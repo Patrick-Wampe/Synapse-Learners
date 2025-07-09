@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exercice : Compléter le Texte - Data & IA</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+        :root {
+            --couleur-principale: #5E28CB;
+            --couleur-succes: #28a745;
+            --couleur-erreur: #dc3545;
+            --couleur-fond: #f4f7f9;
+            --couleur-texte: #212529;
+            --couleur-blanc: #ffffff;
+            --couleur-gris-clair: #e9ecef;
+            --couleur-ombre: rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--couleur-fond);
+            color: var(--couleur-texte);
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+            display: flex;
+            justify-content: center;
+        }
+        
+        #page-container {
+            width: 100%;
+            max-width: 800px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        header {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        #logo img {
+            height: 54px;
+        }
+        
+        header nav a {
+            text-decoration: none;
+            color: var(--couleur-principale);
+            font-weight: 600;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+        }
+
+        header nav a:hover {
+            background-color: var(--couleur-gris-clair);
+        }
+
+        #exercise-container {
+            background-color: var(--couleur-blanc);
+            width: 100%;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px var(--couleur-ombre);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #exercise-header {
+            padding: 20px 30px;
+            background-color: var(--couleur-principale);
+            color: var(--couleur-blanc);
+            text-align: center;
+        }
+
+        #exercise-header h2 {
+            margin: 0;
+            font-size: 1.5em;
+        }
+
+        #question-counter {
+            font-size: 0.9em;
+            font-weight: 600;
+            opacity: 0.8;
+            margin-top: 5px;
+        }
+
+        #exercise-body {
+            padding: 40px 30px;
+            text-align: center;
+        }
+
+        #sentence-container {
+            font-size: 1.4em;
+            line-height: 1.7;
+            margin-bottom: 40px;
+            color: var(--couleur-texte-clair);
+        }
+
+        .blank-space {
+            display: inline-block;
+            border-bottom: 2px solid var(--couleur-principale);
+            min-width: 120px;
+            padding: 0 10px;
+            font-weight: 700;
+            color: var(--couleur-principale);
+            vertical-align: baseline;
+            transition: all 0.3s ease;
+        }
+
+        .blank-space.correct {
+            color: var(--couleur-succes);
+            border-color: var(--couleur-succes);
+        }
+
+        .blank-space.incorrect {
+            animation: shake-horizontal 0.4s;
+            color: var(--couleur-erreur);
+            border-color: var(--couleur-erreur);
+        }
+
+        @keyframes shake-horizontal {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        #options-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .option-btn {
+            background-color: var(--couleur-blanc);
+            border: 2px solid var(--couleur-gris-clair);
+            color: var(--couleur-texte);
+            padding: 10px 20px;
+            font-size: 1.1em;
+            font-family: 'Poppins', sans-serif;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .option-btn code {
+            font-size: 0.9em;
+        }
+
+        .option-btn:hover:not([disabled]) {
+            background-color: #f8f9fa;
+            border-color: var(--couleur-principale);
+            transform: translateY(-2px);
+        }
+
+        .option-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        #exercise-footer {
+            padding: 20px 30px;
+            border-top: 1px solid var(--couleur-gris-clair);
+            text-align: center;
+        }
+
+        #explanation {
+            font-size: 0.95em;
+            color: #555;
+            line-height: 1.6;
+            min-height: 50px;
+            margin-bottom: 20px;
+        }
+
+        #next-btn {
+            background-color: var(--couleur-principale);
+            color: var(--couleur-blanc);
+            border: none;
+            padding: 12px 35px;
+            font-size: 1.1em;
+            font-weight: 600;
+            border-radius: 25px;
+            cursor: pointer;
+            visibility: hidden;
+        }
+
+        #results-screen {
+            padding: 40px;
+            text-align: center;
+        }
+        
+        #results-screen h2 {
+            font-size: 2em;
+            color: var(--couleur-principale);
+        }
+        
+        #restart-btn {
+            margin-top:20px;
+            background-color: var(--couleur-principale);
+            color: white;
+            border: none;
+            padding: 12px 35px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: 600;
+        }
+
+        .summary-item {
+            background-color: #f8f9fa;
+            border: 1px solid var(--couleur-gris-clair);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+            line-height: 1.6;
+            text-align: left;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 2rem;
+            color: var(--couleur-texte-clair);
+            font-size: 0.9rem;
+        }
+
+    </style>
+</head>
+<body>
+    <div id="page-container">
+        <header>
+            <div id="logo">
+                <a href="index.html" title="Accueil des exercices">
+                    <img src="https://d1yei2z3i6k35z.cloudfront.net/3391351/67a8d590ebeea_logosynapselearners.png" alt="Logo Synapse Learners">
+                </a>
+            </div>
+            <nav>
+                <a href="index.html">Retour aux exercices</a>
+            </nav>
+        </header>
+
+        <div id="exercise-container">
+            <!-- Le contenu de l'exercice sera injecté ici -->
+        </div>
+        
+        <footer>
+            <p>&copy; 2025 Synapse Learners. Tous droits réservés ®.</p>
+            <p>Codé avec ❤️</p>
+        </footer>
+    </div>
+
+    <script>
+        const exerciseData = [
+            {
+                start: 'Pour prédire une variable cible continue comme le chiffre d\'affaires, on utilise un modèle de',
+                end: '.',
+                options: ['classification', 'régression', 'clustering', 'ACP'],
+                correctAnswer: 'régression',
+                explanation: 'La <strong>régression</strong> est utilisée pour prédire des valeurs numériques continues.'
+            },
+            {
+                start: 'Un modèle qui performe mal sur les données d\'entraînement et de test est probablement en situation de',
+                end: '.',
+                options: ['sur-apprentissage', 'sous-apprentissage', 'classification', 'normalisation'],
+                correctAnswer: 'sous-apprentissage',
+                explanation: 'Le <strong>sous-apprentissage</strong> (underfitting) se produit quand le modèle est trop simple pour capturer la complexité des données.'
+            },
+            {
+                start: 'Pour s\'assurer que la proportion des classes est la même dans les jeux d\'entraînement et de test, on utilise le paramètre',
+                end: 'de <code>train_test_split</code>.',
+                options: ['shuffle', 'random_state', 'stratify', 'test_size'],
+                correctAnswer: 'stratify',
+                explanation: 'Le paramètre <strong>stratify</strong> est crucial pour les problèmes de classification, surtout si les classes sont déséquilibrées.'
+            },
+            {
+                start: 'La méthode',
+                end: 'de Pandas est une forme de One-Hot Encoding qui transforme les catégories en colonnes binaires.',
+                options: ['<code>.factorize()</code>', '<code>.get_dummies()</code>', '<code>.value_counts()</code>', '<code>.pivot_table()</code>'],
+                correctAnswer: '.get_dummies()',
+                explanation: '<strong><code>pd.get_dummies()</code></strong> est la méthode la plus directe pour appliquer un encodage One-Hot et préparer les données pour la modélisation.'
+            },
+            {
+                start: 'Le coefficient de',
+                end: 'mesure la force d\'une relation linéaire entre deux variables numériques.',
+                options: ['Spearman', 'Kendall', 'Pearson', 'Cramer'],
+                correctAnswer: 'Pearson',
+                explanation: 'La corrélation de <strong>Pearson</strong> est le standard pour les relations linéaires, tandis que Spearman ou Kendall sont utilisés pour les relations monotones non-linéaires.'
+            },
+            {
+                start: 'Remplacer les valeurs manquantes par la',
+                end: 'est une stratégie robuste en présence de nombreux outliers.',
+                options: ['moyenne', 'médiane', 'valeur la plus fréquente', 'valeur nulle'],
+                correctAnswer: 'médiane',
+                explanation: 'La <strong>médiane</strong> est moins sensible aux valeurs extrêmes que la moyenne, ce qui en fait un choix plus sûr pour l\'imputation dans ce cas.'
+            },
+            {
+                start: 'Un',
+                end: 'est une représentation graphique qui utilise les quartiles et l\'écart interquartile pour visualiser la distribution et détecter les outliers.',
+                options: ['histogramme', 'nuage de points', 'boxplot', 'diagramme circulaire'],
+                correctAnswer: 'boxplot',
+                explanation: 'Le <strong>boxplot</strong> (ou boîte à moustaches) est spécifiquement conçu pour résumer la distribution et identifier visuellement les valeurs extrêmes.'
+            },
+            {
+                start: 'Le',
+                end: 'est un algorithme d\'apprentissage non supervisé utilisé pour segmenter des données en groupes homogènes.',
+                options: ['Random Forest', 'K-Means', 'SVM', 'Régression Logistique'],
+                correctAnswer: 'K-Means',
+                explanation: '<strong>K-Means</strong> est l\'un des algorithmes de <strong>clustering</strong> les plus populaires pour partitionner des données en K clusters distincts.'
+            },
+            {
+                start: 'Le fait que les données deviennent très éparses dans un espace de grande dimension est appelé le',
+                end: '.',
+                options: ['paradoxe de Simpson', 'théorème central limite', 'fléau de la dimension', 'biais de confirmation'],
+                correctAnswer: 'fléau de la dimension',
+                explanation: 'Le <strong>fléau de la dimension</strong> (curse of dimensionality) décrit les divers problèmes qui surviennent lors de l\'analyse de données dans des espaces de haute dimension.'
+            },
+            {
+                start: 'Pour transformer les features afin qu\'elles aient une moyenne de 0 et un écart-type de 1, on utilise un',
+                end: '.',
+                options: ['<code>MinMaxScaler</code>', '<code>RobustScaler</code>', '<code>LabelEncoder</code>', '<code>StandardScaler</code>'],
+                correctAnswer: 'StandardScaler',
+                explanation: 'Le <strong><code>StandardScaler</code></strong> effectue une standardisation (ou Z-score normalization), ce qui est requis par de nombreux algorithmes de Machine Learning.'
+            },
+            {
+                start: 'L\'Analyse en Composantes Principales (ACP) est une technique de',
+                end: '.',
+                options: ['classification', 'régression', 'réduction de dimension', 'nettoyage de données'],
+                correctAnswer: 'réduction de dimension',
+                explanation: 'L\'<strong>ACP</strong> (PCA en anglais) permet de réduire le nombre de variables tout en conservant un maximum de la variance (information) présente dans les données.'
+            },
+            {
+                start: 'Si un modèle a une performance de 99% sur l\'entraînement mais de 55% sur le test, il est en',
+                end: '.',
+                options: ['sous-apprentissage', 'sur-apprentissage', 'équilibre', 'convergence'],
+                correctAnswer: 'sur-apprentissage',
+                explanation: 'Un grand écart de performance entre l\'entraînement et le test est le signe caractéristique du <strong>sur-apprentissage</strong> (overfitting).'
+            },
+            {
+                start: 'Pour évaluer une association entre la variable "ville" et la variable "catégorie de produit", on utilise un test du',
+                end: '.',
+                options: ['Student', 'Chi-2', 'Pearson', 'Kolmogorov-Smirnov'],
+                correctAnswer: 'Chi-2',
+                explanation: 'Le test du <strong>Chi-2</strong> est la méthode statistique standard pour tester l\'indépendance entre deux variables catégorielles.'
+            },
+            {
+                start: 'Dans un boxplot, une valeur est souvent considérée comme un outlier si elle est supérieure à',
+                end: '.',
+                options: ['Q3 + 1.5 * EIQ', 'la moyenne + 3 * std', 'Q3', 'la médiane'],
+                correctAnswer: 'Q3 + 1.5 * EIQ',
+                explanation: 'La "moustache" supérieure d\'un boxplot s\'étend généralement jusqu\'à <strong>Q3 + 1.5 * EIQ</strong>. Les points au-delà sont affichés individuellement comme des outliers.'
+            },
+            {
+                start: 'La fonction',
+                end: 'de Scikit-Learn permet de tester systématiquement plusieurs combinaisons d\'hyperparamètres pour trouver la meilleure.',
+                options: ['<code>cross_val_score</code>', '<code>Pipeline</code>', '<code>GridSearchCV</code>', '<code>train_test_split</code>'],
+                correctAnswer: 'GridSearchCV',
+                explanation: '<strong>GridSearchCV</strong> combine une recherche exhaustive sur une "grille" d\'hyperparamètres avec une validation croisée pour une évaluation robuste.'
+            }
+        ];
+
+        const exerciseContainer = document.getElementById('exercise-container');
+        let shuffledData = [];
+        let currentQuestionIndex = 0;
+
+        function startExercise() {
+            currentQuestionIndex = 0;
+            shuffledData = [...exerciseData].sort(() => Math.random() - 0.5);
+            showQuestion();
+        }
+
+        function showQuestion() {
+            exerciseContainer.innerHTML = '';
+
+            if (currentQuestionIndex < shuffledData.length) {
+                const questionData = shuffledData[currentQuestionIndex];
+                const shuffledOptions = [...questionData.options].sort(() => Math.random() - 0.5);
+
+                const questionHTML = `
+                    <div id="exercise-header">
+                        <h2>Complétez la phrase</h2>
+                        <div id="question-counter">Question ${currentQuestionIndex + 1} / ${shuffledData.length}</div>
+                    </div>
+                    <div id="exercise-body">
+                        <p id="sentence-container">
+                            ${questionData.start}
+                            <span class="blank-space" id="blank"></span>
+                            ${questionData.end}
+                        </p>
+                        <div id="options-container">
+                            ${shuffledOptions.map(option => `<button class="option-btn">${option}</button>`).join('')}
+                        </div>
+                    </div>
+                    <div id="exercise-footer">
+                        <div id="explanation"></div>
+                        <button id="next-btn">Question Suivante</button>
+                    </div>
+                `;
+
+                exerciseContainer.innerHTML = questionHTML;
+
+                document.querySelectorAll('.option-btn').forEach(button => {
+                    button.addEventListener('click', selectAnswer);
+                });
+                document.getElementById('next-btn').addEventListener('click', nextQuestion);
+
+            } else {
+                showResults();
+            }
+        }
+
+        function selectAnswer(e) {
+            const selectedButton = e.currentTarget; // Use currentTarget to be safe
+            const selectedAnswer = selectedButton.textContent;
+            const questionData = shuffledData[currentQuestionIndex];
+            const blank = document.getElementById('blank');
+
+            if (blank.classList.contains('correct')) return;
+
+            if (selectedAnswer === questionData.correctAnswer) {
+                blank.innerHTML = selectedButton.innerHTML; // Use innerHTML to preserve <code> tags
+                blank.classList.add('correct');
+                document.getElementById('explanation').innerHTML = questionData.explanation;
+                document.querySelectorAll('.option-btn').forEach(btn => btn.disabled = true);
+                const nextBtn = document.getElementById('next-btn');
+                if (currentQuestionIndex === shuffledData.length - 1) {
+                    nextBtn.textContent = 'Voir le récapitulatif';
+                }
+                nextBtn.style.visibility = 'visible';
+            } else {
+                blank.innerHTML = selectedButton.innerHTML;
+                blank.classList.add('incorrect');
+                selectedButton.disabled = true;
+
+                setTimeout(() => {
+                    blank.innerHTML = '';
+                    blank.classList.remove('incorrect');
+                }, 600);
+            }
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            showQuestion();
+        }
+
+        function showResults() {
+            const summaryHTML = shuffledData
+                .map(item => {
+                    // To properly display code in summary, we need to find the full option text
+                    const correctOptionHTML = item.options.find(opt => opt.includes(item.correctAnswer)) || item.correctAnswer;
+                    return `
+                    <div class="summary-item">
+                        <p>${item.start} <strong style="color:var(--couleur-succes)">${correctOptionHTML}</strong> ${item.end}</p>
+                    </div>
+                `}).join('');
+
+            const resultsHTML = `
+                <div id="results-screen">
+                    <h2>Exercice Terminé !</h2>
+                    <p>Voici le récapitulatif des bonnes réponses.</p>
+                    <div id="summary-container">
+                        ${summaryHTML}
+                    </div>
+                    <button id="restart-btn">Recommencer</button>
+                </div>
+            `;
+            exerciseContainer.innerHTML = resultsHTML;
+            document.getElementById('restart-btn').addEventListener('click', startExercise);
+        }
+
+        startExercise();
+    </script>
+</body>
+</html>
