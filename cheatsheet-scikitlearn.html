@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="https://d1yei2z3i6k35z.cloudfront.net/3391351/67a8d590ebeea_logosynapselearners.png">
+    <title>Cheat Sheet Scikit-Learn - Synapse Learners</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --couleur-principale: #5E28CB;
+            --couleur-secondaire: #4a20a2;
+            --couleur-succes: #28a745;
+            --couleur-erreur: #dc3545;
+            --couleur-fond: #f9fafb;
+            --couleur-texte: #374151;
+            --couleur-texte-clair: #6b7280;
+            --couleur-blanc: #ffffff;
+            --couleur-gris-clair: #f3f4f6;
+            --code-bg: #2d2d2d;
+            --ombre: rgba(0, 0, 0, 0.05);
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--couleur-fond);
+            color: var(--couleur-texte);
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 2rem;
+            box-sizing: border-box;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--couleur-gris-clair);
+        }
+
+        #logo img {
+            height: 60px; /* Taille augmentée */
+        }
+        
+        header a {
+            text-decoration: none;
+            color: var(--couleur-principale);
+            font-weight: 600;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        header a:hover {
+            background-color: var(--couleur-gris-clair);
+        }
+
+        .page-title {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .page-title h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--couleur-principale);
+            margin-bottom: 0.5rem;
+        }
+
+        .page-title p {
+            font-size: 1.2rem;
+            color: var(--couleur-texte-clair);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .doc-link-section {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .doc-link-section a {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background-color: var(--couleur-principale);
+            color: var(--couleur-blanc);
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .doc-link-section a:hover {
+            background-color: var(--couleur-secondaire);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .cheatsheet-section {
+            margin-bottom: 3rem;
+        }
+
+        .cheatsheet-section h2 {
+            font-size: 2.2rem;
+            color: var(--couleur-secondaire);
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid var(--couleur-principale);
+            padding-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .code-block {
+            background-color: var(--code-bg);
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+        }
+
+        .code-header {
+            background-color: #444;
+            padding: 0.75rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .code-title-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            cursor: pointer;
+        }
+
+        .code-title {
+            color: #ccc;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+        }
+        
+        .copy-btn {
+            background-color: #666;
+            color: #fff;
+            border: none;
+            padding: 0.3rem 0.6rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: background-color 0.2s;
+        }
+        
+        .copy-btn:hover {
+            background-color: var(--couleur-principale);
+        }
+        
+        .toggle-explanation {
+            color: #f5a623;
+            transition: transform 0.3s ease;
+        }
+        
+        .toggle-explanation.open {
+            transform: rotate(180deg);
+        }
+
+        .code-block pre {
+            margin: 0;
+            padding: 1.5rem;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .code-block code {
+            color: #f1f1f1;
+            font-family: 'Source Code Pro', monospace;
+            font-size: 1rem;
+        }
+        
+        .code-block .comment { color: #8a8a8a; }
+        .code-block .keyword { color: #cf8e6d; }
+        .code-block .function { color: #6db0cf; }
+        .code-block .string { color: #9ddc9a; }
+        .code-block .number { color: #b5cea8; }
+
+        .code-explanation {
+            background-color: #3a3a3a;
+            color: #e0e0e0;
+            padding: 1.5rem;
+            border-top: 1px solid #555;
+            display: none;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+        .code-explanation strong {
+            color: #f5a623;
+        }
+        .code-explanation ul {
+            padding-left: 20px;
+            margin-top: 0.5rem;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--couleur-gris-clair);
+            color: var(--couleur-texte-clair);
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .page-title h1 { font-size: 2.2rem; }
+            .page-title p { font-size: 1rem; }
+            header { flex-direction: column; gap: 1rem; }
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div id="logo">
+                <a href="index.html" title="Accueil des exercices">
+                    <img src="https://d1yei2z3i6k35z.cloudfront.net/3391351/67a8d590ebeea_logosynapselearners.png" alt="Logo Synapse Learners">
+                </a>
+            </div>
+            <nav id="main-nav">
+                <a href="https://www.synapselearners.com" target="_blank">Visiter le site</a>
+            </nav>
+        </header>
+
+        <main>
+            <section class="page-title">
+                <h1>Cheat Sheet : Scikit-Learn</h1>
+                <p>Votre guide de référence rapide pour le Machine Learning en Python. Retrouvez les fonctions essentielles pour chaque étape de vos projets.</p>
+            </section>
+
+            <section class="doc-link-section">
+                <a href="https://scikit-learn.org/stable/" target="_blank">Consulter la Documentation Officielle <i data-lucide="book-open"></i></a>
+            </section>
+
+            <!-- Preprocessing -->
+            <section class="cheatsheet-section">
+                <h2><i data-lucide="blender"></i>Preprocessing des Données</h2>
+
+                <div class="code-block">
+                    <div class="code-header"><div class="code-title-container"><span class="code-title">Séparer les données (Train/Test Split)</span><i data-lucide="chevron-down" class="toggle-explanation"></i></div><button class="copy-btn">Copier</button></div>
+                    <pre><code><span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> train_test_split
+
+<span class="comment"># X: features, y: target</span>
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=<span class="number">0.2</span>, random_state=<span class="number">42</span>, stratify=y
+)</code></pre>
+                    <div class="code-explanation"><strong>Explication :</strong> C'est l'étape la plus cruciale avant la modélisation. Elle divise vos données en un jeu d'entraînement (pour que le modèle apprenne) et un jeu de test (pour évaluer sa performance sur des données inconnues). <strong>`test_size=0.2`</strong> signifie que 20% des données seront pour le test. <strong>`random_state=42`</strong> assure que la division est toujours la même à chaque exécution (reproductibilité). <strong>`stratify=y`</strong> est essentiel en classification pour garder la même proportion de chaque classe dans les deux jeux, surtout si les données sont déséquilibrées.</div>
+                </div>
+                
+                <div class="code-block">
+                    <div class="code-header"><div class="code-title-container"><span class="code-title">Standardiser les données (StandardScaler)</span><i data-lucide="chevron-down" class="toggle-explanation"></i></div><button class="copy-btn">Copier</button></div>
+                    <pre><code><span class="keyword">from</span> sklearn.preprocessing <span class="keyword">import</span> StandardScaler
+
+scaler = StandardScaler()
+X_train_scaled = scaler.fit_transform(X_train)
+X_test_scaled = scaler.transform(X_test)</code></pre>
+                    <div class="code-explanation"><strong>Explication :</strong> La standardisation est vitale pour les algorithmes sensibles aux échelles de grandeur (KNN, SVM, etc.). <strong>`StandardScaler`</strong> transforme chaque colonne pour qu'elle ait une moyenne de 0 et un écart-type de 1. On utilise <strong>`.fit_transform()`</strong> sur le jeu d'entraînement pour apprendre les paramètres de scaling (moyenne, écart-type) et les appliquer. On utilise ensuite <strong>`.transform()`</strong> seul sur le jeu de test pour appliquer les mêmes paramètres, évitant ainsi toute fuite de données du test vers l'entraînement.</div>
+                </div>
+
+                <div class="code-block">
+                    <div class="code-header"><div class="code-title-container"><span class="code-title">Encoder les catégories (OneHotEncoder)</span><i data-lucide="chevron-down" class="toggle-explanation"></i></div><button class="copy-btn">Copier</button></div>
+                    <pre><code><span class="keyword">from</span> sklearn.preprocessing <span class="keyword">import</span> OneHotEncoder
+
+encoder = OneHotEncoder(handle_unknown=<span class="string">'ignore'</span>, sparse_output=<span class="keyword">False</span>)
+X_train_encoded = encoder.fit_transform(X_train[[<span class="string">'col_cat'</span>]])
+<span class="comment"># ... puis concaténer avec les autres colonnes</span></code></pre>
+                    <div class="code-explanation"><strong>Explication :</strong> Les modèles de ML ne comprennent pas le texte. <strong>`OneHotEncoder`</strong> transforme une colonne catégorielle (ex: 'Rouge', 'Vert') en plusieurs colonnes binaires (une par catégorie). C'est souvent préférable au <strong>`LabelEncoder`</strong> qui assigne un entier (0, 1, 2...), car ce dernier peut introduire une relation d'ordre artificielle que le modèle pourrait mal interpréter. <strong>`handle_unknown='ignore'`</strong> évite les erreurs si une catégorie du test est absente de l'entraînement.</div>
+                </div>
+                
+                <div class="code-block">
+                    <div class="code-header"><div class="code-title-container"><span class="code-title">Encoder les catégories (LabelEncoder)</span><i data-lucide="chevron-down" class="toggle-explanation"></i></div><button class="copy-btn">Copier</button></div>
+                    <pre><code><span class="keyword">from</span> sklearn.preprocessing <span class="keyword">import</span> LabelEncoder
+
+encoder = LabelEncoder()
+y_train_encoded = encoder.fit_transform(y_train)
+y_test_encoded = encoder.transform(y_test)</code></pre>
+                    <div class="code-explanation"><strong>Explication :</strong> Le <strong>`LabelEncoder`</strong> transforme chaque catégorie en un entier unique (ex: 'Chat' -> 0, 'Chien' -> 1). <ul><li><strong>Quand l'utiliser ?</strong> Principalement pour encoder la <strong>variable cible (y)</strong>.</li><li><strong>Pourquoi pas sur les features (X) ?</strong> Car il crée une relation d'ordre (1 > 0) que les modèles pourraient interpréter à tort comme une hiérarchie. Pour les features, préférez `OneHotEncoder`.</li></ul></div>
+                </div>
+
+                <div class="code-block">
+                    <div class="code-header"><div class="code-title-container"><span class="code-title">Imputer les valeurs manquantes (SimpleImputer)</span><i data-lucide="chevron-down" class="toggle-explanation"></i></div><button class="copy-btn">Copier</button></div>
+                    <pre><code><span class="keyword">from</span> sklearn.impute <span class="keyword">import</span> SimpleImputer
+
+imputer = SimpleImputer(strategy=<span class="string">'mean'</span>) <span class="comment"># ou 'median', 'most_frequent'</span>
+X_train_imputed = imputer.fit_transform(X_train)
+X_test_imputed = imputer.transform(X_test)</code></pre>
+                    <div class="code-explanation"><strong>Explication :</strong> Gère les valeurs manquantes (NaN). <strong>`SimpleImputer`</strong> remplace les NaN par une valeur calculée sur le jeu d'entraînement. <ul><li><strong>mean:</strong> Rapide, mais sensible aux outliers.</li><li><strong>median:</strong> Robuste aux outliers.</li><li><strong>most_frequent:</strong> Utile pour les variables catégorielles.</li></ul></div>
+                </div>
+            </section>
+
+            <!-- Modèles de Machine Learning -->
+            <section class="cheatsheet-section">
+                <h2><i data-lucide="brain-circuit"></i>Modèles de Machine Learning</h2>
+
+                <div class="code-block">
+                    <div class="code-header"><div class="code-title-container"><span class="code-title">Régression Linéaire</span><i data-lucide="chevron-down" class="toggle-explanation"></i></div><button class="copy-btn">Copier</button></div>
+                    <pre><code><span class="keyword">from</span> sklearn.linear_model <span class="keyword">import</span> LinearRegression
+
+model = LinearRegression()
+model.fit(X_train, y_train)
+predictions = model.predict(X_test)</code></pre>
+                    <div class="code-explanation"><strong>Explication :</strong> Le modèle de base pour la <strong>régression</strong>. Il cherche la meilleure ligne droite (ou hyperplan) qui décrit la relation entre X et y. <ul><li><strong>Idéal pour :</strong> Problèmes où la relation entre les variables est simple et linéaire (ex: prédire un prix de maison en fonction de sa surface).</li><li><strong>Forces :</strong> Très rapide, simple à interpréter (grâce aux coefficients), ne nécessite pas beaucoup de réglages.</li><li><strong>Faiblesses :</strong> Suppose une relation linéaire, sensible aux outliers.</li></ul></div>
+                </div>
+
+                <div class="code-block">
+                    <div class="code-header"><div class="code-title-container"><span class="code-title">Régression Logistique (Classification)</span><i data-lucide="chevron-down" class="toggle-explanation"></i></div><button class="copy-btn">Copier</button></div>
+                    <pre><code><span class="keyword">from</span> sklearn.linear_model <span class="keyword">import</span> LogisticRegression
+
+model = LogisticRegression(random_state=<span class="number">42</span>)
+model.fit(X_train, y_train)
+predictions = model.predict(X_test)
+probabilities = model.predict_proba(X_test)</code></pre>
+                    <div class="code-explanation"><strong>Explication :</strong> Malgré son nom, c'est un modèle de <strong>classification</strong>. Il prédit la probabilité qu'une observation appartienne à une classe. <ul><li><strong>Idéal pour :</strong> Problèmes de classification binaire (oui/non, spam/non spam) ou multi-classe où les classes sont bien séparables linéairement.</li><li><strong>Forces :</strong> Excellent point de départ, rapide, fournit des probabilités interprétables.</li><li><strong>Faiblesses :</strong> Suppose une frontière de décision linéaire entre les classes.</li></ul></div>
+                </div>
+
+                <div class="code-block">
+                    <div class="code-header"><div class="code-title-container"><span class="code-title">Forêt Aléatoire (Random Forest)</span><i data-lucide="chevron-down" class="toggle-explanation"></i></div><button class="copy-btn">Copier</button></div>
+                    <pre><code><span class="keyword">from</span> sklearn.ensemble <span class="keyword">import</span> RandomForestClassifier
+
+model = RandomForestClassifier(n_estimators=<span class="number">100</span>, random_state=<span class="number">42</span>)
+model.fit(X_train, y_train)
+predictions = model.predict(X_test)</code></pre>
+                    <div class="code-explanation"><strong>Explication :</strong> Un modèle d'<strong>ensemble</strong> puissant. Il construit plusieurs arbres de décision sur des sous-ensembles de données et de features, puis agrège leurs votes. <ul><li><strong>Idéal pour :</strong> Problèmes complexes avec des interactions non-linéaires entre les variables (ex: prédiction de churn client, diagnostic médical).</li><li><strong>Forces :</strong> Très performant, robuste à l'overfitting, gère bien les non-linéarités.</li><li><strong>Faiblesses :</strong> Moins interprétable ("boîte noire"), peut être plus lent et gourmand en mémoire.</li></ul></div>
+                </div>
+                
+                <div class="code-block">
+                    <div class="code-header"><div class="code-title-container"><span class="code-title">K-Plus Proches Voisins (KNN)</span><i data-lucide="chevron-down" class="toggle-explanation"></i></div><button class="copy-btn">Copier</button></div>
+                    <pre><code><span class="keyword">from</span> sklearn.neighbors <span class="keyword">import</span> KNeighborsClassifier
+
+model = KNeighborsClassifier(n_neighbors=<span class="number">5</span>)
+model.fit(X_train_scaled, y_train)
+predictions = model.predict(X_test_scaled)</code></pre>
+                    <div class="code-explanation"><strong>Explication :</strong> Un algorithme basé sur la distance. Pour prédire, il regarde les `k` points les plus proches et effectue un vote. <ul><li><strong>Idéal pour :</strong> Systèmes de recommandation simples, reconnaissance de motifs où la "proximité" a un sens (ex: images similaires).</li><li><strong>Forces :</strong> Simple à comprendre, efficace sur des problèmes non-linéaires.</li><li><strong>Faiblesses :</strong> Nécessite la standardisation des données, peut être lent sur de grands datasets car il doit calculer les distances avec tous les points.</li></ul></div>
+                </div>
+
+                <div class="code-block">
+                    <div class="code-header"><div class="code-title-container"><span class="code-title">K-Means (Clustering)</span><i data-lucide="chevron-down" class="toggle-explanation"></i></div><button class="copy-btn">Copier</button></div>
+                    <pre><code><span class="keyword">from</span> sklearn.cluster <span class="keyword">import</span> KMeans
+
+model = KMeans(n_clusters=<span class="number">3</span>, random_state=<span class="number">42</span>, n_init=<span class="string">'auto'</span>)
+model.fit(X_scaled)
+labels = model.labels_</code></pre>
+                    <div class="code-explanation"><strong>Explication :</strong> L'algorithme de <strong>clustering</strong> (non supervisé) le plus connu. Il regroupe les données en `k` clusters distincts. <ul><li><strong>Idéal pour :</strong> La segmentation de clients, la détection d'anomalies, le regroupement de documents.</li><li><strong>Forces :</strong> Simple, rapide et efficace sur de grands datasets.</li><li><strong>Faiblesses :</strong> Il faut choisir le nombre de clusters `k` à l'avance, et il suppose que les clusters sont sphériques.</li></ul></div>
+                </div>
+            </section>
+
+            <!-- Évaluation de Modèles -->
+            <section class="cheatsheet-section">
+                <h2><i data-lucide="clipboard-check"></i>Évaluation de Modèles</h2>
+                
+                <div class="code-block">
+                    <div class="code-header"><div class="code-title-container"><span class="code-title">Métriques de Régression</span><i data-lucide="chevron-down" class="toggle-explanation"></i></div><button class="copy-btn">Copier</button></div>
+                    <pre><code><span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> r2_score, mean_squared_error
+
+r2 = r2_score(y_test, predictions)
+rmse = mean_squared_error(y_test, predictions, squared=<span class="keyword">False</span>)</code></pre>
+                    <div class="code-explanation"><strong>Explication :</strong> <strong>`r2_score`</strong> (proche de 1, c'est bien) indique la proportion de la variance expliquée par le modèle. <strong>`RMSE`</strong> (plus c'est bas, mieux c'est) mesure l'erreur moyenne de prédiction dans les mêmes unités que la cible. Utile pour comprendre concrètement de combien le modèle se trompe.</div>
+                </div>
+
+                <div class="code-block">
+                    <div class="code-header"><div class="code-title-container"><span class="code-title">Métriques de Classification</span><i data-lucide="chevron-down" class="toggle-explanation"></i></div><button class="copy-btn">Copier</button></div>
+                    <pre><code><span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> accuracy_score, confusion_matrix, classification_report
+
+accuracy = accuracy_score(y_test, predictions)
+conf_matrix = confusion_matrix(y_test, predictions)
+class_report = classification_report(y_test, predictions)</code></pre>
+                    <div class="code-explanation"><strong>Explication :</strong> <strong>`accuracy`</strong> est le % de prédictions correctes. La <strong>`confusion_matrix`</strong> détaille les Vrais/Faux Positifs et Négatifs. Le <strong>`classification_report`</strong> est le plus complet, il donne pour chaque classe : <ul><li><strong>Precision :</strong> Sur tout ce que le modèle a prédit comme étant "Classe A", quel pourcentage était correct ?</li><li><strong>Recall (Rappel) :</strong> Sur tout ce qui était réellement "Classe A", quel pourcentage le modèle a-t-il trouvé ?</li><li><strong>F1-score :</strong> La moyenne harmonique de la précision et du rappel.</li></ul></div>
+                </div>
+                
+                <div class="code-block">
+                    <div class="code-header"><div class="code-title-container"><span class="code-title">Score de Silhouette (Clustering)</span><i data-lucide="chevron-down" class="toggle-explanation"></i></div><button class="copy-btn">Copier</button></div>
+                    <pre><code><span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> silhouette_score
+
+score = silhouette_score(X_scaled, labels)</code></pre>
+                    <div class="code-explanation"><strong>Explication :</strong> Mesure la qualité d'un clustering. Il compare la distance moyenne d'un point avec les autres points de son propre cluster (cohésion) à la distance moyenne avec les points du cluster le plus proche (séparation). Un score proche de 1 est idéal.</div>
+                </div>
+            </section>
+
+            <!-- Pipeline et Recherche d'Hyperparamètres -->
+            <section class="cheatsheet-section">
+                <h2><i data-lucide="workflow"></i>Pipeline & Tuning</h2>
+
+                <div class="code-block">
+                    <div class="code-header"><div class="code-title-container"><span class="code-title">Créer un Pipeline</span><i data-lucide="chevron-down" class="toggle-explanation"></i></div><button class="copy-btn">Copier</button></div>
+                    <pre><code><span class="keyword">from</span> sklearn.pipeline <span class="keyword">import</span> Pipeline
+
+pipeline = Pipeline([
+    (<span class="string">'scaler'</span>, StandardScaler()),
+    (<span class="string">'classifier'</span>, RandomForestClassifier(random_state=<span class="number">42</span>))
+])
+pipeline.fit(X_train, y_train)</code></pre>
+                    <div class="code-explanation"><strong>Explication :</strong> Un <strong>`Pipeline`</strong> est un outil extrêmement puissant qui enchaîne plusieurs étapes de transformation et de modélisation. Il permet d'éviter les fuites de données (le scaler est "fitté" uniquement sur le train set) et de simplifier grandement le code, surtout lors de la validation croisée ou du déploiement.</div>
+                </div>
+
+                <div class="code-block">
+                    <div class="code-header"><div class="code-title-container"><span class="code-title">Recherche sur Grille (GridSearchCV)</span><i data-lucide="chevron-down" class="toggle-explanation"></i></div><button class="copy-btn">Copier</button></div>
+                    <pre><code><span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> GridSearchCV
+
+param_grid = {
+    <span class="string">'classifier__n_estimators'</span>: [<span class="number">100</span>, <span class="number">200</span>],
+    <span class="string">'classifier__max_depth'</span>: [<span class="keyword">None</span>, <span class="number">10</span>, <span class="number">20</span>]
+}
+
+grid_search = GridSearchCV(pipeline, param_grid, cv=<span class="number">5</span>, n_jobs=<span class="number">-1</span>)
+grid_search.fit(X_train, y_train)
+<span class="function">print</span>(grid_search.best_params_)</code></pre>
+                    <div class="code-explanation"><strong>Explication :</strong> <strong>`GridSearchCV`</strong> automatise la recherche des meilleurs hyperparamètres. Il teste toutes les combinaisons de `param_grid` en utilisant la validation croisée (`cv=5` signifie 5 "folds" ou plis) pour trouver la plus performante. La syntaxe `classifier__n_estimators` permet de cibler un paramètre à l'intérieur d'un pipeline. <strong>`n_jobs=-1`</strong> utilise tous les cœurs du processeur pour accélérer la recherche.</div>
+                </div>
+            </section>
+
+        </main>
+
+        <footer>
+            <p>&copy; 2025 Synapse Learners. Tous droits réservés ®.</p>
+            <p>Codé avec ❤️</p>
+        </footer>
+    </div>
+    <script>
+        lucide.createIcons();
+
+        // --- Copy to Clipboard Logic ---
+        document.querySelectorAll('.copy-btn').forEach(button => {
+            button.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const codeBlock = button.closest('.code-block');
+                const codeElement = codeBlock.querySelector('code');
+                const codeText = codeElement.innerText;
+
+                const textArea = document.createElement('textarea');
+                textArea.value = codeText;
+                document.body.appendChild(textArea);
+                textArea.select();
+                try {
+                    document.execCommand('copy');
+                    button.textContent = 'Copié !';
+                    setTimeout(() => {
+                        button.textContent = 'Copier';
+                    }, 2000);
+                } catch (err) {
+                    console.error('Impossible de copier le texte', err);
+                }
+                document.body.removeChild(textArea);
+            });
+        });
+        
+        // --- Toggle Explanation Logic ---
+        document.querySelectorAll('.code-title-container').forEach(container => {
+            container.addEventListener('click', (e) => {
+                const codeBlock = container.closest('.code-block');
+                const explanation = codeBlock.querySelector('.code-explanation');
+                const icon = container.querySelector('.toggle-explanation');
+                if (explanation) {
+                    const isVisible = explanation.style.display === 'block';
+                    explanation.style.display = isVisible ? 'none' : 'block';
+                    icon.classList.toggle('open', !isVisible);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
