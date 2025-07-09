@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Le Parcours du Data Analyst - Le Jeu</title>
+    <link rel="icon" type="image/png" href="https://d1yei2z3i6k35z.cloudfront.net/3391351/67a8d590ebeea_logosynapselearners.png">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Source+Code+Pro:wght@700&display=swap');
+
+        :root {
+            --couleur-principale: #5E28CB;
+            --couleur-secondaire: #f5a623;
+            --couleur-succes: #28a745;
+            --couleur-erreur: #dc3545;
+            --couleur-fond: #f4f7f9;
+            --couleur-texte: #212529;
+            --couleur-blanc: #ffffff;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--couleur-fond);
+            color: var(--couleur-texte);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        header {
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        #logo img {
+            height: 54px;
+        }
+
+        #game-container {
+            position: relative;
+            width: 800px;
+            height: 500px;
+            max-width: 100%;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border-radius: 15px;
+            overflow: hidden;
+            background: #87CEEB;
+        }
+
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+        
+        #game-ui {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            right: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            pointer-events: none; /* Permet de cliquer à travers l'UI */
+        }
+        
+        #hearts-container {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            background-color: rgba(0,0,0,0.2);
+            padding: 5px 10px;
+            border-radius: 10px;
+        }
+        
+        #hearts-container span {
+            font-size: 24px;
+            color: red;
+            transition: transform 0.3s ease;
+        }
+
+        #hearts-container span.broken {
+            transform: scale(0);
+        }
+
+        #ingame-restart-btn {
+            background-color: var(--couleur-secondaire);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+            pointer-events: all; /* Rend le bouton cliquable */
+        }
+
+        #quiz-modal, #end-game-modal {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            text-align: center;
+        }
+        
+        .modal-content {
+            background: var(--couleur-blanc);
+            padding: 30px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .modal-content h2 {
+            color: var(--couleur-principale);
+            font-size: 2em;
+        }
+        
+        #quiz-question {
+            font-size: 1.2em;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        
+        #quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .quiz-option-btn, #restart-btn {
+            background-color: var(--couleur-blanc);
+            border: 2px solid #e9ecef;
+            color: var(--couleur-texte);
+            padding: 12px;
+            font-size: 1em;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .quiz-option-btn:hover {
+            border-color: var(--couleur-principale);
+            background-color: #f8f9fa;
+        }
+        
+        #restart-btn {
+            background-color: var(--couleur-principale);
+            color: var(--couleur-blanc);
+            margin-top: 20px;
+            font-weight: 600;
+        }
+        
+        #feedback-message {
+            margin-top: 15px;
+            font-weight: 600;
+            min-height: 24px;
+        }
+        
+        #feedback-message.correct { color: var(--couleur-succes); }
+        #feedback-message.incorrect { color: var(--couleur-erreur); }
+
+        .summary-item {
+            background-color: #f8f9fa;
+            border: 1px solid var(--couleur-gris-clair);
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            text-align: left;
+        }
+        .summary-question {
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        .summary-answer {
+            font-weight: 600;
+            color: var(--couleur-succes);
+        }
+        .summary-explanation {
+            font-size: 0.9em;
+            margin-top: 10px;
+            color: #6c757d;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 2rem;
+            color: #555;
+            font-size: 0.9rem;
+        }
+
+    </style>
+</head>
+<body>
+    <header>
+        <div id="logo">
+            <a href="index.html" title="Accueil des exercices">
+                <img src="https://d1yei2z3i6k35z.cloudfront.net/3391351/67a8d590ebeea_logosynapselearners.png" alt="Logo Synapse Learners">
+            </a>
+        </div>
+        <h1>Le Parcours du Data Analyst</h1>
+    </header>
+
+    <div id="game-container">
+        <canvas id="gameCanvas"></canvas>
+        <div id="game-ui">
+            <div id="hearts-container"></div>
+            <button id="ingame-restart-btn">Recommencer</button>
+        </div>
+        <div id="quiz-modal">
+            <div class="modal-content">
+                <p id="quiz-question">Question ?</p>
+                <div id="quiz-options"></div>
+                <p id="feedback-message"></p>
+            </div>
+        </div>
+        <div id="end-game-modal">
+            <div class="modal-content">
+                <h2 id="end-game-title">Titre</h2>
+                <p id="end-game-message">Message</p>
+                <div id="summary-container"></div>
+                <button id="restart-btn">Recommencer</button>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <p>Utilisez les flèches ◀️▶️ pour vous déplacer et la flèche ▲ pour sauter.</p>
+    </footer>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+
+        const container = document.getElementById('game-container');
+        canvas.width = container.clientWidth;
+        canvas.height = container.clientHeight;
+
+        // --- Game Variables ---
+        const gravity = 0.5;
+        const worldWidth = 4000;
+        let player, platforms, collectibles, birds, scenery, keys, gameRequestId, gamePaused, lives, camera;
+
+        const allQuizData = [
+            { id: 1, question: "Pour lire un fichier CSV, quelle bibliothèque Python est la plus couramment utilisée ?", options: ["NumPy", "Matplotlib", "Pandas", "Scikit-learn"], correctAnswer: "Pandas", explanation: "Pandas est la bibliothèque de référence pour la manipulation de données en Python. NumPy est pour le calcul numérique, Matplotlib pour la visualisation, et Scikit-learn pour le machine learning." },
+            { id: 2, question: "Quelle clause SQL est utilisée pour filtrer les résultats d'une requête ?", options: ["FILTER", "SELECT", "ORDER BY", "WHERE"], correctAnswer: "WHERE", explanation: "La clause WHERE est utilisée pour extraire uniquement les enregistrements qui remplissent une condition spécifiée. SELECT choisit les colonnes et ORDER BY les trie." },
+            { id: 3, question: "Quel type de ressource fournit des données structurées via une URL, souvent au format JSON ?", options: ["Un fichier Excel", "Une API REST", "Un document Word", "Un fichier image"], correctAnswer: "Une API REST", explanation: "Une API REST est une interface web qui permet d'obtenir des données de manière structurée. Les autres options sont des fichiers statiques." },
+            { id: 4, question: "Comment appelle-t-on le processus de gestion des valeurs manquantes dans un jeu de données ?", options: ["Scaling", "Encodage", "Imputation", "Réduction"], correctAnswer: "Imputation", explanation: "L'imputation consiste à remplacer les données manquantes. Le Scaling et l'Encodage modifient les valeurs existantes, et la Réduction diminue le nombre de features." },
+            { id: 5, question: "Quelle visualisation est la plus adaptée pour voir la relation entre deux variables numériques ?", options: ["Diagramme circulaire", "Histogramme", "Nuage de points", "Boxplot"], correctAnswer: "Nuage de points", explanation: "Un nuage de points (scatter plot) est idéal pour visualiser la corrélation entre deux variables continues. Les autres graphiques servent à analyser des distributions ou des proportions." },
+            { id: 6, question: "En Machine Learning, qu'est-ce qu'une 'feature' ?", options: ["Une bibliothèque Python", "Une variable d'entrée du modèle", "Le résultat de la prédiction", "Une erreur dans le code"], correctAnswer: "Une variable d'entrée du modèle", explanation: "Une 'feature' (ou caractéristique) est une propriété mesurable qui sert d'entrée à un modèle. La prédiction est la sortie." }
+        ];
+        let quizData = [];
+
+        // --- Classes ---
+        class Player {
+            constructor() { this.reset(); }
+            reset() {
+                this.position = { x: 100, y: 300 };
+                this.velocity = { x: 0, y: 0 };
+                this.width = 40;
+                this.height = 60;
+                this.onGround = false;
+                this.invincible = false;
+            }
+            draw() {
+                ctx.globalAlpha = this.invincible ? 0.5 : 1.0;
+                
+                // Corps du personnage
+                ctx.fillStyle = '#5E28CB';
+                ctx.fillRect(this.position.x, this.position.y, this.width, this.height);
+
+                // Verres des lunettes (carrés blancs)
+                ctx.fillStyle = 'white';
+                ctx.fillRect(this.position.x + 5, this.position.y + 10, 15, 15);
+                ctx.fillRect(this.position.x + 20, this.position.y + 10, 15, 15);
+
+                // Monture des lunettes (noire)
+                ctx.fillStyle = 'black';
+                // Pont
+                ctx.fillRect(this.position.x + 18, this.position.y + 17, 4, 2);
+                // Pupilles
+                ctx.fillRect(this.position.x + 10, this.position.y + 15, 5, 5);
+                ctx.fillRect(this.position.x + 25, this.position.y + 15, 5, 5);
+
+                // Sourire
+                ctx.fillStyle = 'white';
+                ctx.fillRect(this.position.x + 12, this.position.y + 40, 16, 5);
+                
+                ctx.globalAlpha = 1.0;
+            }
+            update() {
+                this.draw();
+                this.position.x += this.velocity.x;
+                this.position.y += this.velocity.y;
+                this.velocity.y += gravity;
+            }
+        }
+
+        class Platform {
+            constructor({ x, y, width, height }) { this.position = { x, y }; this.width = width; this.height = height; }
+            draw() { ctx.fillStyle = '#654321'; ctx.fillRect(this.position.x, this.position.y, this.width, this.height); }
+        }
+
+        class Collectible {
+            constructor({ id, x, y, text }) { this.id = id; this.position = { x, y }; this.width = 50; this.height = 50; this.text = text; this.isCollected = false; }
+            draw() {
+                if (this.isCollected) return;
+                ctx.fillStyle = '#FFD700';
+                ctx.fillRect(this.position.x, this.position.y, this.width, this.height);
+                ctx.fillStyle = '#000';
+                ctx.font = 'bold 20px "Source Code Pro"';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(this.text, this.position.x + this.width / 2, this.position.y + this.height / 2);
+            }
+        }
+        
+        class Bird {
+            constructor({ y, speed }) {
+                this.width = 40; this.height = 30;
+                this.speed = speed;
+                this.position = { x: speed > 0 ? -this.width : worldWidth, y: y };
+                this.velocity = { x: speed, y: 0 };
+            }
+            draw() {
+                ctx.fillStyle = '#A52A2A';
+                ctx.beginPath();
+                if (this.velocity.x > 0) {
+                    ctx.moveTo(this.position.x, this.position.y + this.height / 2);
+                    ctx.lineTo(this.position.x + this.width / 2, this.position.y);
+                    ctx.lineTo(this.position.x + this.width, this.position.y + this.height / 2);
+                } else {
+                    ctx.moveTo(this.position.x + this.width, this.position.y + this.height / 2);
+                    ctx.lineTo(this.position.x + this.width / 2, this.position.y);
+                    ctx.lineTo(this.position.x, this.position.y + this.height / 2);
+                }
+                ctx.closePath();
+                ctx.fill();
+            }
+            update() {
+                this.position.x += this.velocity.x;
+                this.draw();
+                if (this.position.x > worldWidth || this.position.x < -this.width) {
+                    this.position.x = this.velocity.x > 0 ? -this.width : worldWidth;
+                }
+            }
+        }
+        
+        class SceneryObject {
+            constructor({ x, y, width, height, color, parallaxFactor = 1}) { this.position = {x, y}; this.width = width; this.height = height; this.color = color; this.parallaxFactor = parallaxFactor; }
+            draw(cameraX) {
+                const drawX = this.position.x - cameraX * this.parallaxFactor;
+                ctx.fillStyle = this.color;
+                ctx.fillRect(drawX, this.position.y, this.width, this.height);
+            }
+        }
+
+        function generateLevel() {
+            const groundSegments = [
+                { x: 0, width: 500 },
+                { x: 700, width: 800 },
+                { x: 1700, width: 600 },
+                { x: 2500, width: 1500 }
+            ];
+            platforms = groundSegments.map(seg => new Platform({ x: seg.x, y: canvas.height - 40, width: seg.width, height: 40 }));
+            
+            // LEVEL DESIGN CORRIGÉ - v4 - Accessibilité garantie
+            platforms.push(
+                new Platform({ x: 300, y: 400, width: 150, height: 20 }),
+                new Platform({ x: 550, y: 350, width: 120, height: 20 }),
+                new Platform({ x: 750, y: 280, width: 120, height: 20 }),
+                new Platform({ x: 1050, y: 380, width: 200, height: 20 }),
+                new Platform({ x: 1300, y: 400, width: 100, height: 20 }),
+                new Platform({ x: 1450, y: 320, width: 100, height: 20 }),
+                new Platform({ x: 1600, y: 240, width: 150, height: 20 }),
+                new Platform({ x: 2000, y: 350, width: 150, height: 20 }),
+                new Platform({ x: 2250, y: 350, width: 150, height: 20 }),
+                new Platform({ x: 2700, y: 400, width: 100, height: 20 }),
+                new Platform({ x: 2850, y: 320, width: 100, height: 20 }),
+                new Platform({ x: 3000, y: 240, width: 100, height: 20 }),
+                new Platform({ x: 3150, y: 160, width: 150, height: 20 })
+            );
+            
+            quizData = [...allQuizData].sort(() => 0.5 - Math.random());
+            
+            collectibles = [
+                new Collectible({ id: quizData[0].id, x: 350, y: 350, text: `Q1` }),
+                new Collectible({ id: quizData[1].id, x: 785, y: 230, text: `Q2` }),
+                new Collectible({ id: quizData[2].id, x: 1100, y: 330, text: `Q3` }),
+                new Collectible({ id: quizData[3].id, x: 1650, y: 190, text: `Q4` }),
+                new Collectible({ id: quizData[4].id, x: 2150, y: 300, text: `Q5` }),
+                new Collectible({ id: quizData[5].id, x: 3200, y: 110, text: `Q6` })
+            ];
+        }
+
+        function init() {
+            gamePaused = false;
+            document.getElementById('end-game-modal').style.display = 'none';
+            lives = 7;
+            player = new Player();
+            camera = { x: 0 };
+            keys = { right: { pressed: false }, left: { pressed: false } };
+            
+            generateLevel();
+
+            birds = [
+                new Bird({ y: 100, speed: 2 }),
+                new Bird({ y: 200, speed: -1.5 }),
+                new Bird({ y: 300, speed: 2.5 })
+            ];
+            
+            scenery = [
+                new SceneryObject({ x: 100, y: canvas.height - 140, width: 400, height: 100, color: '#228B22', parallaxFactor: 0.2 }),
+                new SceneryObject({ x: 800, y: canvas.height - 190, width: 600, height: 150, color: '#2E8B57', parallaxFactor: 0.3 }),
+                new SceneryObject({ x: 1500, y: canvas.height - 120, width: 500, height: 80, color: '#228B22', parallaxFactor: 0.2 }),
+                new SceneryObject({ x: 2200, y: canvas.height - 220, width: 800, height: 180, color: '#2E8B57', parallaxFactor: 0.3 }),
+                new SceneryObject({ x: 150, y: 100, width: 100, height: 40, color: 'white', parallaxFactor: 0.5 }),
+                new SceneryObject({ x: 700, y: 50, width: 150, height: 60, color: 'white', parallaxFactor: 0.5 }),
+                new SceneryObject({ x: 1300, y: 120, width: 120, height: 50, color: 'white', parallaxFactor: 0.5 }),
+                new SceneryObject({ x: 2000, y: 80, width: 180, height: 70, color: 'white', parallaxFactor: 0.5 }),
+            ];
+            
+            if(gameRequestId) cancelAnimationFrame(gameRequestId);
+            animate();
+        }
+
+        function animate() {
+            gameRequestId = requestAnimationFrame(animate);
+            if (gamePaused) return;
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            camera.x = player.position.x - canvas.width / 3;
+            if (camera.x < 0) camera.x = 0;
+            if (camera.x > worldWidth - canvas.width) camera.x = worldWidth - canvas.width;
+
+            ctx.save();
+            ctx.translate(-camera.x, 0);
+
+            scenery.forEach(obj => obj.draw(camera.x));
+            platforms.forEach(platform => platform.draw());
+            collectibles.forEach(collectible => collectible.draw());
+            birds.forEach(bird => bird.update());
+            player.update();
+            
+            ctx.restore();
+            
+            updateUI();
+
+            if (keys.left.pressed && player.position.x > 0) player.velocity.x = -5;
+            else if (keys.right.pressed && player.position.x + player.width < worldWidth) player.velocity.x = 5;
+            else player.velocity.x = 0;
+
+            let onAnyPlatform = false;
+            platforms.forEach(platform => {
+                if (player.position.y + player.height <= platform.position.y && player.position.y + player.height + player.velocity.y >= platform.position.y && player.position.x + player.width >= platform.position.x && player.position.x <= platform.position.x + platform.width) {
+                    player.velocity.y = 0;
+                    player.position.y = platform.position.y - player.height;
+                    onAnyPlatform = true;
+                }
+            });
+            player.onGround = onAnyPlatform;
+            
+            if (player.position.y > canvas.height) {
+                showEndGame(false);
+                return;
+            }
+
+            if (!player.invincible) {
+                collectibles.forEach(item => {
+                    if (!item.isCollected && isColliding(player, item)) {
+                        pauseGameAndShowQuiz(item.id);
+                    }
+                });
+
+                birds.forEach(bird => {
+                    if (isColliding(player, bird)) {
+                        handlePlayerHit();
+                    }
+                });
+            }
+            
+            if (collectibles.every(c => c.isCollected)) {
+                showEndGame(true);
+            }
+        }
+        
+        function isColliding(rect1, rect2) {
+            return rect1.position.x < rect2.position.x + rect2.width &&
+                   rect1.position.x + rect1.width > rect2.position.x &&
+                   rect1.position.y < rect2.position.y + rect2.height &&
+                   rect1.position.y + rect1.height > rect2.position.y;
+        }
+        
+        function handlePlayerHit() {
+            if (player.invincible) return;
+            lives--;
+            player.invincible = true;
+            if (lives <= 0) {
+                showEndGame(false);
+            } else {
+                setTimeout(() => { player.invincible = false; }, 1500);
+            }
+        }
+
+        function updateUI() {
+            const heartsEl = document.getElementById('hearts-container');
+            heartsEl.innerHTML = '';
+            for (let i = 0; i < lives; i++) {
+                const heart = document.createElement('span');
+                heart.textContent = '❤️';
+                heartsEl.appendChild(heart);
+            }
+        }
+        
+        const quizModal = document.getElementById('quiz-modal');
+        const quizQuestionEl = document.getElementById('quiz-question');
+        const quizOptionsEl = document.getElementById('quiz-options');
+        const feedbackMessageEl = document.getElementById('feedback-message');
+
+        function pauseGameAndShowQuiz(id) {
+            gamePaused = true;
+            const quiz = quizData.find(q => q.id === id);
+            const item = collectibles.find(c => c.id === id);
+            
+            quizQuestionEl.textContent = quiz.question;
+            quizOptionsEl.innerHTML = '';
+            feedbackMessageEl.textContent = '';
+            
+            quiz.options.forEach(option => {
+                const button = document.createElement('button');
+                button.textContent = option;
+                button.className = 'quiz-option-btn';
+                button.onclick = () => {
+                    Array.from(quizOptionsEl.children).forEach(btn => btn.disabled = true);
+                    if (option === quiz.correctAnswer) {
+                        feedbackMessageEl.textContent = "Bonne réponse !";
+                        feedbackMessageEl.className = 'correct';
+                        item.isCollected = true;
+                    } else {
+                        feedbackMessageEl.textContent = "Mauvaise réponse ! Vous perdez une vie.";
+                        feedbackMessageEl.className = 'incorrect';
+                        item.isCollected = false;
+                        lives--;
+                        const hearts = document.getElementById('hearts-container').children;
+                        if (hearts.length > 0) {
+                            hearts[hearts.length - 1].classList.add('broken');
+                        }
+                        if (lives <= 0) {
+                            setTimeout(() => {
+                                quizModal.style.display = 'none';
+                                showEndGame(false);
+                            }, 1500);
+                            return;
+                        }
+                    }
+                    setTimeout(() => { quizModal.style.display = 'none'; gamePaused = false; }, 1500);
+                };
+                quizOptionsEl.appendChild(button);
+            });
+            
+            quizModal.style.display = 'flex';
+        }
+        
+        function showEndGame(isWin) {
+            gamePaused = true;
+            const modal = document.getElementById('end-game-modal');
+            const title = document.getElementById('end-game-title');
+            const message = document.getElementById('end-game-message');
+            const summaryContainer = document.getElementById('summary-container');
+            
+            if (isWin) {
+                title.textContent = 'Niveau Terminé !';
+                message.textContent = 'Vous avez collecté toutes les données ! Bravo !';
+                let summaryHTML = '<h3>Récapitulatif des questions</h3>';
+                allQuizData.forEach(q => {
+                    summaryHTML += `
+                        <div class="summary-item">
+                            <p class="summary-question">${q.question}</p>
+                            <p class="summary-answer">Réponse : ${q.correctAnswer}</p>
+                            <p class="summary-explanation">${q.explanation}</p>
+                        </div>
+                    `;
+                });
+                summaryContainer.innerHTML = summaryHTML;
+            } else {
+                title.textContent = 'Game Over';
+                message.textContent = 'Vous n\'avez plus de vies. Entraînez-vous et réessayez !';
+                summaryContainer.innerHTML = ''; // Pas de récap en cas de défaite
+            }
+            
+            modal.style.display = 'flex';
+        }
+
+        window.addEventListener('keydown', ({ code }) => {
+            if (gamePaused) return;
+            switch (code) {
+                case 'ArrowLeft': keys.left.pressed = true; break;
+                case 'ArrowRight': keys.right.pressed = true; break;
+                case 'ArrowUp': 
+                    if (player.onGround) {
+                        player.velocity.y = -12;
+                        player.onGround = false;
+                    }
+                    break;
+            }
+        });
+
+        window.addEventListener('keyup', ({ code }) => {
+            switch (code) {
+                case 'ArrowLeft': keys.left.pressed = false; break;
+                case 'ArrowRight': keys.right.pressed = false; break;
+            }
+        });
+        
+        document.getElementById('restart-btn').addEventListener('click', init);
+        document.getElementById('ingame-restart-btn').addEventListener('click', init);
+
+        init();
+
+    </script>
+</body>
+</html>
