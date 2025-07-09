@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Data Analyst - Bloc 3</title>
+    <style>
+        /* --- Styles Généraux --- */
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+        :root {
+            --couleur-principale: #5E28CB;
+            --couleur-secondaire: #f5a623;
+            --couleur-succes: #28a745;
+            --couleur-erreur: #dc3545;
+            --couleur-fond: #f4f7f9;
+            --couleur-texte: #212529;
+            --couleur-blanc: #ffffff;
+            --couleur-gris-clair: #e9ecef;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--couleur-fond);
+            color: var(--couleur-texte);
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        
+        #page-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+
+        #logo-container {
+            width: 100%;
+            max-width: 700px;
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        #logo-container img {
+            height: 45px; /* Ajustez la taille de votre logo */
+        }
+
+        /* --- Conteneur du Quiz --- */
+        #quiz-container {
+            background-color: var(--couleur-blanc);
+            width: 100%;
+            max-width: 700px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* --- En-tête --- */
+        #quiz-header {
+            padding: 20px 30px;
+            background-color: var(--couleur-principale);
+            color: var(--couleur-blanc);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        #question-counter {
+            font-size: 0.9em;
+            font-weight: 600;
+            background-color: rgba(255, 255, 255, 0.2);
+            padding: 5px 12px;
+            border-radius: 20px;
+        }
+
+        #score-display {
+            font-size: 1.2em;
+            font-weight: 700;
+        }
+
+        /* --- Corps du Quiz --- */
+        #quiz-body {
+            padding: 30px;
+        }
+
+        #question-text {
+            font-size: 1.4em;
+            font-weight: 700;
+            margin-bottom: 25px;
+            line-height: 1.4;
+        }
+
+        #answer-options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .option-btn {
+            background-color: var(--couleur-blanc);
+            border: 2px solid var(--couleur-gris-clair);
+            color: var(--couleur-texte);
+            padding: 15px;
+            width: 100%;
+            text-align: left;
+            font-size: 1em;
+            font-family: 'Poppins', sans-serif;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .option-btn:hover:not([disabled]) {
+            background-color: #f8f9fa;
+            border-color: var(--couleur-principale);
+        }
+
+        .option-btn:disabled {
+            cursor: not-allowed;
+        }
+
+        .option-btn.correct {
+            background-color: var(--couleur-succes) !important;
+            color: var(--couleur-blanc) !important;
+            border-color: var(--couleur-succes) !important;
+        }
+
+        .option-btn.incorrect {
+            background-color: var(--couleur-erreur) !important;
+            color: var(--couleur-blanc) !important;
+            border-color: var(--couleur-erreur) !important;
+        }
+
+        .option-btn code {
+            background-color: rgba(0,0,0,0.1);
+            padding: 2px 5px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+
+        .option-btn.correct code, .option-btn.incorrect code {
+             background-color: rgba(0,0,0,0.2);
+        }
+
+        /* --- Pied de page --- */
+        #quiz-footer {
+            padding: 20px 30px;
+            border-top: 1px solid var(--couleur-gris-clair);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #explanation {
+            font-size: 0.95em;
+            color: #555;
+            margin-bottom: 20px;
+            text-align: center;
+            line-height: 1.6;
+            min-height: 50px;
+        }
+
+        #explanation strong.title {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        #explanation strong.correct {
+            color: var(--couleur-succes);
+        }
+        #explanation strong.incorrect {
+            color: var(--couleur-erreur);
+        }
+
+        #explanation code {
+             background-color: var(--couleur-gris-clair);
+             padding: 2px 5px;
+             border-radius: 4px;
+             font-family: monospace;
+        }
+
+        #next-btn {
+            background-color: #5E28CB;
+            color: var(--couleur-blanc);
+            border: none;
+            padding: 12px 35px;
+            font-size: 1.1em;
+            font-weight: 600;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
+            visibility: hidden;
+        }
+
+        #next-btn:hover {
+            background-color: #CFC4F7;
+            color: #000;
+            transform: translateY(-2px);
+        }
+
+        /* --- Écran final et Récapitulatif --- */
+        #results-screen {
+            text-align: center;
+            padding: 30px;
+        }
+
+        #results-screen h2 {
+            font-size: 2em;
+            color: var(--couleur-principale);
+        }
+
+        #results-screen p {
+            font-size: 1.2em;
+        }
+
+        #restart-btn {
+            background-color: var(--couleur-principale);
+            color: var(--couleur-blanc);
+            border: none;
+            padding: 12px 35px;
+            font-size: 1.1em;
+            font-weight: 600;
+            border-radius: 25px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background-color 0.3s ease;
+        }
+
+        #restart-btn:hover {
+            opacity: 0.9;
+        }
+
+        #summary-container {
+            width: 100%;
+            margin-top: 30px;
+            text-align: left;
+        }
+
+        .summary-item {
+            background-color: #f8f9fa;
+            border: 1px solid var(--couleur-gris-clair);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        .summary-item p {
+            margin: 0;
+            padding: 0;
+            font-size: 1em;
+        }
+
+        .summary-question {
+            font-weight: 700;
+            margin-bottom: 10px !important;
+        }
+
+        .summary-answer {
+             margin-top: 8px !important;
+        }
+
+        .summary-explanation {
+            font-style: italic;
+            font-size: 0.9em !important;
+            margin-top: 10px !important;
+            color: #6c757d;
+        }
+    </style>
+</head>
+<body>
+    <div id="page-container">
+        <div id="logo-container">
+            <!-- MODIFIEZ ICI : Remplacez par le lien vers l'image de votre logo -->
+            <img src="https://i.ibb.co/9bsd91s/logo-synapse-learners.png" alt="Logo Synapse Learners">
+        </div>
+        <div id="quiz-container">
+            <!-- Le contenu du quiz sera injecté ici par JavaScript -->
+        </div>
+    </div>
+
+    <script>
+        // --- Base de Données des Questions ---
+        const quizData = [
+            // Difficulté Facile
+            {
+                question: "Vous devez prédire le prix d'un appartement en fonction de sa surface. Quel type de problème de Machine Learning est-ce ?",
+                options: ["Classification", "Clustering", "Régression", "Réduction de dimension"],
+                correctAnswer: "Régression",
+                explanation: "La <strong>régression</strong> est utilisée pour prédire une valeur <strong>quantitative continue</strong>, comme un prix. La classification prédit une catégorie."
+            },
+            {
+                question: "Quelle méthode de Scikit-Learn est indispensable pour évaluer honnêtement la performance d'un modèle ?",
+                options: ["<code>StandardScaler()</code>", "<code>train_test_split()</code>", "<code>PCA()</code>", "<code>KMeans()</code>"],
+                correctAnswer: "<code>train_test_split()</code>",
+                explanation: "Cette fonction divise les données en un jeu d'<strong>entraînement</strong> (pour apprendre) et un jeu de <strong>test</strong> (pour évaluer), garantissant que l'évaluation se fait sur des données inconnues du modèle."
+            },
+            {
+                question: "Vous trouvez un âge de '150 ans' dans votre jeu de données client. Comment qualifiez-vous cette valeur ?",
+                options: ["Une valeur manquante", "Une valeur extrême", "Une valeur aberrante", "Une valeur normale"],
+                correctAnswer: "Une valeur aberrante",
+                explanation: "Une valeur <strong>aberrante</strong> est une donnée qui n'a pas de sens logique. Une valeur <strong>extrême</strong> est possible mais très rare."
+            },
+            {
+                question: "Quel est l'objectif principal de la normalisation (scaling) des données ?",
+                options: ["Supprimer les outliers", "Mettre toutes les variables sur une échelle de grandeur comparable", "Créer de nouvelles colonnes", "Remplir les valeurs manquantes"],
+                correctAnswer: "Mettre toutes les variables sur une échelle de grandeur comparable",
+                explanation: "La normalisation (ex: <code>StandardScaler</code>, <code>MinMaxScaler</code>) est cruciale pour que les algorithmes ne donnent pas un poids disproportionné aux variables ayant de grandes valeurs."
+            },
+            {
+                question: "Si votre modèle est trop simple et ne parvient pas à capturer la tendance des données, même sur le set d'entraînement, il est en situation de...",
+                options: ["Overfitting", "Clustering", "Underfitting", "Classification"],
+                correctAnswer: "Underfitting",
+                explanation: "L'<strong>underfitting</strong> (sous-apprentissage) se produit quand un modèle est trop simple. L'<strong>overfitting</strong>, c'est quand il est trop complexe et apprend le bruit."
+            },
+            // Difficulté Moyenne
+            {
+                question: "Pour gérer des valeurs manquantes dans une colonne avec beaucoup d'outliers, quelle stratégie d'imputation est la plus prudente ?",
+                options: ["Supprimer les lignes", "Remplacer par la moyenne", "Remplacer par la médiane", "Remplacer par zéro"],
+                correctAnswer: "Remplacer par la médiane",
+                explanation: "La <strong>médiane</strong> est moins sensible aux valeurs extrêmes (outliers) que la moyenne. C'est donc une mesure de tendance centrale plus <strong>robuste</strong> dans ce cas."
+            },
+            {
+                question: "Quelle est la principale utilité de la méthode <code>pd.get_dummies()</code> de Pandas ?",
+                options: ["Supprimer les doublons", "Encoder des variables catégorielles en format binaire", "Normaliser les données numériques", "Calculer le Z-Score"],
+                correctAnswer: "Encoder des variables catégorielles en format binaire",
+                explanation: "<code>pd.get_dummies()</code> transforme une colonne catégorielle en plusieurs colonnes binaires (0/1), ce qui est une forme de <strong>One-Hot Encoding</strong> nécessaire pour de nombreux algorithmes."
+            },
+            {
+                question: "Pour analyser la relation entre deux variables numériques qui semble non-linéaire (courbée), quel coefficient de corrélation est le plus adapté ?",
+                options: ["Le coefficient de Pearson", "Le Z-Score", "Le V de Cramer", "Le coefficient de Spearman"],
+                correctAnswer: "Le coefficient de Spearman",
+                explanation: "Le coefficient de <strong>Pearson</strong> mesure la force d'une relation <strong>linéaire</strong>. <strong>Spearman</strong> évalue les relations <strong>monotones</strong>, qu'elles soient linéaires ou non."
+            },
+            {
+                question: "Quel est l'objectif principal de l'Analyse en Composantes Principales (ACP) ?",
+                options: ["Prédire une cible", "Regrouper des individus similaires", "Réduire le nombre de colonnes en gardant le maximum d'information", "Visualiser des données géographiques"],
+                correctAnswer: "Réduire le nombre de colonnes en gardant le maximum d'information",
+                explanation: "L'ACP combat le '<strong>fléau de la dimension</strong>' en créant de nouvelles variables (composantes) qui sont des combinaisons des anciennes, permettant de réduire la complexité."
+            },
+            {
+                question: "Que se passe-t-il si un modèle est en situation d'overfitting (sur-apprentissage) ?",
+                options: ["Il est très performant sur les données de test et d'entraînement", "Il est mauvais sur les données de test et d'entraînement", "Il est excellent sur les données d'entraînement mais mauvais sur de nouvelles données (test)", "Il est simple et ne capture pas la complexité des données"],
+                correctAnswer: "Il est excellent sur les données d'entraînement mais mauvais sur de nouvelles données (test)",
+                explanation: "L'<strong>overfitting</strong> signifie que le modèle a 'appris par cœur' les données d'entraînement, y compris le bruit, et a du mal à <strong>généraliser</strong> sa performance."
+            },
+            {
+                question: "Pour détecter des outliers en se basant sur la médiane et les quartiles, quelle visualisation est la plus directe ?",
+                options: ["Un histogramme", "Un nuage de points", "Un diagramme circulaire", "Un boxplot (boîte à moustaches)"],
+                correctAnswer: "Un boxplot (boîte à moustaches)",
+                explanation: "Le <strong>boxplot</strong> est conçu pour montrer la distribution autour de la médiane (Q2), avec les quartiles (Q1, Q3) et les outliers définis par l'<strong>écart interquartile</strong>."
+            },
+            {
+                question: "Vous voulez prédire si un email est 'spam' ou 'non spam'. De quel type de problème s'agit-il ?",
+                options: ["Régression multi-classe", "Clustering hiérarchique", "Classification binaire", "Régression logistique"],
+                correctAnswer: "Classification binaire",
+                explanation: "Il s'agit de prédire une catégorie parmi deux options possibles ('spam'/'non spam'), ce qui est la définition d'une <strong>classification binaire</strong>."
+            },
+            {
+                question: "Quelle est la différence entre <code>StandardScaler</code> et <code>MinMaxScaler</code> ?",
+                options: ["Le premier utilise la médiane, le second la moyenne", "Le premier met les données entre 0 et 1, le second entre -1 et 1", "Le premier centre et réduit par l'écart-type, le second met les données entre 0 et 1", "Il n'y a pas de différence majeure"],
+                correctAnswer: "Le premier centre et réduit par l'écart-type, le second met les données entre 0 et 1",
+                explanation: "<code>StandardScaler</code> transforme les données pour avoir une <strong>moyenne de 0 et un écart-type de 1</strong>. <code>MinMaxScaler</code> redimensionne les données dans un <strong>intervalle fixe [0, 1]</strong>."
+            },
+            {
+                question: "Pour analyser la relation entre deux variables qualitatives (ex: 'catégorie de produit' et 'région de vente'), quelle méthode statistique est appropriée ?",
+                options: ["ANOVA", "Test du Chi-2 (χ²)", "Corrélation de Pearson", "Régression linéaire"],
+                correctAnswer: "Test du Chi-2 (χ²)",
+                explanation: "Le test du <strong>Chi-2</strong> est utilisé pour déterminer s'il existe une association significative entre deux variables <strong>catégorielles</strong>, souvent à l'aide d'une <strong>matrice de contingence</strong>."
+            },
+            {
+                question: "Vous avez une colonne 'code postal'. Pourquoi est-il dangereux de l'utiliser directement comme une variable numérique ?",
+                options: ["Elle contient trop de valeurs uniques", "Le modèle pourrait interpréter 75000 comme étant 'plus grand' que 13000", "Elle est toujours de type texte", "Elle ne contient que des outliers"],
+                correctAnswer: "Le modèle pourrait interpréter 75000 comme étant 'plus grand' que 13000",
+                explanation: "Un code postal est une <strong>donnée qualitative (nominale)</strong> déguisée en nombre. Il faut la traiter comme une catégorie (ex: par encodage) pour ne pas créer une <strong>relation d'ordre artificielle</strong>."
+            },
+            // Difficulté Difficile
+            {
+                question: "Après avoir utilisé un <code>LabelEncoder</code> sur une colonne avec 50 catégories uniques, pourquoi est-il crucial de normaliser les données ?",
+                options: ["Pour réduire le nombre de colonnes", "Pour éviter que le modèle ne donne trop de poids à cette colonne", "Pour supprimer les valeurs manquantes", "Pour accélérer le calcul"],
+                correctAnswer: "Pour éviter que le modèle ne donne trop de poids à cette colonne",
+                explanation: "Le <code>LabelEncoder</code> crée des valeurs de 0 à 49. Sans normalisation, un modèle pourrait interpréter '49' comme étant plus important que '1', créant un <strong>biais</strong>. La normalisation <strong>réduit cette variance</strong>."
+            },
+            {
+                question: "Dans un boxplot, comment sont définis les points considérés comme des outliers par défaut ?",
+                options: ["Toute valeur au-dessus de la moyenne", "Les valeurs au-delà de 3 écarts-types", "Les valeurs en dehors de [Q1 - 1.5*EIQ , Q3 + 1.5*EIQ]", "Les 5% de valeurs les plus extrêmes"],
+                correctAnswer: "Les valeurs en dehors de [Q1 - 1.5*EIQ , Q3 + 1.5*EIQ]",
+                explanation: "Un outlier est typiquement une valeur qui se situe en dessous de <strong>Q1 - 1.5 * EIQ</strong> ou au-dessus de <strong>Q3 + 1.5 * EIQ</strong>, où EIQ est l'Écart Interquartile (Q3 - Q1)."
+            },
+            {
+                question: "Vous utilisez une validation croisée (cross-validation) avec 5 'folds'. Que se passe-t-il concrètement ?",
+                options: ["Le modèle est entraîné 5 fois sur tout le dataset", "Le dataset est divisé en 5, et le modèle est entraîné 5 fois, chaque fois sur 4/5 des données", "Le dataset est divisé en 5, et le modèle est entraîné 1 fois sur 1/5 des données", "5 modèles différents sont entraînés"],
+                correctAnswer: "Le dataset est divisé en 5, et le modèle est entraîné 5 fois, chaque fois sur 4/5 des données",
+                explanation: "La validation croisée à k-folds divise les données en k blocs. Le processus est répété k fois : <strong>k-1 blocs pour l'entraînement</strong>, et <strong>1 bloc pour la validation</strong>. La performance finale est la moyenne des k scores."
+            },
+            {
+                question: "Après une ACP, la première composante (CP1) explique 80% de la variance. Qu'est-ce que cela implique sur vos données d'origine ?",
+                options: ["Les variables d'origine ne sont pas du tout corrélées", "Les variables d'origine sont fortement corrélées entre elles", "L'ACP a échoué", "Il faut obligatoirement utiliser 80% des colonnes"],
+                correctAnswer: "Les variables d'origine sont fortement corrélées entre elles",
+                explanation: "Un pourcentage élevé de variance expliqué par les premières composantes indique une <strong>forte redondance (colinéarité)</strong> dans les données. L'ACP a donc réussi à <strong>condenser l'information</strong> efficacement."
+            },
+            {
+                question: "À quoi sert la fonction <code>GridSearchCV</code> de Scikit-Learn ?",
+                options: ["À visualiser les données en grille", "À trouver la meilleure combinaison d'hyperparamètres pour un modèle", "À créer une grille de sous-graphiques", "À sélectionner les meilleures colonnes pour le modèle"],
+                correctAnswer: "À trouver la meilleure combinaison d'hyperparamètres pour un modèle",
+                explanation: "<code>GridSearchCV</code> teste <strong>systématiquement toutes les combinaisons d'hyperparamètres</strong> que vous spécifiez, et renvoie celle qui donne la meilleure performance en validation croisée."
+            },
+            {
+                question: "Pourquoi est-il parfois préférable d'utiliser un <code>RobustScaler</code> plutôt qu'un <code>StandardScaler</code> ?",
+                options: ["Il est plus rapide à calculer", "Il est plus efficace en présence d'outliers", "Il conserve la forme originale de la distribution", "Il fonctionne mieux pour la classification"],
+                correctAnswer: "Il est plus efficace en présence d'outliers",
+                explanation: "<code>RobustScaler</code> utilise la <strong>médiane</strong> et les <strong>quartiles</strong> pour la mise à l'échelle. Comme ces statistiques sont robustes aux outliers, le scaling est moins faussé par les valeurs extrêmes."
+            },
+            {
+                question: "Quelle est la principale limite de la suppression pure et simple des lignes contenant des valeurs manquantes ?",
+                options: ["C'est techniquement trop complexe", "Cela peut introduire un biais si les manques ne sont pas aléatoires", "Cela augmente le temps de calcul", "Cela ne fonctionne que pour les variables numériques"],
+                correctAnswer: "Cela peut introduire un biais si les manques ne sont pas aléatoires",
+                explanation: "Si les valeurs manquantes sont liées à une caractéristique spécifique (ex: les clients à haut revenu ne répondent pas), les supprimer peut <strong>fausser la distribution</strong> de vos données et <strong>biaiser le modèle</strong>."
+            },
+            {
+                question: "Un Z-score de 3.5 pour une observation signifie que...",
+                options: ["La valeur est 3.5 fois plus grande que la moyenne", "La valeur se situe à 3.5 écarts-types de la moyenne", "La valeur est un outlier modéré", "La valeur est erronée et doit être supprimée"],
+                correctAnswer: "La valeur se situe à 3.5 écarts-types de la moyenne",
+                explanation: "Le Z-score mesure le nombre d'<strong>écarts-types</strong> qui séparent une donnée de la <strong>moyenne</strong>. Une valeur > 3 ou < -3 est généralement considérée comme un <strong>outlier extrême</strong>."
+            },
+            {
+                question: "Vous avez deux colonnes numériques très corrélées (colinéarité). Quel est le risque si vous les gardez toutes les deux dans un modèle de régression linéaire ?",
+                options: ["Aucun risque, cela renforce le modèle", "Le modèle sera plus long à entraîner", "L'interprétation des coefficients du modèle devient instable et peu fiable", "Le modèle fera de l'underfitting"],
+                correctAnswer: "L'interprétation des coefficients du modèle devient instable et peu fiable",
+                explanation: "La <strong>multicolinéarité</strong> rend difficile pour le modèle de déterminer l'effet individuel de chaque variable, ce qui peut mener à des <strong>coefficients instables</strong> et contre-intuitifs."
+            },
+             {
+                question: "Vous voulez regrouper vos clients en segments homogènes sans avoir d'étiquette prédéfinie. Quel type de problème est-ce ?",
+                options: ["Classification", "Régression", "Clustering", "Analyse de séries temporelles"],
+                correctAnswer: "Clustering",
+                explanation: "Le <strong>clustering</strong> est un apprentissage <strong>non supervisé</strong> qui vise à créer des groupes (clusters) de données basés sur leur <strong>similarité</strong>, sans cible à prédire."
+            },
+            // Questions Bonus
+             {
+                question: "Dans quel cas la corrélation de Pearson entre deux variables peut-elle être proche de 0, alors qu'il existe une forte relation entre elles ?",
+                options: ["Quand la relation est parfaitement linéaire", "Quand la relation est non-linéaire (ex: en forme de 'U')", "Quand les variables ont des outliers", "Ce n'est pas possible"],
+                correctAnswer: "Quand la relation est non-linéaire (ex: en forme de 'U')",
+                explanation: "Pearson ne mesure que la relation <strong>linéaire</strong>. Une relation quadratique parfaite (en U ou U inversé) peut avoir une corrélation de Pearson nulle. C'est pourquoi la <strong>visualisation est essentielle</strong>."
+            },
+            {
+                question: "Qu'est-ce que le 'fléau de la dimension' (curse of dimensionality) ?",
+                options: ["Le fait d'avoir trop de lignes dans son dataset", "Le fait que les données deviennent très éparses dans un espace de grande dimension", "Une erreur de la librairie Scikit-Learn", "Le fait de ne pas pouvoir visualiser les données au-delà de 3D"],
+                correctAnswer: "Le fait que les données deviennent très éparses dans un espace de grande dimension",
+                explanation: "Avec beaucoup de dimensions (colonnes), la <strong>distance entre les points augmente</strong>, les données deviennent éparses et il devient beaucoup plus difficile pour un modèle de trouver des motifs pertinents."
+            },
+            {
+                question: "Vous effectuez un <code>GridSearch</code> pour un <code>RandomForestClassifier</code>. Vous testez 10 combinaisons d'hyperparamètres avec une validation croisée à 5 'folds' (cv=5). Combien de modèles seront entraînés au total ?",
+                options: ["10", "5", "15", "50"],
+                correctAnswer: "50",
+                explanation: "Le calcul est : <strong>nombre de combinaisons × nombre de folds</strong>. Soit 10 combinaisons * 5 folds = 50 entraînements de modèles au total."
+            },
+            {
+                question: "Pourquoi la fonction <code>train_test_split</code> possède-t-elle un paramètre <code>stratify</code> ?",
+                options: ["Pour mélanger les données plus rapidement", "Pour s'assurer que la proportion des classes de la cible est la même dans le train et le test set", "Pour trier les données avant de les diviser", "Pour accélérer l'entraînement du modèle"],
+                correctAnswer: "Pour s'assurer que la proportion des classes de la cible est la même dans le train et le test set",
+                explanation: "L'option <code>stratify</code> est cruciale en <strong>classification</strong>, surtout avec des <strong>classes déséquilibrées</strong>, pour garantir que les deux ensembles sont représentatifs de la distribution d'origine."
+            },
+            {
+                question: "Quelle est la différence fondamentale entre une API et le web scraping pour collecter des données ?",
+                options: ["L'API est toujours payante, le scraping est gratuit", "L'API fournit des données structurées et autorisées, le scraping extrait des données brutes du HTML", "L'API est plus lente que le scraping", "Le scraping est toujours illégal"],
+                correctAnswer: "L'API fournit des données structurées et autorisées, le scraping extrait des données brutes du HTML",
+                explanation: "Une <strong>API (Application Programming Interface)</strong> est une porte d'entrée <strong>officielle et structurée</strong>. Le <strong>scraping</strong> est une technique d'extraction qui peut être plus fragile et soumise à des conditions légales strictes."
+            }
+        ];
+
+        // --- Logique du Quiz ---
+        const quizContainer = document.getElementById('quiz-container');
+        let shuffledQuestions = [];
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let userAnswers = [];
+
+        function shuffleArray(array) {
+            return array.sort(() => Math.random() - 0.5);
+        }
+
+        function startQuiz() {
+            shuffledQuestions = shuffleArray([...quizData]);
+            currentQuestionIndex = 0;
+            score = 0;
+            userAnswers = [];
+            showQuestion();
+        }
+
+        function showQuestion() {
+            quizContainer.innerHTML = '';
+
+            if (currentQuestionIndex < shuffledQuestions.length) {
+                const questionData = shuffledQuestions[currentQuestionIndex];
+
+                const questionHTML = `
+                    <div id="quiz-header">
+                        <div id="question-counter">Question ${currentQuestionIndex + 1} / ${shuffledQuestions.length}</div>
+                        <div id="score-display">Score: ${score}</div>
+                    </div>
+                    <div id="quiz-body">
+                        <div id="question-text">${questionData.question}</div>
+                        <div id="answer-options">
+                            ${questionData.options.map(option => `<button class="option-btn">${option}</button>`).join('')}
+                        </div>
+                    </div>
+                    <div id="quiz-footer">
+                        <div id="explanation"></div>
+                        <button id="next-btn">Suivant</button>
+                    </div>
+                `;
+
+                quizContainer.innerHTML = questionHTML;
+
+                document.querySelectorAll('.option-btn').forEach(button => {
+                    button.addEventListener('click', selectAnswer);
+                });
+                document.getElementById('next-btn').addEventListener('click', nextQuestion);
+
+            } else {
+                showResults();
+            }
+        }
+
+        function selectAnswer(e) {
+            const selectedButton = e.currentTarget;
+            const selectedAnswer = selectedButton.innerHTML;
+            const questionData = shuffledQuestions[currentQuestionIndex];
+            const correctAnswer = questionData.correctAnswer;
+            const explanation = questionData.explanation;
+
+            userAnswers.push({
+                question: questionData.question,
+                selected: selectedAnswer,
+                correct: correctAnswer,
+                explanation: explanation
+            });
+
+            document.querySelectorAll('.option-btn').forEach(button => {
+                button.disabled = true;
+            });
+
+            if (selectedAnswer === correctAnswer) {
+                selectedButton.classList.add('correct');
+                score++;
+                document.getElementById('score-display').textContent = `Score: ${score}`;
+                document.getElementById('explanation').innerHTML = `<strong class="title correct">Bonne réponse !</strong><br>${explanation}`;
+            } else {
+                selectedButton.classList.add('incorrect');
+                document.querySelectorAll('.option-btn').forEach(button => {
+                    if (button.innerHTML === correctAnswer) {
+                        button.classList.add('correct');
+                    }
+                });
+                document.getElementById('explanation').innerHTML = `<strong class="title incorrect">Mauvaise réponse.</strong><br>${explanation}`;
+            }
+
+            document.getElementById('next-btn').style.visibility = 'visible';
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            showQuestion();
+        }
+
+        function showResults() {
+            let summaryHTML = userAnswers.map(item => `
+                <div class="summary-item">
+                    <p class="summary-question">${item.question}</p>
+                    <p class="summary-answer">Votre réponse : <span style="color: ${item.selected === item.correct ? 'var(--couleur-succes)' : 'var(--couleur-erreur)'}">${item.selected}</span></p>
+                    ${item.selected !== item.correct ? `<p class="summary-answer">Réponse correcte : <span style="color: var(--couleur-succes)">${item.correct}</span></p>` : ''}
+                    <p class="summary-explanation">${item.explanation}</p>
+                </div>
+            `).join('');
+
+            const resultsHTML = `
+                <div id="results-screen">
+                    <h2>Quiz Terminé !</h2>
+                    <p>Votre score final est de ${score} sur ${shuffledQuestions.length}.</p>
+                    <div id="summary-container">
+                        <h3>Récapitulatif des réponses</h3>
+                        ${summaryHTML}
+                    </div>
+                    <button id="restart-btn">Recommencer</button>
+                </div>
+            `;
+            quizContainer.innerHTML = resultsHTML;
+            document.getElementById('restart-btn').addEventListener('click', startQuiz);
+        }
+
+        // --- Démarrage du Quiz ---
+        startQuiz();
+    </script>
+</body>
+</html>
