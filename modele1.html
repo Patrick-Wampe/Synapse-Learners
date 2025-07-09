@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="https://d1yei2z3i6k35z.cloudfront.net/3391351/67a8d590ebeea_logosynapselearners.png">
+    <title>Synapse Learners - Zone d'entraînement</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --couleur-principale: #5E28CB;
+            --couleur-secondaire: #4a20a2;
+            --couleur-fond: #f4f7f9;
+            --couleur-texte: #333;
+            --couleur-texte-clair: #555;
+            --couleur-blanc: #ffffff;
+            --couleur-gris-clair: #e9ecef;
+            --couleur-ombre: rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--couleur-fond);
+            color: var(--couleur-texte);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1100px;
+            padding: 2rem;
+            box-sizing: border-box;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+        }
+
+        #logo img {
+            height: 54px;
+        }
+        
+        #main-nav a {
+            text-decoration: none;
+            color: var(--couleur-principale);
+            font-weight: 600;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+        }
+
+        #main-nav a:hover {
+            background-color: var(--couleur-gris-clair);
+        }
+
+        .hero {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 6rem 2rem;
+            margin-bottom: 3rem;
+            border-radius: 15px;
+            overflow: hidden;
+            color: var(--couleur-blanc);
+        }
+
+        .video-background {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 100%;
+            height: 100%;
+            transform: translate(-50%, -50%);
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .video-background iframe {
+            width: 100vw;
+            height: 56.25vw; /* 16:9 Aspect Ratio */
+            min-width: 177.77vh; /* 16:9 Aspect Ratio for portrait screens */
+            min-height: 100vh;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 2;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 3;
+        }
+
+        .hero h1 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: var(--couleur-blanc);
+            margin-bottom: 0.5rem;
+            line-height: 1.2;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--couleur-blanc);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .exercise-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .exercise-card {
+            background-color: var(--couleur-blanc);
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 8px 25px var(--couleur-ombre);
+            text-decoration: none;
+            color: var(--couleur-texte);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+        }
+
+        .exercise-card:not(.disabled):hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 35px rgba(94, 40, 203, 0.2);
+        }
+
+        .exercise-card .icon {
+            color: var(--couleur-principale);
+            margin-bottom: 1rem;
+        }
+
+        .exercise-card h3 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin: 0 0 0.5rem 0;
+        }
+
+        .exercise-card p {
+            font-size: 0.95rem;
+            color: var(--couleur-texte-clair);
+            margin: 0;
+            flex-grow: 1;
+        }
+        
+        .exercise-card.disabled {
+            background-color: #f8f9fa;
+            cursor: not-allowed;
+            color: #adb5bd;
+        }
+
+        .exercise-card.disabled:hover {
+            transform: none;
+            box-shadow: 0 8px 25px var(--couleur-ombre);
+        }
+        
+        .exercise-card.disabled .icon {
+            color: #ced4da;
+        }
+        
+        .badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background-color: #adb5bd;
+            color: var(--couleur-blanc);
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--couleur-gris-clair);
+            color: var(--couleur-texte-clair);
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+            .hero p {
+                font-size: 1rem;
+            }
+            header {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div id="logo">
+                <a href="https://www.synapselearners.com" title="Accueil Synapse Learners">
+                    <img src="https://d1yei2z3i6k35z.cloudfront.net/3391351/67a8d590ebeea_logosynapselearners.png" alt="Logo Synapse Learners">
+                </a>
+            </div>
+            <nav id="main-nav">
+                <a href="https://www.synapselearners.com" target="_blank">Visiter le site</a>
+            </nav>
+        </header>
+
+        <main>
+            <section class="hero">
+                <div class="video-background">
+                    <iframe src="https://www.youtube.com/embed/FAplyNf7uuE?autoplay=1&mute=1&loop=1&playlist=FAplyNf7uuE&controls=0&showinfo=0&autohide=1&modestbranding=1&iv_load_policy=3" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                </div>
+                <div class="hero-content">
+                    <h1>Zone d'entraînement des Synapse Learners</h1>
+                    <p>
+                        Notre mission est de vous aider à lancer votre carrière dans la tech. Mettez en pratique vos connaissances, consolidez vos compétences et démarquez-vous grâce à nos exercices interactifs conçus par des experts.
+                    </p>
+                </div>
+            </section>
+
+            <section class="exercise-grid">
+                <!-- Liens existants -->
+                <a href="https://patrick-wampe.github.io/Synapse-Learners/quizz-bloc3.html" class="exercise-card" target='_blank'>
+                    <div class="icon"><i data-lucide="file-question"></i></div>
+                    <h3>Quiz Interactifs</h3>
+                    <p>Testez vos connaissances sur des concepts clés de la Data, l'IA et du développement.</p>
+                </a>
+
+                <a href="https://patrick-wampe.github.io/Synapse-Learners/drag&drop-bloc3.html" class="exercise-card" target='_blank'>
+                    <div class="icon"><i data-lucide="move"></i></div>
+                    <h3>Drag and Drop</h3>
+                    <p>Associez les concepts, les fonctions et leurs définitions par glisser-déposer.</p>
+                </a>
+
+                <a href="https://patrick-wampe.github.io/Synapse-Learners/texteacompleter-bloc3.html" class="exercise-card" target='_blank'>
+                    <div class="icon"><i data-lucide="pilcrow"></i></div>
+                    <h3>Texte à compléter</h3>
+                    <p>Remplissez les trous dans des blocs de texte ou de code pour valider votre compréhension.</p>
+                </a>
+
+                <a href="https://patrick-wampe.github.io/Synapse-Learners/ordonnercode-bloc3.html" class="exercise-card" target='_blank'>
+                    <div class="icon"><i data-lucide="list-ordered"></i></div>
+                    <h3>Ordonner le Code</h3>
+                    <p>Remettez dans le bon ordre des lignes de code pour créer un script fonctionnel.</p>
+                </a>
+
+                <a href="https://patrick-wampe.github.io/Synapse-Learners/codemanquant-bloc3.html" class="exercise-card" target='_blank'>
+                    <div class="icon"><i data-lucide="code-2"></i></div>
+                    <h3>Compléter le Code</h3>
+                    <p>Écrivez le code manquant dans des fonctions ou des classes pour résoudre un problème.</p>
+                </a>
+                
+                <a href="https://patrick-wampe.github.io/Synapse-Learners/jeudelapprentissage.html" class="exercise-card" target='_blank'>
+                    <div class="icon"><i data-lucide="gamepad-2"></i></div>
+                    <h3>Le Jeu de l'Apprentissage</h3>
+                    <p>Apprenez en vous amusant grâce à notre jeu de plateforme éducatif en 2D.</p>
+                </a>
+
+                <a href="#" class="exercise-card disabled">
+                    <div class="badge">Bientôt</div>
+                    <div class="icon"><i data-lucide="search"></i></div>
+                    <h3>Le Détective des Données 🕵️</h3>
+                    <p>Menez l'enquête sur un jeu de données réel. Prenez les bonnes décisions pour résoudre le mystère.</p>
+                </a>
+
+                <a href="#" class="exercise-card disabled">
+                    <div class="badge">Bientôt</div>
+                    <div class="icon"><i data-lucide="key-round"></i></div>
+                    <h3>L'Escape Game de la Data</h3>
+                    <p>Résolvez une série d'énigmes de code en un temps limité pour vous "échapper".</p>
+                </a>
+                
+                <a href="#" class="exercise-card disabled">
+                    <div class="badge">Bientôt</div>
+                    <div class="icon"><i data-lucide="image"></i></div>
+                    <h3>Analyse d'Images</h3>
+                    <p>Identifiez la bonne visualisation, le bon schéma ou le bon élément parmi plusieurs propositions.</p>
+                </a>
+                
+                <!-- Nouveaux blocs ajoutés -->
+                <a href="#" class="exercise-card disabled">
+                    <div class="badge">Bientôt</div>
+                    <div class="icon"><i data-lucide="notebook"></i></div>
+                    <h3>Le Notebook Interactif</h3>
+                    <p>Suivez un raisonnement de projet complet dans un environnement de travail réaliste.</p>
+                </a>
+                
+                <a href="#" class="exercise-card disabled">
+                    <div class="badge">Bientôt</div>
+                    <div class="icon"><i data-lucide="bug"></i></div>
+                    <h3>Le Débugueur de l'Extrême</h3>
+                    <p>Trouvez et corrigez les erreurs subtiles cachées dans des blocs de code.</p>
+                </a>
+
+                <a href="#" class="exercise-card disabled">
+                    <div class="badge">Bientôt</div>
+                    <div class="icon"><i data-lucide="swords"></i></div>
+                    <h3>Le Code Duel</h3>
+                    <p>Affrontez d'autres apprenants ou un bot en temps réel dans des défis de code chronométrés.</p>
+                </a>
+
+                <a href="#" class="exercise-card disabled">
+                    <div class="badge">Bientôt</div>
+                    <div class="icon"><i data-lucide="layers-3"></i></div>
+                    <h3>Flashcards Intelligentes</h3>
+                    <p>Mémorisez les concepts clés sur le long terme grâce à notre système de répétition espacée.</p>
+                </a>
+
+                <a href="#" class="exercise-card disabled">
+                    <div class="badge">Bientôt</div>
+                    <div class="icon"><i data-lucide="trophy"></i></div>
+                    <h3>Le Défi de la Semaine</h3>
+                    <p>Relevez un nouveau challenge chaque semaine et comparez votre solution à celle de la communauté.</p>
+                </a>
+
+            </section>
+        </main>
+
+        <footer>
+            <p>&copy; 2025 Synapse Learners. Tous droits réservés ®.</p>
+            <p>Codé avec ❤️</p>
+        </footer>
+    </div>
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>
