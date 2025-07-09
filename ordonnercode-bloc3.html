@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exercice : Ordonner le Code - Data & IA</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Source+Code+Pro:wght@400;600&display=swap');
+
+        :root {
+            --couleur-principale: #5E28CB;
+            --couleur-succes: #28a745;
+            --couleur-erreur: #dc3545;
+            --couleur-fond: #f4f7f9;
+            --couleur-texte: #212529;
+            --couleur-blanc: #ffffff;
+            --couleur-gris-clair: #e9ecef;
+            --code-bg: #2d2d2d;
+            --ombre: rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--couleur-fond);
+            color: var(--couleur-texte);
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+            display: flex;
+            justify-content: center;
+        }
+        
+        #page-container {
+            width: 100%;
+            max-width: 800px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        header {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        #logo img {
+            height: 54px;
+        }
+        
+        header nav a {
+            text-decoration: none;
+            color: var(--couleur-principale);
+            font-weight: 600;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+        }
+
+        header nav a:hover {
+            background-color: var(--couleur-gris-clair);
+        }
+
+        #exercise-container {
+            background-color: var(--couleur-blanc);
+            width: 100%;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px var(--ombre);
+            overflow: hidden;
+        }
+
+        #exercise-header {
+            padding: 20px 30px;
+            background-color: var(--couleur-principale);
+            color: var(--couleur-blanc);
+            text-align: center;
+        }
+
+        #exercise-header h2 {
+            margin: 0;
+            font-size: 1.5em;
+        }
+        
+        #question-counter {
+            font-size: 0.9em;
+            font-weight: 600;
+            opacity: 0.8;
+            margin-top: 5px;
+        }
+
+        #question-text {
+            font-size: 1.1em;
+            font-weight: 400;
+            opacity: 0.9;
+            margin-top: 10px;
+        }
+
+        #exercise-body {
+            padding: 30px;
+        }
+
+        #drop-zone {
+            background-color: var(--code-bg);
+            border-radius: 8px;
+            padding: 20px;
+            min-height: 200px;
+            transition: box-shadow 0.3s ease;
+        }
+
+        #drop-zone.correct {
+            box-shadow: 0 0 0 4px var(--couleur-succes);
+        }
+
+        #drop-zone.incorrect {
+            animation: shake-horizontal 0.4s;
+        }
+        @keyframes shake-horizontal {
+            0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); }
+        }
+
+        .code-line {
+            background-color: #444;
+            color: #f1f1f1;
+            font-family: 'Source Code Pro', monospace;
+            padding: 12px 15px;
+            margin-bottom: 8px;
+            border-radius: 5px;
+            cursor: grab;
+            user-select: none;
+            transition: background-color 0.2s;
+            border-left: 3px solid var(--couleur-principale);
+        }
+
+        .code-line:last-child {
+            margin-bottom: 0;
+        }
+
+        .code-line.dragging {
+            opacity: 0.4;
+        }
+
+        #exercise-footer {
+            padding: 20px 30px;
+            border-top: 1px solid var(--couleur-gris-clair);
+            text-align: center;
+        }
+
+        #explanation {
+            font-size: 0.95em;
+            color: #555;
+            line-height: 1.6;
+            min-height: 40px;
+            margin-bottom: 20px;
+            display: none; /* Cachée par défaut */
+        }
+
+        .btn {
+            background-color: #5E28CB;
+            color: var(--couleur-blanc);
+            border: none;
+            padding: 12px 35px;
+            font-size: 1.1em;
+            font-weight: 600;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .btn:hover {
+            background-color: #4a1f9e;
+        }
+
+        #next-btn {
+            display: none; /* Caché par défaut */
+        }
+
+        #results-screen {
+             padding: 30px;
+             text-align: center;
+        }
+        
+        #results-screen h2 {
+             font-size: 2em;
+             color: var(--couleur-principale);
+        }
+
+        #summary-container {
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        .summary-item {
+            background-color: #f8f9fa;
+            border: 1px solid var(--couleur-gris-clair);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+        .summary-question {
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+        .summary-code {
+            background-color: var(--code-bg);
+            border-radius: 5px;
+            padding: 15px;
+            margin: 10px 0;
+            white-space: pre-wrap;
+            color: #f1f1f1;
+            font-family: 'Source Code Pro', monospace;
+        }
+        .summary-explanation {
+            font-size: 0.9em;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px dashed var(--couleur-gris-clair);
+            color: #6c757d;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 2rem;
+            color: var(--couleur-texte-clair);
+            font-size: 0.9rem;
+        }
+
+    </style>
+</head>
+<body>
+    <div id="page-container">
+        <header>
+            <div id="logo">
+                <a href="index.html" title="Accueil des exercices">
+                    <img src="https://d1yei2z3i6k35z.cloudfront.net/3391351/67a8d590ebeea_logosynapselearners.png" alt="Logo Synapse Learners">
+                </a>
+            </div>
+        </header>
+
+        <div id="exercise-container">
+            <!-- Le contenu de l'exercice sera injecté ici -->
+        </div>
+        
+        <footer>
+            <p>&copy; 2025 Synapse Learners. Tous droits réservés ®.</p>
+            <p>Codé avec ❤️</p>
+        </footer>
+    </div>
+
+    <script>
+        const exerciseData = [
+            {
+                question: "Ordonnez ces lignes pour importer Pandas, créer un DataFrame et afficher les 5 premières lignes.",
+                lines: [
+                    "import pandas as pd",
+                    "data = {'col1': [1, 2], 'col2': [3, 4]}",
+                    "df = pd.DataFrame(data)",
+                    "print(df.head())"
+                ],
+                explanation: "Il faut toujours importer la bibliothèque en premier, puis créer les données, instancier le DataFrame, et enfin utiliser une méthode comme `.head()`."
+            },
+            {
+                question: "Réorganisez ce code pour entraîner un modèle de Régression Linéaire simple avec Scikit-Learn.",
+                lines: [
+                    "from sklearn.model_selection import train_test_split",
+                    "from sklearn.linear_model import LinearRegression",
+                    "X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)",
+                    "model = LinearRegression()",
+                    "model.fit(X_train, y_train)",
+                    "predictions = model.predict(X_test)"
+                ],
+                explanation: "Le processus standard est : importer les classes, diviser les données (split), instancier le modèle, l'entraîner (`.fit()`) sur les données d'entraînement, et enfin prédire sur les données de test."
+            },
+            {
+                question: "Ordonnez cette requête SQL pour sélectionner le nom des clients de plus de 30 ans, triés par nom.",
+                lines: [
+                    "SELECT nom",
+                    "FROM clients",
+                    "WHERE age > 30",
+                    "ORDER BY nom;"
+                ],
+                explanation: "En SQL, l'ordre des clauses est strict : `SELECT`, `FROM`, `WHERE`, `ORDER BY`."
+            },
+            {
+                question: "Placez ces lignes dans le bon ordre pour lire un fichier CSV, puis afficher le nombre de valeurs manquantes par colonne.",
+                lines: [
+                    "import pandas as pd",
+                    "df = pd.read_csv('mon_fichier.csv')",
+                    "missing_values = df.isnull().sum()",
+                    "print(missing_values)"
+                ],
+                explanation: "On importe Pandas, on charge les données avec `read_csv`, on utilise la méthode `.isnull()` pour détecter les valeurs manquantes et `.sum()` pour les compter par colonne."
+            },
+            {
+                question: "Réorganisez ce code pour appliquer un `StandardScaler` à une colonne d'un DataFrame.",
+                lines: [
+                    "from sklearn.preprocessing import StandardScaler",
+                    "scaler = StandardScaler()",
+                    "df['colonne_scaled'] = scaler.fit_transform(df[['colonne_a_scaler']])"
+                ],
+                explanation: "On importe le scaler, on l'instancie, puis on applique `.fit_transform()` sur la colonne désirée. Notez les doubles crochets `[[]]` pour garder un format de DataFrame."
+            },
+            {
+                question: "Ordonnez cette requête SQL pour compter le nombre de produits par catégorie.",
+                lines: [
+                    "SELECT categorie, COUNT(id_produit)",
+                    "FROM produits",
+                    "GROUP BY categorie;"
+                ],
+                explanation: "Pour agréger des données avec une fonction comme `COUNT()`, il faut utiliser la clause `GROUP BY` pour spécifier sur quelle colonne regrouper les résultats."
+            },
+            {
+                question: "Ordonnez ces lignes pour créer un histogramme de la colonne 'age' avec Matplotlib.",
+                lines: [
+                    "import matplotlib.pyplot as plt",
+                    "plt.hist(df['age'], bins=10)",
+                    "plt.title('Distribution des âges')",
+                    "plt.xlabel('Âge')",
+                    "plt.ylabel('Fréquence')",
+                    "plt.show()"
+                ],
+                explanation: "On importe la bibliothèque, on crée le graphique avec `.hist()`, on ajoute les titres et labels, et enfin on l'affiche avec `.show()`."
+            },
+            {
+                question: "Réorganisez cette requête SQL complexe pour trouver le chiffre d'affaires total par client.",
+                lines: [
+                    "SELECT c.nom, SUM(p.prix * v.quantite) AS chiffre_affaires",
+                    "FROM clients c",
+                    "JOIN ventes v ON c.id_client = v.id_client",
+                    "JOIN produits p ON v.id_produit = p.id_produit",
+                    "GROUP BY c.nom;"
+                ],
+                explanation: "On sélectionne les colonnes, on définit la table principale (`FROM`), on la joint (`JOIN`) aux autres tables, et on agrège les résultats (`GROUP BY`)."
+            },
+            {
+                question: "Ordonnez ces étapes pour créer et utiliser un Pipeline Scikit-Learn simple.",
+                lines: [
+                    "from sklearn.pipeline import Pipeline",
+                    "from sklearn.preprocessing import StandardScaler",
+                    "from sklearn.svm import SVC",
+                    "pipeline = Pipeline([('scaler', StandardScaler()), ('svc', SVC())])",
+                    "pipeline.fit(X_train, y_train)",
+                    "accuracy = pipeline.score(X_test, y_test)"
+                ],
+                explanation: "On importe les classes nécessaires, on définit les étapes du pipeline, on l'entraîne avec `.fit()` comme un modèle normal, puis on évalue sa performance."
+            },
+            {
+                question: "Placez ces lignes dans le bon ordre pour imputer les valeurs manquantes d'une colonne numérique par la moyenne.",
+                lines: [
+                    "mean_value = df['col_numerique'].mean()",
+                    "df['col_numerique'].fillna(mean_value, inplace=True)"
+                ],
+                explanation: "Il faut d'abord calculer la valeur de remplacement (ici, la moyenne), puis utiliser `.fillna()` pour combler les valeurs manquantes avec cette valeur."
+            }
+        ];
+
+        const exerciseContainer = document.getElementById('exercise-container');
+        let shuffledQuestions = [];
+        let currentQuestionIndex = 0;
+
+        function shuffleArray(array) {
+            return [...array].sort(() => Math.random() - 0.5);
+        }
+
+        function startExercise() {
+            shuffledQuestions = shuffleArray(exerciseData);
+            currentQuestionIndex = 0;
+            showQuestion();
+        }
+
+        function showQuestion() {
+            const questionData = shuffledQuestions[currentQuestionIndex];
+            const shuffledLines = shuffleArray(questionData.lines);
+
+            const nextButtonText = (currentQuestionIndex === shuffledQuestions.length - 1)
+                ? "Voir le récapitulatif"
+                : "Question Suivante";
+
+            const exerciseHTML = `
+                <div id="exercise-header">
+                    <h2>Ordonnez les Lignes de Code</h2>
+                    <div id="question-counter">Question ${currentQuestionIndex + 1} / ${shuffledQuestions.length}</div>
+                    <p id="question-text">${questionData.question}</p>
+                </div>
+                <div id="exercise-body">
+                    <div id="drop-zone">
+                        ${shuffledLines.map(line => {
+                            const correctIndex = questionData.lines.indexOf(line);
+                            const escapedLine = line.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/ /g, '&nbsp;');
+                            return `<div class="code-line" draggable="true" data-id="${correctIndex}">${escapedLine}</div>`
+                        }).join('')}
+                    </div>
+                </div>
+                <div id="exercise-footer">
+                    <p id="explanation"></p>
+                    <button id="check-btn" class="btn">Vérifier</button>
+                    <button id="next-btn" class="btn">${nextButtonText}</button>
+                </div>
+            `;
+            exerciseContainer.innerHTML = exerciseHTML;
+            addDragAndDropListeners();
+        }
+
+        function addDragAndDropListeners() {
+            const dropZone = document.getElementById('drop-zone');
+
+            dropZone.addEventListener('dragstart', e => {
+                if(e.target.classList.contains('code-line')) {
+                    e.target.classList.add('dragging');
+                }
+            });
+
+            dropZone.addEventListener('dragend', e => {
+                if(e.target.classList.contains('code-line')) {
+                    e.target.classList.remove('dragging');
+                }
+            });
+
+            dropZone.addEventListener('dragover', e => {
+                e.preventDefault();
+                const afterElement = getDragAfterElement(dropZone, e.clientY);
+                const dragging = document.querySelector('.dragging');
+                if (dragging) {
+                    if (afterElement == null) {
+                        dropZone.appendChild(dragging);
+                    } else {
+                        dropZone.insertBefore(dragging, afterElement);
+                    }
+                }
+            });
+
+            document.getElementById('check-btn').addEventListener('click', checkAnswer);
+            document.getElementById('next-btn').addEventListener('click', () => {
+                currentQuestionIndex++;
+                if (currentQuestionIndex < shuffledQuestions.length) {
+                    showQuestion();
+                } else {
+                    showResults();
+                }
+            });
+        }
+
+        function getDragAfterElement(container, y) {
+            const draggableElements = [...container.querySelectorAll('.code-line:not(.dragging)')];
+            return draggableElements.reduce((closest, child) => {
+                const box = child.getBoundingClientRect();
+                const offset = y - box.top - box.height / 2;
+                if (offset < 0 && offset > closest.offset) {
+                    return { offset: offset, element: child };
+                } else {
+                    return closest;
+                }
+            }, { offset: Number.NEGATIVE_INFINITY }).element;
+        }
+
+        function checkAnswer() {
+            const dropZone = document.getElementById('drop-zone');
+            const lines = [...dropZone.querySelectorAll('.code-line')];
+            let isCorrect = true;
+
+            if (lines.length !== shuffledQuestions[currentQuestionIndex].lines.length) {
+                isCorrect = false;
+            } else {
+                lines.forEach((line, index) => {
+                    if (parseInt(line.dataset.id) !== index) {
+                        isCorrect = false;
+                    }
+                });
+            }
+
+            if (isCorrect) {
+                dropZone.classList.remove('incorrect');
+                dropZone.classList.add('correct');
+                const explanation = document.getElementById('explanation');
+                explanation.innerHTML = `<strong>Correct !</strong> ${shuffledQuestions[currentQuestionIndex].explanation}`;
+                explanation.style.display = 'block';
+                document.getElementById('check-btn').style.display = 'none';
+                document.getElementById('next-btn').style.display = 'inline-block';
+                lines.forEach(line => line.draggable = false);
+            } else {
+                dropZone.classList.add('incorrect');
+                setTimeout(() => dropZone.classList.remove('incorrect'), 500);
+            }
+        }
+
+        function showResults() {
+             const summaryHTML = exerciseData
+                .map(item => {
+                    const codeBlock = item.lines.map(l => l.replace(/</g, '&lt;').replace(/>/g, '&gt;')).join('\n');
+                    return `
+                        <div class="summary-item">
+                            <p class="summary-question">${item.question}</p>
+                            <div class="summary-code"><pre><code>${codeBlock}</code></pre></div>
+                            <p class="summary-explanation">${item.explanation}</p>
+                        </div>
+                    `;
+                }).join('');
+
+            const finalHTML = `
+                <div id="exercise-header">
+                    <h2>Exercice Terminé !</h2>
+                </div>
+                <div id="results-screen">
+                    <h3>Récapitulatif des solutions</h3>
+                    <div id="summary-container">
+                        ${summaryHTML}
+                    </div>
+                    <button id="restart-btn" class="btn">Recommencer</button>
+                </div>
+            `;
+            exerciseContainer.innerHTML = finalHTML;
+            document.getElementById('restart-btn').addEventListener('click', startExercise);
+        }
+
+        startExercise();
+    </script>
+</body>
+</html>
