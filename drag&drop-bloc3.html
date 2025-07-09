@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exercice Drag & Drop - Data & IA</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+        :root {
+            --couleur-principale: #5E28CB;
+            --couleur-succes: #28a745;
+            --couleur-erreur: #dc3545;
+            --couleur-fond: #f4f7f9;
+            --couleur-texte: #212529;
+            --couleur-blanc: #ffffff;
+            --couleur-gris-clair: #e9ecef;
+            --couleur-ombre: rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--couleur-fond);
+            color: var(--couleur-texte);
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+            display: flex;
+            justify-content: center;
+        }
+        
+        #page-container {
+            width: 100%;
+            max-width: 900px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        header {
+            width: 100%;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        #logo img {
+            height: 54px;
+        }
+
+        #exercise-container {
+            background-color: var(--couleur-blanc);
+            width: 100%;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px var(--couleur-ombre);
+            overflow: hidden;
+        }
+
+        #exercise-header {
+            padding: 20px 30px;
+            background-color: var(--couleur-principale);
+            color: var(--couleur-blanc);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        #exercise-header h2 {
+            margin: 0;
+            font-size: 1.5em;
+        }
+        
+        #set-counter {
+            font-size: 0.9em;
+            font-weight: 600;
+            background-color: rgba(255, 255, 255, 0.2);
+            padding: 5px 12px;
+            border-radius: 20px;
+        }
+
+        #exercise-body {
+            padding: 30px;
+            display: flex;
+            gap: 30px;
+        }
+
+        #terms-container, #definitions-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        #terms-container h3, #definitions-container h3 {
+            margin-top: 0;
+            text-align: center;
+            color: #888;
+            font-weight: 600;
+        }
+
+        .term-item {
+            background-color: #f8f9fa;
+            border: 2px solid var(--couleur-gris-clair);
+            color: var(--couleur-texte);
+            padding: 15px;
+            font-size: 1.05em;
+            font-weight: 600;
+            text-align: center;
+            border-radius: 10px;
+            cursor: grab;
+            transition: all 0.3s ease;
+        }
+
+        .term-item.dragging {
+            opacity: 0.5;
+            transform: scale(1.05);
+        }
+
+        .definition-box {
+            background-color: var(--couleur-blanc);
+            border: 2px dashed var(--couleur-gris-clair);
+            min-height: 80px;
+            border-radius: 10px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .definition-text {
+            color: #555;
+            text-align: center;
+        }
+
+        .definition-box.drag-over {
+            border-color: var(--couleur-principale);
+            background-color: #e9e1f8;
+        }
+
+        .definition-box.correct {
+            border-style: solid;
+            border-color: var(--couleur-succes);
+            background-color: #eaf6ec;
+        }
+
+        .definition-box.correct .term-item {
+            background-color: var(--couleur-succes);
+            color: var(--couleur-blanc);
+            cursor: not-allowed;
+            border-color: var(--couleur-succes);
+        }
+
+        .definition-box.incorrect-flash {
+            animation: flash-red 0.5s;
+        }
+
+        @keyframes flash-red {
+            0% { background-color: #fbe9e7; border-color: var(--couleur-erreur); }
+            100% { background-color: var(--couleur-blanc); border-color: var(--couleur-gris-clair); }
+        }
+
+        #exercise-footer {
+            padding: 20px 30px;
+            text-align: center;
+        }
+
+        #next-set-btn {
+            background-color: var(--couleur-principale);
+            color: var(--couleur-blanc);
+            border: none;
+            padding: 12px 35px;
+            font-size: 1.1em;
+            font-weight: 600;
+            border-radius: 25px;
+            cursor: pointer;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        #next-set-btn:hover {
+            background-color: #4a1f9e;
+        }
+
+        #results-screen {
+             text-align: center;
+             padding: 30px;
+        }
+        
+        #results-screen h2 {
+            font-size: 2em;
+            color: var(--couleur-principale);
+        }
+
+        #restart-btn {
+            background-color: var(--couleur-principale);
+            color: var(--couleur-blanc);
+            border: none;
+            padding: 12px 35px;
+            font-size: 1.1em;
+            font-weight: 600;
+            border-radius: 25px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        #summary-container {
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        .summary-item {
+            background-color: #f8f9fa;
+            border: 1px solid var(--couleur-gris-clair);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+        .summary-term {
+            font-weight: 700;
+            font-size: 1.1em;
+            color: var(--couleur-principale);
+        }
+        .summary-definition {
+             margin-top: 5px;
+        }
+        .summary-explanation {
+            font-size: 0.9em;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px dashed var(--couleur-gris-clair);
+            color: #6c757d;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 2rem;
+            color: var(--couleur-texte-clair);
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            #exercise-body {
+                flex-direction: column;
+            }
+        }
+        
+    </style>
+</head>
+<body>
+    <div id="page-container">
+        <header>
+            <div id="logo">
+                <a href="https://www.synapselearners.com" title="Accueil Synapse Learners">
+                    <img src="https://d1yei2z3i6k35z.cloudfront.net/3391351/67a8d590ebeea_logosynapselearners.png" alt="Logo Synapse Learners">
+                </a>
+            </div>
+        </header>
+
+        <div id="exercise-container">
+            <!-- Le contenu de l'exercice sera injecté ici -->
+        </div>
+        
+        <footer>
+            <p>&copy; 2025 Synapse Learners. Tous droits réservés ®.</p>
+            <p>Codé avec ❤️</p>
+        </footer>
+    </div>
+
+    <script>
+        const allExerciseData = [
+            { id: 1, term: 'Régression', definition: 'Prédire une valeur quantitative continue (ex: un prix).', explanation: 'Utilisé quand la cible est un nombre sur lequel on peut faire des maths.' },
+            { id: 2, term: 'Classification', definition: 'Prédire une catégorie ou une classe (ex: "spam" ou "non spam").', explanation: 'Utilisé quand la cible est une étiquette ou une catégorie.' },
+            { id: 3, term: 'Clustering', definition: 'Regrouper des données similaires sans étiquette prédéfinie.', explanation: 'C\'est une méthode d\'apprentissage non supervisé pour découvrir des structures.' },
+            { id: 4, term: 'Overfitting', definition: 'Le modèle est trop performant sur l\'entraînement et mauvais sur les nouvelles données.', explanation: 'Le modèle a "appris par cœur" le bruit des données au lieu de généraliser.' },
+            { id: 5, term: 'Underfitting', definition: 'Le modèle est trop simple pour capturer la structure des données.', explanation: 'Le modèle a une mauvaise performance sur les données d\'entraînement et de test.' },
+            { id: 6, term: 'StandardScaler', definition: 'Met à l\'échelle les données en centrant sur 0 et en divisant par l\'écart-type.', explanation: 'Les données ont alors une moyenne de 0 et une variance de 1.' },
+            { id: 7, term: 'MinMaxScaler', definition: 'Met à l\'échelle les données pour qu\'elles se situent dans un intervalle [0, 1].', explanation: 'Utile pour les algorithmes sensibles à la magnitude des valeurs.' },
+            { id: 8, term: 'ACP (PCA)', definition: 'Technique de réduction de dimension qui condense l\'information.', explanation: 'Crée de nouvelles variables non corrélées appelées composantes principales.' },
+            { id: 9, term: 'Imputation par la médiane', definition: 'Remplacer les valeurs manquantes par la valeur centrale de la série.', explanation: 'Stratégie robuste qui est peu affectée par les outliers.' },
+            { id: 10, term: 'One-Hot Encoding', definition: 'Convertit une variable catégorielle en plusieurs colonnes binaires (0 ou 1).', explanation: 'Évite de créer une relation d\'ordre artificielle entre les catégories.' },
+            { id: 11, term: 'Label Encoding', definition: 'Attribue un entier unique à chaque catégorie d\'une variable.', explanation: 'Simple, mais peut introduire une relation d\'ordre non désirée.' },
+            { id: 12, term: 'Corrélation de Pearson', definition: 'Mesure la force et la direction d\'une relation *linéaire* entre deux variables.', explanation: 'Le score varie de -1 (parfaitement négative) à +1 (parfaitement positive).' },
+            { id: 13, term: 'Test du Chi-2', definition: 'Teste s\'il existe une association significative entre deux variables *catégorielles*.', explanation: 'Utilise une table de contingence pour comparer les fréquences observées et attendues.' },
+            { id: 14, term: 'Z-Score', definition: 'Indique à combien d\'écarts-types une donnée se situe de la moyenne.', explanation: 'Une valeur absolue > 3 est souvent considérée comme un outlier.' },
+            { id: 15, term: 'Écart Interquartile (EIQ)', definition: 'La différence entre le troisième quartile (Q3) et le premier quartile (Q1).', explanation: 'Mesure de la dispersion des 50% de données centrales, utilisée pour détecter les outliers.' },
+            { id: 16, term: 'Validation Croisée', definition: 'Technique d\'évaluation qui entraîne et teste le modèle sur différentes parties des données.', explanation: 'Donne une estimation plus robuste de la performance de généralisation du modèle.' },
+            { id: 17, term: 'GridSearch CV', definition: 'Automatise la recherche des meilleurs hyperparamètres pour un modèle.', explanation: 'Teste toutes les combinaisons possibles que vous spécifiez et retourne la meilleure.' },
+            { id: 18, term: 'Valeur aberrante', definition: 'Une donnée qui est logiquement incorrecte ou impossible (ex: âge négatif).', explanation: 'Doit souvent être corrigée ou supprimée car elle représente une erreur.' },
+            { id: 19, term: 'Fléau de la dimension', definition: 'La dégradation de la performance des modèles quand le nombre de features augmente.', explanation: 'Dans un espace de grande dimension, les données deviennent éparses et les distances perdent leur sens.' },
+            { id: 20, term: 'RobustScaler', definition: 'Met à l\'échelle les données en utilisant la médiane et les quartiles.', explanation: 'Alternative au StandardScaler qui est plus robuste aux outliers.' }
+        ];
+
+        const exerciseContainer = document.getElementById('exercise-container');
+        const SET_SIZE = 5;
+        let fullShuffledData = [];
+        let currentSetIndex = 0;
+        let matchedPairsInSet = 0;
+
+        function startExercise() {
+            currentSetIndex = 0;
+            fullShuffledData = [...allExerciseData].sort(() => Math.random() - 0.5);
+            showCurrentSet();
+        }
+
+        function showCurrentSet() {
+            matchedPairsInSet = 0;
+            const startIndex = currentSetIndex * SET_SIZE;
+            const endIndex = startIndex + SET_SIZE;
+            const currentSetData = fullShuffledData.slice(startIndex, endIndex);
+            
+            const shuffledTerms = [...currentSetData].sort(() => Math.random() - 0.5);
+            const shuffledDefinitions = [...currentSetData].sort(() => Math.random() - 0.5);
+
+            const exerciseHTML = `
+                <div id="exercise-header">
+                    <h2>Associez chaque terme à sa description</h2>
+                    <div id="set-counter">Série ${currentSetIndex + 1} / ${allExerciseData.length / SET_SIZE}</div>
+                </div>
+                <div id="exercise-body">
+                    <div id="terms-container">
+                        <h3>Termes</h3>
+                        ${shuffledTerms.map(item => `
+                            <div class="term-item" draggable="true" data-id="${item.id}">
+                                ${item.term}
+                            </div>
+                        `).join('')}
+                    </div>
+                    <div id="definitions-container">
+                        <h3>Descriptions</h3>
+                        ${shuffledDefinitions.map(item => `
+                            <div class="definition-box" data-id="${item.id}">
+                                <span class="definition-text">${item.definition}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+                <div id="exercise-footer">
+                    <button id="next-set-btn">Série Suivante</button>
+                </div>
+            `;
+            exerciseContainer.innerHTML = exerciseHTML;
+            addDragAndDropListeners();
+        }
+
+        function addDragAndDropListeners() {
+            document.querySelectorAll('.term-item').forEach(term => {
+                term.addEventListener('dragstart', handleDragStart);
+                term.addEventListener('dragend', handleDragEnd);
+            });
+
+            document.querySelectorAll('.definition-box').forEach(zone => {
+                zone.addEventListener('dragover', handleDragOver);
+                zone.addEventListener('dragleave', handleDragLeave);
+                zone.addEventListener('drop', handleDrop);
+            });
+
+            document.getElementById('next-set-btn').addEventListener('click', nextSet);
+        }
+
+        function handleDragStart(e) {
+            e.dataTransfer.setData('text/plain', e.target.dataset.id);
+            setTimeout(() => e.target.classList.add('dragging'), 0);
+        }
+
+        function handleDragEnd(e) {
+            e.target.classList.remove('dragging');
+        }
+
+        function handleDragOver(e) {
+            e.preventDefault();
+            const dropzone = e.currentTarget;
+            if (!dropzone.classList.contains('correct')) {
+                dropzone.classList.add('drag-over');
+            }
+        }
+
+        function handleDragLeave(e) {
+            e.currentTarget.classList.remove('drag-over');
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            const dropzone = e.currentTarget;
+            dropzone.classList.remove('drag-over');
+
+            if (dropzone.classList.contains('correct')) return;
+
+            const draggedId = e.dataTransfer.getData('text/plain');
+            const dropzoneId = dropzone.dataset.id;
+            const draggedElement = document.querySelector(`.term-item[data-id="${draggedId}"]`);
+
+            if (draggedId === dropzoneId) {
+                dropzone.classList.add('correct');
+                dropzone.querySelector('.definition-text').style.display = 'none';
+                dropzone.appendChild(draggedElement);
+                draggedElement.draggable = false;
+                draggedElement.style.cursor = 'not-allowed';
+
+                matchedPairsInSet++;
+                if (matchedPairsInSet === SET_SIZE) {
+                    const nextBtn = document.getElementById('next-set-btn');
+                    if (currentSetIndex === (allExerciseData.length / SET_SIZE) - 1) {
+                        nextBtn.textContent = 'Terminé ! Voir le récapitulatif';
+                    }
+                    nextBtn.style.visibility = 'visible';
+                }
+            } else {
+                dropzone.classList.add('incorrect-flash');
+                setTimeout(() => dropzone.classList.remove('incorrect-flash'), 500);
+            }
+        }
+
+        function nextSet() {
+            currentSetIndex++;
+            if (currentSetIndex < allExerciseData.length / SET_SIZE) {
+                showCurrentSet();
+            } else {
+                showResults();
+            }
+        }
+
+        function showResults() {
+            const summaryHTML = allExerciseData
+                .sort((a, b) => a.term.localeCompare(b.term))
+                .map(item => `
+                    <div class="summary-item">
+                        <p class="summary-term">${item.term}</p>
+                        <p class="summary-definition">${item.definition}</p>
+                        <p class="summary-explanation">${item.explanation}</p>
+                    </div>
+                `).join('');
+
+            const resultsHTML = `
+                <div id="results-screen">
+                    <h2>Exercice Terminé !</h2>
+                    <div id="summary-container">
+                        <h3>Récapitulatif de tous les termes</h3>
+                        ${summaryHTML}
+                    </div>
+                    <button id="restart-btn">Recommencer</button>
+                </div>
+            `;
+            exerciseContainer.innerHTML = resultsHTML;
+            document.getElementById('restart-btn').addEventListener('click', startExercise);
+        }
+
+        startExercise();
+    </script>
+</body>
+</html>
