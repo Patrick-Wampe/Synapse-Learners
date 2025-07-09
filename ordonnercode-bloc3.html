@@ -41,26 +41,13 @@
         header {
             width: 100%;
             display: flex;
-            justify-content: space-between;
+            justify-content: flex-start; /* Modifié pour aligner à gauche */
             align-items: center;
             margin-bottom: 1.5rem;
         }
 
         #logo img {
             height: 54px;
-        }
-        
-        header nav a {
-            text-decoration: none;
-            color: var(--couleur-principale);
-            font-weight: 600;
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            transition: all 0.3s ease;
-        }
-
-        header nav a:hover {
-            background-color: var(--couleur-gris-clair);
         }
 
         #exercise-container {
@@ -154,6 +141,7 @@
             min-height: 40px;
             margin-bottom: 20px;
             display: none; /* Cachée par défaut */
+            text-align: left;
         }
 
         .btn {
@@ -258,7 +246,7 @@
                     "df = pd.DataFrame(data)",
                     "print(df.head())"
                 ],
-                explanation: "Il faut toujours importer la bibliothèque en premier, puis créer les données, instancier le DataFrame, et enfin utiliser une méthode comme `.head()`."
+                explanation: "L'ordre est crucial : 1. <strong>`import pandas as pd`</strong> : On importe la bibliothèque pour la rendre disponible. 2. <strong>`data = ...`</strong> : On définit les données brutes. 3. <strong>`df = pd.DataFrame(data)`</strong> : On utilise le constructeur de Pandas pour créer le DataFrame. 4. <strong>`print(df.head())`</strong> : Enfin, on utilise une méthode sur l'objet DataFrame qui vient d'être créé."
             },
             {
                 question: "Réorganisez ce code pour entraîner un modèle de Régression Linéaire simple avec Scikit-Learn.",
@@ -270,7 +258,7 @@
                     "model.fit(X_train, y_train)",
                     "predictions = model.predict(X_test)"
                 ],
-                explanation: "Le processus standard est : importer les classes, diviser les données (split), instancier le modèle, l'entraîner (`.fit()`) sur les données d'entraînement, et enfin prédire sur les données de test."
+                explanation: "La séquence de modélisation est standard : 1. <strong>Imports</strong> : On charge les outils nécessaires. 2. <strong>`train_test_split`</strong> : On sépare les données pour une évaluation honnête. 3. <strong>Instanciation</strong> : On crée une instance du modèle. 4. <strong>Entraînement (`.fit`)</strong> : Le modèle apprend les relations sur les données d'entraînement. 5. <strong>Prédiction (`.predict`)</strong> : On utilise le modèle entraîné pour faire des prédictions sur des données qu'il n'a jamais vues."
             },
             {
                 question: "Ordonnez cette requête SQL pour sélectionner le nom des clients de plus de 30 ans, triés par nom.",
@@ -280,7 +268,7 @@
                     "WHERE age > 30",
                     "ORDER BY nom;"
                 ],
-                explanation: "En SQL, l'ordre des clauses est strict : `SELECT`, `FROM`, `WHERE`, `ORDER BY`."
+                explanation: "L'ordre des clauses en SQL est fondamental et non négociable : <strong>`SELECT`</strong> (quelles colonnes ?), <strong>`FROM`</strong> (de quelle table ?), <strong>`WHERE`</strong> (avec quelles conditions ?), et enfin <strong>`ORDER BY`</strong> (comment trier le résultat final ?)."
             },
             {
                 question: "Placez ces lignes dans le bon ordre pour lire un fichier CSV, puis afficher le nombre de valeurs manquantes par colonne.",
@@ -290,7 +278,7 @@
                     "missing_values = df.isnull().sum()",
                     "print(missing_values)"
                 ],
-                explanation: "On importe Pandas, on charge les données avec `read_csv`, on utilise la méthode `.isnull()` pour détecter les valeurs manquantes et `.sum()` pour les compter par colonne."
+                explanation: "La logique est séquentielle : 1. <strong>`import pandas as pd`</strong> : Nécessaire pour toute opération Pandas. 2. <strong>`df = pd.read_csv(...)`</strong> : On doit d'abord charger les données dans un DataFrame. 3. <strong>`df.isnull().sum()`</strong> : On enchaîne les méthodes. `.isnull()` retourne un DataFrame de booléens (True si manquant), puis `.sum()` additionne ces booléens (True=1, False=0) par colonne."
             },
             {
                 question: "Réorganisez ce code pour appliquer un `StandardScaler` à une colonne d'un DataFrame.",
@@ -299,7 +287,7 @@
                     "scaler = StandardScaler()",
                     "df['colonne_scaled'] = scaler.fit_transform(df[['colonne_a_scaler']])"
                 ],
-                explanation: "On importe le scaler, on l'instancie, puis on applique `.fit_transform()` sur la colonne désirée. Notez les doubles crochets `[[]]` pour garder un format de DataFrame."
+                explanation: "Le processus est : 1. <strong>`from... import...`</strong> : Importer la classe. 2. <strong>`scaler = StandardScaler()`</strong> : Créer une instance de l'objet. 3. <strong>`.fit_transform()`</strong> : Cette méthode apprend les paramètres de scaling (moyenne, écart-type) sur les données (`fit`) et les transforme en une seule étape (`transform`). Les doubles crochets `[['...']]` sont cruciaux pour que l'entrée soit un DataFrame, comme attendu par Scikit-Learn."
             },
             {
                 question: "Ordonnez cette requête SQL pour compter le nombre de produits par catégorie.",
@@ -308,7 +296,7 @@
                     "FROM produits",
                     "GROUP BY categorie;"
                 ],
-                explanation: "Pour agréger des données avec une fonction comme `COUNT()`, il faut utiliser la clause `GROUP BY` pour spécifier sur quelle colonne regrouper les résultats."
+                explanation: "La logique d'agrégation en SQL est : 1. <strong>`SELECT`</strong> : On spécifie la colonne de regroupement (`categorie`) et la fonction d'agrégation (`COUNT(...)`). 2. <strong>`FROM`</strong> : On indique la table source. 3. <strong>`GROUP BY`</strong> : Cette clause est obligatoire et doit contenir toutes les colonnes du `SELECT` qui ne sont pas dans une fonction d'agrégation."
             },
             {
                 question: "Ordonnez ces lignes pour créer un histogramme de la colonne 'age' avec Matplotlib.",
@@ -320,7 +308,7 @@
                     "plt.ylabel('Fréquence')",
                     "plt.show()"
                 ],
-                explanation: "On importe la bibliothèque, on crée le graphique avec `.hist()`, on ajoute les titres et labels, et enfin on l'affiche avec `.show()`."
+                explanation: "La création de graphiques suit un ordre logique : 1. <strong>`import`</strong> : On charge la bibliothèque. 2. <strong>`plt.hist()`</strong> : On génère le graphique principal. 3. <strong>`plt.title/xlabel/ylabel`</strong> : On ajoute les métadonnées pour rendre le graphique lisible. 4. <strong>`plt.show()`</strong> : Cette commande finale affiche la fenêtre du graphique."
             },
             {
                 question: "Réorganisez cette requête SQL complexe pour trouver le chiffre d'affaires total par client.",
@@ -331,7 +319,7 @@
                     "JOIN produits p ON v.id_produit = p.id_produit",
                     "GROUP BY c.nom;"
                 ],
-                explanation: "On sélectionne les colonnes, on définit la table principale (`FROM`), on la joint (`JOIN`) aux autres tables, et on agrège les résultats (`GROUP BY`)."
+                explanation: "Une requête avec jointure se construit ainsi : 1. <strong>`SELECT`</strong> : On définit les colonnes finales. 2. <strong>`FROM`</strong> : On part de la table centrale (`clients`). 3. <strong>`JOIN`</strong> : On connecte les autres tables en spécifiant les clés de jointure (`ON ...`). 4. <strong>`GROUP BY`</strong> : On agrège les résultats par client pour pouvoir utiliser `SUM()`."
             },
             {
                 question: "Ordonnez ces étapes pour créer et utiliser un Pipeline Scikit-Learn simple.",
@@ -343,7 +331,7 @@
                     "pipeline.fit(X_train, y_train)",
                     "accuracy = pipeline.score(X_test, y_test)"
                 ],
-                explanation: "On importe les classes nécessaires, on définit les étapes du pipeline, on l'entraîne avec `.fit()` comme un modèle normal, puis on évalue sa performance."
+                explanation: "Un Pipeline structure le workflow : 1. <strong>Imports</strong> : On importe `Pipeline` et toutes les étapes. 2. <strong>Définition</strong> : On crée une liste de tuples `[('nom_etape', objet_etape)]`. 3. <strong>Entraînement</strong> : On appelle `.fit()` sur le pipeline entier, qui applique séquentiellement `.fit_transform()` pour chaque étape sauf la dernière, qui utilise `.fit()`."
             },
             {
                 question: "Placez ces lignes dans le bon ordre pour imputer les valeurs manquantes d'une colonne numérique par la moyenne.",
@@ -351,7 +339,7 @@
                     "mean_value = df['col_numerique'].mean()",
                     "df['col_numerique'].fillna(mean_value, inplace=True)"
                 ],
-                explanation: "Il faut d'abord calculer la valeur de remplacement (ici, la moyenne), puis utiliser `.fillna()` pour combler les valeurs manquantes avec cette valeur."
+                explanation: "L'imputation se fait en deux temps : 1. <strong>Calcul</strong> : On doit d'abord calculer la valeur à imputer (la moyenne) et la stocker. 2. <strong>Remplacement</strong> : On utilise ensuite `.fillna()` pour remplacer les `NaN` par la valeur calculée. `inplace=True` modifie le DataFrame directement."
             }
         ];
 
