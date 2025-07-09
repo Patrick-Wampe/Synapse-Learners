@@ -63,9 +63,16 @@
         }
 
         .hero {
-            text-align: center;
+            display: flex;
+            align-items: center;
+            gap: 3rem;
             padding: 2rem 0;
             margin-bottom: 3rem;
+        }
+        
+        .hero-content {
+            flex: 1;
+            text-align: left;
         }
 
         .hero h1 {
@@ -73,13 +80,38 @@
             font-weight: 700;
             color: var(--couleur-principale);
             margin-bottom: 0.5rem;
+            line-height: 1.2;
         }
 
         .hero p {
             font-size: 1.2rem;
             color: var(--couleur-texte-clair);
-            max-width: 700px;
-            margin: 0 auto 1.5rem auto;
+            margin: 0 auto 1.5rem 0;
+        }
+        
+        .hero-image-slider {
+            flex: 1;
+            position: relative;
+            height: 380px;
+            min-width: 40%;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px var(--couleur-ombre);
+        }
+
+        .hero-image-slider .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0;
+            transition: opacity 1.5s ease-in-out;
+        }
+
+        .hero-image-slider .slide.active {
+            opacity: 1;
         }
 
         .exercise-grid {
@@ -162,6 +194,19 @@
             font-size: 0.9rem;
         }
         
+        @media (max-width: 992px) {
+             .hero {
+                flex-direction: column;
+                text-align: center;
+            }
+            .hero-content {
+                text-align: center;
+            }
+            .hero p {
+                margin: 0 auto 1.5rem auto;
+            }
+        }
+        
         @media (max-width: 768px) {
             .hero h1 {
                 font-size: 2.2rem;
@@ -192,10 +237,18 @@
 
         <main>
             <section class="hero">
-                <h1>Zone d'entraînement des Synapse Learners</h1>
-                <p>
-                    Notre mission est de vous aider à lancer votre carrière dans la tech. Mettez en pratique vos connaissances, consolidez vos compétences et démarquez-vous grâce à nos exercices interactifs conçus par des experts.
-                </p>
+                <div class="hero-content">
+                    <h1>Zone d'entraînement des Synapse Learners</h1>
+                    <p>
+                        Notre mission est de vous aider à lancer votre carrière dans la tech. Mettez en pratique vos connaissances, consolidez vos compétences et démarquez-vous grâce à nos exercices interactifs conçus par des experts.
+                    </p>
+                </div>
+                <div class="hero-image-slider">
+                    <img src="https://images.pexels.com/photos/5473298/pexels-photo-5473298.jpeg" alt="Une femme qui code devant son pc" class="slide active">
+                    <img src="https://images.pexels.com/photos/3861969/pexels-photo-3861969.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Femme data analyst souriante devant son ordinateur" class="slide">
+                    <img src="https://images.pexels.com/photos/3183150/pexels-photo-3183150.jpeg" alt="Travail d'équipe" class="slide">
+                    <img src="https://images.pexels.com/photos/3729557/pexels-photo-3729557.jpeg" alt="Des équationst" class="slide">
+                </div>
             </section>
 
             <section class="exercise-grid">
@@ -303,6 +356,28 @@
     </div>
     <script>
         lucide.createIcons();
+
+        // --- Slideshow Logic ---
+        const slides = document.querySelectorAll('.hero-image-slider .slide');
+        let currentSlide = 0;
+
+        function showSlide(index) {
+            slides.forEach((slide, i) => {
+                slide.classList.remove('active');
+                if (i === index) {
+                    slide.classList.add('active');
+                }
+            });
+        }
+
+        if (slides.length > 0) {
+            setInterval(() => {
+                currentSlide = (currentSlide + 1) % slides.length;
+                showSlide(currentSlide);
+            }, 4000); // Change image every 4 seconds
+
+            showSlide(0); // Show the first slide initially
+        }
     </script>
 </body>
 </html>
