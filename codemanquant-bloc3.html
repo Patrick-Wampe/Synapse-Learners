@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exercice : Compléter le Code</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Source+Code+Pro:wght@400;600&display=swap');
+
+        :root {
+            --couleur-principale: #5E28CB;
+            --couleur-succes: #28a745;
+            --couleur-erreur: #dc3545;
+            --couleur-indice: #ffc107;
+            --couleur-fond: #f4f7f9;
+            --couleur-texte: #212529;
+            --couleur-blanc: #ffffff;
+            --couleur-gris-clair: #e9ecef;
+            --code-bg: #2d2d2d;
+            --ombre: rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--couleur-fond);
+            color: var(--couleur-texte);
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+            display: flex;
+            justify-content: center;
+        }
+        
+        #page-container {
+            width: 100%;
+            max-width: 800px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        header {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        #logo img {
+            height: 54px;
+        }
+        
+        header nav a {
+            text-decoration: none;
+            color: var(--couleur-principale);
+            font-weight: 600;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+        }
+
+        header nav a:hover {
+            background-color: var(--couleur-gris-clair);
+        }
+
+        #exercise-container {
+            background-color: var(--couleur-blanc);
+            width: 100%;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px var(--ombre);
+            overflow: hidden;
+        }
+
+        #exercise-header {
+            padding: 20px 30px;
+            background-color: var(--couleur-principale);
+            color: var(--couleur-blanc);
+            text-align: center;
+        }
+
+        #exercise-header h2 {
+            margin: 0;
+            font-size: 1.5em;
+        }
+
+        #question-counter {
+            font-size: 0.9em;
+            font-weight: 600;
+            opacity: 0.8;
+            margin-top: 5px;
+        }
+        
+        #question-text {
+            font-size: 1.1em;
+            font-weight: 400;
+            margin-top: 10px;
+            line-height: 1.5;
+        }
+
+        #exercise-body {
+            padding: 30px;
+        }
+        
+        .code-context {
+            background-color: var(--code-bg);
+            color: #ccc;
+            font-family: 'Source Code Pro', monospace;
+            padding: 15px;
+            border-radius: 8px 8px 0 0;
+            white-space: pre-wrap;
+            border-bottom: 2px dashed #555;
+        }
+
+        #code-input {
+            width: 100%;
+            box-sizing: border-box;
+            height: 150px;
+            background-color: var(--code-bg);
+            color: #f1f1f1;
+            border: 2px solid #555;
+            border-radius: 8px;
+            padding: 15px;
+            font-family: 'Source Code Pro', monospace;
+            font-size: 1em;
+            resize: vertical;
+            transition: border-color 0.3s ease;
+        }
+        
+        .code-context + #code-input {
+            border-top-left-radius: 0;
+            border-top-right-radius: 0;
+            border-top: none;
+        }
+
+        #code-input:focus {
+            outline: none;
+            border-color: var(--couleur-principale);
+        }
+
+        #code-input.correct {
+            border-color: var(--couleur-succes);
+        }
+
+        #code-input.incorrect {
+            animation: shake-horizontal 0.4s;
+            border-color: var(--couleur-erreur);
+        }
+        @keyframes shake-horizontal {
+            0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); }
+        }
+
+        #exercise-footer {
+            padding: 20px 30px;
+            border-top: 1px solid var(--couleur-gris-clair);
+            text-align: center;
+        }
+
+        #feedback-zone {
+            font-size: 0.95em;
+            color: #555;
+            line-height: 1.6;
+            min-height: 40px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        
+        #feedback-zone.hint {
+            color: #856404;
+            background-color: #fff3cd;
+            border: 1px solid var(--couleur-indice);
+            padding: 10px;
+            border-radius: 8px;
+        }
+
+        .btn {
+            background-color: #5E28CB;
+            color: var(--couleur-blanc);
+            border: none;
+            padding: 12px 35px;
+            font-size: 1.1em;
+            font-weight: 600;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .btn:hover {
+            background-color: #4a1f9e;
+        }
+
+        #next-btn {
+            display: none;
+        }
+
+        #results-screen {
+             padding: 30px;
+             text-align: center;
+        }
+        
+        #results-screen h2 {
+             font-size: 2em;
+             color: var(--couleur-principale);
+        }
+
+        .summary-item {
+            background-color: #f8f9fa;
+            border: 1px solid var(--couleur-gris-clair);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+            text-align: left;
+        }
+        .summary-question {
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+        .summary-code {
+            background-color: var(--code-bg);
+            border-radius: 5px;
+            padding: 15px;
+            margin: 10px 0;
+            white-space: pre-wrap;
+            color: #f1f1f1;
+            font-family: 'Source Code Pro', monospace;
+        }
+        .summary-explanation {
+            font-size: 0.9em;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px dashed var(--couleur-gris-clair);
+            color: #6c757d;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 2rem;
+            color: var(--couleur-texte-clair);
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div id="page-container">
+        <header>
+            <div id="logo">
+                <a href="index.html" title="Accueil des exercices">
+                    <img src="https://d1yei2z3i6k35z.cloudfront.net/3391351/67a8d590ebeea_logosynapselearners.png" alt="Logo Synapse Learners">
+                </a>
+            </div>
+        </header>
+
+        <div id="exercise-container">
+            <!-- Le contenu de l'exercice sera injecté ici -->
+        </div>
+        
+        <footer>
+            <p>&copy; 2025 Synapse Learners. Tous droits réservés ®.</p>
+            <p>Codé avec ❤️</p>
+        </footer>
+    </div>
+
+    <script>
+        const exerciseData = [
+            {
+                question: "Importez la bibliothèque Pandas en utilisant l'alias commun `pd`.",
+                correctAnswers: ["import pandas as pd"],
+                explanation: "L'alias `pd` est une convention quasi universelle dans la communauté Data Science pour désigner Pandas, ce qui rend le code plus lisible et concis.",
+                hint: "Pensez à la structure `import ... as ...`."
+            },
+            {
+                question: "En utilisant Pandas, écrivez la ligne de code pour lire un fichier nommé 'ventes.csv' dans un DataFrame appelé `df`.",
+                correctAnswers: ["df = pd.read_csv('ventes.csv')", "df = pd.read_csv(\"ventes.csv\")"],
+                explanation: "La fonction `pd.read_csv()` est l'outil principal pour charger des données tabulaires depuis un fichier CSV dans un DataFrame Pandas.",
+                hint: "Utilisez la fonction `read_...` de Pandas et n'oubliez pas d'assigner le résultat à la variable `df`."
+            },
+            {
+                question: "Affichez les 3 premières lignes du DataFrame `df`.",
+                contextCode: "import pandas as pd\ndata = {'ville': ['Paris', 'Lyon', 'Lille', 'Nice', 'Bordeaux'], 'ventes': [120, 95, 88, 105, 70]}\ndf = pd.DataFrame(data)\n\n# Votre code ici",
+                correctAnswers: ["df.head(3)", "print(df.head(3))"],
+                explanation: "La méthode `.head(n)` permet d'inspecter rapidement les `n` premières lignes d'un DataFrame. Si `n` n'est pas spécifié, il affiche 5 lignes par défaut.",
+                hint: "Quelle méthode permet de voir la 'tête' du DataFrame ?"
+            },
+            {
+                question: "Sélectionnez uniquement la colonne 'ventes' du DataFrame `df`.",
+                contextCode: "import pandas as pd\ndata = {'ville': ['Paris', 'Lyon'], 'ventes': [120, 95]}\ndf = pd.DataFrame(data)\n\n# Votre code ici",
+                correctAnswers: ["df['ventes']", "df[\"ventes\"]"],
+                explanation: "Pour sélectionner une seule colonne, on utilise la notation `df['nom_colonne']`, qui retourne une `Series` Pandas.",
+                hint: "Utilisez les crochets `[]` avec le nom de la colonne en chaîne de caractères."
+            },
+            {
+                question: "Filtrez le DataFrame `df` pour ne garder que les lignes où les ventes sont supérieures à 100.",
+                contextCode: "import pandas as pd\ndata = {'ville': ['Paris', 'Lyon'], 'ventes': [120, 95]}\ndf = pd.DataFrame(data)\n\n# Votre code ici",
+                correctAnswers: ["df[df['ventes'] > 100]", "df[df[\"ventes\"] > 100]"],
+                explanation: "C'est ce qu'on appelle un 'boolean indexing'. `df['ventes'] > 100` crée une série de booléens, qui est ensuite utilisée pour filtrer les lignes du DataFrame.",
+                hint: "La condition doit être placée à l'intérieur des crochets du DataFrame : `df[condition]`."
+            },
+            {
+                question: "Instanciez un modèle de classification `RandomForestClassifier` avec le paramètre `n_estimators` égal à 100.",
+                contextCode: "from sklearn.ensemble import RandomForestClassifier\n\n# Votre code ici",
+                correctAnswers: ["model = RandomForestClassifier(n_estimators=100)"],
+                explanation: "On crée une instance de la classe `RandomForestClassifier` et on passe les hyperparamètres (comme `n_estimators`) lors de l'initialisation.",
+                hint: "Créez une variable `model` et assignez-lui l'appel à la classe `RandomForestClassifier` avec le bon paramètre."
+            },
+            {
+                question: "Écrivez une requête SQL pour sélectionner toutes les colonnes (`*`) de la table `utilisateurs`.",
+                correctAnswers: ["SELECT * FROM utilisateurs;"],
+                explanation: "L'astérisque `*` est un joker en SQL qui signifie 'toutes les colonnes'. Le point-virgule à la fin est une bonne pratique pour terminer la requête.",
+                hint: "La structure est `SELECT ... FROM ...`."
+            },
+            {
+                question: "Calculez la moyenne de la colonne 'prix' dans le DataFrame `df`.",
+                contextCode: "import pandas as pd\ndata = {'produit': ['A', 'B'], 'prix': [50, 150]}\ndf = pd.DataFrame(data)\n\n# Votre code ici",
+                correctAnswers: ["df['prix'].mean()", "df[\"prix\"].mean()"],
+                explanation: "On sélectionne d'abord la colonne `df['prix']`, puis on applique la méthode `.mean()` pour calculer sa moyenne arithmétique.",
+                hint: "Sélectionnez la colonne 'prix' et utilisez la méthode pour la moyenne."
+            }
+        ];
+
+        const exerciseContainer = document.getElementById('exercise-container');
+        let shuffledQuestions = [];
+        let currentQuestionIndex = 0;
+        let errorCount = 0;
+
+        function shuffleArray(array) {
+            return [...array].sort(() => Math.random() - 0.5);
+        }
+
+        function startExercise() {
+            shuffledQuestions = shuffleArray(exerciseData);
+            currentQuestionIndex = 0;
+            showQuestion();
+        }
+
+        function showQuestion() {
+            errorCount = 0;
+            const questionData = shuffledQuestions[currentQuestionIndex];
+            const nextButtonText = (currentQuestionIndex === shuffledQuestions.length - 1)
+                ? "Voir le récapitulatif"
+                : "Question Suivante";
+
+            let contextHTML = '';
+            if (questionData.contextCode) {
+                contextHTML = `<div class="code-context">${questionData.contextCode}</div>`;
+            }
+
+            const exerciseHTML = `
+                <div id="exercise-header">
+                    <h2>Complétez le Code</h2>
+                    <div id="question-counter">Question ${currentQuestionIndex + 1} / ${shuffledQuestions.length}</div>
+                    <p id="question-text">${questionData.question}</p>
+                </div>
+                <div id="exercise-body">
+                    ${contextHTML}
+                    <textarea id="code-input" placeholder="Écrivez votre code ici..." spellcheck="false" rows="4"></textarea>
+                </div>
+                <div id="exercise-footer">
+                    <div id="feedback-zone"></div>
+                    <button id="check-btn" class="btn">Vérifier</button>
+                    <button id="next-btn" class="btn">${nextButtonText}</button>
+                </div>
+            `;
+            exerciseContainer.innerHTML = exerciseHTML;
+
+            document.getElementById('check-btn').addEventListener('click', checkAnswer);
+            document.getElementById('next-btn').addEventListener('click', () => {
+                currentQuestionIndex++;
+                if (currentQuestionIndex < shuffledQuestions.length) {
+                    showQuestion();
+                } else {
+                    showResults();
+                }
+            });
+        }
+
+        function normalizeAnswer(str) {
+            // Remplace les guillemets simples par des guillemets doubles
+            // Supprime les espaces multiples et les espaces de début/fin
+            // Supprime le point-virgule final optionnel (pour SQL)
+            return str.replace(/'/g, '"').replace(/\s+/g, ' ').trim().replace(/;$/, '');
+        }
+
+        function checkAnswer() {
+            const codeInput = document.getElementById('code-input');
+            const userAnswer = codeInput.value;
+            const questionData = shuffledQuestions[currentQuestionIndex];
+            const feedbackZone = document.getElementById('feedback-zone');
+
+            const normalizedUserAnswer = normalizeAnswer(userAnswer);
+            const isCorrect = questionData.correctAnswers.some(answer => normalizeAnswer(answer) === normalizedUserAnswer);
+
+            codeInput.classList.remove('correct', 'incorrect');
+            feedbackZone.style.display = 'none';
+            feedbackZone.classList.remove('hint');
+
+            if (isCorrect) {
+                codeInput.classList.add('correct');
+                codeInput.disabled = true;
+                feedbackZone.innerHTML = `<strong>Correct !</strong> ${questionData.explanation}`;
+                feedbackZone.style.display = 'block';
+                document.getElementById('check-btn').style.display = 'none';
+                document.getElementById('next-btn').style.display = 'inline-block';
+            } else {
+                errorCount++;
+                codeInput.classList.add('incorrect');
+                setTimeout(() => codeInput.classList.remove('incorrect'), 500);
+                
+                if (errorCount >= 2 && questionData.hint) {
+                    feedbackZone.innerHTML = `<strong>Indice :</strong> ${questionData.hint}`;
+                    feedbackZone.classList.add('hint');
+                    feedbackZone.style.display = 'block';
+                }
+            }
+        }
+
+        function showResults() {
+            const summaryHTML = exerciseData
+                .map(item => `
+                    <div class="summary-item">
+                        <p class="summary-question">${item.question}</p>
+                        <div class="summary-code"><pre><code>${item.correctAnswers[0]}</code></pre></div>
+                        <p class="summary-explanation">${item.explanation}</p>
+                    </div>
+                `).join('');
+
+            const finalHTML = `
+                <div id="exercise-header">
+                    <h2>Exercice Terminé !</h2>
+                </div>
+                <div id="results-screen">
+                    <h3>Récapitulatif des solutions</h3>
+                    <div id="summary-container">
+                        ${summaryHTML}
+                    </div>
+                    <button id="restart-btn" class="btn">Recommencer</button>
+                </div>
+            `;
+            exerciseContainer.innerHTML = finalHTML;
+            document.getElementById('restart-btn').addEventListener('click', startExercise);
+        }
+
+        startExercise();
+    </script>
+</body>
+</html>
