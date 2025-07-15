@@ -114,6 +114,15 @@
             opacity: 1;
         }
 
+        .category-title {
+            font-size: 2.2rem;
+            color: var(--couleur-secondaire);
+            margin-top: 3rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--couleur-principale);
+        }
+
         .exercise-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -240,7 +249,7 @@
                 <div class="hero-content">
                     <h1>Zone d'entraînement des Synapse Learners</h1>
                     <p>
-                        Notre mission est de vous aider à lancer votre carrière dans la tech. Mettez en pratique vos connaissances, consolidez vos compétences et démarquez-vous grâce à nos exercices interactifs conçus par des experts.
+                        Notre mission est de vous aider à lancer votre carrière dans la Tech. Renforcer vos connaissances, consolidez vos compétences et démarquez-vous grâce à nos exercices interactifs conçus par des experts. Que les synapses soient avec vous !
                     </p>
                 </div>
                 <div class="hero-image-slider">
@@ -251,143 +260,164 @@
                 </div>
             </section>
 
+            <h2 class="category-title">Maîtriser les concepts clés</h2>
             <section class="exercise-grid">
-                <!-- Exercices disponibles -->
-                <a href="https://patrick-wampe.github.io/Synapse-Learners/quizz-bloc3.html" class="exercise-card" target='_blank'>
-                    <div class="icon"><i data-lucide="file-question"></i></div>
-                    <h3>Quiz Interactifs</h3>
-                    <p>Testez vos connaissances sur des concepts clés de la tech, de la data à l'IA en passant par le développement.</p>
-                </a>
-
-                <a href="https://patrick-wampe.github.io/Synapse-Learners/drag&drop-bloc3.html" class="exercise-card" target='_blank'>
-                    <div class="icon"><i data-lucide="move"></i></div>
-                    <h3>Drag and Drop</h3>
-                    <p>Associez les concepts, les fonctions et leurs définitions par glisser-déposer pour renforcer votre mémoire.</p>
-                </a>
-
-                <a href="https://patrick-wampe.github.io/Synapse-Learners/texteacompleter-bloc3.html" class="exercise-card" target='_blank'>
+            <a href="https://patrick-wampe.github.io/Synapse-Learners/texteacompleter-bloc3.html" class="exercise-card" target='_blank'>
                     <div class="icon"><i data-lucide="pilcrow"></i></div>
                     <h3>Texte à compléter</h3>
                     <p>Remplissez les trous dans des blocs de texte ou de code pour valider votre compréhension des syntaxes.</p>
                 </a>
-
-                <a href="https://patrick-wampe.github.io/Synapse-Learners/ordonnercode-bloc3.html" class="exercise-card" target='_blank'>
-                    <div class="icon"><i data-lucide="list-ordered"></i></div>
-                    <h3>Ordonner le Code</h3>
-                    <p>Remettez dans le bon ordre des lignes de code pour créer un script fonctionnel et maîtriser la logique algorithmique.</p>
+                
+                <a href="https://patrick-wampe.github.io/Synapse-Learners/quizz-bloc3.html" class="exercise-card" target='_blank'>
+                    <div class="icon"><i data-lucide="file-question"></i></div>
+                    <h3>Quiz Interactifs</h3>
+                    <p>Testez vos connaissances sur des concepts et identifiez vos points faibles pour mieux progresser.</p>
                 </a>
-
-                <a href="https://patrick-wampe.github.io/Synapse-Learners/codemanquant-bloc3.html" class="exercise-card" target='_blank'>
-                    <div class="icon"><i data-lucide="code-2"></i></div>
-                    <h3>Compléter le Code</h3>
-                    <p>Écrivez le code manquant dans des fonctions ou des classes pour résoudre des problèmes concrets.</p>
+                
+                <a href="https://patrick-wampe.github.io/Synapse-Learners/drag&drop-bloc3.html" class="exercise-card" target='_blank'>
+                    <div class="icon"><i data-lucide="move"></i></div>
+                    <h3>Drag and Drop</h3>
+                    <p>Associez des concepts et des définitions par glisser-déposer pour créer des réflexes mentaux solides.</p>
                 </a>
                 
                 <a href="https://patrick-wampe.github.io/Synapse-Learners/jeuvideo.html" class="exercise-card" target='_blank'>
                     <div class="icon"><i data-lucide="gamepad-2"></i></div>
-                    <h3>Un Jeu Vidéo pour Apprendre</h3>
+                    <h3>Jeu Vidéo et Apprentissage</h3>
                     <p>Apprenez en vous amusant grâce à notre jeu de plateforme éducatif pour ancrer les concepts fondamentaux.</p>
                 </a>
+                <a href="#" class="exercise-card disabled">
+                    <div class="badge">Bientôt</div>
+                    <div class="icon"><i data-lucide="snake"></i></div>
+                    <h3>Le Serpent des Connaissances</h3>
+                    <p>Dirigez le serpent vers les blocs de savoir. Chaque bloc mangé déclenche une question pour tester vos connaissances.</p>
+                </a>
+                <a href="#" class="exercise-card disabled">
+                    <div class="badge">Bientôt</div>
+                    <div class="icon"><i data-lucide="bird"></i></div>
+                    <h3>Angry Questions</h3>
+                    <p>Lancez des oiseaux sur les questions pour les débloquer. Une bonne réponse vous donne un oiseau supplémentaire.</p>
+                </a>
                 
-                <!-- Exercices à venir -->
-                <a href="#" class="exercise-card disabled">
-                    <div class="badge">Bientôt</div>
-                    <div class="icon"><i data-lucide="search"></i></div>
-                    <h3>Le Détective des Données</h3>
-                    <p>Menez l'enquête sur un jeu de données réel. Prenez les bonnes décisions pour résoudre le mystère et présenter vos conclusions.</p>
-                </a>
-
-                <a href="#" class="exercise-card disabled">
-                    <div class="badge">Bientôt</div>
-                    <div class="icon"><i data-lucide="key-round"></i></div>
-                    <h3>L'Escape Game de la Tech</h3>
-                    <p>Résolvez une série d'énigmes de code en un temps limité pour vous "échapper" et prouver votre maîtrise technique.</p>
-                </a>
-
-                <a href="#" class="exercise-card disabled">
-                    <div class="badge">Bientôt</div>
-                    <div class="icon"><i data-lucide="swords"></i></div>
-                    <h3>Le Code Duel</h3>
-                    <p>Affrontez d'autres apprenants ou un bot en temps réel dans des défis de code chronométrés pour tester votre rapidité.</p>
-                </a>
-
-                <a href="#" class="exercise-card disabled">
-                    <div class="badge">Bientôt</div>
-                    <div class="icon"><i data-lucide="notebook"></i></div>
-                    <h3>Le Notebook Interactif</h3>
-                    <p>Suivez un raisonnement de projet complet dans un environnement de travail réaliste, étape par étape.</p>
-                </a>
-
-                <a href="#" class="exercise-card disabled">
-                    <div class="badge">Bientôt</div>
-                    <div class="icon"><i data-lucide="rocket"></i></div>
-                    <h3>Le Défi de la Performance</h3>
-                    <p>Optimisez un code lent en identifiant les goulots d'étranglement pour améliorer sa vitesse et sa mémoire.</p>
-                </a>
+                
                 
                 <a href="#" class="exercise-card disabled">
                     <div class="badge">Bientôt</div>
-                    <div class="icon"><i data-lucide="scissors"></i></div>
-                    <h3>Le Défi de la Concision</h3>
-                    <p>Refactorisez un script fonctionnel mais verbeux pour le rendre plus court, plus élégant et plus lisible.</p>
+                    <div class="icon"><i data-lucide="layers-3"></i></div>
+                    <h3>Flashcards Intelligentes</h3>
+                    <p>Mémorisez les notions clés sur le long terme grâce à notre système de répétition espacée.</p>
                 </a>
+                <a href="#" class="exercise-card disabled">
+                    <div class="badge">Bientôt</div>
+                    <div class="icon"><i data-lucide="timer"></i></div>
+                    <h3>Le Sprint de la mémoire</h3>
+                    <p>Retrouvez les paires (concept/définition, logo/technologie...) sur une grille d'image avant la fin du chrono pour booster votre mémoire.</p>
+                </a>
+                <a href="#" class="exercise-card disabled">
+                    <div class="badge">Bientôt</div>
+                    <div class="icon"><i data-lucide="music"></i></div>
+                    <h3>La Chanson de l'Apprenant</h3>
+                    <p>Découvrez notre playlist de chansons pour comprendre et retenir des notions complexes en s'amusant.</p>
+                </a>
+                <a href="#" class="exercise-card disabled">
+                    <div class="badge">Bientôt</div>
+                    <div class="icon"><i data-lucide="brain-circuit"></i></div>
+                    <h3>La Zone Méthodo</h3>
+                    <p>La pratique, c'est bien. La pratique guidée par la bonne méthode, c'est mieux. Plongez dans les principes et les techniques qui séparent les amateurs des professionnels.</p>
+                </a>
+            </section>
 
+            <h2 class="category-title">L'Atelier du Codeur : Débugger & Optimiser</h2>
+            <section class="exercise-grid">
+                <a href="https://patrick-wampe.github.io/Synapse-Learners/ordonnercode-bloc3.html" class="exercise-card" target='_blank'>
+                    <div class="icon"><i data-lucide="list-ordered"></i></div>
+                    <h3>Ordonner le Code</h3>
+                    <p>Intégrez la logique et la structure d'un script fonctionnel en remettant les lignes dans le bon ordre.</p>
+                </a>
+                <a href="https://patrick-wampe.github.io/Synapse-Learners/codemanquant-bloc3.html" class="exercise-card" target='_blank'>
+                    <div class="icon"><i data-lucide="code-2"></i></div>
+                    <h3>Compléter le Code</h3>
+                    <p>Apprenez à vous intégrer dans du code existant en écrivant les lignes manquantes pour résoudre un problème.</p>
+                </a>
                 <a href="#" class="exercise-card disabled">
                     <div class="badge">Bientôt</div>
                     <div class="icon"><i data-lucide="bug"></i></div>
                     <h3>Le Débugueur de l'Extrême</h3>
-                    <p>Trouvez et corrigez les erreurs subtiles cachées dans des blocs de code pour devenir un pro du débuggage.</p>
+                    <p>Trouvez et corrigez les erreurs subtiles cachées dans des blocs de code pour devenir un pro du débuggage. C'est l'une des compétences les plus cruciale.</p>
                 </a>
-
+                <a href="#" class="exercise-card disabled">
+                    <div class="badge">Bientôt</div>
+                    <div class="icon"><i data-lucide="scissors"></i></div>
+                    <h3>Le Défi de la Concision</h3>
+                    <p>Apprenez à refactoriser un code qui fonctionne pour le rendre plus propre, plus lisible, plus maintenable, plus court.</p>
+                </a>
+                <a href="#" class="exercise-card disabled">
+                    <div class="badge">Bientôt</div>
+                    <div class="icon"><i data-lucide="rocket"></i></div>
+                    <h3>Le Défi de la Performance</h3>
+                    <p>Optimisez la vitesse et la consommation mémoire de vos algorithmes grâce à l'optimisation algorithmique.</p>
+                </a>
+            </section>
+            
+            <h2 class="category-title">Scénarios professionnels et projets guidés</h2>
+            <section class="exercise-grid">
+                <a href="#" class="exercise-card disabled">
+                    <div class="badge">Bientôt</div>
+                    <div class="icon"><i data-lucide="text-quote"></i></div>
+                    <h3>Le Simplicator Résumator</h3>
+                    <p>Entraînez-vous à la vulgarisation. Votre défi ? Expliquer un concept technique complexe avec une clarté absolue en 200 caractères ou moins.</p>
+                </a>
+                <a href="#" class="exercise-card disabled">
+                    <div class="badge">Bientôt</div>
+                    <div class="icon"><i data-lucide="image"></i></div>
+                    <h3>Analyse d'Images</h3>
+                    <p>Apprenez à interpréter des graphiques et à choisir les bonnes visualisations pour convaincre et faire passer un message en mode storytelling.</p>
+                </a>
+                <a href="#" class="exercise-card disabled">
+                    <div class="badge">Bientôt</div>
+                    <div class="icon"><i data-lucide="architecture"></i></div>
+                    <h3>Le Bâtisseur de Solutions</h3>
+                    <p>Concevez l'architecture d'une application en assemblant les bons composants techniques pour un besoin métier.</p>
+                </a>
+                <a href="#" class="exercise-card disabled">
+                    <div class="badge">Bientôt</div>
+                    <div class="icon"><i data-lucide="search"></i></div>
+                    <h3>Le Détective des Données</h3>
+                    <p>Résolvez un problème métier en menant l'enquête sur un jeu de données. De l'exploration à la conclusion.</p>
+                </a>
+                <a href="#" class="exercise-card disabled">
+                    <div class="badge">Bientôt</div>
+                    <div class="icon"><i data-lucide="notebook"></i></div>
+                    <h3>Le Notebook Interactif</h3>
+                    <p>Suivez pas à pas un projet complet, comme en entreprise, dans un environnement de travail réaliste et guidé.</p>
+                </a>
+            </section>
+            
+            <h2 class="category-title">Collaboration & Compétition</h2>
+            <section class="exercise-grid">
+                <a href="#" class="exercise-card disabled">
+                    <div class="badge">Bientôt</div>
+                    <div class="icon"><i data-lucide="trophy"></i></div>
+                    <h3>Le Défi de la Semaine</h3>
+                    <p>Relevez des challenges régulièrement en affrontant d'autres apprenants pour rester à la pointe, découvrir de nouvelles approches et voir son classement parmi d'autres Synapse Learners.</p>
+                </a>
+                <a href="#" class="exercise-card disabled">
+                    <div class="badge">Bientôt</div>
+                    <div class="icon"><i data-lucide="eye"></i></div>
+                    <h3>L'Œil du Critique</h3>
+                    <p>Progressez en soumettant votre code et en recevant des feedbacks constructifs de la communauté pour affûter votre expertise. Vous pourrez aussi en donner</p>
+                </a>
                 <a href="#" class="exercise-card disabled">
                     <div class="badge">Bientôt</div>
                     <div class="icon"><i data-lucide="users"></i></div>
                     <h3>Le Projet d'Équipe</h3>
                     <p>Unissez vos forces pour construire un projet de A à Z, de la répartition des tâches à la fusion du code final.</p>
                 </a>
-                
                 <a href="#" class="exercise-card disabled">
                     <div class="badge">Bientôt</div>
-                    <div class="icon"><i data-lucide="eye"></i></div>
-                    <h3>L'Œil du Critique</h3>
-                    <p>Soumettez votre code et recevez des feedbacks constructifs de la communauté pour affûter votre expertise.</p>
+                    <div class="icon"><i data-lucide="key-round"></i></div>
+                    <h3>L'Escape Game de la Tech</h3>
+                    <p>Résolvez une série d'énigmes en un temps limité pour vous "échapper" et prouver votre maîtrise technique.</p>
                 </a>
-                
-                <a href="#" class="exercise-card disabled">
-                    <div class="badge">Bientôt</div>
-                    <div class="icon"><i data-lucide="trophy"></i></div>
-                    <h3>Le Défi de la Semaine</h3>
-                    <p>Relevez un nouveau challenge chaque semaine et comparez votre solution à celle de la communauté.</p>
-                </a>
-                
-                <a href="#" class="exercise-card disabled">
-                    <div class="badge">Bientôt</div>
-                    <div class="icon"><i data-lucide="architecture"></i></div>
-                    <h3>Le Bâtisseur de Solutions</h3>
-                    <p>Concevez l'architecture d'une application robuste en assemblant les bons composants techniques.</p>
-                </a>
-
-                <a href="#" class="exercise-card disabled">
-                    <div class="badge">Bientôt</div>
-                    <div class="icon"><i data-lucide="layers-3"></i></div>
-                    <h3>Flashcards Intelligentes</h3>
-                    <p>Mémorisez les concepts clés sur le long terme grâce à notre système de répétition espacée.</p>
-                </a>
-                
-                <a href="#" class="exercise-card disabled">
-                    <div class="badge">Bientôt</div>
-                    <div class="icon"><i data-lucide="image"></i></div>
-                    <h3>Analyse d'Images</h3>
-                    <p>Identifiez la bonne visualisation, le bon schéma ou le bon élément parmi plusieurs propositions.</p>
-                </a>
-
-                <a href="#" class="exercise-card disabled">
-                    <div class="badge">Bientôt</div>
-                    <div class="icon"><i data-lucide="brain-circuit"></i></div>
-                    <h3>La Zone Méthodo</h3>
-                    <p>Révisez les méthodologies et bonnes pratiques qui font la différence derrière le code.</p>
-                </a>
-
             </section>
         </main>
 
