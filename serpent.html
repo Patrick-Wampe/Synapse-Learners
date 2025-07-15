@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="https://d1yei2z3i6k35z.cloudfront.net/3391351/67a8d590ebeea_logosynapselearners.png">
+    <title>Le Serpent des Connaissances - Synapse Learners</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --couleur-principale: #5E28CB;
+            --couleur-secondaire: #f5a623;
+            --couleur-succes: #28a745;
+            --couleur-erreur: #dc3545;
+            --couleur-fond: #f4f7f9;
+            --couleur-texte: #333;
+            --couleur-blanc: #ffffff;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--couleur-fond);
+            color: var(--couleur-texte);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+        
+        header {
+            width: 100%;
+            max-width: 600px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        #logo img {
+            height: 54px;
+        }
+
+        #game-container {
+            position: relative;
+            width: 600px;
+            height: 600px;
+            max-width: 95vw;
+            max-height: 95vw;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border-radius: 15px;
+            overflow: hidden;
+            background: #a7d3a7;
+        }
+
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+        
+        #game-ui {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            right: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+            font-family: 'Press Start 2P', cursive;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            pointer-events: none;
+        }
+        
+        #score, #tries {
+            font-size: 16px;
+        }
+        
+        #ingame-restart-btn {
+            background-color: var(--couleur-secondaire);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+            pointer-events: all;
+        }
+
+        #modal-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            text-align: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        
+        .modal-content {
+            background: var(--couleur-blanc);
+            padding: 30px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        
+        .modal-content h2 {
+            color: var(--couleur-principale);
+            font-size: 2em;
+            margin-top: 0;
+        }
+        
+        #quiz-question {
+            font-size: 1.2em;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        
+        #quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .quiz-option-btn, #restart-btn {
+            background-color: var(--couleur-blanc);
+            border: 2px solid #e9ecef;
+            color: var(--couleur-texte);
+            padding: 12px;
+            font-size: 1em;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .quiz-option-btn:hover:not(:disabled) {
+            border-color: var(--couleur-principale);
+            background-color: #f8f9fa;
+        }
+        
+        #restart-btn {
+            background-color: var(--couleur-principale);
+            color: var(--couleur-blanc);
+            margin-top: 20px;
+            font-weight: 600;
+        }
+        
+        #feedback-message {
+            margin-top: 15px;
+            font-weight: 600;
+            min-height: 24px;
+        }
+        
+        #feedback-message.correct { color: var(--couleur-succes); }
+        #feedback-message.incorrect { color: var(--couleur-erreur); }
+        
+        footer {
+            text-align: center;
+            margin-top: 2rem;
+            color: #555;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div id="logo">
+            <a href="index.html" title="Accueil des exercices">
+                <img src="https://d1yei2z3i6k35z.cloudfront.net/3391351/67a8d590ebeea_logosynapselearners.png" alt="Logo Synapse Learners">
+            </a>
+        </div>
+    </header>
+
+    <div id="game-container">
+        <canvas id="gameCanvas"></canvas>
+        <div id="game-ui">
+            <div id="score">Score: 0</div>
+            <button id="ingame-restart-btn">Recommencer</button>
+            <div id="tries">Essais restants: 5</div>
+        </div>
+        <div id="modal-overlay">
+            <div class="modal-content">
+                <h2 id="modal-title">Titre</h2>
+                <p id="end-game-message"></p>
+                <div id="quiz-container">
+                    <p id="quiz-question">Question ?</p>
+                    <div id="quiz-options"></div>
+                    <p id="feedback-message"></p>
+                </div>
+                <div id="summary-container"></div>
+                <button id="restart-btn">Recommencer</button>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <p>Utilisez les flèches du clavier pour diriger le serpent.</p>
+    </footer>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const container = document.getElementById('game-container');
+
+        const gridSize = 20;
+        let tileCountX, tileCountY;
+        
+        let snake, food, holes, velocity, gameRequestId, gamePaused, score, tries;
+        
+        const allQuizData = [
+            { question: "Quelle fonction Pandas est utilisée pour lire un fichier CSV ?", options: ["pd.read_file()", "pd.read_csv()", "pd.load_csv()", "pd.open_csv()"], correctAnswer: "pd.read_csv()" },
+            { question: "Comment afficher les 5 premières lignes d'un DataFrame `df` ?", options: ["df.first(5)", "df.show(5)", "df.head()", "df.top(5)"], correctAnswer: "df.head()" },
+            { question: "Quelle méthode Scikit-Learn sépare les données en ensembles d'entraînement et de test ?", options: ["data_splitter()", "split_data()", "train_test_split()", "make_sets()"], correctAnswer: "train_test_split()" },
+            { question: "Quel modèle est utilisé pour prédire une valeur continue (ex: un prix) ?", options: ["Régression Logistique", "K-Means", "Régression Linéaire", "KNN Classifier"], correctAnswer: "Régression Linéaire" },
+            { question: "Comment s'appelle l'étape qui met les données numériques sur la même échelle ?", options: ["Encodage", "Standardisation", "Imputation", "Vectorisation"], correctAnswer: "Standardisation" },
+            { question: "Pour regrouper des données non étiquetées, on utilise un algorithme de...", options: ["Classification", "Régression", "Clustering", "Prédiction"], correctAnswer: "Clustering" },
+            { question: "La méthode `.fit()` dans Scikit-Learn sert à...", options: ["Faire des prédictions", "Évaluer le modèle", "Entraîner le modèle", "Afficher les données"], correctAnswer: "Entraîner le modèle" },
+            { question: "Quelle fonction Pandas permet de regrouper des données selon une colonne ?", options: ["df.group()", "df.aggregate()", "df.sort_by()", "df.groupby()"], correctAnswer: "df.groupby()" },
+            { question: "Pour gérer les valeurs manquantes, on peut utiliser...", options: ["StandardScaler", "OneHotEncoder", "SimpleImputer", "train_test_split"], correctAnswer: "SimpleImputer" },
+            { question: "Un score R² proche de 1 dans une régression signifie que...", options: ["Le modèle est mauvais", "Le modèle est excellent", "Le modèle est en overfitting", "Le modèle est trop simple"], correctAnswer: "Le modèle est excellent" },
+            { question: "L'accuracy est une métrique pour les problèmes de...", options: ["Régression", "Clustering", "Classification", "Réduction de dimension"], correctAnswer: "Classification" },
+            { question: "Quel paramètre de `KMeans` définit le nombre de groupes à trouver ?", options: ["k", "n_groups", "n_clusters", "clusters"], correctAnswer: "n_clusters" },
+            { question: "La méthode `.predict_proba()` renvoie...", options: ["La classe prédite", "Les probabilités d'appartenance à chaque classe", "Le score du modèle", "Une erreur"], correctAnswer: "Les probabilités d'appartenance à chaque classe" },
+            { question: "Pour créer un pipeline d'opérations, on utilise...", options: ["sklearn.pipeline.Pipeline", "sklearn.compose.Composer", "sklearn.chain.Chain", "sklearn.flow.Flow"], correctAnswer: "sklearn.pipeline.Pipeline" }
+        ];
+        let availableQuestions = [];
+
+        function resizeCanvas() {
+            canvas.width = container.clientWidth;
+            canvas.height = container.clientHeight;
+            tileCountX = Math.floor(canvas.width / gridSize);
+            tileCountY = Math.floor(canvas.height / gridSize);
+        }
+
+        function init() {
+            resizeCanvas();
+            gamePaused = false;
+            document.getElementById('modal-overlay').style.display = 'none';
+            score = 0;
+            tries = 5;
+            
+            snake = {
+                body: [{ x: 10, y: 10 }],
+                tailLength: 5
+            };
+            // BUG FIX: Start the snake moving
+            velocity = { x: 1, y: 0 };
+
+            availableQuestions = [...allQuizData].sort(() => 0.5 - Math.random());
+            
+            generateHoles();
+            placeFood();
+            
+            if(gameRequestId) clearInterval(gameRequestId);
+            gameRequestId = setInterval(gameLoop, 1000 / 10); // 10 FPS
+        }
+        
+        function generateHoles() {
+            holes = [];
+            const numHoles = Math.floor(Math.random() * 2) + 2; // 2 ou 3 trous
+            for (let i = 0; i < numHoles; i++) {
+                holes.push({
+                    x: Math.floor(Math.random() * tileCountX),
+                    y: Math.floor(Math.random() * tileCountY)
+                });
+            }
+        }
+
+        function placeFood() {
+            if (availableQuestions.length === 0) {
+                food = null;
+                return;
+            }
+            let validPosition = false;
+            while(!validPosition) {
+                food = {
+                    x: Math.floor(Math.random() * tileCountX),
+                    y: Math.floor(Math.random() * tileCountY),
+                    quiz: availableQuestions.pop()
+                };
+                let onSnake = snake.body.some(segment => segment.x === food.x && segment.y === food.y);
+                let onHole = holes.some(h => h.x === food.x && h.y === food.y);
+                if (!onSnake && !onHole) {
+                    validPosition = true;
+                }
+            }
+        }
+
+        function gameLoop() {
+            if (gamePaused) return;
+
+            let head = { x: snake.body[0].x + velocity.x, y: snake.body[0].y + velocity.y };
+
+            if (head.x < 0) head.x = tileCountX - 1;
+            if (head.x >= tileCountX) head.x = 0;
+            if (head.y < 0) head.y = tileCountY - 1;
+            if (head.y >= tileCountY) head.y = 0;
+
+            // Check self collision
+            for (let i = 0; i < snake.body.length; i++) {
+                if (head.x === snake.body[i].x && head.y === snake.body[i].y) {
+                    showEndGame(false);
+                    return;
+                }
+            }
+            
+            // Check hole collision
+            for (let hole of holes) {
+                if (head.x === hole.x && head.y === hole.y) {
+                    showEndGame(false);
+                    return;
+                }
+            }
+
+            snake.body.unshift(head);
+            while (snake.body.length > snake.tailLength) {
+                snake.body.pop();
+            }
+
+            // Check food collision
+            if (food && head.x === food.x && head.y === food.y) {
+                pauseGameAndShowQuiz(food.quiz);
+            }
+            
+            drawGame();
+            updateUI();
+        }
+
+        function drawGame() {
+            ctx.fillStyle = '#a7d3a7';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            holes.forEach(hole => {
+                ctx.fillStyle = '#6b4f3a';
+                ctx.fillRect(hole.x * gridSize, hole.y * gridSize, gridSize, gridSize);
+            });
+
+            ctx.fillStyle = 'limegreen';
+            snake.body.forEach(segment => {
+                ctx.fillRect(segment.x * gridSize, segment.y * gridSize, gridSize - 2, gridSize - 2);
+            });
+
+            if (food) {
+                ctx.fillStyle = '#FFD700';
+                ctx.fillRect(food.x * gridSize, food.y * gridSize, gridSize, gridSize);
+                ctx.font = `bold ${gridSize*0.7}px Poppins`;
+                ctx.fillStyle = '#000';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText('?', food.x * gridSize + gridSize / 2, food.y * gridSize + gridSize / 2 + 2);
+            }
+        }
+        
+        function updateUI() {
+            document.getElementById('score').textContent = `Score: ${score}`;
+            document.getElementById('tries').textContent = `Essais restants: ${tries}`;
+        }
+
+        const modalOverlay = document.getElementById('modal-overlay');
+        const modalTitle = document.getElementById('modal-title');
+        const quizContainer = document.getElementById('quiz-container');
+        const summaryContainer = document.getElementById('summary-container');
+        const messageEl = document.getElementById('end-game-message');
+        
+        function pauseGameAndShowQuiz(quiz) {
+            gamePaused = true;
+            modalTitle.style.display = 'none';
+            quizContainer.style.display = 'block';
+            if(summaryContainer) summaryContainer.style.display = 'none';
+            if(messageEl) messageEl.textContent = '';
+            
+            const quizQuestionEl = document.getElementById('quiz-question');
+            const quizOptionsEl = document.getElementById('quiz-options');
+            const feedbackMessageEl = document.getElementById('feedback-message');
+            
+            quizQuestionEl.textContent = quiz.question;
+            quizOptionsEl.innerHTML = '';
+            feedbackMessageEl.textContent = '';
+            
+            quiz.options.forEach(option => {
+                const button = document.createElement('button');
+                button.textContent = option;
+                button.className = 'quiz-option-btn';
+                button.onclick = () => {
+                    Array.from(quizOptionsEl.children).forEach(btn => btn.disabled = true);
+                    if (option === quiz.correctAnswer) {
+                        feedbackMessageEl.textContent = "Bonne réponse !";
+                        feedbackMessageEl.className = 'correct';
+                        score++;
+                    } else {
+                        feedbackMessageEl.textContent = "Mauvaise réponse !";
+                        feedbackMessageEl.className = 'incorrect';
+                        tries--;
+                    }
+                    snake.tailLength++;
+
+                    if (score >= 7) {
+                         setTimeout(() => showEndGame(true), 1500);
+                         return;
+                    }
+                    if (tries <= 0) {
+                        setTimeout(() => showEndGame(false), 1500);
+                        return;
+                    }
+                    setTimeout(() => {
+                        modalOverlay.style.display = 'none';
+                        gamePaused = false;
+                        placeFood();
+                    }, 1500);
+                };
+                quizOptionsEl.appendChild(button);
+            });
+            
+            modalOverlay.style.display = 'flex';
+        }
+        
+        function showEndGame(isWin) {
+            gamePaused = true;
+            clearInterval(gameRequestId);
+            
+            modalTitle.style.display = 'block';
+            quizContainer.style.display = 'none';
+            if(summaryContainer) summaryContainer.style.display = 'block';
+            
+            if (isWin) {
+                modalTitle.textContent = 'Bravo, vous avez gagné !';
+                if(messageEl) messageEl.textContent = `Vous avez atteint un score de ${score} !`;
+            } else {
+                modalTitle.textContent = 'Game Over';
+                if(messageEl) messageEl.textContent = 'Entraînez-vous et réessayez !';
+            }
+            modalOverlay.style.display = 'flex';
+        }
+
+        window.addEventListener('keydown', ({ code }) => {
+            if (gamePaused) return;
+            switch (code) {
+                case 'ArrowLeft': if(velocity.x === 0) { velocity = { x: -1, y: 0 }; } break;
+                case 'ArrowUp': if(velocity.y === 0) { velocity = { x: 0, y: -1 }; } break;
+                case 'ArrowRight': if(velocity.x === 0) { velocity = { x: 1, y: 0 }; } break;
+                case 'ArrowDown': if(velocity.y === 0) { velocity = { x: 0, y: 1 }; } break;
+            }
+        });
+        
+        document.getElementById('restart-btn').addEventListener('click', init);
+        document.getElementById('ingame-restart-btn').addEventListener('click', init);
+
+        init();
+        window.addEventListener('resize', init);
+
+    </script>
+</body>
+</html>
