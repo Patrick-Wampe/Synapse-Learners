@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="fr" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infographie : Le CV Parfait pour la Data</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0d1117; 
+            color: #c9d1d9;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 400px;
+            }
+        }
+        .glass-card {
+            background: rgba(22, 27, 34, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(48, 54, 61, 0.5);
+        }
+        .big-stat-text {
+            font-size: 10rem;
+            line-height: 1;
+            font-weight: 900;
+            color: #0094FF;
+            text-shadow: 0 0 15px rgba(0, 148, 255, 0.5);
+        }
+         .flowchart-item {
+            border: 2px solid #004AAD;
+            transition: all 0.3s ease;
+        }
+        .flowchart-item:hover {
+            background-color: #004AAD;
+            color: #ffffff;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 74, 173, 0.3);
+        }
+        .flowchart-arrow {
+            color: #0094FF;
+            font-size: 2.5rem;
+            line-height: 1;
+        }
+        .logo-text {
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: #89CFF0;
+        }
+        .logo-box {
+            border: 2px solid #0094FF;
+            padding: 2px 8px;
+            border-radius: 5px;
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <div class="container mx-auto px-4 py-8 md:py-16">
+
+        <header class="text-center mb-16 md:mb-24">
+            <div class="logo-box">
+                <span class="logo-text">Synapse Learners</span>
+            </div>
+            <h1 class="text-4xl md:text-6xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-[#89CFF0] to-[#0094FF]">Le CV Parfait pour la Data</h1>
+            <p class="text-lg md:text-xl text-gray-400 max-w-3xl mx-auto">Une guide visuel pour transformer votre CV en un aimant à recruteurs, basé sur les meilleures pratiques du secteur.</p>
+        </header>
+
+        <section id="hook" class="mb-20 md:mb-32">
+            <div class="text-center">
+                <h2 class="text-3xl font-bold mb-2 text-white">Vous avez 6 secondes.</h2>
+                <p class="text-gray-400 mb-8 max-w-2xl mx-auto">C'est le temps moyen qu'un recruteur passe sur votre CV. Chaque détail compte. Voyez votre CV non pas comme un document, mais comme votre premier projet data : clair, structuré et orienté résultats.</p>
+                <div class="flex justify-center items-center gap-4">
+                    <div class="big-stat-text">6s</div>
+                    <div class="text-left">
+                        <p class="text-2xl font-bold text-white">Pour faire la différence.</p>
+                        <p class="text-gray-400">Votre mission : guider l'œil du recruteur vers l'essentiel.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="anatomy" class="mb-20 md:mb-32">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-white">Anatomie d'un CV d'Impact</h2>
+                <p class="text-gray-400 max-w-2xl mx-auto">Pour un profil junior, l'ordre des sections est stratégique. Il met en avant le potentiel et les compétences pratiques avant l'expérience, qui est souvent limitée.</p>
+            </div>
+            <div class="flex flex-col items-center space-y-4">
+                <div class="flowchart-item w-full md:w-1/2 p-4 rounded-lg text-center">
+                    <span class="font-bold text-lg">1. En-tête & Titre</span><br><span class="text-sm text-gray-300">Nom, Titre visé (ex: Data Analyst), Contact, LinkedIn, GitHub</span>
+                </div>
+                <div class="flowchart-arrow">↓</div>
+                <div class="flowchart-item w-full md:w-1/2 p-4 rounded-lg text-center">
+                    <span class="font-bold text-lg">2. Projets Personnels</span><br><span class="text-sm text-gray-300">La preuve par l'action. Votre meilleure vitrine technique.</span>
+                </div>
+                <div class="flowchart-arrow">↓</div>
+                <div class="flowchart-item w-full md:w-1/2 p-4 rounded-lg text-center">
+                    <span class="font-bold text-lg">3. Compétences</span><br><span class="text-sm text-gray-300">Organisées par catégories (Langages, Outils, Cloud...).</span>
+                </div>
+                <div class="flowchart-arrow">↓</div>
+                <div class="flowchart-item w-full md:w-1/2 p-4 rounded-lg text-center">
+                    <span class="font-bold text-lg">4. Expériences Professionnelles</span><br><span class="text-sm text-gray-300">Stages, alternances. Décrivez les réalisations, pas les tâches.</span>
+                </div>
+                <div class="flowchart-arrow">↓</div>
+                <div class="flowchart-item w-full md:w-1/2 p-4 rounded-lg text-center">
+                    <span class="font-bold text-lg">5. Formation & Certifications</span><br><span class="text-sm text-gray-300">Diplômes et certifications reconnues (AWS, Google...).</span>
+                </div>
+            </div>
+        </section>
+
+        <section id="star" class="mb-20 md:mb-32">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-white">De Tâches à Triomphes : La Méthode STAR</h2>
+                <p class="text-gray-400 max-w-2xl mx-auto">Ne listez pas ce que vous avez fait, montrez l'impact que vous avez eu. Chaque point de votre expérience doit raconter une histoire de succès, même modeste.</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="glass-card rounded-xl p-6 text-center">
+                    <div class="text-4xl mb-4">📍</div>
+                    <h3 class="text-xl font-bold mb-2 text-white">Situation</h3>
+                    <p class="text-gray-400">Quel était le contexte ou le problème de départ ?</p>
+                </div>
+                <div class="glass-card rounded-xl p-6 text-center">
+                    <div class="text-4xl mb-4">🎯</div>
+                    <h3 class="text-xl font-bold mb-2 text-white">Tâche</h3>
+                    <p class="text-gray-400">Quelle était votre mission, votre objectif précis ?</p>
+                </div>
+                <div class="glass-card rounded-xl p-6 text-center">
+                    <div class="text-4xl mb-4">⚙️</div>
+                    <h3 class="text-xl font-bold mb-2 text-white">Action</h3>
+                    <p class="text-gray-400">Qu'avez-vous fait concrètement ? (Outils, techniques).</p>
+                </div>
+                <div class="glass-card rounded-xl p-6 text-center">
+                    <div class="text-4xl mb-4">🏆</div>
+                    <h3 class="text-xl font-bold mb-2 text-white">Résultat</h3>
+                    <p class="text-gray-400">Quel a été l'impact ? **Quantifiez tout !** (+X%, -Y€).</p>
+                </div>
+            </div>
+             <div class="mt-8 p-6 glass-card rounded-xl">
+                <p class="text-gray-400 text-center"><strong class="text-white">Exemple :</strong> <span class="text-red-400 line-through">"Création de dashboards."</span> vs <span class="text-green-400">"Conçu et déployé des dashboards interactifs sur Tableau, réduisant le temps de reporting de 40% et contribuant à une hausse de 5% des ventes trimestrielles."</span></p>
+            </div>
+        </section>
+        
+        <section id="roles" class="mb-20 md:mb-32">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-white">Parler le Bon Langage : Adaptez Votre Message</h2>
+                <p class="text-gray-400 max-w-2xl mx-auto">Un Data Analyst, un Data Scientist et un Data Engineer n'ont pas les mêmes objectifs. Votre CV doit refléter les compétences et les métriques les plus pertinentes pour le rôle que vous visez.</p>
+            </div>
+            <div class="glass-card rounded-xl p-6">
+                <div class="chart-container">
+                    <canvas id="rolesRadarChart"></canvas>
+                </div>
+                 <p class="text-center mt-4 text-gray-400">Ce graphique montre l'importance relative des grandes familles de compétences pour chaque rôle. Positionnez votre CV en fonction de votre cible.</p>
+                 <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+                    <div>
+                        <h4 class="font-bold text-lg text-white">Data Analyst</h4>
+                        <p class="text-sm text-gray-400">Objectif : Traduire les données en insights business. Focus sur SQL, Tableau/Power BI et la communication.</p>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-lg text-white">Data Scientist</h4>
+                        <p class="text-sm text-gray-400">Objectif : Construire des modèles prédictifs. Focus sur le Machine Learning, Python/R et les statistiques.</p>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-lg text-white">Data Engineer</h4>
+                        <p class="text-sm text-gray-400">Objectif : Bâtir des systèmes de données robustes. Focus sur Spark, Kafka, Cloud (AWS/GCP/Azure) et les pipelines ETL.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="ats" class="mb-20 md:mb-32">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-white">Déjouer les Robots et Séduire les Humains</h2>
+                <p class="text-gray-400 max-w-2xl mx-auto">Votre CV doit d'abord passer le filtre des logiciels de suivi (ATS) avec les bons mots-clés, puis convaincre un humain en quelques secondes. Évitez les erreurs qui mènent à un rejet instantané.</p>
+            </div>
+             <div class="glass-card rounded-xl p-6">
+                <h3 class="text-xl font-bold text-white text-center mb-4">Principales Causes de Rejet d'un CV</h3>
+                <div class="chart-container h-96 md:h-[450px]">
+                    <canvas id="mistakesBarChart"></canvas>
+                </div>
+                 <p class="text-center mt-4 text-gray-400">La quantification et la personnalisation sont les clés. Une simple faute d'orthographe peut signaler un manque de rigueur fatal dans le domaine de la data.</p>
+                 <div class="mt-12 grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="bg-green-900/30 p-6 rounded-lg border border-green-500">
+                        <h4 class="font-bold text-lg text-green-300 mb-3">✅ À Faire pour l'ATS</h4>
+                        <ul class="list-disc list-inside text-gray-300 space-y-2">
+                            <li>Utiliser les mots-clés de l'offre d'emploi.</li>
+                            <li>Privilégier un format simple (PDF texte, .docx).</li>
+                            <li>Utiliser des titres de section standards (Ex: "Expériences").</li>
+                        </ul>
+                    </div>
+                     <div class="bg-red-900/30 p-6 rounded-lg border border-red-500">
+                        <h4 class="font-bold text-lg text-red-300 mb-3">❌ À Éviter pour l'ATS</h4>
+                        <ul class="list-disc list-inside text-gray-300 space-y-2">
+                            <li>Mises en page complexes (colonnes, tableaux).</li>
+                            <li>Images, logos, et graphiques.</li>
+                            <li>Polices de caractères exotiques ou non-standard.</li>
+                        </ul>
+                    </div>
+                 </div>
+            </div>
+        </section>
+
+        <section id="future" class="mb-20 md:mb-32">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-white">Préparez Votre Avenir : Les Compétences de Demain</h2>
+                <p class="text-gray-400 max-w-2xl mx-auto">Le monde de la data évolue vite. Montrer une conscience des tendances futures fait de vous un candidat plus stratégique.</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="glass-card rounded-xl p-6">
+                    <h3 class="text-xl font-bold text-white text-center mb-4">Équilibre des Compétences Recherchées</h3>
+                     <div class="chart-container h-80">
+                        <canvas id="skillsDonutChart"></canvas>
+                    </div>
+                     <p class="text-center mt-4 text-gray-400">À mesure que l'IA automatise les tâches techniques, les compétences humaines comme la communication et la résolution de problèmes deviennent des différenciateurs majeurs.</p>
+                </div>
+                <div class="glass-card rounded-xl p-6">
+                    <h3 class="text-xl font-bold text-white text-center mb-4">Tendances Techniques à Surveiller</h3>
+                     <div class="chart-container h-80">
+                        <canvas id="futureSkillsBubbleChart"></canvas>
+                    </div>
+                    <p class="text-center mt-4 text-gray-400">La familiarité avec ces concepts (la taille des bulles indique leur importance croissante) montre que vous êtes un candidat visionnaire et adaptable.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="freelance" class="mb-16 md:mb-24">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-white">Au-delà du CV : Le Portfolio du Freelance</h2>
+                <p class="text-gray-400 max-w-2xl mx-auto">Pour une mission freelance, le CV dirige vers votre preuve la plus puissante : le portfolio. Il ne s'agit plus de lister des compétences, mais de démontrer des solutions via des études de cas.</p>
+            </div>
+            <div class="glass-card rounded-xl p-8">
+                <h3 class="text-2xl font-bold text-white text-center mb-8">Structure d'une Étude de Cas Impactante</h3>
+                <div class="flex flex-col items-center space-y-4">
+                    <div class="flowchart-item w-full md:w-2/3 p-4 rounded-lg text-center">
+                        <span class="font-bold text-lg">1. Défi Client & Contexte</span><br><span class="text-sm text-gray-300">Quel était le problème business à résoudre ?</span>
+                    </div>
+                    <div class="flowchart-arrow">↓</div>
+                    <div class="flowchart-item w-full md:w-2/3 p-4 rounded-lg text-center">
+                        <span class="font-bold text-lg">2. Solution Proposée</span><br><span class="text-sm text-gray-300">Quelle a été votre approche stratégique et technique ?</span>
+                    </div>
+                    <div class="flowchart-arrow">↓</div>
+                    <div class="flowchart-item w-full md:w-2/3 p-4 rounded-lg text-center">
+                        <span class="font-bold text-lg">3. Mise en Œuvre & Outils</span><br><span class="text-sm text-gray-300">Quelles étapes, quel code, quelle stack technique ?</span>
+                    </div>
+                    <div class="flowchart-arrow">↓</div>
+                    <div class="flowchart-item w-full md:w-2/3 p-4 rounded-lg text-center bg-blue-500/20 border-blue-400">
+                        <span class="font-bold text-lg text-blue-300">4. Résultats & Impact Chiffré</span><br><span class="text-sm text-gray-300">Quel a été le ROI ? (+X% de conversion, -Y€ de coûts, etc.)</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer class="text-center mt-16 pt-8 border-t border-gray-800">
+            <p class="text-gray-400">Vous avez maintenant les clés pour construire un CV qui ouvre des portes.</p>
+            <p class="font-bold text-white text-lg mt-2">À vous de jouer !</p>
+        </footer>
+    </div>
+
+    <script>
+        const brilliantBlues = {
+            darkBlue: '#004AAD',
+            mediumBlue: '#0094FF',
+            lightBlue: '#89CFF0',
+            skyBlue: '#B2FFFF',
+            white: '#FFFFFF',
+            text: '#c9d1d9',
+            grid: 'rgba(201, 209, 217, 0.2)'
+        };
+
+        const globalChartOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    labels: {
+                        color: brilliantBlues.text,
+                        font: {
+                            size: 14
+                        }
+                    }
+                },
+                tooltip: {
+                    callbacks: {
+                        title: function(tooltipItems) {
+                            const item = tooltipItems[0];
+                            let label = item.chart.data.labels[item.dataIndex];
+                            if (Array.isArray(label)) {
+                              return label.join(' ');
+                            } else {
+                              return label;
+                            }
+                        }
+                    }
+                }
+            }
+        };
+
+        function wrapLabel(str, maxWidth = 16) {
+            if (typeof str !== 'string' || str.length <= maxWidth) {
+                return str;
+            }
+            const words = str.split(' ');
+            const lines = [];
+            let currentLine = '';
+            words.forEach(word => {
+                if ((currentLine + word).length > maxWidth && currentLine.length > 0) {
+                    lines.push(currentLine.trim());
+                    currentLine = '';
+                }
+                currentLine += word + ' ';
+            });
+            lines.push(currentLine.trim());
+            return lines;
+        }
+
+        function initRolesRadarChart() {
+            const ctx = document.getElementById('rolesRadarChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: ['Business & Storytelling', 'Modélisation & Stats', ['Ingénierie &', 'Infrastructure'], 'Data Visualization', 'Communication & Collaboration'],
+                    datasets: [{
+                        label: 'Data Analyst',
+                        data: [9, 3, 4, 9, 8],
+                        backgroundColor: 'rgba(137, 207, 240, 0.2)',
+                        borderColor: brilliantBlues.lightBlue,
+                        pointBackgroundColor: brilliantBlues.lightBlue,
+                    }, {
+                        label: 'Data Scientist',
+                        data: [7, 9, 6, 6, 7],
+                        backgroundColor: 'rgba(0, 148, 255, 0.2)',
+                        borderColor: brilliantBlues.mediumBlue,
+                        pointBackgroundColor: brilliantBlues.mediumBlue,
+                    }, {
+                        label: 'Data Engineer',
+                        data: [3, 4, 10, 2, 6],
+                        backgroundColor: 'rgba(0, 74, 173, 0.2)',
+                        borderColor: brilliantBlues.darkBlue,
+                        pointBackgroundColor: brilliantBlues.darkBlue,
+                    }]
+                },
+                options: {
+                    ...globalChartOptions,
+                    scales: {
+                        r: {
+                            angleLines: { color: brilliantBlues.grid },
+                            grid: { color: brilliantBlues.grid },
+                            pointLabels: { 
+                                color: brilliantBlues.text,
+                                font: {
+                                    size: 12
+                                }
+                             },
+                            ticks: {
+                                color: brilliantBlues.text,
+                                backdropColor: 'rgba(0,0,0,0)'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function initMistakesBarChart() {
+            const ctx = document.getElementById('mistakesBarChart').getContext('2d');
+            const rawLabels = ['CV Générique / Non personnalisé', 'Manque de Quantification', "Fautes d'orthographe", 'Mise en page complexe / ATS', 'Focus sur les tâches (pas les résultats)'];
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: rawLabels.map(l => wrapLabel(l)),
+                    datasets: [{
+                        label: 'Probabilité de rejet',
+                        data: [95, 90, 80, 75, 70],
+                        backgroundColor: [brilliantBlues.darkBlue, brilliantBlues.mediumBlue, brilliantBlues.lightBlue, '#006aab', '#5caddc'],
+                        borderColor: brilliantBlues.white,
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    ...globalChartOptions,
+                    indexAxis: 'y',
+                    plugins: {
+                        ...globalChartOptions.plugins,
+                        legend: { display: false },
+                    },
+                    scales: {
+                        x: {
+                            grid: { color: brilliantBlues.grid },
+                            ticks: { 
+                                color: brilliantBlues.text,
+                                callback: function(value) { return value + '%' }
+                            }
+                        },
+                        y: {
+                            grid: { color: 'transparent' },
+                            ticks: { color: brilliantBlues.text }
+                        }
+                    }
+                }
+            });
+        }
+        
+        function initSkillsDonutChart() {
+            const ctx = document.getElementById('skillsDonutChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Compétences Humaines (Soft Skills)', 'Compétences Techniques Pures'],
+                    datasets: [{
+                        label: 'Équilibre des Compétences',
+                        data: [55, 45],
+                        backgroundColor: [brilliantBlues.mediumBlue, brilliantBlues.darkBlue],
+                        borderColor: '#0d1117',
+                        borderWidth: 4
+                    }]
+                },
+                options: {
+                    ...globalChartOptions,
+                    cutout: '70%',
+                }
+            });
+        }
+
+        function initFutureSkillsBubbleChart() {
+            const ctx = document.getElementById('futureSkillsBubbleChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bubble',
+                data: {
+                    datasets: [{
+                        label: 'Compétences Techniques Futures',
+                        data: [
+                            {x: 20, y: 30, r: 25, label: 'MLOps'},
+                            {x: 40, y: 60, r: 22, label: 'Explainable AI (XAI)'},
+                            {x: 65, y: 40, r: 20, label: 'IA Générative'},
+                            {x: 75, y: 75, r: 18, label: 'Graph Analytics'},
+                            {x: 25, y: 80, r: 15, label: 'Data Privacy Tech'}
+                        ],
+                        backgroundColor: 'rgba(0, 148, 255, 0.6)'
+                    }]
+                },
+                options: {
+                    ...globalChartOptions,
+                    plugins: {
+                        legend: { display: false },
+                         tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.raw.label;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: { display: false },
+                        y: { display: false }
+                    }
+                }
+            });
+        }
+
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initRolesRadarChart();
+            initMistakesBarChart();
+            initSkillsDonutChart();
+            initFutureSkillsBubbleChart();
+        });
+    </script>
+</body>
+</html>
