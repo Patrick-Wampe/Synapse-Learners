@@ -3,20 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Exercice : Compléter le Texte - Synapse Learners</title>
+    <title>Texte à Compléter - Synapse Learners</title>
     <link rel="icon" type="image/png" href="https://d1yei2z3i6k35z.cloudfront.net/3391351/67a8d590ebeea_logosynapselearners.png">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
 
         :root {
             --couleur-principale: #5E28CB;
+            --couleur-secondaire: #7a4de1;
             --couleur-succes: #28a745;
             --couleur-erreur: #dc3545;
             --couleur-fond: #f4f7f9;
             --couleur-texte: #212529;
+            --couleur-texte-clair: #6c757d;
             --couleur-blanc: #ffffff;
             --couleur-gris-clair: #e9ecef;
-            --couleur-ombre: rgba(0, 0, 0, 0.1);
+            --couleur-ombre: rgba(94, 40, 203, 0.1);
         }
 
         body {
@@ -32,7 +34,7 @@
         
         #page-container {
             width: 100%;
-            max-width: 800px;
+            max-width: 900px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -75,7 +77,7 @@
 
         #exercise-header {
             padding: 20px 30px;
-            background-color: var(--couleur-principale);
+            background: linear-gradient(135deg, var(--couleur-principale), var(--couleur-secondaire));
             color: var(--couleur-blanc);
             text-align: center;
         }
@@ -101,7 +103,7 @@
             font-size: 1.4em;
             line-height: 1.7;
             margin-bottom: 40px;
-            color: var(--couleur-texte-clair);
+            color: var(--couleur-texte);
         }
 
         .blank-space {
@@ -153,6 +155,9 @@
         
         .option-btn code {
             font-size: 0.9em;
+            background-color: var(--couleur-gris-clair);
+            padding: 2px 6px;
+            border-radius: 4px;
         }
 
         .option-btn:hover:not([disabled]) {
@@ -190,19 +195,16 @@
             border-radius: 25px;
             cursor: pointer;
             visibility: hidden;
+            transition: background-color 0.3s;
+        }
+        #next-btn:hover {
+            background-color: var(--couleur-secondaire);
         }
 
-        #results-screen {
-            padding: 40px;
-            text-align: center;
-        }
-        
-        #results-screen h2 {
-            font-size: 2em;
-            color: var(--couleur-principale);
-        }
-        
-        #restart-btn {
+        /* Styles pour l'écran des résultats */
+        #results-screen { padding: 40px; text-align: center; }
+        #results-screen h2 { font-size: 2em; color: var(--couleur-principale); }
+        #back-to-topics-btn {
             margin-top:20px;
             background-color: var(--couleur-principale);
             color: white;
@@ -212,8 +214,11 @@
             cursor: pointer;
             font-size: 1.1em;
             font-weight: 600;
+            transition: background-color 0.3s;
         }
-
+        #back-to-topics-btn:hover {
+             background-color: var(--couleur-secondaire);
+        }
         .summary-item {
             background-color: #f8f9fa;
             border: 1px solid var(--couleur-gris-clair);
@@ -224,6 +229,58 @@
             line-height: 1.6;
             text-align: left;
         }
+        .summary-item strong code {
+            background-color: #d1e7dd; /* Light green */
+            padding: 2px 5px;
+            border-radius: 4px;
+        }
+
+        /* NOUVEAUX STYLES POUR LA SÉLECTION DE THÈMES */
+        .topic-category {
+            width: 100%;
+            margin-bottom: 25px;
+            border: 1px solid var(--couleur-gris-clair);
+            border-radius: 10px;
+            padding: 20px;
+            background-color: #fff;
+        }
+        .category-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--couleur-gris-clair);
+        }
+        .category-icon {
+            font-size: 2.5em;
+        }
+        .category-title {
+            font-size: 1.5em;
+            font-weight: 700;
+            color: var(--couleur-texte);
+        }
+        .sub-topics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        .sub-topic-card {
+            background-color: var(--couleur-fond);
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            border: 1px solid var(--couleur-gris-clair);
+        }
+        .sub-topic-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px var(--couleur-ombre);
+            color: var(--couleur-principale);
+            border-color: var(--couleur-principale);
+        }
         
         footer {
             text-align: center;
@@ -231,25 +288,23 @@
             color: var(--couleur-texte-clair);
             font-size: 0.9rem;
         }
-
     </style>
 </head>
 <body>
     <div id="page-container">
         <header>
             <div id="logo">
-                <a href="index.html" title="Accueil des exercices">
+                <a href="#" onclick="renderTopicSelection()" title="Accueil des exercices">
                     <img src="https://d1yei2z3i6k35z.cloudfront.net/3391351/67a8d590ebeea_logosynapselearners.png" alt="Logo Synapse Learners">
                 </a>
             </div>
             <nav>
-                <a href="index.html">Retour aux exercices</a>
+                <a href="#" onclick="renderTopicSelection()">Retour aux thèmes</a>
             </nav>
         </header>
 
         <div id="exercise-container">
-            <!-- Le contenu de l'exercice sera injecté ici -->
-        </div>
+            </div>
         
         <footer>
             <p>&copy; 2025 Synapse Learners. Tous droits réservés ®.</p>
@@ -258,126 +313,275 @@
     </div>
 
     <script>
-        const exerciseData = [
-            {
-                start: 'Pour prédire une variable cible continue comme le chiffre d\'affaires, on utilise un modèle de',
-                end: '.',
-                options: ['classification', 'régression', 'clustering', 'ACP'],
-                correctAnswer: 'régression',
-                explanation: 'La <strong>régression</strong> est utilisée pour prédire des valeurs numériques continues.'
-            },
-            {
-                start: 'Un modèle qui performe mal sur les données d\'entraînement et de test est probablement en situation de',
-                end: '.',
-                options: ['sur-apprentissage', 'sous-apprentissage', 'classification', 'normalisation'],
-                correctAnswer: 'sous-apprentissage',
-                explanation: 'Le <strong>sous-apprentissage</strong> (underfitting) se produit quand le modèle est trop simple pour capturer la complexité des données.'
-            },
-            {
-                start: 'Pour s\'assurer que la proportion des classes est la même dans les jeux d\'entraînement et de test, on utilise le paramètre',
-                end: 'de <code>train_test_split</code>.',
-                options: ['shuffle', 'random_state', 'stratify', 'test_size'],
-                correctAnswer: 'stratify',
-                explanation: 'Le paramètre <strong>stratify</strong> est crucial pour les problèmes de classification, surtout si les classes sont déséquilibrées.'
-            },
-            {
-                start: 'La méthode',
-                end: 'de Pandas est une forme de One-Hot Encoding qui transforme les catégories en colonnes binaires.',
-                options: ['<code>.factorize()</code>', '<code>.get_dummies()</code>', '<code>.value_counts()</code>', '<code>.pivot_table()</code>'],
-                correctAnswer: '.get_dummies()',
-                explanation: '<strong><code>pd.get_dummies()</code></strong> est la méthode la plus directe pour appliquer un encodage One-Hot et préparer les données pour la modélisation.'
-            },
-            {
-                start: 'Le coefficient de',
-                end: 'mesure la force d\'une relation linéaire entre deux variables numériques.',
-                options: ['Spearman', 'Kendall', 'Pearson', 'Cramer'],
-                correctAnswer: 'Pearson',
-                explanation: 'La corrélation de <strong>Pearson</strong> est le standard pour les relations linéaires, tandis que Spearman ou Kendall sont utilisés pour les relations monotones non-linéaires.'
-            },
-            {
-                start: 'Remplacer les valeurs manquantes par la',
-                end: 'est une stratégie robuste en présence de nombreux outliers.',
-                options: ['moyenne', 'médiane', 'valeur la plus fréquente', 'valeur nulle'],
-                correctAnswer: 'médiane',
-                explanation: 'La <strong>médiane</strong> est moins sensible aux valeurs extrêmes que la moyenne, ce qui en fait un choix plus sûr pour l\'imputation dans ce cas.'
-            },
-            {
-                start: 'Un',
-                end: 'est une représentation graphique qui utilise les quartiles et l\'écart interquartile pour visualiser la distribution et détecter les outliers.',
-                options: ['histogramme', 'nuage de points', 'boxplot', 'diagramme circulaire'],
-                correctAnswer: 'boxplot',
-                explanation: 'Le <strong>boxplot</strong> (ou boîte à moustaches) est spécifiquement conçu pour résumer la distribution et identifier visuellement les valeurs extrêmes.'
-            },
-            {
-                start: 'Le',
-                end: 'est un algorithme d\'apprentissage non supervisé utilisé pour segmenter des données en groupes homogènes.',
-                options: ['Random Forest', 'K-Means', 'SVM', 'Régression Logistique'],
-                correctAnswer: 'K-Means',
-                explanation: '<strong>K-Means</strong> est l\'un des algorithmes de <strong>clustering</strong> les plus populaires pour partitionner des données en K clusters distincts.'
-            },
-            {
-                start: 'Le fait que les données deviennent très éparses dans un espace de grande dimension est appelé le',
-                end: '.',
-                options: ['paradoxe de Simpson', 'théorème central limite', 'fléau de la dimension', 'biais de confirmation'],
-                correctAnswer: 'fléau de la dimension',
-                explanation: 'Le <strong>fléau de la dimension</strong> (curse of dimensionality) décrit les divers problèmes qui surviennent lors de l\'analyse de données dans des espaces de haute dimension.'
-            },
-            {
-                start: 'Pour transformer les features afin qu\'elles aient une moyenne de 0 et un écart-type de 1, on utilise un',
-                end: '.',
-                options: ['<code>MinMaxScaler</code>', '<code>RobustScaler</code>', '<code>LabelEncoder</code>', '<code>StandardScaler</code>'],
-                correctAnswer: 'StandardScaler',
-                explanation: 'Le <strong><code>StandardScaler</code></strong> effectue une standardisation (ou Z-score normalization), ce qui est requis par de nombreux algorithmes de Machine Learning.'
-            },
-            {
-                start: 'L\'Analyse en Composantes Principales (ACP) est une technique de',
-                end: '.',
-                options: ['classification', 'régression', 'réduction de dimension', 'nettoyage de données'],
-                correctAnswer: 'réduction de dimension',
-                explanation: 'L\'<strong>ACP</strong> (PCA en anglais) permet de réduire le nombre de variables tout en conservant un maximum de la variance (information) présente dans les données.'
-            },
-            {
-                start: 'Si un modèle a une performance de 99% sur l\'entraînement mais de 55% sur le test, il est en',
-                end: '.',
-                options: ['sous-apprentissage', 'sur-apprentissage', 'équilibre', 'convergence'],
-                correctAnswer: 'sur-apprentissage',
-                explanation: 'Un grand écart de performance entre l\'entraînement et le test est le signe caractéristique du <strong>sur-apprentissage</strong> (overfitting).'
-            },
-            {
-                start: 'Pour évaluer une association entre la variable "ville" et la variable "catégorie de produit", on utilise un test du',
-                end: '.',
-                options: ['Student', 'Chi-2', 'Pearson', 'Kolmogorov-Smirnov'],
-                correctAnswer: 'Chi-2',
-                explanation: 'Le test du <strong>Chi-2</strong> est la méthode statistique standard pour tester l\'indépendance entre deux variables catégorielles.'
-            },
-            {
-                start: 'Dans un boxplot, une valeur est souvent considérée comme un outlier si elle est supérieure à',
-                end: '.',
-                options: ['Q3 + 1.5 * EIQ', 'la moyenne + 3 * std', 'Q3', 'la médiane'],
-                correctAnswer: 'Q3 + 1.5 * EIQ',
-                explanation: 'La "moustache" supérieure d\'un boxplot s\'étend généralement jusqu\'à <strong>Q3 + 1.5 * EIQ</strong>. Les points au-delà sont affichés individuellement comme des outliers.'
-            },
-            {
-                start: 'La fonction',
-                end: 'de Scikit-Learn permet de tester systématiquement plusieurs combinaisons d\'hyperparamètres pour trouver la meilleure.',
-                options: ['<code>cross_val_score</code>', '<code>Pipeline</code>', '<code>GridSearchCV</code>', '<code>train_test_split</code>'],
-                correctAnswer: 'GridSearchCV',
-                explanation: '<strong>GridSearchCV</strong> combine une recherche exhaustive sur une "grille" d\'hyperparamètres avec une validation croisée pour une évaluation robuste.'
-            }
-        ];
+        // --- BASE DE DONNÉES COMPLÈTE DES EXERCICES ---
+        const allExercises = {
+            // --- BLOC 1: SQL & DATA COLLECTION ---
+            sql_concepts: [
+                 { start: 'Une', end: 'est un identifiant unique pour chaque enregistrement dans une table.', options: ['clé étrangère', 'clé primaire', 'index', 'clé de session'], correctAnswer: 'clé primaire', explanation: 'La <strong>clé primaire</strong> garantit l\'unicité de chaque ligne et ne peut pas contenir de valeurs nulles.'},
+                { start: 'Une', end: 'est une clé utilisée pour lier deux tables entre elles.', options: ['clé composée', 'clé primaire', 'clé étrangère', 'superclé'], correctAnswer: 'clé étrangère', explanation: 'La <strong>clé étrangère</strong> dans une table fait référence à la clé primaire d\'une autre table.'},
+                { start: 'La normalisation vise principalement à réduire la', end: 'des données dans une base de données.', options: ['complexité', 'redondance', 'vitesse', 'sécurité'], correctAnswer: 'redondance', explanation: 'En réduisant la <strong>redondance</strong>, la normalisation prévient les anomalies de mise à jour et économise de l\'espace.'},
+                { start: 'Le modèle conceptuel de données, qui représente les entités et leurs relations, est souvent abrégé en', end: '.', options: ['MLD', 'MPD', 'MCD', 'SQL'], correctAnswer: 'MCD', explanation: 'Le <strong>MCD</strong> (Modèle Conceptuel de Données) est une représentation abstraite de haut niveau de la structure de la base de données.'},
+                { start: 'Le passage du MCD au Modèle Logique de Données (MLD) transforme les relations N:N en', end: 'intermédiaires.', options: ['vues', 'tables', 'colonnes', 'procédures'], correctAnswer: 'tables', explanation: 'Une table intermédiaire (ou table de jonction) contient les clés étrangères des deux tables qu\'elle relie.'}
+            ],
+            sql_normalization: [
+                { start: 'Pour s\'assurer que les données sont atomiques dans une table, on applique la', end: 'Forme Normale (1FN).', options: ['Première', 'Deuxième', 'Troisième', 'Quatrième'], correctAnswer: 'Première', explanation: 'La <strong>Première Forme Normale</strong> (1FN) stipule que chaque cellule d\'une table doit contenir une seule valeur atomique (non divisible).'},
+                { start: 'La Deuxième Forme Normale (2FN) exige que la table soit en 1FN et que tous les attributs non-clés dépendent pleinement de la', end: 'entière.', options: ['clé étrangère', 'clé primaire', 'table', 'base de données'], correctAnswer: 'clé primaire', explanation: 'La 2FN élimine les dépendances partielles vis-à-vis d\'une clé primaire composée.'},
+                { start: 'La Troisième Forme Normale (3FN) vise à éliminer les dépendances', end: ', où un attribut non-clé dépend d\'un autre attribut non-clé.', options: ['partielles', 'fonctionnelles', 'réflexives', 'transitives'], correctAnswer: 'transitives', explanation: 'La 3FN assure que tous les attributs ne dépendent que de la clé, toute la clé, et rien que la clé.'},
+                { start: 'Une table contenant une colonne "ville_proprietaire" et "code_postal_proprietaire" viole la 3FN car le code postal dépend de la', end: '.', options: ['ville', 'clé primaire', 'table', 'voiture'], correctAnswer: 'ville', explanation: 'Il s\'agit d\'une dépendance transitive. Il faudrait créer une table "Villes" séparée.'},
+                { start: 'Le principal objectif de la normalisation est de protéger l\'', end: 'des données.', options: ['intégrité', 'opacité', 'vitesse', 'accessibilité'], correctAnswer: 'intégrité', explanation: 'L\'<strong>intégrité</strong> des données est assurée en évitant les anomalies de suppression, d\'insertion et de mise à jour.'}
+            ],
+            sql_read: [
+                { start: 'Pour extraire des données d\'une table, on utilise la commande', end: '.', options: ['<code>FETCH</code>', '<code>SELECT</code>', '<code>GET</code>', '<code>PULL</code>'], correctAnswer: 'SELECT', explanation: 'La commande <strong><code>SELECT</code></strong> est la base de toute requête pour lire des données dans une base de données SQL.'},
+                { start: 'La clause qui permet de spécifier la table à interroger est', end: '.', options: ['<code>FROM</code>', '<code>TABLE</code>', '<code>IN</code>', '<code>SOURCE</code>'], correctAnswer: 'FROM', explanation: 'La clause <strong><code>FROM</code></strong> suit toujours le <code>SELECT</code> pour indiquer de quelle table proviennent les données.'},
+                { start: 'La clause qui permet de filtrer les résultats d\'une requête est', end: '.', options: ['<code>FILTER BY</code>', '<code>HAVING</code>', '<code>ORDER BY</code>', '<code>WHERE</code>'], correctAnswer: 'WHERE', explanation: 'La clause <strong><code>WHERE</code></strong> s\'applique sur les lignes avant tout regroupement pour ne garder que celles qui respectent une condition.'},
+                { start: 'Pour trier les résultats par ordre croissant, on utilise', end: '.', options: ['<code>SORT BY ASC</code>', '<code>ORDER BY ASC</code>', '<code>GROUP BY ASC</code>', '<code>ARRANGE BY ASC</code>'], correctAnswer: 'ORDER BY ASC', explanation: '<strong><code>ORDER BY</code></strong> trie les résultats. <code>ASC</code> (ascendant) est le tri par défaut.'},
+                { start: 'Pour supprimer les doublons dans le résultat d\'une requête, on utilise le mot-clé', end: 'après <code>SELECT</code>.', options: ['<code>UNIQUE</code>', '<code>DISTINCT</code>', '<code>SINGLE</code>', '<code>NODUPE</code>'], correctAnswer: 'DISTINCT', explanation: '<code>SELECT DISTINCT pays</code> renverra une liste unique des pays présents dans la table.'}
+            ],
+            sql_joins: [
+                 { start: 'Pour combiner les données de deux tables sur la base d\'une colonne commune, on utilise une', end: '.', options: ['fusion', 'jointure', 'relation', 'union'], correctAnswer: 'jointure', explanation: 'Une <strong>jointure</strong> (<code>JOIN</code>) est l\'opération qui permet de lier plusieurs tables entre elles.'},
+                 { start: 'La jointure', end: 'ne retourne que les lignes qui ont une correspondance dans les deux tables.', options: ['<code>LEFT JOIN</code>', '<code>FULL OUTER JOIN</code>', '<code>INNER JOIN</code>', '<code>RIGHT JOIN</code>'], correctAnswer: 'INNER JOIN', explanation: '<strong><code>INNER JOIN</code></strong> est le type de jointure le plus courant, ne conservant que les correspondances strictes.'},
+                 { start: 'La jointure', end: 'retourne toutes les lignes de la table de gauche, et les lignes correspondantes de la table de droite.', options: ['<code>LEFT JOIN</code>', '<code>INNER JOIN</code>', '<code>RIGHT JOIN</code>', '<code>SELF JOIN</code>'], correctAnswer: 'LEFT JOIN', explanation: 'S\'il n\'y a pas de correspondance dans la table de droite, les colonnes correspondantes contiendront des valeurs <code>NULL</code>.'},
+                 { start: 'Pour joindre une table à elle-même, on utilise une', end: '.', options: ['<code>INNER JOIN</code>', '<code>RECURSIVE JOIN</code>', '<code>SELF JOIN</code>', '<code>LOOP JOIN</code>'], correctAnswer: 'SELF JOIN', explanation: 'Une <strong><code>SELF JOIN</code></strong> est utile pour comparer des lignes au sein de la même table, par exemple pour trouver des employés qui ont le même manager.'},
+                 { start: 'La jointure', end: 'retourne toutes les lignes quand il y a une correspondance dans l\'une des tables.', options: ['<code>LEFT JOIN</code>', '<code>FULL OUTER JOIN</code>', '<code>INNER JOIN</code>', '<code>CROSS JOIN</code>'], correctAnswer: 'FULL OUTER JOIN', explanation: '<strong><code>FULL OUTER JOIN</code></strong> combine les résultats des jointures LEFT et RIGHT. Les lignes sans correspondance dans l\'autre table auront des valeurs <code>NULL</code>.'},
+                 { start: 'La clause <code>ON</code> dans une jointure sert à spécifier la condition de', end: '.', options: ['filtrage', 'tri', 'liaison', 'regroupement'], correctAnswer: 'liaison', explanation: 'La condition de <strong>liaison</strong>, par exemple <code>ON tableA.id = tableB.id_A</code>, indique comment les tables sont connectées.'}
+            ],
+            sql_aggregation: [
+                { start: 'Pour regrouper des lignes et appliquer une fonction d\'agrégation comme <code>COUNT()</code>, on utilise', end: '.', options: ['<code>CLUSTER BY</code>', '<code>AGGREGATE BY</code>', '<code>GROUP BY</code>', '<code>SORT BY</code>'], correctAnswer: 'GROUP BY', explanation: 'La clause <strong><code>GROUP BY</code></strong> est essentielle pour réaliser des calculs statistiques sur des sous-ensembles de données.'},
+                { start: 'La fonction d\'agrégation', end: 'calcule la moyenne des valeurs d\'une colonne.', options: ['<code>SUM()</code>', '<code>COUNT()</code>', '<code>AVG()</code>', '<code>MEAN()</code>'], correctAnswer: 'AVG()', explanation: '<strong><code>AVG()</code></strong> (pour Average) est la fonction standard SQL pour calculer la moyenne.'},
+                { start: 'La fonction d\'agrégation', end: 'retourne la somme des valeurs d\'une colonne.', options: ['<code>TOTAL()</code>', '<code>SUM()</code>', '<code>PLUS()</code>', '<code>ADD()</code>'], correctAnswer: 'SUM()', explanation: '<strong><code>SUM()</code></strong> est utilisée pour calculer des totaux, comme le chiffre d\'affaires total.'},
+                { start: 'Pour compter le nombre de lignes dans un groupe, on utilise', end: '.', options: ['<code>SUM()</code>', '<code>COUNT()</code>', '<code>TOTAL()</code>', '<code>NUMBER()</code>'], correctAnswer: 'COUNT()', explanation: '<code>COUNT(nom_colonne)</code> compte les valeurs non-nulles, tandis que <code>COUNT(*)</code> compte toutes les lignes.'},
+                { start: 'La clause', end: 'est similaire à <code>WHERE</code> mais s\'applique aux groupes après une agrégation.', options: ['<code>HAVING</code>', '<code>AFTER</code>', '<code>WHEN</code>', '<code>THEN</code>'], correctAnswer: 'HAVING', explanation: 'On utilise <strong><code>HAVING</code></strong> pour filtrer les résultats d\'un <code>GROUP BY</code>, par exemple `HAVING COUNT(*) > 10`.'}
+            ],
+            sql_advanced: [
+                { start: 'Une requête imbriquée à l\'intérieur d\'une autre requête est appelée une', end: '.', options: ['sous-requête', 'requête jointe', 'vue', 'procédure stockée'], correctAnswer: 'sous-requête', explanation: 'Les <strong>sous-requêtes</strong> sont très utiles pour effectuer des filtrages complexes basés sur le résultat d\'une autre requête.'},
+                { start: 'Une', end: 'est une table virtuelle basée sur le jeu de résultats d\'une requête SQL.', options: ['table temporaire', 'procédure', 'fonction', 'vue'], correctAnswer: 'vue', explanation: 'Une <strong>vue</strong> (<code>VIEW</code>) peut simplifier des requêtes complexes et renforcer la sécurité en masquant certaines colonnes.'},
+                { start: 'L\'opérateur', end: 'est utilisé pour combiner le jeu de résultats de deux ou plusieurs requêtes <code>SELECT</code> en supprimant les doublons.', options: ['<code>JOIN</code>', '<code>MERGE</code>', '<code>UNION</code>', '<code>COMBINE</code>'], correctAnswer: 'UNION', explanation: '<strong><code>UNION</code></strong> empile les résultats des requêtes. Pour conserver les doublons, on utilise <code>UNION ALL</code>.'},
+                { start: 'Donner un nom temporaire à une colonne ou une table dans une requête est appelé un', end: '.', options: ['surnom', 'alias', 'raccourci', 'label'], correctAnswer: 'alias', explanation: 'On utilise le mot-clé <code>AS</code> pour créer un <strong>alias</strong>, par exemple <code>SELECT nom AS nom_client</code>.'},
+                { start: 'La commande', end: 'est utilisée pour supprimer complètement une table et toutes ses données.', options: ['<code>DELETE TABLE</code>', '<code>TRUNCATE TABLE</code>', '<code>REMOVE TABLE</code>', '<code>DROP TABLE</code>'], correctAnswer: 'DROP TABLE', explanation: '<strong><code>DROP TABLE</code></strong> est une opération DDL irréversible qui supprime la structure et les données, contrairement à <code>DELETE</code> qui ne supprime que les données.'}
+            ],
+            // --- BLOC 2: PYTHON & PANDAS ---
+            python_basics: [
+                 { start: 'En Python, l\'indentation définit les', end: 'de code.', options: ['commentaires', 'variables', 'blocs', 'fonctions'], correctAnswer: 'blocs', explanation: 'Python utilise l\'indentation pour délimiter les <strong>blocs</strong> de code (boucles, conditions, fonctions), là où d\'autres langages utilisent des accolades.'},
+                { start: 'Un type de données', end: 'ne peut pas être modifié après sa création, comme un tuple ou une chaîne de caractères.', options: ['immuable', 'mutable', 'dynamique', 'statique'], correctAnswer: 'immuable', explanation: 'Les objets <strong>immuables</strong> (immutable) garantissent que leur état ne change pas, ce qui est important pour la sécurité et la performance.'},
+                { start: 'La boucle', end: 'est utilisée pour itérer sur les éléments d\'une séquence (comme une liste).', options: ['<code>while</code>', '<code>if</code>', '<code>for</code>', '<code>do</code>'], correctAnswer: 'for', explanation: 'La boucle <strong><code>for</code></strong> est idéale pour parcourir chaque élément d\'un objet itérable.'},
+                { start: 'La boucle', end: 'continue de s\'exécuter tant qu\'une condition reste vraie.', options: ['<code>while</code>', '<code>for</code>', '<code>if</code>', '<code>until</code>'], correctAnswer: 'while', explanation: 'Une boucle <strong><code>while</code></strong> est utile quand on ne sait pas à l\'avance combien d\'itérations seront nécessaires.'},
+                { start: 'Pour vérifier si deux valeurs sont égales, on utilise l\'opérateur', end: '.', options: ['<code>=</code>', '<code>!=</code>', '<code>==</code>', '<code>is</code>'], correctAnswer: '==', explanation: 'L\'opérateur <strong><code>==</code></strong> compare les valeurs, tandis que <code>=</code> est utilisé pour l\'affectation de variable.'}
+            ],
+            python_structures: [
+                { start: 'En Python, les collections ordonnées et modifiables sont appelées des', end: '.', options: ['tuples', 'sets', 'dictionnaires', 'listes'], correctAnswer: 'listes', explanation: 'Les <strong>listes</strong> (<code>list</code>) sont définies avec des crochets <code>[]</code> et peuvent être modifiées après leur création.'},
+                { start: 'Les collections non ordonnées d\'éléments uniques sont des', end: '.', options: ['tuples', 'sets', 'dictionnaires', 'listes'], correctAnswer: 'sets', explanation: 'Un <strong>set</strong> (ensemble), défini avec des accolades `{}`, est très efficace pour supprimer les doublons ou tester l\'appartenance d\'un élément.'},
+                { start: 'Un dictionnaire stocke des paires de', end: '.', options: ['index-valeur', 'clé-valeur', 'nom-attribut', 'type-objet'], correctAnswer: 'clé-valeur', explanation: 'Les <strong>dictionnaires</strong> (<code>dict</code>) permettent un accès très rapide aux valeurs via leurs clés uniques.'},
+                { start: 'Les', end: 'sont des collections ordonnées mais immuables, définies avec des parenthèses.', options: ['listes', 'sets', 'dictionnaires', 'tuples'], correctAnswer: 'tuples', explanation: 'Les <strong>tuples</strong> sont souvent utilisés pour stocker des données qui ne doivent pas changer, comme des coordonnées.'},
+                { start: 'Pour accéder à une valeur dans un dictionnaire, on utilise sa', end: '.', options: ['position', 'clé', 'index', 'nom'], correctAnswer: 'clé', explanation: 'Par exemple, <code>mon_dict[\'ma_cle\']</code> renvoie la valeur associée à `ma_cle`.'},
+                { start: 'Pour obtenir le nombre d\'éléments dans une liste, on utilise la fonction', end: '.', options: ['<code>count()</code>', '<code>size()</code>', '<code>len()</code>', '<code>length()</code>'], correctAnswer: 'len()', explanation: 'La fonction <strong><code>len()</code></strong> est universelle et fonctionne sur la plupart des objets conteneurs en Python (listes, tuples, dictionnaires, chaînes...).'}
+            ],
+            python_functions: [
+                { start: 'Pour définir une fonction en Python, on utilise le mot-clé', end: '.', options: ['<code>function</code>', '<code>def</code>', '<code>fun</code>', '<code>lambda</code>'], correctAnswer: 'def', explanation: 'Le mot-clé <strong><code>def</code></strong> est suivi du nom de la fonction, de ses paramètres entre parenthèses et de deux-points.'},
+                { start: 'Pour renvoyer une valeur depuis une fonction, on utilise le mot-clé', end: '.', options: ['<code>return</code>', '<code>yield</code>', '<code>send</code>', '<code>output</code>'], correctAnswer: 'return', explanation: 'Le mot-clé <strong><code>return</code></strong> met fin à l\'exécution de la fonction et renvoie une valeur à l\'appelant.'},
+                { start: 'Une fonction anonyme, définie en une seule ligne, est créée avec le mot-clé', end: '.', options: ['<code>def</code>', '<code>proc</code>', '<code>func</code>', '<code>lambda</code>'], correctAnswer: 'lambda', explanation: 'Les fonctions <strong><code>lambda</code></strong> sont utiles pour des opérations courtes, souvent passées en argument à d\'autres fonctions comme <code>map()</code> ou <code>filter()</code>.'},
+                { start: 'Pour accepter un nombre variable d\'arguments positionnels dans une fonction, on utilise la syntaxe', end: '.', options: ['<code>**kwargs</code>', '<code>&args</code>', '<code>*args</code>', '<code>...args</code>'], correctAnswer: '*args', explanation: '<strong><code>*args</code></strong> rassemble les arguments positionnels supplémentaires dans un tuple.'},
+                { start: 'Pour accepter un nombre variable d\'arguments nommés (par mot-clé), on utilise la syntaxe', end: '.', options: ['<code>*args</code>', '<code>**kwargs</code>', '<code>&kwargs</code>', '<code>...kwargs</code>'], correctAnswer: '**kwargs', explanation: '<strong><code>**kwargs</code></strong> rassemble les arguments nommés supplémentaires dans un dictionnaire.'}
+            ],
+            python_oop: [
+                { start: 'En Programmation Orientée Objet, une', end: 'est un plan ou un modèle pour créer des objets.', options: ['fonction', 'variable', 'instance', 'classe'], correctAnswer: 'classe', explanation: 'Une <strong>classe</strong> (<code>class</code>) définit les attributs (données) et les méthodes (comportements) que ses objets (instances) auront.'},
+                { start: 'Une réalisation concrète d\'une classe est appelée un objet ou une', end: '.', options: ['copie', 'instance', 'définition', 'variable'], correctAnswer: 'instance', explanation: 'On crée une <strong>instance</strong> d\'une classe en appelant la classe comme une fonction : <code>ma_voiture = Voiture()</code>.'},
+                { start: 'La méthode spéciale', end: 'est le constructeur d\'une classe, appelée lors de la création d\'une nouvelle instance.', options: ['<code>__main__</code>', '<code>__start__</code>', '<code>__init__</code>', '<code>__class__</code>'], correctAnswer: '__init__', explanation: 'La méthode <strong><code>__init__(self, ...)</code></strong> est utilisée pour initialiser les attributs de l\'objet.'},
+                { start: 'Le mécanisme qui permet à une classe (enfant) d\'acquérir les propriétés d\'une autre classe (parent) est l\'', end: '.', options: ['encapsulation', 'héritage', 'polymorphisme', 'abstraction'], correctAnswer: 'héritage', explanation: 'L\'<strong>héritage</strong> favorise la réutilisation du code et la création de hiérarchies de classes logiques.'},
+                { start: 'Le principe de cacher les détails d\'implémentation d\'un objet et d\'exposer uniquement une interface s\'appelle l\'', end: '.', options: ['héritage', 'abstraction', 'polymorphisme', 'encapsulation'], correctAnswer: 'encapsulation', explanation: 'L\'<strong>encapsulation</strong> est souvent mise en œuvre avec des attributs "privés" (par convention, préfixés par `_` ou `__`).'}
+            ],
+            pandas_basics: [
+                 { start: 'La structure de données principale de NumPy, un tableau multidimensionnel, est appelée', end: '.', options: ['DataFrame', 'Series', 'list', 'ndarray'], correctAnswer: 'ndarray', explanation: 'L\'objet <strong><code>ndarray</code></strong> (N-dimensional array) de NumPy est la base de tout calcul scientifique en Python, offrant des performances exceptionnelles.'},
+                { start: 'La structure de données de Pandas qui représente un tableau à deux dimensions, similaire à une feuille de calcul, est un', end: '.', options: ['Series', 'DataFrame', 'ndarray', 'Matrix'], correctAnswer: 'DataFrame', explanation: 'Un <strong>DataFrame</strong> est la structure la plus utilisée en Pandas. Il est composé de colonnes, qui sont elles-mêmes des objets Series.'},
+                { start: 'Pour lire un fichier CSV dans un DataFrame, on utilise la fonction', end: '.', options: ['<code>pd.load_csv()</code>', '<code>pd.open_csv()</code>', '<code>pd.read_csv()</code>', '<code>pd.get_csv()</code>'], correctAnswer: 'pd.read_csv()', explanation: '<strong><code>pd.read_csv()</code></strong> est une fonction très flexible avec de nombreux paramètres pour gérer différents formats de fichiers CSV.'},
+                { start: 'Pour sélectionner des lignes et des colonnes par leurs étiquettes (noms), on utilise l\'accesseur', end: '.', options: ['<code>.iloc[]</code>', '<code>.get[]</code>', '<code>.loc[]</code>', '<code>.ix[]</code>'], correctAnswer: '.loc[]', explanation: '<strong><code>.loc[]</code></strong> est basé sur les labels de l\'index et des colonnes, par exemple `df.loc[\'ligne_A\', \'colonne_B\']`.'},
+                { start: 'Pour sélectionner des lignes et des colonnes par leur position entière (index numérique), on utilise', end: '.', options: ['<code>.iloc[]</code>', '<code>.pos[]</code>', '<code>.loc[]</code>', '<code>.at[]</code>'], correctAnswer: '.iloc[]', explanation: '<strong><code>.iloc[]</code></strong> est basé sur la position, par exemple `df.iloc[0, 1]` pour la première ligne, deuxième colonne.'}
+            ],
+            pandas_cleaning: [
+                { start: 'Pour remplacer les valeurs manquantes (NaN) dans un DataFrame par une valeur spécifique, on utilise', end: '.', options: ['<code>.dropna()</code>', '<code>.replace()</code>', '<code>.fillna()</code>', '<code>.clean()</code>'], correctAnswer: '.fillna()', explanation: 'La méthode <strong><code>.fillna()</code></strong> offre plusieurs stratégies pour imputer les valeurs manquantes (valeur fixe, moyenne, médiane, etc.).'},
+                { start: 'Pour supprimer les lignes contenant des valeurs manquantes, on utilise la méthode', end: '.', options: ['<code>.drop()</code>', '<code>.delete_na()</code>', '<code>.remove_na()</code>', '<code>.dropna()</code>'], correctAnswer: '.dropna()', explanation: '<strong><code>.dropna()</code></strong> peut être configurée pour supprimer les lignes (ou colonnes) si n\'importe quelle ou toutes leurs valeurs sont manquantes.'},
+                { start: 'Pour supprimer les lignes dupliquées d\'un DataFrame, la méthode à utiliser est', end: '.', options: ['<code>.drop_duplicates()</code>', '<code>.remove_duplicates()</code>', '<code>.unique()</code>', '<code>.deduplicate()</code>'], correctAnswer: '.drop_duplicates()', explanation: '<strong><code>.drop_duplicates()</code></strong> peut considérer toutes les colonnes ou un sous-ensemble de colonnes pour identifier les doublons.'},
+                { start: 'Pour convertir le type de données d\'une colonne, par exemple de `object` à `float`, on utilise la méthode', end: '.', options: ['<code>.convert()</code>', '<code>.change_type()</code>', '<code>.to_numeric()</code>', '<code>.astype()</code>'], correctAnswer: '.astype()', explanation: 'La méthode <strong><code>.astype()</code></strong> est très polyvalente, ex: `df[\'col\'].astype(\'int64\')`. Pour les conversions numériques, `pd.to_numeric` est aussi une option robuste.'},
+                { start: 'Remplacer les valeurs manquantes par la', end: 'est une stratégie robuste en présence de nombreux outliers.', options: ['moyenne', 'médiane', 'valeur la plus fréquente', 'valeur nulle'], correctAnswer: 'médiane', explanation: 'La <strong>médiane</strong> est moins sensible aux valeurs extrêmes que la moyenne, ce qui en fait un choix plus sûr pour l\'imputation dans ce cas.'}
+            ],
+            // --- BLOC 3: MACHINE LEARNING ---
+            ml_concepts: [
+                { start: 'L\'apprentissage automatique où le modèle apprend à partir de données étiquetées est appelé apprentissage', end: '.', options: ['supervisé', 'non supervisé', 'par renforcement', 'profond'], correctAnswer: 'supervisé', explanation: 'En apprentissage <strong>supervisé</strong>, on fournit au modèle des exemples avec la "bonne réponse" (l\'étiquette ou `label`).'},
+                { start: 'Le', end: 'est une technique d\'apprentissage non supervisé qui vise à regrouper des données similaires.', options: ['clustering', 'régression', 'classification', 'nettoyage'], correctAnswer: 'clustering', explanation: 'Le <strong>clustering</strong> (ou partitionnement de données) permet de découvrir des structures ou des segments cachés dans les données sans étiquettes préalables.'},
+                { start: 'Un modèle qui apprend "par cœur" les données d\'entraînement et performe mal sur de nouvelles données est en situation de', end: '.', options: ['sous-apprentissage', 'sur-apprentissage', 'généralisation', 'validation'], correctAnswer: 'sur-apprentissage', explanation: 'Le <strong>sur-apprentissage</strong> (overfitting) se produit quand le modèle est trop complexe et capture le bruit au lieu du signal dans les données d\'entraînement.'},
+                { start: 'L\'erreur d\'un modèle due à des hypothèses de base incorrectes, le rendant trop simple, est appelée le', end: '.', options: ['biais', 'bruit', 'hasard', 'paradoxe'], correctAnswer: 'biais', explanation: 'Un <strong>biais</strong> élevé signifie que le modèle ne peut pas capturer la relation sous-jacente entre les features et la cible (signe de sous-apprentissage).'},
+                { start: 'Un', end: 'est un paramètre du modèle qui n\'est pas appris par l\'entraînement mais qui est défini en amont par le data analyst.', options: ['poids', 'biais', 'coefficient', 'hyperparamètre'], correctAnswer: 'hyperparamètre', explanation: 'Le nombre de voisins dans un KNN ou le taux d\'apprentissage d\'un réseau de neurones sont des exemples d\'<strong>hyperparamètres</strong>.'}
+            ],
+            ml_process: [
+                { start: 'Le processus de découpage des données en un ensemble pour l\'entraînement et un autre pour l\'évaluation s\'appelle le', end: '.', options: ['<code>train/test split</code>', '<code>cross-validation</code>', '<code>bootstrapping</code>', '<code>sampling</code>'], correctAnswer: 'train/test split', explanation: 'Le <strong><code>train/test split</code></strong> est l\'étape fondamentale pour évaluer honnêtement la capacité de généralisation d\'un modèle.'},
+                { start: 'Pour s\'assurer que les résultats d\'un `train_test_split` sont reproductibles, on fixe le paramètre', end: '.', options: ['<code>shuffle</code>', '<code>test_size</code>', '<code>stratify</code>', '<code>random_state</code>'], correctAnswer: 'random_state', explanation: 'Fixer <strong><code>random_state</code></strong> avec une valeur entière garantit que la division aléatoire sera toujours la même.'},
+                { start: 'Pour s\'assurer que la proportion des classes est la même dans les jeux d\'entraînement et de test, on utilise le paramètre', end: 'de <code>train_test_split</code>.', options: ['<code>shuffle</code>', '<code>random_state</code>', '<code>stratify</code>', '<code>test_size</code>'], correctAnswer: 'stratify', explanation: 'Le paramètre <strong><code>stratify</code></strong> est crucial pour les problèmes de classification, surtout si les classes sont déséquilibrées.'},
+                { start: 'La', end: 'est une technique de ré-échantillonnage qui divise les données en "k" plis pour une évaluation plus robuste du modèle.', options: ['standardisation', 'normalisation', 'validation croisée', 'régularisation'], correctAnswer: 'validation croisée', explanation: 'La <strong>validation croisée</strong> (cross-validation) permet d\'utiliser toutes les données pour l\'entraînement et le test, en faisant tourner le pli de test.'},
+                { start: 'Pour transformer les features afin qu\'elles aient une moyenne de 0 et un écart-type de 1, on utilise un', end: '.', options: ['<code>MinMaxScaler</code>', '<code>RobustScaler</code>', '<code>LabelEncoder</code>', '<code>StandardScaler</code>'], correctAnswer: 'StandardScaler', explanation: 'Le <strong><code>StandardScaler</code></strong> effectue une standardisation (ou Z-score normalization), ce qui est requis par de nombreux algorithmes de Machine Learning.'},
+                { start: 'La fonction', end: 'de Scikit-Learn permet de tester systématiquement plusieurs combinaisons d\'hyperparamètres pour trouver la meilleure.', options: ['<code>cross_val_score</code>', '<code>Pipeline</code>', '<code>GridSearchCV</code>', '<code>train_test_split</code>'], correctAnswer: 'GridSearchCV', explanation: '<strong>GridSearchCV</strong> combine une recherche exhaustive sur une "grille" d\'hyperparamètres avec une validation croisée pour une évaluation robuste.'}
+            ],
+            ml_regression: [
+                 { start: 'Pour prédire une variable cible continue comme le chiffre d\'affaires, on utilise un modèle de', end: '.', options: ['classification', 'régression', 'clustering', 'ACP'], correctAnswer: 'régression', explanation: 'La <strong>régression</strong> est utilisée pour prédire des valeurs numériques continues.'},
+                 { start: 'Dans une régression linéaire simple, la pente de la droite de régression est appelée un', end: '.', options: ['intercept', 'coefficient', 'résidu', 'résultat'], correctAnswer: 'coefficient', explanation: 'Le <strong>coefficient</strong> représente le changement de la variable dépendante pour une augmentation d\'une unité de la variable indépendante.'},
+                 { start: 'La métrique', end: 'calcule la moyenne des carrés des différences entre les valeurs prédites et réelles.', options: ['R²', 'MSE', 'MAE', 'RMSE'], correctAnswer: 'MSE', explanation: 'La <strong>MSE</strong> (Mean Squared Error) pénalise fortement les grandes erreurs en raison de la mise au carré.'},
+                 { start: 'Pour la régression, le', end: 'mesure la part de la variance de la variable cible qui est expliquée par le modèle.', options: ['MAE (Mean Absolute Error)', 'R² (Coefficient de détermination)', 'RMSE (Root Mean Squared Error)', 'MSE (Mean Squared Error)'], correctAnswer: 'R² (Coefficient de détermination)', explanation: 'Un <strong>R²</strong> proche de 1 indique que le modèle explique bien la variabilité des données, tandis qu\'un R² proche de 0 indique le contraire.'},
+                 { start: 'Un modèle de régression', end: 'peut capturer des relations non-linéaires en ajoutant des termes de puissance des features.', options: ['logistique', 'linéaire', 'polynomiale', 'Robuste'], correctAnswer: 'polynomiale', explanation: 'La <strong>régression polynomiale</strong> est une extension de la régression linéaire qui peut s\'adapter à des courbes plus complexes.'}
+            ],
+            ml_classification: [
+                { start: 'Dans une matrice de confusion, un', end: 'est un cas où le modèle prédit "Positif" alors que la réalité est "Négatif".', options: ['Vrai Positif (TP)', 'Faux Positif (FP)', 'Vrai Négatif (TN)', 'Faux Négatif (FN)'], correctAnswer: 'Faux Positif (FP)', explanation: 'Un <strong>Faux Positif</strong> (False Positive) est aussi appelé une erreur de Type I.'},
+                { start: 'La métrique qui mesure la proportion d\'identifiés positifs qui étaient réellement positifs est la', end: '.', options: ['précision', 'rappel', 'exactitude', 'F1-score'], correctAnswer: 'précision', explanation: 'La <strong>précision</strong> (Precision) répond à la question : "Parmi tout ce que j\'ai prédit comme positif, quel pourcentage était correct ?" (TP / (TP + FP)).'},
+                { start: 'La métrique qui mesure la proportion des positifs réels qui ont été correctement identifiés est le', end: '.', options: ['précision', 'rappel', 'exactitude', 'spécificité'], correctAnswer: 'rappel', explanation: 'Le <strong>rappel</strong> (Recall ou Sensibilité) répond à la question : "De tous les positifs qui existaient, quel pourcentage ai-je trouvé ?" (TP / (TP + FN)).'},
+                { start: 'L\'algorithme', end: 'trouve l\'hyperplan qui sépare au mieux les différentes classes.', options: ['K-Means', 'SVM (Support Vector Machine)', 'Naive Bayes', 'Arbre de Décision'], correctAnswer: 'SVM (Support Vector Machine)', explanation: 'Les <strong>SVM</strong> cherchent la "marge" maximale entre les classes, ce qui les rend robustes.'},
+                { start: 'L\'aire sous la courbe ROC (Receiver Operating Characteristic) est appelée', end: '.', options: ['RMSE', 'AUC', 'MAE', 'R²'], correctAnswer: 'AUC', explanation: 'L\'<strong>AUC</strong> (Area Under Curve) donne un score global de la performance d\'un classifieur. Un modèle parfait a une AUC de 1, un modèle aléatoire une AUC de 0.5.'},
+                { start: 'L\'algorithme', end: 'classifie un nouveau point en se basant sur le vote majoritaire de ses plus proches voisins.', options: ['Régression Logistique', 'K-Means', 'KNN (K-Nearest Neighbors)', 'SVM'], correctAnswer: 'KNN (K-Nearest Neighbors)', explanation: 'Le <strong>KNN</strong> est un algorithme simple et intuitif, mais qui peut être lent sur de grands jeux de données.'}
+            ],
+            ml_clustering: [
+                { start: 'Le', end: 'est un algorithme d\'apprentissage non supervisé utilisé pour segmenter des données en groupes homogènes.', options: ['Random Forest', 'K-Means', 'SVM', 'Régression Logistique'], correctAnswer: 'K-Means', explanation: '<strong>K-Means</strong> est l\'un des algorithmes de <strong>clustering</strong> les plus populaires pour partitionner des données en K clusters distincts.'},
+                { start: 'La méthode du coude ("elbow method") est utilisée en clustering pour aider à déterminer le nombre optimal de', end: '.', options: ['features', 'voisins', 'clusters (k)', 'dimensions'], correctAnswer: 'clusters (k)', explanation: 'On cherche le "coude" sur le graphique de l\'inertie en fonction de k, qui représente le point où l\'ajout d\'un nouveau cluster apporte un gain marginal décroissant.'},
+                { start: 'Le score de', end: 'mesure à la fois la cohésion intra-cluster et la séparation inter-cluster.', options: ['silhouette', 'R²', 'précision', 'Calinski-Harabasz'], correctAnswer: 'silhouette', explanation: 'Le <strong>score de silhouette</strong> varie de -1 à 1. Une valeur proche de 1 indique des clusters denses et bien séparés.'},
+                { start: 'Le clustering', end: 'construit une hiérarchie de clusters, souvent visualisée sous forme de dendrogramme.', options: ['K-Means', 'DBSCAN', 'agglomératif', 'à noyau'], correctAnswer: 'agglomératif', explanation: 'Le <strong>clustering agglomératif</strong> est une approche ascendante : chaque point commence comme son propre cluster, et les paires les plus proches sont fusionnées successivement.'},
+                { start: 'L\'algorithme de clustering', end: 'est basé sur la densité et est efficace pour trouver des clusters de formes non sphériques.', options: ['K-Means', 'Hiérarchique', 'DBSCAN', 'Spectral'], correctAnswer: 'DBSCAN', explanation: '<strong>DBSCAN</strong> (Density-Based Spatial Clustering of Applications with Noise) est capable d\'identifier les outliers comme du bruit.'}
+            ],
+            ml_nlp: [
+                { start: 'L\'étape du NLP qui consiste à découper un texte en phrases ou en mots est la', end: '.', options: ['lemmatisation', 'vectorisation', 'segmentation', 'tokenisation'], correctAnswer: 'tokenisation', explanation: 'La <strong>tokenisation</strong> est la première étape fondamentale de la plupart des pipelines NLP.'},
+                { start: 'Les mots très courants comme "le", "de", "et", qui sont souvent filtrés, sont appelés des', end: '.', options: ['tokens', 'lemmes', 'mots vides (stop words)', 'n-grammes'], correctAnswer: 'mots vides (stop words)', explanation: 'La suppression des <strong>mots vides</strong> permet de se concentrer sur les mots qui portent le plus de sens.'},
+                { start: 'L\'étape du NLP qui consiste à réduire un mot à sa forme de base (ex: "mangeait" -> "manger") est la', end: '.', options: ['tokenisation', 'vectorisation', 'lemmatisation', 'standardisation'], correctAnswer: 'lemmatisation', explanation: 'La <strong>lemmatisation</strong> est une étape de normalisation du texte plus avancée que le stemming car elle tient compte du contexte grammatical.'},
+                { start: 'La représentation de texte où chaque document est un vecteur de comptage de mots est appelée', end: '.', options: ['Word2Vec', 'TF-IDF', 'Bag-of-Words (Sac de mots)', 'One-Hot Encoding'], correctAnswer: 'Bag-of-Words (Sac de mots)', explanation: 'Le <strong>Bag-of-Words</strong> est une méthode simple et efficace pour transformer du texte en données numériques, bien qu\'elle perde l\'ordre des mots.'},
+                { start: 'L\'approche', end: 'pondère les mots en fonction de leur fréquence dans un document, mais pénalise les mots qui sont fréquents dans tout le corpus.', options: ['Bag-of-Words', 'Word2Vec', 'TF-IDF', 'GloVe'], correctAnswer: 'TF-IDF', explanation: '<strong>TF-IDF</strong> (Term Frequency-Inverse Document Frequency) aide à identifier les mots qui sont importants pour un document spécifique.'}
+            ],
+            // --- BLOC 4: DATA VIZ & COMMUNICATION ---
+            dataviz_principles: [
+                { start: 'Le choix d\'une visualisation doit avant tout dépendre du', end: 'que l\'on souhaite communiquer.', options: ['graphique', 'message', 'dataset', 'code'], correctAnswer: 'message', explanation: 'Le <strong>message</strong> et l\'audience cible sont les deux piliers qui doivent guider le choix de toute data visualization.'},
+                { start: 'Un bon indicateur clé de performance (KPI) doit être SMART, ce qui signifie Spécifique, Mesurable, Atteignable, Pertinent et', end: '.', options: ['Transparent', 'Testable', 'Temporellement défini', 'Technique'], correctAnswer: 'Temporellement défini', explanation: 'Un KPI doit être <strong>temporellement défini</strong>, c\'est-à-dire associé à une échéance claire pour mesurer les progrès.'},
+                { start: 'Pour éviter de surcharger un graphique, il faut maximiser le ratio', end: '.', options: ['données/encre', 'texte/image', 'couleurs/données', 'pixels/information'], correctAnswer: 'données/encre', explanation: 'Le ratio <strong>données/encre</strong> (data-ink ratio), concept introduit par Edward Tufte, préconise de supprimer tout élément graphique non essentiel.'},
+                { start: 'L\'ensemble des principes de perception visuelle qui aident à organiser l\'information (proximité, similarité...) est appelé la théorie de la', end: '.', options: ['Gestalt', 'Couleur', 'Relativité', 'Complexité'], correctAnswer: 'Gestalt', explanation: 'La théorie de la <strong>Gestalt</strong> aide à comprendre comment nous percevons les formes et organisons l\'information visuelle, ce qui est crucial pour un bon design de dashboard.'},
+                { start: 'Le fait de raconter une histoire avec les données pour guider l\'audience vers une conclusion s\'appelle le', end: '.', options: ['reporting', 'data storytelling', 'data journalism', 'business intelligence'], correctAnswer: 'data storytelling', explanation: 'Le <strong>data storytelling</strong> combine les données, les visuels et une narration pour rendre les insights plus percutants et mémorables.'}
+            ],
+            dataviz_static: [
+                { start: 'En Python, la bibliothèque historique et la plus fondamentale pour la visualisation de données est', end: '.', options: ['Seaborn', 'Plotly', 'Matplotlib', 'Bokeh'], correctAnswer: 'Matplotlib', explanation: '<strong>Matplotlib</strong> est la bibliothèque de base sur laquelle de nombreuses autres, comme Seaborn, sont construites. Elle offre un contrôle total sur chaque élément du graphique.'},
+                { start: 'La bibliothèque', end: 'est basée sur Matplotlib et permet de créer des graphiques statistiques plus esthétiques avec une syntaxe plus simple.', options: ['Seaborn', 'Plotly', 'Pandas', 'Bokeh'], correctAnswer: 'Seaborn', explanation: '<strong>Seaborn</strong> excelle dans la création de visualisations complexes comme les `heatmaps`, `pairplots` ou `violinplots` en quelques lignes de code.'},
+                { start: 'Pour visualiser la distribution d\'une seule variable numérique, le graphique le plus approprié est un', end: '.', options: ['nuage de points', 'histogramme', 'diagramme en barres', 'graphique linéaire'], correctAnswer: 'histogramme', explanation: 'Un <strong>histogramme</strong> regroupe les valeurs en intervalles (bins) et montre la fréquence des observations dans chaque intervalle.'},
+                { start: 'Pour étudier la relation entre deux variables numériques continues, on utilise un', end: '.', options: ['nuage de points', 'histogramme', 'boxplot', 'graphique linéaire'], correctAnswer: 'nuage de points', explanation: 'Un <strong>nuage de points</strong> (scatter plot) permet de détecter visuellement des tendances, des corrélations ou des clusters.'},
+                { start: 'Pour afficher une matrice de corrélation de manière visuelle, on utilise une', end: '.', options: ['heatmap (carte de chaleur)', 'carte choroplèthe', 'carte de densité', 'pairplot'], correctAnswer: 'heatmap (carte de chaleur)', explanation: 'Une <strong>heatmap</strong> utilise un code couleur pour représenter les valeurs dans une matrice, ce qui est parfait pour visualiser les corrélations.'}
+            ],
+            dataviz_interactive: [
+                { start: 'La bibliothèque', end: 'est spécifiquement conçue pour créer des graphiques interactifs (zoom, survol) destinés au web.', options: ['Matplotlib', 'Plotly', 'Seaborn', 'Pillow'], correctAnswer: 'Plotly', explanation: '<strong>Plotly</strong> génère des graphiques en HTML/JavaScript, ce qui les rend naturellement interactifs et parfaits pour les dashboards web.'},
+                { start: 'Pour représenter des données géographiques sur une carte, la bibliothèque Python la plus populaire est', end: '.', options: ['Geopandas', 'Shapely', 'Folium', 'Cartopy'], correctAnswer: 'Folium', explanation: '<strong>Folium</strong> utilise la puissance de la bibliothèque JavaScript Leaflet.js pour créer facilement des cartes interactives.'},
+                { start: 'Une carte', end: 'utilise différentes teintes ou motifs pour représenter une variable statistique agrégée sur des zones géographiques.', options: ['de densité', 'topographique', 'choroplèthe', 'de chaleur'], correctAnswer: 'choroplèthe', explanation: 'Une carte <strong>choroplèthe</strong> est idéale pour visualiser des données comme la densité de population ou le taux de chômage par département.'},
+                { start: 'La bibliothèque', end: 'est une autre alternative puissante à Plotly pour créer des applications web interactives et des dashboards complexes.', options: ['Streamlit', 'Dash', 'Bokeh', 'Pygal'], correctAnswer: 'Bokeh', explanation: '<strong>Bokeh</strong> est particulièrement performant pour gérer de grands volumes de données et créer des interactions personnalisées avec des widgets.'},
+                { start: 'L\'ajout d\'une', end: 'sur un graphique interactif permet d\'afficher des informations détaillées lorsqu\'on survole un point de donnée.', options: ['légende', 'annotation', 'infobulle (tooltip)', 'étiquette'], correctAnswer: 'infobulle (tooltip)', explanation: 'Les <strong>infobulles</strong> sont une fonctionnalité clé de la dataviz interactive pour enrichir l\'exploration des données.'}
+            ],
+            dataviz_bi: [
+                 { start: 'Dans un tableur comme Excel, un', end: 'permet de résumer, regrouper et analyser de grandes quantités de données de manière interactive.', options: ['graphique simple', 'filtre avancé', 'tableau croisé dynamique', 'format conditionnel'], correctAnswer: 'tableau croisé dynamique', explanation: 'Le <strong>tableau croisé dynamique</strong> est un outil d\'analyse extrêmement puissant pour croiser des variables et agréger des données.'},
+                { start: 'Un', end: 'est un outil de Business Intelligence qui permet de créer des tableaux de bord interactifs à partir de multiples sources de données.', options: ['Excel', 'PowerPoint', 'Power BI', 'Jupyter'], correctAnswer: 'Power BI', explanation: '<strong>Power BI</strong>, comme Tableau, sont des outils leaders de la BI qui permettent aux analystes de créer et partager des rapports dynamiques.'},
+                { start: 'Dans Power BI, le langage de formule utilisé pour créer des mesures et des colonnes calculées est le', end: '.', options: ['SQL', 'Python', 'M', 'DAX'], correctAnswer: 'DAX', explanation: '<strong>DAX</strong> (Data Analysis Expressions) est un langage de formules puissant et flexible, essentiel pour la modélisation avancée dans Power BI.'},
+                { start: 'Dans Tableau, une', end: 'est une collection de plusieurs feuilles de calcul et tableaux de bord dans un seul fichier.', options: ['source de données', 'histoire (Story)', 'dossier', 'classeur (Workbook)'], correctAnswer: 'classeur (Workbook)', explanation: 'Un <strong>classeur Tableau</strong> (<code>.twb</code> ou <code>.twbx</code>) est le conteneur principal pour tout votre travail d\'analyse et de visualisation.'},
+                { start: 'Les', end: 'dans un tableau de bord BI permettent aux utilisateurs de filtrer dynamiquement toutes les visualisations en même temps.', options: ['segments (slicers)', 'boutons', 'légendes', 'titres'], correctAnswer: 'segments (slicers)', explanation: 'Les <strong>segments</strong> sont des filtres visuels qui rendent l\'exploration des données très intuitive pour l\'utilisateur final.'},
+            ]
+        };
+
 
         const exerciseContainer = document.getElementById('exercise-container');
-        let shuffledData = [];
+        let currentTopicData = [];
         let currentQuestionIndex = 0;
 
-        function startExercise() {
+        function renderTopicSelection() {
+            const topicSelectionHTML = `
+                <div id="exercise-header">
+                    <h2>Texte à compléter</h2>
+                </div>
+                <div id="exercise-body">
+                    <h3 style="margin-bottom: 30px;">Choisissez un thème pour commencer</h3>
+                    
+                    <div class="topic-category">
+                        <div class="category-header">
+                            <div class="category-icon">🗃️</div>
+                            <div class="category-title">SQL & Data Collection</div>
+                        </div>
+                        <div class="sub-topics-grid">
+                            <div class="sub-topic-card" data-topic="sql_concepts">Concepts & Modélisation</div>
+                            <div class="sub-topic-card" data-topic="sql_normalization">Normalisation</div>
+                            <div class="sub-topic-card" data-topic="sql_read">Lecture de Données (SELECT)</div>
+                            <div class="sub-topic-card" data-topic="sql_joins">Jointures</div>
+                            <div class="sub-topic-card" data-topic="sql_aggregation">Agrégations</div>
+                            <div class="sub-topic-card" data-topic="sql_advanced">Requêtes Avancées</div>
+                        </div>
+                    </div>
+
+                    <div class="topic-category">
+                        <div class="category-header">
+                            <div class="category-icon">🐍</div>
+                            <div class="category-title">Python pour la Data</div>
+                        </div>
+                        <div class="sub-topics-grid">
+                            <div class="sub-topic-card" data-topic="python_basics">Fondamentaux</div>
+                            <div class="sub-topic-card" data-topic="python_structures">Structures de Données</div>
+                            <div class="sub-topic-card" data-topic="python_functions">Fonctions</div>
+                            <div class="sub-topic-card" data-topic="python_oop">Programmation Orientée Objet</div>
+                        </div>
+                    </div>
+                    
+                    <div class="topic-category">
+                        <div class="category-header">
+                            <div class="category-icon">🐼</div>
+                            <div class="category-title">Pandas & NumPy</div>
+                        </div>
+                        <div class="sub-topics-grid">
+                           <div class="sub-topic-card" data-topic="pandas_basics">Bases de Pandas & NumPy</div>
+                           <div class="sub-topic-card" data-topic="pandas_cleaning">Nettoyage de Données</div>
+                           <div class="sub-topic-card" data-topic="pandas_transform">Manipulation & Transformation</div>
+                        </div>
+                    </div>
+
+                    <div class="topic-category">
+                        <div class="category-header">
+                            <div class="category-icon">🤖</div>
+                            <div class="category-title">Machine Learning</div>
+                        </div>
+                        <div class="sub-topics-grid">
+                            <div class="sub-topic-card" data-topic="ml_concepts">Concepts Fondamentaux</div>
+                            <div class="sub-topic-card" data-topic="ml_process">Processus & Préparation</div>
+                            <div class="sub-topic-card" data-topic="ml_regression">Régression</div>
+                            <div class="sub-topic-card" data-topic="ml_classification">Classification</div>
+                            <div class="sub-topic-card" data-topic="ml_clustering">Clustering</div>
+                            <div class="sub-topic-card" data-topic="ml_nlp">NLP</div>
+                        </div>
+                    </div>
+                    
+                    <div class="topic-category">
+                        <div class="category-header">
+                            <div class="category-icon">📈</div>
+                            <div class="category-title">Data Visualization & BI</div>
+                        </div>
+                        <div class="sub-topics-grid">
+                            <div class="sub-topic-card" data-topic="dataviz_principles">Principes & KPIs</div>
+                            <div class="sub-topic-card" data-topic="dataviz_static">Visualisation Statique</div>
+                            <div class="sub-topic-card" data-topic="dataviz_interactive">Visualisation Interactive</div>
+                            <div class="sub-topic-card" data-topic="dataviz_bi">Outils BI & Tableurs</div>
+                        </div>
+                    </div>
+
+                </div>
+            `;
+            exerciseContainer.innerHTML = topicSelectionHTML;
+
+            document.querySelectorAll('.sub-topic-card').forEach(card => {
+                card.addEventListener('click', () => {
+                    const topic = card.dataset.topic;
+                    startExercise(topic);
+                });
+            });
+        }
+
+        let shuffledData = [];
+
+        function startExercise(topic) {
             currentQuestionIndex = 0;
-            shuffledData = [...exerciseData].sort(() => Math.random() - 0.5);
+            shuffledData = [...allExercises[topic]].sort(() => Math.random() - 0.5);
             showQuestion();
         }
 
         function showQuestion() {
-            exerciseContainer.innerHTML = '';
+            exerciseContainer.innerHTML = ''; 
 
             if (currentQuestionIndex < shuffledData.length) {
                 const questionData = shuffledData[currentQuestionIndex];
@@ -385,7 +589,7 @@
 
                 const questionHTML = `
                     <div id="exercise-header">
-                        <h2>Complétez la phrase</h2>
+                        <h2>Texte à compléter</h2>
                         <div id="question-counter">Question ${currentQuestionIndex + 1} / ${shuffledData.length}</div>
                     </div>
                     <div id="exercise-body">
@@ -417,15 +621,22 @@
         }
 
         function selectAnswer(e) {
-            const selectedButton = e.currentTarget; // Use currentTarget to be safe
-            const selectedAnswer = selectedButton.textContent;
+            const selectedButton = e.currentTarget;
+            
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = selectedButton.innerHTML;
+            const selectedAnswer = tempDiv.textContent || tempDiv.innerText || "";
+            
             const questionData = shuffledData[currentQuestionIndex];
             const blank = document.getElementById('blank');
 
             if (blank.classList.contains('correct')) return;
+            
+            tempDiv.innerHTML = questionData.correctAnswer;
+            const correctAnswerText = tempDiv.textContent || tempDiv.innerText || "";
 
-            if (selectedAnswer === questionData.correctAnswer) {
-                blank.innerHTML = selectedButton.innerHTML; // Use innerHTML to preserve <code> tags
+            if (selectedAnswer.trim() === correctAnswerText.trim()) {
+                blank.innerHTML = selectedButton.innerHTML;
                 blank.classList.add('correct');
                 document.getElementById('explanation').innerHTML = questionData.explanation;
                 document.querySelectorAll('.option-btn').forEach(btn => btn.disabled = true);
@@ -454,11 +665,9 @@
         function showResults() {
             const summaryHTML = shuffledData
                 .map(item => {
-                    // To properly display code in summary, we need to find the full option text
-                    const correctOptionHTML = item.options.find(opt => opt.includes(item.correctAnswer)) || item.correctAnswer;
                     return `
                     <div class="summary-item">
-                        <p>${item.start} <strong style="color:var(--couleur-succes)">${correctOptionHTML}</strong> ${item.end}</p>
+                        <p>${item.start} <strong style="color:var(--couleur-succes)">${item.correctAnswer}</strong> ${item.end}</p>
                     </div>
                 `}).join('');
 
@@ -466,17 +675,18 @@
                 <div id="results-screen">
                     <h2>Exercice Terminé !</h2>
                     <p>Voici le récapitulatif des bonnes réponses.</p>
-                    <div id="summary-container">
+                    <div id="summary-container" style="max-height: 400px; overflow-y: auto; padding-right: 15px;">
                         ${summaryHTML}
                     </div>
-                    <button id="restart-btn">Recommencer</button>
+                    <button id="back-to-topics-btn">Retour aux thèmes</button>
                 </div>
             `;
             exerciseContainer.innerHTML = resultsHTML;
-            document.getElementById('restart-btn').addEventListener('click', startExercise);
+            document.getElementById('back-to-topics-btn').addEventListener('click', renderTopicSelection);
         }
 
-        startExercise();
+        // Démarrer en affichant la sélection des thèmes
+        renderTopicSelection();
     </script>
 </body>
 </html>
