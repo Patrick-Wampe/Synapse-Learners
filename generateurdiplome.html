@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Générateur d'Attestation - Synapse Learners</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Bibliothèques pour PDF/JPEG (nécessaires pour le téléchargement) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        #certificate-container {
+            font-family: 'Montserrat', sans-serif;
+            background-color: white;
+            border: 1px solid #e0e0e0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.07);
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .input-field {
+            @apply w-full px-4 py-2 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-shadow;
+        }
+        .custom-input-group {
+            @apply flex items-center gap-2;
+        }
+        .custom-input-group input[type="number"] {
+            @apply w-20;
+        }
+         .custom-input-group input[type="color"] {
+            @apply h-10 w-20 p-1 border border-gray-300 rounded-lg cursor-pointer;
+        }
+
+        .btn {
+            @apply px-6 py-3 font-semibold text-white rounded-lg shadow-md transition-transform transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2;
+        }
+        .btn-jpeg {
+            @apply bg-green-600 hover:bg-green-700 focus:ring-green-500;
+        }
+        .btn-pdf {
+            @apply bg-red-600 hover:bg-red-700 focus:ring-red-500;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <div class="container mx-auto p-4 lg:p-8">
+        <header class="text-center mb-10">
+            <img src="https://d1yei2z3i6k35z.cloudfront.net/3391351/67771c6b52bbc_LogoSynapseLearners.png" alt="Logo Synapse Learners" class="h-16 mx-auto mb-4" crossorigin="anonymous">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-800">Générateur d'Attestation</h1>
+            <p class="text-md text-gray-500 mt-2">Créez et personnalisez les attestations de fin de module.</p>
+        </header>
+
+        <div class="flex flex-col lg:flex-row gap-8">
+
+            <!-- Panneau de contrôle -->
+            <aside class="lg:w-1/3 bg-white p-6 rounded-xl shadow-md">
+                <h2 class="text-2xl font-bold mb-6 text-gray-700 border-b pb-3">Paramètres de l'Attestation</h2>
+                <div class="space-y-4">
+                    <div>
+                        <label for="learnerName" class="block text-sm font-medium text-gray-600 mb-1">Nom de l'apprenant</label>
+                        <input type="text" id="learnerName" class="input-field" value="Jeanne Dupont">
+                    </div>
+                    <div>
+                        <label for="moduleName" class="block text-sm font-medium text-gray-600 mb-1">Nom du module</label>
+                        <input type="text" id="moduleName" class="input-field" value="Savoirs essentiels et Culture générale">
+                    </div>
+                    <div>
+                        <label for="signatureUrl" class="block text-sm font-medium text-gray-600 mb-1">URL de votre signature (image)</label>
+                        <input type="text" id="signatureUrl" class="input-field" placeholder="https://exemple.com/signature.png">
+                    </div>
+                    <div>
+                        <label for="backgroundUrl" class="block text-sm font-medium text-gray-600 mb-1">URL de l'image de fond</label>
+                        <input type="text" id="backgroundUrl" class="input-field" placeholder="https://exemple.com/fond.jpg">
+                    </div>
+                </div>
+                
+                <h3 class="text-xl font-bold mt-8 mb-4 text-gray-700 border-b pb-3">Personnalisation du Style</h3>
+                <div class="space-y-4">
+                     <div class="custom-input-group justify-between">
+                        <label for="primaryColor" class="text-sm font-medium text-gray-600">Couleur du nom & bandeau</label>
+                        <input type="color" id="primaryColor" value="#5142CE">
+                    </div>
+                    <div class="custom-input-group justify-between">
+                        <label for="titleFontSize" class="text-sm font-medium text-gray-600">Taille du titre (px)</label>
+                        <input type="number" id="titleFontSize" class="input-field" value="36" min="12" max="72">
+                    </div>
+                    <div class="custom-input-group justify-between">
+                        <label for="learnerNameFontSize" class="text-sm font-medium text-gray-600">Taille du nom (px)</label>
+                        <input type="number" id="learnerNameFontSize" class="input-field" value="24" min="12" max="60">
+                    </div>
+                </div>
+
+                <div class="mt-8 pt-6 border-t">
+                    <h3 class="text-xl font-bold mb-4 text-gray-700">Télécharger</h3>
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <button id="downloadJpeg" class="btn btn-jpeg w-full">JPEG</button>
+                        <button id="downloadPdf" class="btn btn-pdf w-full">PDF</button>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Prévisualisation de l'attestation -->
+            <main class="lg:w-2/3 flex items-center justify-center">
+                <div id="certificate-container" class="aspect-[297/210] w-full">
+                   <div class="absolute inset-0 bg-white/85 z-10"></div>
+                   <div class="relative z-20 h-full flex flex-col justify-between text-gray-800 p-8 md:p-10">
+                        <div class="text-left">
+                            <div id="cert-title-banner" class="inline-block mb-8">
+                                <h1 id="cert-title" class="text-white font-bold px-4 py-2">Attestation de Réussite</h1>
+                            </div>
+                            <p class="text-lg">
+                                Félicitations à <span id="cert-learnerName" class="font-bold">Jeanne Dupont</span>
+                            </p>
+                            <p class="text-lg mt-1">
+                                pour avoir validé avec succès le module <strong id="cert-moduleName">"Savoirs essentiels et Culture générale"</strong>.
+                            </p>
+                        </div>
+                        <div class="flex justify-between items-end">
+                            <div class="text-left text-sm">
+                                <p id="cert-date" class="font-bold"></p>
+                                <p id="cert-id" class="text-xs mt-1 text-gray-500"></p>
+                            </div>
+                            <div class="flex items-end gap-6">
+                                <div class="text-center text-sm">
+                                    <p class="font-semibold">Patrick Wampé</p>
+                                    <p class="text-xs text-gray-600">Fondateur de Synapse Learners</p>
+                                    <img id="cert-signature" src="" alt="Signature" class="h-12 my-2 mx-auto" crossorigin="anonymous" onerror="this.style.display='none'; this.src='';">
+                                    <div class="border-t border-gray-400"></div>
+                                </div>
+                                <img src="https://d1yei2z3i6k35z.cloudfront.net/3391351/67771c6b52bbc_LogoSynapseLearners.png" alt="Logo Synapse Learners" class="h-16" crossorigin="anonymous" onerror="this.style.display='none';">
+                            </div>
+                        </div>
+                   </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Inputs pour le contenu
+            const learnerNameInput = document.getElementById('learnerName');
+            const moduleNameInput = document.getElementById('moduleName');
+            const signatureUrlInput = document.getElementById('signatureUrl');
+            const backgroundUrlInput = document.getElementById('backgroundUrl');
+
+            // Inputs pour le style
+            const primaryColorInput = document.getElementById('primaryColor');
+            const titleFontSizeInput = document.getElementById('titleFontSize');
+            const learnerNameFontSizeInput = document.getElementById('learnerNameFontSize');
+
+            // Éléments de l'attestation
+            const certificateContainer = document.getElementById('certificate-container');
+            const certTitleBanner = document.getElementById('cert-title-banner');
+            const certTitle = document.getElementById('cert-title');
+            const certLearnerName = document.getElementById('cert-learnerName');
+            const certModuleName = document.getElementById('cert-moduleName');
+            const certDate = document.getElementById('cert-date');
+            const certId = document.getElementById('cert-id');
+            const certSignature = document.getElementById('cert-signature');
+            
+            // Boutons
+            const downloadJpegBtn = document.getElementById('downloadJpeg');
+            const downloadPdfBtn = document.getElementById('downloadPdf');
+
+            const getStringNumericValue = (str) => {
+                let total = 0;
+                const letters = str.toUpperCase().replace(/[^A-Z]/g, '');
+                for (let i = 0; i < letters.length; i++) {
+                    total += letters.charCodeAt(i) - 64;
+                }
+                return total;
+            };
+
+            const generateId = () => {
+                const nameValue = getStringNumericValue(learnerNameInput.value);
+                const moduleValue = getStringNumericValue(moduleNameInput.value);
+                const date = new Date();
+                const datePart = `${String(date.getDate()).padStart(2, '0')}${String(date.getMonth() + 1).padStart(2, '0')}${date.getFullYear()}`;
+                return `ID: ${nameValue}-${moduleValue}-${datePart}`;
+            };
+
+            const updateCertificate = () => {
+                // Contenu
+                certLearnerName.textContent = learnerNameInput.value || "Prénom Nom";
+                certModuleName.textContent = `"${moduleNameInput.value || 'Nom du module'}"`;
+                const signatureUrl = signatureUrlInput.value.trim();
+                certSignature.src = signatureUrl;
+                certSignature.style.display = signatureUrl ? 'block' : 'none';
+                const backgroundUrl = backgroundUrlInput.value.trim();
+                certificateContainer.style.backgroundImage = backgroundUrl ? `url('${backgroundUrl}')` : 'none';
+                certId.textContent = generateId();
+
+                // Style
+                const primaryColor = primaryColorInput.value;
+                certTitleBanner.style.backgroundColor = primaryColor;
+                certLearnerName.style.color = primaryColor;
+                certTitle.style.fontSize = `${titleFontSizeInput.value || 36}px`;
+                certLearnerName.style.fontSize = `${learnerNameFontSizeInput.value || 24}px`;
+            };
+
+            const today = new Date();
+            certDate.textContent = today.toLocaleDateString('fr-FR', {
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric'
+            });
+
+            const allInputs = [
+                learnerNameInput, moduleNameInput, signatureUrlInput, backgroundUrlInput,
+                primaryColorInput, titleFontSizeInput, learnerNameFontSizeInput
+            ];
+            allInputs.forEach(input => {
+                input.addEventListener('input', updateCertificate);
+            });
+
+            updateCertificate();
+
+            const download = (format) => {
+                const originalShadow = certificateContainer.style.boxShadow;
+                certificateContainer.style.boxShadow = 'none';
+
+                html2canvas(certificateContainer, { 
+                    scale: 3, 
+                    useCORS: true,
+                    allowTaint: true,
+                    backgroundColor: '#ffffff'
+                }).then(canvas => {
+                    certificateContainer.style.boxShadow = originalShadow;
+                    const fileName = `Attestation-${learnerNameInput.value.replace(/[^a-zA-Z0-9]/g, '_')}`;
+                    
+                    if (format === 'jpeg') {
+                        const imgData = canvas.toDataURL('image/jpeg', 0.95);
+                        const link = document.createElement('a');
+                        link.download = `${fileName}.jpeg`;
+                        link.href = imgData;
+                        link.click();
+                    } else if (format === 'pdf') {
+                        const imgData = canvas.toDataURL('image/png');
+                        const { jsPDF } = window.jspdf;
+                        const pdf = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
+                        const pdfWidth = pdf.internal.pageSize.getWidth();
+                        const pdfHeight = pdf.internal.pageSize.getHeight();
+                        pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+                        pdf.save(`${fileName}.pdf`);
+                    }
+                }).catch(err => {
+                    certificateContainer.style.boxShadow = originalShadow;
+                    console.error("Erreur lors de la génération de l'image : ", err);
+                    alert("Une erreur est survenue. Vérifiez que les URLs des images sont valides et autorisent le partage (CORS). Essayez de rafraîchir la page.");
+                });
+            };
+
+            downloadJpegBtn.addEventListener('click', () => download('jpeg'));
+            downloadPdfBtn.addEventListener('click', () => download('pdf'));
+        });
+    </script>
+</body>
+</html>
