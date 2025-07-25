@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interpréteur Web Synapse Learners</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.15/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.15/theme/material.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.15/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.15/mode/xml/xml.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.15/mode/javascript/javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.15/mode/css/css.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.15/mode/htmlmixed/htmlmixed.min.js"></script>
+
+    <style>
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: #f3f4f6;
+        }
+
+        .CodeMirror { 
+            height: 100%; 
+            font-size: 14px; 
+            line-height: 1.5; 
+        }
+
+        .resizer {
+            background-color: #e5e7eb; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            transition: background-color 0.2s; 
+            z-index: 10;
+        }
+        .resizer:hover { background-color: #3b82f6; }
+        .resizer[data-orientation="horizontal"] { cursor: ns-resize; height: 12px; width: 100%; }
+        .resizer[data-orientation="vertical"] { cursor: ew-resize; width: 12px; height: 100%; flex-shrink: 0; }
+        .resizer-grip { width: 40px; height: 6px; background: #9ca3af; border-radius: 3px; }
+        .resizer[data-orientation="vertical"] .resizer-grip { width: 6px; height: 40px; }
+        
+        .panel-header {
+            padding: 8px; 
+            font-weight: 600; 
+            background-color: #e5e7eb; 
+            border-bottom: 1px solid #d1d5db;
+            color: #4b5563; 
+            flex-shrink: 0;
+        }
+        .editor-wrapper {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+        .code-panel {
+            border-radius: 0.5rem;
+            overflow: hidden;
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+            border: 1px solid #d1d5db;
+            background-color: #fff;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+    <div id="app-container" class="h-screen w-screen overflow-hidden flex flex-col">
+        
+        <div class="p-4 bg-white">
+            <div class="flex justify-start">
+            </div>
+            <div class="text-center mt-2">
+                <h1 class="text-5xl font-bold text-purple-800">Interpréteur Web</h1><br>
+                <h5 class="text-2xl">Coder votre page Web et télécharger le résultat dans un fichier unique.</h5>
+            </div>
+        </div>
+
+
+        <header class="bg-white shadow-md p-2 flex items-center justify-center z-20 flex-shrink-0">
+            <div class="flex items-center gap-4">
+                <button id="run-btn" class="px-4 py-2 text-white font-semibold rounded-lg focus:outline-none flex items-center gap-2" style="background-color: royalblue;" onmouseover="this.style.backgroundColor='#3a5fcc'" onmouseout="this.style.backgroundColor='royalblue'">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    Exécuter
+                </button>
+                <button id="download-btn" class="px-4 py-2 text-white font-semibold rounded-lg focus:outline-none flex items-center gap-2" style="background-color: darkred;" onmouseover="this.style.backgroundColor='#7a0000'" onmouseout="this.style.backgroundColor='darkred'">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                    Télécharger
+                </button>
+            </div><br><br><br>
+        </header>
+
+        <main id="main-container" class="flex-grow flex flex-col w-full h-full">
+            <div id="code-panels-container" class="flex w-full p-2 gap-2" style="flex-basis: 50%;">
+                <div id="css-panel" class="code-panel flex flex-col" style="flex-basis: 25%;">
+                    <div class="panel-header text-center text-lg">CSS</div>
+                    <div class="editor-wrapper"><textarea id="css-editor"></textarea></div>
+                </div>
+                
+                <div id="resizer-v1" class="resizer" data-orientation="vertical"><div class="resizer-grip"></div></div>
+    
+                <div id="html-panel" class="code-panel flex flex-col" style="flex-basis: 50%;">
+                    <div class="panel-header text-center text-lg">HTML</div>
+                    <div class="editor-wrapper"><textarea id="html-editor"></textarea></div>
+                </div>
+                
+                <div id="resizer-v2" class="resizer" data-orientation="vertical"><div class="resizer-grip"></div></div>
+    
+                <div id="js-panel" class="code-panel flex flex-col" style="flex-basis: 25%;">
+                    <div class="panel-header text-center text-lg">JavaScript</div>
+                    <div class="editor-wrapper"><textarea id="js-editor"></textarea></div>
+                </div>
+            </div>
+
+            <div id="resizer-h" class="resizer" data-orientation="horizontal"><div class="resizer-grip"></div></div>
+            
+            <div id="preview-panel" class="flex-grow flex items-center justify-center p-2">
+                <iframe id="preview-frame" class="w-full h-full bg-white rounded-md shadow-inner" sandbox="allow-scripts allow-same-origin"></iframe>
+            </div>
+        </main>
+        
+        <footer class="bg-white border-t border-gray-200 p-3 text-center text-sm text-gray-600 flex-shrink-0">
+            <p>Codé avec ❤️ <br>
+            © 2025 Synapse Learners. Tous droits réservés ®.</p>
+        </footer>
+        </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // --- ÉLÉMENTS DU DOM ---
+            const mainContainer = document.getElementById('main-container');
+            const codePanelsContainer = document.getElementById('code-panels-container');
+            const cssPanel = document.getElementById('css-panel');
+            const htmlPanel = document.getElementById('html-panel');
+            const jsPanel = document.getElementById('js-panel');
+            const resizers = {
+                h: document.getElementById('resizer-h'),
+                v1: document.getElementById('resizer-v1'),
+                v2: document.getElementById('resizer-v2'),
+            };
+            
+            const runBtn = document.getElementById('run-btn');
+            const downloadBtn = document.getElementById('download-btn');
+
+            // --- INITIALISATION DE CODEMIRROR ---
+            const createEditor = (id, mode) => CodeMirror.fromTextArea(document.getElementById(id), {
+                mode, theme: 'material', lineNumbers: true, autoCloseTags: true, matchBrackets: true,
+            });
+            const htmlEditor = createEditor('html-editor', 'htmlmixed');
+            const cssEditor = createEditor('css-editor', 'css');
+            const jsEditor = createEditor('js-editor', 'javascript');
+
+            // --- CODE PAR DÉFAUT ---
+            htmlEditor.setValue(`<div class="container">
+  <h1>Interpréteur Web</h1>
+  <p>Modifiez le code HTML, CSS et JS pour voir les changements en direct !</p>
+  <img src="https://gifdb.com/images/thumbnail/programming-coding-on-fire-9yx4zas99sntux0m.gif">
+</div>`);
+            cssEditor.setValue(`body {
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  background: #f0f2f5;
+  color: #333;
+}
+.container {
+  text-align: center;
+  padding: 2rem 3rem;
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}`);
+            jsEditor.setValue(`const button = document.getElementById('myButton');
+button.addEventListener('click', () => {
+  alert('Le JavaScript fonctionne !');
+});`);
+
+            // --- LOGIQUE PRINCIPALE ---
+            function getFullCode() {
+                const htmlCode = htmlEditor.getValue();
+                const cssCode = cssEditor.getValue();
+                const jsCode = jsEditor.getValue();
+                return `<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Preview</title>
+    <style>${cssCode}</style>
+</head>
+<body>
+    ${htmlCode}
+    <script>${jsCode}<\/script>
+</body>
+</html>`;
+            }
+
+            function runCode() {
+                document.getElementById('preview-frame').srcdoc = getFullCode();
+            }
+
+            function downloadCode() {
+                const blob = new Blob([getFullCode()], { type: 'text/html' });
+                const a = document.createElement('a');
+                a.href = URL.createObjectURL(blob);
+                a.download = 'code.html';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            }
+
+            runBtn.addEventListener('click', runCode);
+            downloadBtn.addEventListener('click', downloadCode);
+
+            // --- LOGIQUE DE REDIMENSIONNEMENT ---
+            let activeResizer = null;
+            for (const key in resizers) {
+                resizers[key].addEventListener('mousedown', (e) => {
+                    activeResizer = resizers[key];
+                    document.body.style.cursor = activeResizer.dataset.orientation === 'vertical' ? 'ew-resize' : 'ns-resize';
+                    document.body.style.userSelect = 'none';
+                    e.preventDefault();
+                });
+            }
+
+            window.addEventListener('mousemove', (e) => {
+                if (!activeResizer) return;
+
+                if (activeResizer.dataset.orientation === 'horizontal') {
+                    const totalHeight = mainContainer.offsetHeight;
+                    const newHeight = e.clientY - mainContainer.getBoundingClientRect().top;
+                    const newBasis = (newHeight / totalHeight) * 100;
+                    if (newBasis > 10 && newBasis < 90) {
+                        codePanelsContainer.style.flexBasis = `${newBasis}%`;
+                    }
+                } else { // Vertical
+                    const containerRect = codePanelsContainer.getBoundingClientRect();
+                    const totalWidth = containerRect.width - (resizers.v1.offsetWidth * 2); // Account for resizer width
+                    
+                    if (activeResizer.id === 'resizer-v1') {
+                        const newCssWidth = e.clientX - containerRect.left;
+                        const jsBasis = parseFloat(jsPanel.style.flexBasis);
+                        const newCssBasis = (newCssWidth / totalWidth) * 100;
+                        if (newCssBasis > 5 && (100 - newCssBasis - jsBasis) > 5) {
+                            cssPanel.style.flexBasis = `${newCssBasis}%`;
+                            htmlPanel.style.flexBasis = `${100 - newCssBasis - jsBasis}%`;
+                        }
+                    } else if (activeResizer.id === 'resizer-v2') {
+                        const newJsWidth = containerRect.right - e.clientX;
+                        const cssBasis = parseFloat(cssPanel.style.flexBasis);
+                        const newJsBasis = (newJsWidth / totalWidth) * 100;
+                        if (newJsBasis > 5 && (100 - newJsBasis - cssBasis) > 5) {
+                            jsPanel.style.flexBasis = `${newJsBasis}%`;
+                            htmlPanel.style.flexBasis = `${100 - newJsBasis - cssBasis}%`;
+                        }
+                    }
+                }
+            });
+
+            window.addEventListener('mouseup', () => {
+                activeResizer = null;
+                document.body.style.cursor = 'default';
+                document.body.style.userSelect = 'auto';
+            });
+
+            // --- État initial ---
+            runCode();
+        });
+    </script>
+</body>
+</html>
