@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aide-Mémoire Interactif Regex</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Chosen Palette: Deep Purple & Warm Neutrals */
+        /* Application Structure Plan: A single-page application featuring a sticky navigation header for quick jumps to content sections. The primary interactive element is a real-time Regex Tester at the top. Below, reference tables for Functions, Syntax, Sequences, and Flags. A new "Practical Examples" section is added, featuring common regex patterns with explanations and a "Test" button to load them into the main tester. This structure combines active learning, reference, and practical application in a seamless user flow. */
+        /* Visualization & Content Choices: Reference content is in HTML tables. The main interactive component is the Regex Tester. The new "Examples" section uses a card-based layout for clarity. Interaction: The "Test this pattern" buttons use JavaScript to populate the main tester and scroll the user to it, creating a direct link between learning and doing. Justification: This transforms the static document into a dynamic learning and utility tool. Library/Method: Vanilla JavaScript for all interactivity. */
+        /* CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f7fc;
+            color: #333;
+        }
+        .highlight {
+            background-color: #fef08a; /* yellow-200 */
+            border-radius: 3px;
+            padding: 0 2px;
+            font-weight: 500;
+        }
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            text-align: left;
+            padding: 14px 18px;
+            border-bottom: 1px solid #e5e7eb;
+            transition: background-color 0.3s;
+        }
+        th {
+            background-color: #f9fafb;
+            font-weight: 600;
+        }
+        tbody tr:hover {
+            background-color: #f8f7fc;
+        }
+        tr:last-child td {
+            border-bottom: none;
+        }
+        code, .code-style {
+            background-color: #eef2ff;
+            color: #4338ca;
+            padding: 3px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', Courier, monospace;
+            font-weight: 500;
+        }
+        pre {
+            background-color: #f9fafb;
+            border-radius: 8px;
+            position: relative;
+        }
+        pre code {
+            display: block;
+            padding: 1rem;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            background-color: transparent;
+            color: #374151;
+        }
+        .copy-btn {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background-color: #e5e7eb;
+            border: none;
+            padding: 6px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            color: #4b5563;
+            transition: all 0.2s ease-in-out;
+            opacity: 0.7;
+        }
+        pre:hover .copy-btn {
+            opacity: 1;
+        }
+        .copy-btn:hover {
+            background-color: #d1d5db;
+            transform: scale(1.05);
+        }
+        .copy-btn.copied {
+            background-color: #4f46e5;
+            color: white;
+        }
+        .sticky-nav {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            backdrop-filter: blur(12px);
+            background-color: rgba(248, 247, 252, 0.8);
+            border-bottom: 1px solid #e5e7eb;
+        }
+    </style>
+</head>
+<body class="bg-indigo-50 text-stone-800">
+
+    <header class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="flex flex-col items-center text-center">
+            <h1 class="text-4xl md:text-5xl font-bold text-indigo-800">Aide-Mémoire Interactif Regex</h1>
+            <p class="mt-2 text-lg text-stone-600">Réviser et tester les expressions régulières en temps réel.</p>
+        </div>
+    </header>
+
+    <nav class="sticky-nav">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-center items-center flex-wrap space-x-4 md:space-x-6 py-3 text-sm md:text-base">
+                <a href="#tester" class="nav-link font-medium text-stone-600 hover:text-indigo-600 transition-colors duration-200">Testeur</a>
+                <a href="#exemples" class="nav-link font-medium text-stone-600 hover:text-indigo-600 transition-colors duration-200">Exemples</a>
+                <a href="#fonctions" class="nav-link font-medium text-stone-600 hover:text-indigo-600 transition-colors duration-200">Fonctions</a>
+                <a href="#syntaxe" class="nav-link font-medium text-stone-600 hover:text-indigo-600 transition-colors duration-200">Syntaxe</a>
+                <a href="#sequences" class="nav-link font-medium text-stone-600 hover:text-indigo-600 transition-colors duration-200">Séquences</a>
+                <a href="#drapeaux" class="nav-link font-medium text-stone-600 hover:text-indigo-600 transition-colors duration-200">Drapeaux</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+
+        <!-- Regex Tester -->
+        <section id="tester" class="mb-20 scroll-mt-24">
+            <div class="bg-white p-6 sm:p-8 rounded-xl shadow-lg border border-stone-200 transition-shadow hover:shadow-xl">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="regex-pattern" class="block text-sm font-medium text-stone-700 mb-2">Patron Regex</label>
+                        <input type="text" id="regex-pattern" value="\bcha[a-z]+\b" class="w-full p-3 border border-stone-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition">
+                    </div>
+                    <div>
+                        <label for="regex-flags" class="block text-sm font-medium text-stone-700 mb-2">Drapeaux (Flags)</label>
+                        <input type="text" id="regex-flags" placeholder="ex: gi (global, ignoreCase)" class="w-full p-3 border border-stone-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition">
+                    </div>
+                </div>
+                <div class="mt-6">
+                    <label for="test-string" class="block text-sm font-medium text-stone-700 mb-2">Chaîne de test</label>
+                    <textarea id="test-string" rows="6" class="w-full p-3 border border-stone-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition">Le chat noir et le chameau se sont retrouvés sous le grand chapeau. C'est un cas typique.</textarea>
+                </div>
+                <div class="mt-6">
+                    <label class="block text-sm font-medium text-stone-700 mb-2">Résultat</label>
+                    <div id="highlighted-output" class="w-full p-4 bg-slate-50 border border-stone-200 rounded-lg min-h-[100px] whitespace-pre-wrap break-words text-lg leading-relaxed"></div>
+                </div>
+                 <div id="match-count" class="mt-3 text-sm text-stone-500 font-medium h-5"></div>
+            </div>
+        </section>
+
+        <!-- Practical Examples -->
+        <section id="exemples" class="mb-16 scroll-mt-24">
+            <h2 class="text-3xl font-bold mb-6 border-b-2 pb-3 border-indigo-200 text-indigo-700">Exemples Pratiques</h2>
+            <p class="mb-8 text-stone-600">Voici quelques patrons Regex utiles pour des cas d'usage courants. Cliquez sur "Tester ce patron" pour le charger dans le testeur ci-dessus avec un exemple.</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Email Example -->
+                <div class="bg-white p-6 rounded-xl shadow-md border border-stone-200 flex flex-col">
+                    <h3 class="text-xl font-semibold text-indigo-800 mb-3">Adresse Email</h3>
+                    <p class="text-stone-600 text-sm mb-4 flex-grow">Valide la plupart des formats d'emails standards.</p>
+                    <pre class="mb-4"><code class="text-sm">[\w.-]+@([\w-]+\.)+[\w-]{2,4}</code></pre>
+                    <button class="test-pattern-btn mt-auto w-full bg-indigo-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-indigo-700 transition-colors"
+                            data-pattern="[\w.-]+@([\w-]+\.)+[\w-]{2,4}"
+                            data-test-string="Contactez-nous à hello@synapse-learners.com ou à test.user+alias@gmail.co.uk. Ceci n'est pas un email : user@localhost.">
+                        Tester ce patron
+                    </button>
+                </div>
+                <!-- French Phone Number Example -->
+                <div class="bg-white p-6 rounded-xl shadow-md border border-stone-200 flex flex-col">
+                    <h3 class="text-xl font-semibold text-indigo-800 mb-3">Téléphone Français</h3>
+                    <p class="text-stone-600 text-sm mb-4 flex-grow">Valide les numéros français avec ou sans séparateurs et préfixe international.</p>
+                    <pre class="mb-4"><code class="text-sm">^(?:(?:\+|00)33[\s.-]{0,3}(?:\(0\)[\s.-]{0,3})?|0)[1-9](?:(?:[\s.-]?\d{2}){4}|\d{8})$</code></pre>
+                    <button class="test-pattern-btn mt-auto w-full bg-indigo-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-indigo-700 transition-colors"
+                            data-pattern="^(?:(?:\+|00)33[\s.-]{0,3}(?:\(0\)[\s.-]{0,3})?|0)[1-9](?:(?:[\s.-]?\d{2}){4}|\d{8})$"
+                            data-test-string="Valides: 0612345678, 06.12.34.56.78, +33 6 12 34 56 78. Invalides: 612345678, 00-12-34-56-78.">
+                        Tester ce patron
+                    </button>
+                </div>
+                <!-- Strong Password Example -->
+                <div class="bg-white p-6 rounded-xl shadow-md border border-stone-200 flex flex-col">
+                    <h3 class="text-xl font-semibold text-indigo-800 mb-3">Mot de Passe Robuste</h3>
+                    <p class="text-stone-600 text-sm mb-4 flex-grow">Vérifie la présence de majuscule, minuscule, chiffre et caractère spécial (8+ caractères).</p>
+                    <pre class="mb-4"><code class="text-sm">^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$</code></pre>
+                    <button class="test-pattern-btn mt-auto w-full bg-indigo-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-indigo-700 transition-colors"
+                            data-pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"
+                            data-test-string="Valide: P@ssword123. Invalides: password123, P@ssword, P@ss123.">
+                        Tester ce patron
+                    </button>
+                </div>
+                <!-- URL Example -->
+                <div class="bg-white p-6 rounded-xl shadow-md border border-stone-200 flex flex-col">
+                    <h3 class="text-xl font-semibold text-indigo-800 mb-3">URL Web</h3>
+                    <p class="text-stone-600 text-sm mb-4 flex-grow">Valide une URL web standard (http ou https).</p>
+                    <pre class="mb-4"><code class="text-sm">https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&\/=]*)</code></pre>
+                    <button class="test-pattern-btn mt-auto w-full bg-indigo-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-indigo-700 transition-colors"
+                            data-pattern="https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&\/=]*)"
+                            data-test-string="Valide: https://www.example.com/path?query=1#anchor. Invalide: ftp://example.com">
+                        Tester ce patron
+                    </button>
+                </div>
+                <!-- Date YYYY-MM-DD -->
+                <div class="bg-white p-6 rounded-xl shadow-md border border-stone-200 flex flex-col">
+                    <h3 class="text-xl font-semibold text-indigo-800 mb-3">Date (AAAA-MM-JJ)</h3>
+                    <p class="text-stone-600 text-sm mb-4 flex-grow">Valide une date au format AAAA-MM-JJ, en vérifiant les mois et jours de manière basique.</p>
+                    <pre class="mb-4"><code class="text-sm">^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$</code></pre>
+                    <button class="test-pattern-btn mt-auto w-full bg-indigo-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-indigo-700 transition-colors"
+                            data-pattern="^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$"
+                            data-test-string="Valides: 2025-07-26, 2024-12-31. Invalides: 2025-13-01, 25-07-2024.">
+                        Tester ce patron
+                    </button>
+                </div>
+                <!-- Hex Color -->
+                <div class="bg-white p-6 rounded-xl shadow-md border border-stone-200 flex flex-col">
+                    <h3 class="text-xl font-semibold text-indigo-800 mb-3">Code Couleur Hex</h3>
+                    <p class="text-stone-600 text-sm mb-4 flex-grow">Valide un code couleur hexadécimal à 3 ou 6 chiffres, avec un # optionnel.</p>
+                    <pre class="mb-4"><code class="text-sm">^#?([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$</code></pre>
+                    <button class="test-pattern-btn mt-auto w-full bg-indigo-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-indigo-700 transition-colors"
+                            data-pattern="^#?([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$"
+                            data-test-string="Valides: #ff0000, #F00, ffa500. Invalides: #12345, #gg00ff.">
+                        Tester ce patron
+                    </button>
+                </div>
+                <!-- Username -->
+                <div class="bg-white p-6 rounded-xl shadow-md border border-stone-200 flex flex-col">
+                    <h3 class="text-xl font-semibold text-indigo-800 mb-3">Nom d'utilisateur</h3>
+                    <p class="text-stone-600 text-sm mb-4 flex-grow">Valide un nom d'utilisateur de 3 à 16 caractères (lettres, chiffres, underscore, tiret).</p>
+                    <pre class="mb-4"><code class="text-sm">^[a-zA-Z0-9_-]{3,16}$</code></pre>
+                    <button class="test-pattern-btn mt-auto w-full bg-indigo-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-indigo-700 transition-colors"
+                            data-pattern="^[a-zA-Z0-9_-]{3,16}$"
+                            data-test-string="Valides: user_123, Mon-Pseudo. Invalides: us, un_nom_trop_long_pour_etre_valide, user@.">
+                        Tester ce patron
+                    </button>
+                </div>
+                <!-- Duplicate Words -->
+                <div class="bg-white p-6 rounded-xl shadow-md border border-stone-200 flex flex-col">
+                    <h3 class="text-xl font-semibold text-indigo-800 mb-3">Mots Dupliqués</h3>
+                    <p class="text-stone-600 text-sm mb-4 flex-grow">Trouve les mots identiques qui se suivent immédiatement dans un texte.</p>
+                    <pre class="mb-4"><code class="text-sm">\b(\w+)\s+\1\b</code></pre>
+                    <button class="test-pattern-btn mt-auto w-full bg-indigo-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-indigo-700 transition-colors"
+                            data-pattern="\b(\w+)\s+\1\b"
+                            data-test-string="Ceci est un test test pour trouver les les mots en double.">
+                        Tester ce patron
+                    </button>
+                </div>
+                <!-- Hashtags -->
+                <div class="bg-white p-6 rounded-xl shadow-md border border-stone-200 flex flex-col">
+                    <h3 class="text-xl font-semibold text-indigo-800 mb-3">Hashtags</h3>
+                    <p class="text-stone-600 text-sm mb-4 flex-grow">Trouve les hashtags dans un texte (ex: #tech, #Python_3).</p>
+                    <pre class="mb-4"><code class="text-sm">#[a-zA-Z0-9_]+</code></pre>
+                    <button class="test-pattern-btn mt-auto w-full bg-indigo-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-indigo-700 transition-colors"
+                            data-pattern="#[a-zA-Z0-9_]+"
+                            data-test-string="J'adore le #developpement et le #web ! #Python_3 est génial.">
+                        Tester ce patron
+                    </button>
+                </div>
+                 <!-- IPv4 Address -->
+                <div class="bg-white p-6 rounded-xl shadow-md border border-stone-200 flex flex-col">
+                    <h3 class="text-xl font-semibold text-indigo-800 mb-3">Adresse IPv4</h3>
+                    <p class="text-stone-600 text-sm mb-4 flex-grow">Valide une adresse IPv4 standard de 0.0.0.0 à 255.255.255.255.</p>
+                    <pre class="mb-4"><code class="text-sm">^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$</code></pre>
+                    <button class="test-pattern-btn mt-auto w-full bg-indigo-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-indigo-700 transition-colors"
+                            data-pattern="^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$"
+                            data-test-string="Valides: 192.168.1.1, 8.8.8.8. Invalides: 256.0.0.1, 192.168.1.">
+                        Tester ce patron
+                    </button>
+                </div>
+                <!-- Time HH:MM -->
+                <div class="bg-white p-6 rounded-xl shadow-md border border-stone-200 flex flex-col">
+                    <h3 class="text-xl font-semibold text-indigo-800 mb-3">Heure (HH:MM)</h3>
+                    <p class="text-stone-600 text-sm mb-4 flex-grow">Valide une heure au format 24h, de 00:00 à 23:59.</p>
+                    <pre class="mb-4"><code class="text-sm">^([01]?[0-9]|2[0-3]):[0-5][0-9]$</code></pre>
+                    <button class="test-pattern-btn mt-auto w-full bg-indigo-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-indigo-700 transition-colors"
+                            data-pattern="^([01]?[0-9]|2[0-3]):[0-5][0-9]$"
+                            data-test-string="Valides: 09:30, 17:59, 23:05, 00:00. Invalides: 24:00, 1:2, 09:60.">
+                        Tester ce patron
+                    </button>
+                </div>
+                <!-- French Postal Code -->
+                <div class="bg-white p-6 rounded-xl shadow-md border border-stone-200 flex flex-col">
+                    <h3 class="text-xl font-semibold text-indigo-800 mb-3">Code Postal Français</h3>
+                    <p class="text-stone-600 text-sm mb-4 flex-grow">Valide un code postal français standard à 5 chiffres.</p>
+                    <pre class="mb-4"><code class="text-sm">^\d{5}$</code></pre>
+                    <button class="test-pattern-btn mt-auto w-full bg-indigo-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-indigo-700 transition-colors"
+                            data-pattern="^\d{5}$"
+                            data-test-string="Valides: 75001, 13008, 97400. Invalides: 1234, 7500, 2A200.">
+                        Tester ce patron
+                    </button>
+                </div>
+                 <!-- YouTube ID -->
+                <div class="bg-white p-6 rounded-xl shadow-md border border-stone-200 flex flex-col">
+                    <h3 class="text-xl font-semibold text-indigo-800 mb-3">ID Vidéo YouTube</h3>
+                    <p class="text-stone-600 text-sm mb-4 flex-grow">Extrait l'identifiant unique d'une vidéo depuis différents formats d'URL YouTube.</p>
+                    <pre class="mb-4"><code class="text-sm">(?:https?:\/\/)?(?:www\.)?(?:youtube\.com|youtu\.be)\/(?:watch\?v=)?([\w-]{11})</code></pre>
+                    <button class="test-pattern-btn mt-auto w-full bg-indigo-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-indigo-700 transition-colors"
+                            data-pattern="(?:https?:\/\/)?(?:www\.)?(?:youtube\.com|youtu\.be)\/(?:watch\?v=)?([\w-]{11})"
+                            data-test-string="URL 1: https://www.youtube.com/watch?v=dQw4w9WgXcQ, URL 2: http://youtu.be/dQw4w9WgXcQ">
+                        Tester ce patron
+                    </button>
+                </div>
+                <!-- Log Data Extraction -->
+                <div class="bg-white p-6 rounded-xl shadow-md border border-stone-200 flex flex-col">
+                    <h3 class="text-xl font-semibold text-indigo-800 mb-3">Données de Log</h3>
+                    <p class="text-stone-600 text-sm mb-4 flex-grow">Capture l'adresse IP, la méthode et le statut d'une ligne de log de serveur web commune.</p>
+                    <pre class="mb-4"><code class="text-sm">^(\S+) \S+ \S+ \[.*?\] "(\S+) .*?" (\d{3})</code></pre>
+                    <button class="test-pattern-btn mt-auto w-full bg-indigo-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-indigo-700 transition-colors"
+                            data-pattern="^(\S+) \S+ \S+ \[.*?\] &quot;(\S+) .*?&quot; (\d{3})"
+                            data-test-string='127.0.0.1 - - [25/Jul/2025:14:02:00 +0200] "GET /page HTTP/1.1" 200 1234'>
+                        Tester ce patron
+                    </button>
+                </div>
+                <!-- Number with Commas -->
+                <div class="bg-white p-6 rounded-xl shadow-md border border-stone-200 flex flex-col">
+                    <h3 class="text-xl font-semibold text-indigo-800 mb-3">Nombre avec Virgules</h3>
+                    <p class="text-stone-600 text-sm mb-4 flex-grow">Valide un nombre entier avec des virgules comme séparateurs de milliers.</p>
+                    <pre class="mb-4"><code class="text-sm">^\d{1,3}(,\d{3})*$</code></pre>
+                    <button class="test-pattern-btn mt-auto w-full bg-indigo-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-indigo-700 transition-colors"
+                            data-pattern="^\d{1,3}(,\d{3})*$"
+                            data-test-string="Valides: 1,234,567 et 1000 et 999. Invalides: 1,23,456 et 1234,567.">
+                        Tester ce patron
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Main Functions -->
+        <section id="fonctions" class="mb-16 scroll-mt-24">
+            <h2 class="text-3xl font-bold mb-6 border-b-2 pb-3 border-indigo-200 text-indigo-700">Fonctions principales du module <span class="code-style">re</span></h2>
+            <p class="mb-8 text-stone-600">Le module <span class="code-style">re</span> de Python fournit plusieurs fonctions pour travailler avec les expressions régulières. Voici les plus importantes. Chaque exemple de code peut être copié en un clic.</p>
+            <div class="bg-white rounded-xl shadow-md border border-stone-200 overflow-hidden">
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th class="w-1/4">Fonction</th>
+                                <th class="w-1/4">Explication</th>
+                                <th class="w-1/2">Exemple de code Python</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code class="code-style">re.search(patron, chaine)</code></td>
+                                <td>Cherche le patron n'importe où dans la chaîne. Renvoie un objet "Match" pour la première occurrence trouvée.</td>
+                                <td><pre><button class="copy-btn" title="Copier le code">📋</button><code>import re
+texte = "J'aime le Python"
+match = re.search(r"Python", texte)
+if match:
+    print(f"Trouvé: {match.group(0)}")
+# Output: Trouvé: Python</code></pre></td>
+                            </tr>
+                            <tr>
+                                <td><code class="code-style">re.match(patron, chaine)</code></td>
+                                <td>Cherche le patron uniquement au début de la chaîne.</td>
+                                <td><pre><button class="copy-btn" title="Copier le code">📋</button><code>import re
+texte = "Python est super"
+match = re.match(r"Python", texte)
+if match:
+    print("Correspond au début")
+# Output: Correspond au début</code></pre></td>
+                            </tr>
+                            <tr>
+                                <td><code class="code-style">re.findall(patron, chaine)</code></td>
+                                <td>Trouve toutes les occurrences et les renvoie sous forme de liste de chaînes.</td>
+                                <td><pre><button class="copy-btn" title="Copier le code">📋</button><code>import re
+texte = "chat chapeau chameau"
+resultats = re.findall(r"cha[a-z]+", texte)
+print(resultats)
+# Output: ['chat', 'chapeau', 'chameau']</code></pre></td>
+                            </tr>
+                            <tr>
+                                <td><code class="code-style">re.finditer(patron, chaine)</code></td>
+                                <td>Similaire à <span class="code-style">findall</span>, mais renvoie un itérateur d'objets "Match". Plus efficace pour de grands volumes.</td>
+                                <td><pre><button class="copy-btn" title="Copier le code">📋</button><code>import re
+texte = "Couleur: rouge, Taille: L"
+for m in re.finditer(r"(\w+): (\w+)", texte):
+    print(f"{m.group(1)} -> {m.group(2)}")
+# Output: Couleur -> rouge
+#         Taille -> L</code></pre></td>
+                            </tr>
+                            <tr>
+                                <td><code class="code-style">re.sub(patron, remp, chaine)</code></td>
+                                <td>Remplace toutes les occurrences du patron par la chaîne de remplacement.</td>
+                                <td><pre><button class="copy-btn" title="Copier le code">📋</button><code>import re
+texte = "Mon numéro est 123-456-7890"
+nouveau = re.sub(r"\d", "*", texte)
+print(nouveau)
+# Output: Mon numéro est ***-***-****</code></pre></td>
+                            </tr>
+                            <tr>
+                                <td><code class="code-style">re.split(patron, chaine)</code></td>
+                                <td>Divise la chaîne en utilisant le patron comme délimiteur.</td>
+                                <td><pre><button class="copy-btn" title="Copier le code">📋</button><code>import re
+texte = "Pomme,Banane;Orange"
+print(re.split(r"[,;]", texte))
+# Output: ['Pomme', 'Banane', 'Orange']</code></pre></td>
+                            </tr>
+                            <tr>
+                                <td><code class="code-style">re.compile(patron)</code></td>
+                                <td>Compile une expression régulière pour une réutilisation efficace.</td>
+                                <td><pre><button class="copy-btn" title="Copier le code">📋</button><code>import re
+patron_email = re.compile(r"[\w.-]+@[\w.-]+")
+match = patron_email.search("Contact: user@example.com")
+if match:
+    print(match.group(0))
+# Output: user@example.com</code></pre></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Metacharacters -->
+        <section id="syntaxe" class="mb-16 scroll-mt-24">
+            <h2 class="text-3xl font-bold mb-6 border-b-2 pb-3 border-indigo-200 text-indigo-700">Métacaractères et Syntaxe de base</h2>
+            <p class="mb-8 text-stone-600">Les métacaractères sont le cœur des expressions régulières. Ils ne représentent pas eux-mêmes, mais ont une signification spéciale.</p>
+            <div class="bg-white rounded-xl shadow-md border border-stone-200 overflow-hidden">
+                 <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr><th>Syntaxe</th><th>Nom</th><th>Explication</th><th>Exemple (Patron)</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td><code class="code-style">.</code></td><td>Point</td><td>Correspond à n'importe quel caractère, sauf une nouvelle ligne.</td><td><code class="code-style">c.t</code> correspond à "cat", "cot", "c&t".</td></tr>
+                            <tr><td><code class="code-style">^</code></td><td>Circonflexe</td><td>Correspond au début de la chaîne.</td><td><code class="code-style">^Début</code></td></tr>
+                            <tr><td><code class="code-style">$</code></td><td>Dollar</td><td>Correspond à la fin de la chaîne.</td><td><code class="code-style">fin$</code></td></tr>
+                            <tr><td><code class="code-style">*</code></td><td>Astérisque</td><td>Correspond à 0 ou plusieurs répétitions du caractère précédent.</td><td><code class="code-style">ab*c</code> correspond à "ac", "abc", "abbbc".</td></tr>
+                            <tr><td><code class="code-style">+</code></td><td>Plus</td><td>Correspond à 1 ou plusieurs répétitions du caractère précédent.</td><td><code class="code-style">ab+c</code> correspond à "abc", "abbc".</td></tr>
+                            <tr><td><code class="code-style">?</code></td><td>Point d'interrogation</td><td>Correspond à 0 ou 1 répétition du caractère précédent.</td><td><code class="code-style">couleurs?</code> correspond à "couleur" et "couleurs".</td></tr>
+                            <tr><td><code class="code-style">{m,n}</code></td><td>Accolades</td><td>Correspond à entre <span class="code-style">m</span> et <span class="code-style">n</span> répétitions.</td><td><code class="code-style">a{2,4}</code> correspond à "aa", "aaa", "aaaa".</td></tr>
+                            <tr><td><code class="code-style">[...]</code></td><td>Classes de caractères</td><td>Correspond à n'importe quel caractère dans les crochets.</td><td><code class="code-style">[aeiou]</code> correspond à n'importe quelle voyelle.</td></tr>
+                            <tr><td><code class="code-style">[^...]</code></td><td>Classe négative</td><td>Correspond à n'importe quel caractère qui n'est pas dans les crochets.</td><td><code class="code-style">[^0-9]</code> correspond à tout sauf un chiffre.</td></tr>
+                            <tr><td><code class="code-style">\|</code></td><td>Pipe (OU)</td><td>Agit comme un opérateur OU logique.</td><td><code class="code-style">chat\|chien</code> correspond à "chat" ou "chien".</td></tr>
+                            <tr><td><code class="code-style">(...)</code></td><td>Groupe de capture</td><td>Regroupe une partie du patron et capture le texte correspondant.</td><td><code class="code-style">(https?)://</code> capture "http" ou "https".</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Special Sequences -->
+        <section id="sequences" class="mb-16 scroll-mt-24">
+            <h2 class="text-3xl font-bold mb-6 border-b-2 pb-3 border-indigo-200 text-indigo-700">Séquences Spéciales</h2>
+            <p class="mb-8 text-stone-600">Ces séquences sont des raccourcis pratiques pour des classes de caractères couramment utilisées.</p>
+            <div class="bg-white rounded-xl shadow-md border border-stone-200 overflow-hidden">
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr><th>Séquence</th><th>Explication</th><th>Équivalent</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td><code class="code-style">\d</code></td><td>Correspond à n'importe quel chiffre décimal.</td><td><code class="code-style">[0-9]</code></td></tr>
+                            <tr><td><code class="code-style">\D</code></td><td>Correspond à tout caractère qui n'est pas un chiffre.</td><td><code class="code-style">[^0-9]</code></td></tr>
+                            <tr><td><code class="code-style">\w</code></td><td>Correspond à tout caractère "mot" (alphanumérique + underscore).</td><td><code class="code-style">[a-zA-Z0-9_]</code></td></tr>
+                            <tr><td><code class="code-style">\W</code></td><td>Correspond à tout caractère qui n'est pas un caractère "mot".</td><td><code class="code-style">[^a-zA-Z0-9_]</code></td></tr>
+                            <tr><td><code class="code-style">\s</code></td><td>Correspond à tout caractère d'espacement (espace, tabulation, etc.).</td><td><code class="code-style">[ \t\n\r\f\v]</code></td></tr>
+                            <tr><td><code class="code-style">\S</code></td><td>Correspond à tout caractère qui n'est pas un espacement.</td><td><code class="code-style">[^ \t\n\r\f\v]</code></td></tr>
+                            <tr><td><code class="code-style">\b</code></td><td>Correspond à une frontière de mot (entre <code class="code-style">\w</code> et <code class="code-style">\W</code>).</td><td>N/A</td></tr>
+                            <tr><td><code class="code-style">\B</code></td><td>Correspond à une position qui n'est pas une frontière de mot.</td><td>N/A</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Flags -->
+        <section id="drapeaux" class="scroll-mt-24">
+            <h2 class="text-3xl font-bold mb-6 border-b-2 pb-3 border-indigo-200 text-indigo-700">Drapeaux (Flags)</h2>
+            <p class="mb-8 text-stone-600">Les drapeaux modifient le comportement global de la recherche. En Python, on les passe via l'argument <code class="code-style">flags</code> (ex: <code class="code-style">re.IGNORECASE</code>). Dans le testeur ci-dessus, vous pouvez utiliser les équivalents JS (<code class="code-style">i</code> pour <code class="code-style">IGNORECASE</code>, <code class="code-style">g</code> pour <code class="code-style">global</code>, <code class="code-style">m</code> pour <code class="code-style">MULTILINE</code>).</p>
+            <div class="bg-white rounded-xl shadow-md border border-stone-200 overflow-hidden">
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr><th>Drapeau (Python)</th><th>Raccourci (JS)</th><th>Explication</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td><code class="code-style">re.IGNORECASE</code></td><td><code class="code-style">i</code></td><td>Ignore la casse (majuscules/minuscules).</td></tr>
+                            <tr><td><code class="code-style">re.MULTILINE</code></td><td><code class="code-style">m</code></td><td>Fait en sorte que <code class="code-style">^</code> et <code class="code-style">$</code> correspondent au début/fin de chaque ligne.</td></tr>
+                            <tr><td><code class="code-style">re.DOTALL</code></td><td><code class="code-style">s</code></td><td>Permet au métacaractère <code class="code-style">.</code> de correspondre aussi au caractère de nouvelle ligne (<code class="code-style">\n</code>).</td></tr>
+                            <tr><td>N/A (implicite)</td><td><code class="code-style">g</code></td><td>Global. Trouve toutes les correspondances, pas seulement la première.</td></tr>
+                            <tr><td><code class="code-style">re.VERBOSE</code></td><td>N/A</td><td>Permet d'écrire des patrons plus lisibles avec des commentaires (Python uniquement).</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="text-center py-10 mt-12 border-t border-stone-200">
+        <p class="text-stone-500 text-sm">Codé avec ❤️</p>
+        <p class="text-stone-500 text-xs mt-2">© 2025 Synapse Learners. Tous droits réservés ®.</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const regexPatternInput = document.getElementById('regex-pattern');
+            const regexFlagsInput = document.getElementById('regex-flags');
+            const testStringInput = document.getElementById('test-string');
+            const highlightedOutput = document.getElementById('highlighted-output');
+            const matchCountDisplay = document.getElementById('match-count');
+
+            function updateHighlighting() {
+                const pattern = regexPatternInput.value;
+                const flags = regexFlagsInput.value.includes('g') ? regexFlagsInput.value : regexFlagsInput.value + 'g';
+                const text = testStringInput.value;
+
+                highlightedOutput.textContent = text;
+                matchCountDisplay.textContent = '';
+
+                if (!pattern) {
+                    return;
+                }
+
+                try {
+                    const regex = new RegExp(pattern, flags);
+                    const matches = [...text.matchAll(regex)];
+                    
+                    if (matches.length > 0) {
+                        let highlightedText = '';
+                        let lastIndex = 0;
+
+                        matches.forEach(match => {
+                            const startIndex = match.index;
+                            const matchedString = match[0];
+                            const endIndex = startIndex + matchedString.length;
+                            
+                            highlightedText += escapeHtml(text.substring(lastIndex, startIndex));
+                            highlightedText += `<span class="highlight">${escapeHtml(matchedString)}</span>`;
+                            lastIndex = endIndex;
+                        });
+
+                        highlightedText += escapeHtml(text.substring(lastIndex));
+                        highlightedOutput.innerHTML = highlightedText;
+                        const countText = matches.length === 1 ? 'correspondance trouvée' : 'correspondances trouvées';
+                        matchCountDisplay.textContent = `${matches.length} ${countText}.`;
+                    } else {
+                        highlightedOutput.textContent = text;
+                        matchCountDisplay.textContent = 'Aucune correspondance trouvée.';
+                    }
+                    matchCountDisplay.classList.remove('text-red-600');
+
+                } catch (e) {
+                    highlightedOutput.textContent = text;
+                    matchCountDisplay.textContent = 'Erreur dans le patron Regex.';
+                    matchCountDisplay.classList.add('text-red-600');
+                }
+            }
+            
+            function escapeHtml(unsafe) {
+                return unsafe
+                     .replace(/&/g, "&amp;")
+                     .replace(/</g, "&lt;")
+                     .replace(/>/g, "&gt;")
+                     .replace(/"/g, "&quot;")
+                     .replace(/'/g, "&#039;");
+            }
+
+            [regexPatternInput, regexFlagsInput, testStringInput].forEach(input => {
+                input.addEventListener('input', updateHighlighting);
+            });
+
+            updateHighlighting();
+
+            document.querySelectorAll('.copy-btn').forEach(button => {
+                button.addEventListener('click', () => {
+                    const pre = button.parentElement;
+                    const code = pre.querySelector('code');
+                    const textToCopy = code.innerText;
+
+                    navigator.clipboard.writeText(textToCopy).then(() => {
+                        const originalContent = button.innerHTML;
+                        button.innerHTML = 'Copié ✓';
+                        button.classList.add('copied');
+                        setTimeout(() => {
+                            button.innerHTML = originalContent;
+                            button.classList.remove('copied');
+                        }, 2000);
+                    }).catch(err => {
+                        console.error('Failed to copy: ', err);
+                    });
+                });
+            });
+
+            document.querySelectorAll('.test-pattern-btn').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const pattern = button.dataset.pattern;
+                    const testString = button.dataset.testString;
+                    
+                    // Handle special cases for data-pattern
+                    let finalPattern = pattern;
+                    if (pattern.includes('&quot;')) {
+                        finalPattern = pattern.replace(/&quot;/g, '"');
+                    }
+
+                    regexPatternInput.value = finalPattern;
+                    testStringInput.value = testString;
+
+                    updateHighlighting();
+                    
+                    const testerSection = document.getElementById('tester');
+                    testerSection.scrollIntoView({ behavior: 'smooth' });
+                });
+            });
+        });
+    </script>
+</body>
+</html>
