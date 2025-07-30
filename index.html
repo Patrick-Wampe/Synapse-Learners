@@ -8,7 +8,6 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-    <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         :root {
             --couleur-principale: #5E28CB;
@@ -20,7 +19,6 @@
             --couleur-gris-clair: #e9ecef;
             --couleur-ombre: rgba(0, 0, 0, 0.1);
         }
-
         body {
             font-family: 'Poppins', sans-serif;
             background-color: var(--couleur-fond);
@@ -30,25 +28,21 @@
             display: flex;
             justify-content: center;
         }
-
         .container {
             width: 100%;
             max-width: 1100px;
             padding: 2rem;
             box-sizing: border-box;
         }
-
         header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 3rem;
         }
-
         #logo img {
-            height: 54px;
+            height: 64px; /* Logo agrandi */
         }
-        
         #main-nav a {
             text-decoration: none;
             color: var(--couleur-principale);
@@ -57,11 +51,9 @@
             border-radius: 20px;
             transition: all 0.3s ease;
         }
-
         #main-nav a:hover {
             background-color: var(--couleur-gris-clair);
         }
-
         .hero {
             display: flex;
             align-items: center;
@@ -69,12 +61,10 @@
             padding: 2rem 0;
             margin-bottom: 3rem;
         }
-        
         .hero-content {
             flex: 1;
             text-align: left;
         }
-
         .hero h1 {
             font-size: 2.8rem;
             font-weight: 700;
@@ -82,13 +72,11 @@
             margin-bottom: 0.5rem;
             line-height: 1.2;
         }
-
         .hero p {
             font-size: 1.2rem;
             color: var(--couleur-texte-clair);
             margin: 0 auto 1.5rem 0;
         }
-        
         .hero-image-slider {
             flex: 1;
             position: relative;
@@ -98,7 +86,6 @@
             overflow: hidden;
             box-shadow: 0 10px 30px var(--couleur-ombre);
         }
-
         .hero-image-slider .slide {
             position: absolute;
             top: 0;
@@ -109,11 +96,9 @@
             opacity: 0;
             transition: opacity 1.5s ease-in-out;
         }
-
         .hero-image-slider .slide.active {
             opacity: 1;
         }
-
         .category-title {
             font-size: 2.2rem;
             color: var(--couleur-secondaire);
@@ -122,13 +107,11 @@
             padding-bottom: 0.5rem;
             border-bottom: 2px solid var(--couleur-principale);
         }
-
         .exercise-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 1.5rem;
         }
-
         .exercise-card {
             background-color: var(--couleur-blanc);
             border-radius: 15px;
@@ -143,45 +126,37 @@
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             position: relative;
         }
-
         .exercise-card:not(.disabled):hover {
             transform: translateY(-8px);
             box-shadow: 0 12px 35px rgba(94, 40, 203, 0.2);
         }
-
         .exercise-card .icon {
-            color: var(--couleur-principale);
             margin-bottom: 1rem;
+            font-size: 2.5rem; /* Taille de police pour les emojis */
         }
-
         .exercise-card h3 {
             font-size: 1.3rem;
             font-weight: 600;
             margin: 0 0 0.5rem 0;
         }
-
         .exercise-card p {
             font-size: 0.95rem;
             color: var(--couleur-texte-clair);
             margin: 0;
             flex-grow: 1;
         }
-        
         .exercise-card.disabled {
             background-color: #f8f9fa;
             cursor: not-allowed;
             color: #adb5bd;
         }
-
         .exercise-card.disabled:hover {
             transform: none;
             box-shadow: 0 8px 25px var(--couleur-ombre);
         }
-        
         .exercise-card.disabled .icon {
-            color: #ced4da;
+            opacity: 0.6;
         }
-        
         .badge {
             position: absolute;
             top: 15px;
@@ -193,7 +168,6 @@
             font-size: 0.75rem;
             font-weight: 600;
         }
-
         footer {
             text-align: center;
             margin-top: 4rem;
@@ -202,7 +176,6 @@
             color: var(--couleur-texte-clair);
             font-size: 0.9rem;
         }
-        
         @media (max-width: 992px) {
              .hero {
                 flex-direction: column;
@@ -215,7 +188,6 @@
                 margin: 0 auto 1.5rem auto;
             }
         }
-        
         @media (max-width: 768px) {
             .hero h1 {
                 font-size: 2.2rem;
@@ -228,7 +200,6 @@
                 gap: 1rem;
             }
         }
-
     </style>
 </head>
 <body>
@@ -262,160 +233,164 @@
 
             <h2 class="category-title">Maîtriser les concepts clés 🧠</h2>
             <section class="exercise-grid">
-            <a href="https://patrick-wampe.github.io/Synapse-Learners/texteacompleter-bloc3.html" class="exercise-card" target='_blank'>
-                    <div class="icon"><i data-lucide="pilcrow"></i></div>
+                <a href="https://patrick-wampe.github.io/Synapse-Learners/texteacompleter-bloc3.html" class="exercise-card" target='_blank'>
+                    <div class="icon">✍️</div>
                     <h3>Texte à compléter</h3>
                     <p>Remplissez les trous dans des blocs de texte ou de code pour valider votre compréhension des syntaxes.</p>
                 </a>
-                
                 <a href="https://patrick-wampe.github.io/Synapse-Learners/quizz-bloc3.html" class="exercise-card" target='_blank'>
-                    <div class="icon"><i data-lucide="file-question"></i></div>
-                    <h3>Quiz Interactifs</h3>
+                    <div class="icon">✅</div>
+                    <h3>Quiz interactifs</h3>
                     <p>Testez vos connaissances sur des concepts et identifiez vos points faibles pour mieux progresser.</p>
                 </a>
-                
                 <a href="https://patrick-wampe.github.io/Synapse-Learners/drag&drop-bloc3.html" class="exercise-card" target='_blank'>
-                    <div class="icon"><i data-lucide="move"></i></div>
+                    <div class="icon">🤏</div>
                     <h3>Drag and Drop</h3>
                     <p>Associez des concepts et des définitions par glisser-déposer pour créer des réflexes mentaux solides.</p>
                 </a>
-                
-                <a href="https://patrick-wampe.github.io/Synapse-Learners/jeuvideo.html" class="exercise-card" target='_blank'>
-                    <div class="icon"><i data-lucide="gamepad-2"></i></div>
-                    <h3>Synapse Bros</h3>
-                    <p>Apprenez en vous amusant grâce à notre jeu de plateforme éducatif pour ancrer les concepts fondamentaux.</p>
-                </a>
-                <a href="https://patrick-wampe.github.io/Synapse-Learners/serpent.html" class="exercise-card" target='_blank'>
-                    <div class="icon"><i data-lucide="line-squiggle"></i></div>
-                    <h3>Le Serpent des Connaissances</h3>
-                    <p>Dirigez le serpent vers les blocs de savoir. Chaque bloc mangé déclenche une question pour tester vos connaissances.</p>
-                </a>
                 <a href="#" class="exercise-card disabled">
                     <div class="badge">Bientôt</div>
-                    <div class="icon"><i data-lucide="bird"></i></div>
-                    <h3>Angry Questions</h3>
-                    <p>Lancez des oiseaux sur les questions pour les débloquer. Une bonne réponse vous donne un oiseau supplémentaire.</p>
-                </a>
-                
-                
-                
-                <a href="#" class="exercise-card disabled">
-                    <div class="badge">Bientôt</div>
-                    <div class="icon"><i data-lucide="layers-3"></i></div>
+                    <div class="icon">🗂️</div>
                     <h3>Flashcards Intelligentes</h3>
                     <p>Mémorisez les notions clés sur le long terme grâce à notre système de répétition espacée.</p>
                 </a>
                 <a href="#" class="exercise-card disabled">
                     <div class="badge">Bientôt</div>
-                    <div class="icon"><i data-lucide="timer"></i></div>
-                    <h3>Le Sprint de la mémoire</h3>
-                    <p>Retrouvez les paires (concept/définition, logo/technologie...) sur une grille d'image avant la fin du chrono pour booster votre mémoire.</p>
+                    <div class="icon">⏱️</div>
+                    <h3>Le sprint de la mémoire</h3>
+                    <p>Retrouvez les paires (concept/définition, logo/technologie...) sur une grille d'image avant la fin du chrono.</p>
                 </a>
                 <a href="#" class="exercise-card disabled">
                     <div class="badge">Bientôt</div>
-                    <div class="icon"><i data-lucide="music"></i></div>
-                    <h3>La Chanson de l'Apprenant</h3>
-                    <p>Découvrez notre playlist de chansons pour comprendre et retenir des notions complexes en s'amusant.</p>
+                    <div class="icon">🧭</div>
+                    <h3>La zone Méthodo</h3>
+                    <p>La pratique guidée par la bonne méthode. Plongez dans les principes qui séparent les amateurs des professionnels.</p>
                 </a>
                 <a href="#" class="exercise-card disabled">
                     <div class="badge">Bientôt</div>
-                    <div class="icon"><i data-lucide="brain-circuit"></i></div>
-                    <h3>La Zone Méthodo</h3>
-                    <p>La pratique, c'est bien. La pratique guidée par la bonne méthode, c'est mieux. Plongez dans les principes et les techniques qui séparent les amateurs des professionnels.</p>
+                    <div class="icon">📝</div>
+                    <h3>Le simplificator Résumator</h3>
+                    <p>Entraînez-vous à la vulgarisation. Expliquez un concept technique complexe avec clarté en 200 caractères ou moins.</p>
+                </a>
+                 <a href="#" class="exercise-card disabled">
+                    <div class="badge">Bientôt</div>
+                    <div class="icon">🖼️</div>
+                    <h3>Des images et des Insight</h3>
+                    <p>Apprenez à interpréter des graphiques et à choisir les bonnes visualisations pour convaincre et faire passer un message.</p>
                 </a>
             </section>
 
-            <h2 class="category-title">L'Atelier du Codeur : Débugger & Optimiser 💻</h2>
+            <h2 class="category-title">L’atelier du codeur : Débugger & Optimiser 🛠️</h2>
             <section class="exercise-grid">
                 <a href="https://patrick-wampe.github.io/Synapse-Learners/ordonnercode-bloc3.html" class="exercise-card" target='_blank'>
-                    <div class="icon"><i data-lucide="list-ordered"></i></div>
+                    <div class="icon">📊</div>
                     <h3>Ordonner le Code</h3>
-                    <p>Intégrez la logique et la structure d'un script fonctionnel en remettant les lignes dans le bon ordre.</p>
+                    <p>Intégrez la logique d'un script fonctionnel en remettant les lignes dans le bon ordre.</p>
                 </a>
                 <a href="https://patrick-wampe.github.io/Synapse-Learners/codemanquant-bloc3.html" class="exercise-card" target='_blank'>
-                    <div class="icon"><i data-lucide="code-2"></i></div>
+                    <div class="icon">🧩</div>
                     <h3>Compléter le Code</h3>
                     <p>Apprenez à vous intégrer dans du code existant en écrivant les lignes manquantes pour résoudre un problème.</p>
                 </a>
                 <a href="#" class="exercise-card disabled">
                     <div class="badge">Bientôt</div>
-                    <div class="icon"><i data-lucide="bug"></i></div>
-                    <h3>Le Débugueur de l'Extrême</h3>
-                    <p>Trouvez et corrigez les erreurs subtiles cachées dans des blocs de code pour devenir un pro du débuggage. C'est l'une des compétences les plus cruciale.</p>
+                    <div class="icon">🐛</div>
+                    <h3>Le débugueur de l’extrême</h3>
+                    <p>Trouvez et corrigez les erreurs subtiles cachées dans des blocs de code pour devenir un pro du débuggage.</p>
                 </a>
                 <a href="#" class="exercise-card disabled">
                     <div class="badge">Bientôt</div>
-                    <div class="icon"><i data-lucide="scissors"></i></div>
-                    <h3>Le Défi de la Concision</h3>
-                    <p>Apprenez à refactoriser un code qui fonctionne pour le rendre plus propre, plus lisible, plus maintenable, plus court.</p>
+                    <div class="icon">✂️</div>
+                    <h3>Le défi de la concision</h3>
+                    <p>Apprenez à refactoriser un code qui fonctionne pour le rendre plus propre, plus lisible et plus maintenable.</p>
                 </a>
                 <a href="#" class="exercise-card disabled">
                     <div class="badge">Bientôt</div>
-                    <div class="icon"><i data-lucide="rocket"></i></div>
-                    <h3>Le Défi de la Performance</h3>
+                    <div class="icon">🚀</div>
+                    <h3>Le défi de la performance</h3>
                     <p>Optimisez la vitesse et la consommation mémoire de vos algorithmes grâce à l'optimisation algorithmique.</p>
                 </a>
             </section>
-            
+
+            <h2 class="category-title">Jeux vidéo et animation 🎮</h2>
+            <section class="exercise-grid">
+                <a href="https://patrick-wampe.github.io/Synapse-Learners/jeuvideo.html" class="exercise-card" target='_blank'>
+                    <div class="icon">🍄</div>
+                    <h3>Synapse Bros</h3>
+                    <p>Apprenez en vous amusant grâce à notre jeu de plateforme éducatif pour ancrer les concepts fondamentaux.</p>
+                </a>
+                <a href="https://patrick-wampe.github.io/Synapse-Learners/serpent.html" class="exercise-card" target='_blank'>
+                    <div class="icon">🐍</div>
+                    <h3>Le serpent des connaissances</h3>
+                    <p>Dirigez le serpent vers les blocs de savoir. Chaque bloc mangé déclenche une question pour tester vos connaissances.</p>
+                </a>
+                <a href="#" class="exercise-card disabled">
+                    <div class="badge">Bientôt</div>
+                    <div class="icon">🐦</div>
+                    <h3>Angry Synapse</h3>
+                    <p>Lancez des oiseaux sur les questions pour les débloquer. Une bonne réponse vous donne un oiseau supplémentaire.</p>
+                </a>
+                <a href="#" class="exercise-card disabled">
+                    <div class="badge">Bientôt</div>
+                    <div class="icon">🎶</div>
+                    <h3>La chanson des Synapses</h3>
+                    <p>Découvrez notre playlist de chansons pour comprendre et retenir des notions complexes en s'amusant.</p>
+                </a>
+                <a href="#" class="exercise-card disabled">
+                    <div class="badge">Bientôt</div>
+                    <div class="icon">🗝️</div>
+                    <h3>L'escape Game des synapses</h3>
+                    <p>Résolvez une série d'énigmes en un temps limité pour vous "échapper" et prouver votre maîtrise technique.</p>
+                </a>
+            </section>
+
             <h2 class="category-title">Scénarios professionnels et projets guidés 🗺</h2>
             <section class="exercise-grid">
                 <a href="#" class="exercise-card disabled">
                     <div class="badge">Bientôt</div>
-                    <div class="icon"><i data-lucide="text-quote"></i></div>
-                    <h3>Le Simplicator Résumator</h3>
-                    <p>Entraînez-vous à la vulgarisation. Votre défi ? Expliquer un concept technique complexe avec une clarté absolue en 200 caractères ou moins.</p>
-                </a>
-                <a href="#" class="exercise-card disabled">
-                    <div class="badge">Bientôt</div>
-                    <div class="icon"><i data-lucide="image"></i></div>
-                    <h3>Analyse d'Images</h3>
-                    <p>Apprenez à interpréter des graphiques et à choisir les bonnes visualisations pour convaincre et faire passer un message en mode storytelling.</p>
-                </a>
-                <a href="#" class="exercise-card disabled">
-                    <div class="badge">Bientôt</div>
-                    <div class="icon"><i data-lucide="architecture"></i></div>
-                    <h3>Le Bâtisseur de Solutions</h3>
-                    <p>Concevez l'architecture d'une application en assemblant les bons composants techniques pour un besoin métier.</p>
-                </a>
-                <a href="#" class="exercise-card disabled">
-                    <div class="badge">Bientôt</div>
-                    <div class="icon"><i data-lucide="search"></i></div>
-                    <h3>Le Détective des Données</h3>
+                    <div class="icon">🕵️‍♂️</div>
+                    <h3>Le détective des données</h3>
                     <p>Résolvez un problème métier en menant l'enquête sur un jeu de données. De l'exploration à la conclusion.</p>
                 </a>
                 <a href="#" class="exercise-card disabled">
                     <div class="badge">Bientôt</div>
-                    <div class="icon"><i data-lucide="notebook"></i></div>
-                    <h3>Le Notebook Interactif</h3>
+                    <div class="icon">📓</div>
+                    <h3>Le notebook interactif</h3>
                     <p>Suivez pas à pas un projet complet, comme en entreprise, dans un environnement de travail réaliste et guidé.</p>
                 </a>
+                <a href="#" class="exercise-card disabled">
+                    <div class="badge">Bientôt</div>
+                    <div class="icon">❄️</div>
+                    <h3>Le projet boule de neige</h3>
+                    <p>Un projet à faire grossir pour le faire devenir un vrai truc en mode startup.</p>
+                </a>
             </section>
-            
+
             <h2 class="category-title">Collaboration & Compétition 🆚</h2>
             <section class="exercise-grid">
                 <a href="#" class="exercise-card disabled">
                     <div class="badge">Bientôt</div>
-                    <div class="icon"><i data-lucide="trophy"></i></div>
-                    <h3>Le Challenge</h3>
+                    <div class="icon">🏆</div>
+                    <h3>Le challenge solo</h3>
                     <p>Relevez des challenges régulièrement pour consolider tes compétences et découvrir de nouvelles approches.</p>
                 </a>
-                <a href="#" class="exercise-card disabled">
+                 <a href="#" class="exercise-card disabled">
                     <div class="badge">Bientôt</div>
-                    <div class="icon"><i data-lucide="eye"></i></div>
-                    <h3>L'Œil du Critique</h3>
-                    <p>Progressez en soumettant votre code et en recevant des feedbacks constructifs de la communauté pour affûter votre expertise. Vous pourrez aussi en donner</p>
+                    <div class="icon">🏎️</div>
+                    <h3>La course de vitesse</h3>
+                    <p>On commence le challenge à 2 ou 4, le 1er qui a terminé clique pour stopper le chrono.</p>
                 </a>
                 <a href="#" class="exercise-card disabled">
                     <div class="badge">Bientôt</div>
-                    <div class="icon"><i data-lucide="users"></i></div>
-                    <h3>Le Projet d'Équipe</h3>
+                    <div class="icon">👁️</div>
+                    <h3>L’oeil du Critique</h3>
+                    <p>Progressez en soumettant votre code et en recevant des feedbacks constructifs de la communauté.</p>
+                </a>
+                <a href="#" class="exercise-card disabled">
+                    <div class="badge">Bientôt</div>
+                    <div class="icon">👥</div>
+                    <h3>Le projet d’équipe</h3>
                     <p>Unissez vos forces pour construire un projet de A à Z, de la répartition des tâches à la fusion du code final.</p>
-                </a>
-                <a href="#" class="exercise-card disabled">
-                    <div class="badge">Bientôt</div>
-                    <div class="icon"><i data-lucide="key-round"></i></div>
-                    <h3>L'Escape Game de la Tech</h3>
-                    <p>Résolvez une série d'énigmes en un temps limité pour vous "échapper" et prouver votre maîtrise technique.</p>
                 </a>
             </section>
         </main>
@@ -426,8 +401,6 @@
         </footer>
     </div>
     <script>
-        lucide.createIcons();
-
         // --- Slideshow Logic ---
         const slides = document.querySelectorAll('.hero-image-slider .slide');
         let currentSlide = 0;
@@ -446,7 +419,6 @@
                 currentSlide = (currentSlide + 1) % slides.length;
                 showSlide(currentSlide);
             }, 4000); // Change image every 4 seconds
-
             showSlide(0); // Show the first slide initially
         }
     </script>
