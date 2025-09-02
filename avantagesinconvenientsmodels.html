@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Répertoire des Algorithmes de Machine Learning</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc; /* slate-50 */
+        }
+        .table-header {
+            background-color: #f1f5f9; /* slate-100 */
+            position: sticky;
+            top: 0;
+        }
+        .category-icon {
+            width: 48px;
+            height: 48px;
+            stroke-width: 1.5;
+        }
+        .prose-code {
+            font-family: 'Fira Code', monospace;
+            background-color: #eef2ff; /* indigo-50 */
+            color: #3730a3; /* indigo-800 */
+            font-size: 0.875rem;
+            padding: 0.1rem 0.4rem;
+            border-radius: 0.25rem;
+            font-weight: 600;
+        }
+        .param-desc {
+            font-size: 0.8rem;
+            color: #64748b; /* slate-500 */
+            margin-top: 2px;
+        }
+        tr.animate-on-scroll {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+        }
+        tr.animate-on-scroll.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="text-slate-700">
+
+    <div class="container mx-auto p-4 sm:p-6 lg:p-8">
+        <header class="text-center mb-10">
+            <h1 class="text-4xl sm:text-5xl font-bold text-slate-900 tracking-tight">Répertoire des Algorithmes de Machine Learning</h1>
+            <p class="mt-4 text-lg text-slate-600 max-w-3xl mx-auto">Un guide de référence pour les algorithmes les plus courants en régression, classification, clustering et réduction de dimensionnalité.</p>
+        </header>
+
+        <main>
+            <div class="overflow-x-auto bg-white rounded-lg shadow-lg">
+                <table class="w-full text-sm text-left">
+                    <thead class="table-header">
+                        <tr>
+                            <th scope="col" class="px-6 py-4 w-1/12 text-center">Catégorie</th>
+                            <th scope="col" class="px-6 py-4 w-2/12">Algorithme</th>
+                            <th scope="col" class="px-6 py-4 w-3/12">Description</th>
+                            <th scope="col" class="px-6 py-4 w-2/12">Avantages</th>
+                            <th scope="col" class="px-6 py-4 w-2/12">Faiblesses</th>
+                            <th scope="col" class="px-6 py-4 w-2/12">Hyper-paramètres Clés</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Catégorie Régression -->
+                        <tr class="border-b hover:bg-slate-50/50 animate-on-scroll">
+                            <td class="px-6 py-4 align-top text-center" rowspan="7">
+                                <div class="flex flex-col items-center">
+                                    <svg class="category-icon text-sky-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
+                                    <span class="mt-2 text-xs font-semibold text-slate-600">Régression</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 font-semibold text-slate-900">Régression Linéaire</td>
+                            <td class="px-6 py-4">Modèle simple qui trouve la meilleure ligne droite pour décrire la relation entre des variables.</td>
+                            <td class="px-6 py-4">Simple, rapide, très interprétable.</td>
+                            <td class="px-6 py-4">Ne fonctionne que pour les relations linéaires, sensible aux outliers.</td>
+                            <td class="px-6 py-4">Aucun (sauf variantes).</td>
+                        </tr>
+                        <tr class="border-b bg-slate-50 hover:bg-slate-100/50 animate-on-scroll">
+                            <td class="px-6 py-4 font-semibold text-slate-900">Régression Polynomiale</td>
+                            <td class="px-6 py-4">Étend la régression linéaire pour modéliser des relations non-linéaires en ajoutant des termes polynomiaux.</td>
+                            <td class="px-6 py-4">Plus flexible, peut capturer des courbes.</td>
+                            <td class="px-6 py-4">Risque élevé d'overfitting, choix du degré complexe.</td>
+                            <td class="px-6 py-4"><div><code class="prose-code">degree</code><p class="param-desc">Contrôle la complexité de la courbe. Un `degree` élevé permet de suivre des motifs complexes mais augmente fortement le risque de surapprentissage.</p></div></td>
+                        </tr>
+                        <tr class="border-b hover:bg-slate-50/50 animate-on-scroll">
+                            <td class="px-6 py-4 font-semibold text-slate-900">KNN Regressor</td>
+                            <td class="px-6 py-4">Prédit la valeur d'un point en se basant sur la moyenne des valeurs de ses 'k' plus proches voisins.</td>
+                            <td class="px-6 py-4">Simple, non-paramétrique.</td>
+                            <td class="px-6 py-4">Lent avec de grandes données, sensible au choix de 'k'.</td>
+                            <td class="px-6 py-4"><div><code class="prose-code">n_neighbors</code><p class="param-desc">Définit combien de voisins sont consultés. Un `k` petit rend le modèle sensible au bruit ; un `k` grand lisse les prédictions en se basant sur une tendance plus générale.</p></div><div><code class="prose-code">weights</code><p class="param-desc">'distance' donne plus d'importance aux voisins proches, ce qui est souvent plus pertinent.</p></div></td>
+                        </tr>
+                        <tr class="border-b bg-slate-50 hover:bg-slate-100/50 animate-on-scroll">
+                            <td class="px-6 py-4 font-semibold text-slate-900">SVM Regressor (SVR)</td>
+                            <td class="px-6 py-4">Trouve un hyperplan qui maximise la marge (un "tube") contenant le maximum de points de données.</td>
+                            <td class="px-6 py-4">Efficace en haute dimension, robuste.</td>
+                            <td class="px-6 py-4">Moins interprétable, sensible au choix du noyau.</td>
+                            <td class="px-6 py-4"><div><code class="prose-code">C</code><p class="param-desc">Règle le compromis entre simplicité et précision. Un `C` faible tolère les erreurs pour une "marge" plus large. Un `C` élevé cherche à être plus précis, au risque de surapprendre.</p></div><div><code class="prose-code">kernel</code><p class="param-desc">Définit la forme de la frontière de décision. 'linear' pour des lignes, 'rbf' pour des formes complexes.</p></div></td>
+                        </tr>
+                        <tr class="border-b hover:bg-slate-50/50 animate-on-scroll">
+                            <td class="px-6 py-4 font-semibold text-slate-900">Lasso</td>
+                            <td class="px-6 py-4">Régression linéaire avec une pénalité L1 qui peut réduire certains coefficients à zéro, effectuant une sélection de variables.</td>
+                            <td class="px-6 py-4">Sélection de variables automatique.</td>
+                            <td class="px-6 py-4">Peut être instable si les variables sont très corrélées.</td>
+                            <td class="px-6 py-4"><div><code class="prose-code">alpha</code><p class="param-desc">Contrôle la force de la "pénalisation". Plus `alpha` est grand, plus le modèle est forcé de mettre des coefficients à zéro, ignorant ainsi les variables jugées moins importantes.</p></div></td>
+                        </tr>
+                        <tr class="border-b bg-slate-50 hover:bg-slate-100/50 animate-on-scroll">
+                            <td class="px-6 py-4 font-semibold text-slate-900">Decision Tree Regressor</td>
+                            <td class="px-6 py-4">Construit un arbre de décisions pour prédire une valeur continue.</td>
+                            <td class="px-6 py-4">Facile à interpréter et visualiser.</td>
+                            <td class="px-6 py-4">Forte tendance à l'overfitting, instable.</td>
+                            <td class="px-6 py-4"><div><code class="prose-code">max_depth</code><p class="param-desc">Profondeur max de l'arbre. C'est le principal levier pour l'empêcher de devenir trop complexe et de surapprendre.</p></div><div><code class="prose-code">min_samples_split</code><p class="param-desc">Nombre minimum d'exemples dans un nœud pour autoriser sa division.</p></div></td>
+                        </tr>
+                        <tr class="border-b hover:bg-slate-50/50 animate-on-scroll">
+                            <td class="px-6 py-4 font-semibold text-slate-900">Random Forest Regressor</td>
+                            <td class="px-6 py-4">Ensemble d'arbres de décision. La prédiction finale est la moyenne des prédictions de tous les arbres.</td>
+                            <td class="px-6 py-4">Très performant, robuste à l'overfitting.</td>
+                            <td class="px-6 py-4">Moins interprétable (boîte noire), plus lourd en mémoire.</td>
+                            <td class="px-6 py-4"><div><code class="prose-code">n_estimators</code><p class="param-desc">Nombre d'arbres dans la forêt. Plus il y en a, plus c'est robuste (et long à entraîner).</p></div><div><code class="prose-code">max_depth</code><p class="param-desc">Profondeur maximale de chaque arbre individuel.</p></div></td>
+                        </tr>
+
+                        <!-- Catégorie Classification -->
+                        <tr class="border-t-2 border-slate-200 hover:bg-slate-50/50 animate-on-scroll">
+                            <td class="px-6 py-4 align-top text-center" rowspan="5">
+                                <div class="flex flex-col items-center">
+                                    <svg class="category-icon text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                                    <span class="mt-2 text-xs font-semibold text-slate-600">Classification</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 font-semibold text-slate-900">KNN Classifier</td>
+                            <td class="px-6 py-4">Classifie un point en se basant sur la classe majoritaire de ses 'k' plus proches voisins.</td>
+                            <td class="px-6 py-4">Simple, non-paramétrique.</td>
+                            <td class="px-6 py-4">Lent, sensible au choix de 'k' et à la "malédiction de la dimensionnalité".</td>
+                            <td class="px-6 py-4"><div><code class="prose-code">n_neighbors</code><p class="param-desc">Le nombre 'k' de voisins qui "votent" pour la classe. Un `k` petit est sensible au bruit, un `k` grand lisse la frontière de décision.</p></div><div><code class="prose-code">weights</code><p class="param-desc">'distance' donne plus de poids aux voisins proches lors du vote.</p></div></td>
+                        </tr>
+                        <tr class="border-b bg-slate-50 hover:bg-slate-100/50 animate-on-scroll">
+                            <td class="px-6 py-4 font-semibold text-slate-900">Naive Bayes</td>
+                            <td class="px-6 py-4">Modèle probabiliste basé sur le théorème de Bayes avec une forte hypothèse d'indépendance des variables.</td>
+                            <td class="px-6 py-4">Très rapide, bon pour le texte.</td>
+                            <td class="px-6 py-4">L'hypothèse d'indépendance est souvent fausse.</td>
+                            <td class="px-6 py-4"><div><code class="prose-code">alpha</code><p class="param-desc">Paramètre de lissage. Empêche les probabilités nulles si une catégorie n'a jamais été vue avec un mot lors de l'entraînement.</p></div></td>
+                        </tr>
+                        <tr class="border-b hover:bg-slate-50/50 animate-on-scroll">
+                            <td class="px-6 py-4 font-semibold text-slate-900">SVM Classifier (SVC)</td>
+                            <td class="px-6 py-4">Trouve l'hyperplan qui sépare au mieux les classes de données.</td>
+                            <td class="px-6 py-4">Efficace en haute dimension.</td>
+                            <td class="px-6 py-4">Moins efficace sur données bruitées.</td>
+                            <td class="px-6 py-4"><div><code class="prose-code">C</code><p class="param-desc">Contrôle la "pénalité" pour chaque point mal classé. Un `C` élevé cherche à tout classer correctement, au risque de surapprendre.</p></div><div><code class="prose-code">kernel</code><p class="param-desc">Permet de projeter les données dans une dimension supérieure pour trouver une séparation. 'rbf' est puissant pour les cas non-linéaires.</p></div></td>
+                        </tr>
+                         <tr class="border-b bg-slate-50 hover:bg-slate-100/50 animate-on-scroll">
+                            <td class="px-6 py-4 font-semibold text-slate-900">Decision Tree Classifier</td>
+                            <td class="px-6 py-4">Construit un arbre de décisions pour classer les données.</td>
+                            <td class="px-6 py-4">Très interprétable.</td>
+                            <td class="px-6 py-4">Tendance à l'overfitting.</td>
+                            <td class="px-6 py-4"><div><code class="prose-code">max_depth</code><p class="param-desc">Limite le nombre de "questions" que l'arbre peut poser. C'est le meilleur moyen de lutter contre le surapprentissage.</p></div><div><code class="prose-code">criterion</code><p class="param-desc">Mesure mathématique ('gini' ou 'entropy') utilisée pour évaluer la "pureté" d'une division.</p></div></td>
+                        </tr>
+                        <tr class="border-b hover:bg-slate-50/50 animate-on-scroll">
+                            <td class="px-6 py-4 font-semibold text-slate-900">Random Forest Classifier</td>
+                            <td class="px-6 py-4">Ensemble d'arbres de décision pour la classification. Prédiction par vote majoritaire.</td>
+                            <td class="px-6 py-4">Très performant et robuste.</td>
+                            <td class="px-6 py-4">Boîte noire, plus lourd.</td>
+                            <td class="px-6 py-4"><div><code class="prose-code">n_estimators</code><p class="param-desc">Nombre d'arbres à entraîner. Plus il y en a, plus le modèle est stable et performant (jusqu'à un certain point).</p></div><div><code class="prose-code">max_features</code><p class="param-desc">Nombre de variables tirées au hasard à chaque division. Force les arbres à être différents les uns des autres.</p></div></td>
+                        </tr>
+
+                        <!-- Catégorie Clustering -->
+                        <tr class="border-t-2 border-slate-200 hover:bg-slate-50/50 animate-on-scroll">
+                             <td class="px-6 py-4 align-top text-center" rowspan="3">
+                                <div class="flex flex-col items-center">
+                                    <svg class="category-icon text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M5.636 18.364a9 9 0 010-12.728m12.728 0a9 9 0 010 12.728m-9.9-2.829a5 5 0 010-7.07m7.072 0a5 5 0 010 7.07M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                                    <span class="mt-2 text-xs font-semibold text-slate-600">Clustering</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 font-semibold text-slate-900">K-Means</td>
+                            <td class="px-6 py-4">Partitionne les données en 'k' clusters en minimisant la distance au centre (centroïde) de chaque cluster.</td>
+                            <td class="px-6 py-4">Simple, rapide et efficace sur de grands jeux de données.</td>
+                            <td class="px-6 py-4">Doit spécifier 'k' à l'avance, suppose des clusters sphériques.</td>
+                            <td class="px-6 py-4"><div><code class="prose-code">n_clusters</code><p class="param-desc">Le nombre 'k' de groupes à trouver. C'est le paramètre le plus important, à déterminer en amont (ex: méthode du coude).</p></div><div><code class="prose-code">init</code><p class="param-desc">'k-means++' est une initialisation intelligente des centres qui aide l'algorithme à converger plus vite et mieux.</p></div></td>
+                        </tr>
+                        <tr class="border-b bg-slate-50 hover:bg-slate-100/50 animate-on-scroll">
+                            <td class="px-6 py-4 font-semibold text-slate-900">Clustering Hiérarchique</td>
+                            <td class="px-6 py-4">Crée une hiérarchie de clusters (dendrogramme), soit en regroupant (agglomératif) soit en divisant.</td>
+                            <td class="px-6 py-4">N'oblige pas à choisir 'k', visualisation via dendrogramme.</td>
+                            <td class="px-6 py-4">Lourd en calcul ($O(n^3)$), sensible au bruit.</td>
+                            <td class="px-6 py-4"><div><code class="prose-code">linkage</code><p class="param-desc">Définit comment mesurer la distance entre deux clusters ('ward' minimise la variance, 'complete' utilise la distance max).</p></div><div><code class="prose-code">distance</code><p class="param-desc">Métrique de distance entre les points ('euclidean', 'manhattan').</p></div></td>
+                        </tr>
+                        <tr class="border-b hover:bg-slate-50/50 animate-on-scroll">
+                            <td class="px-6 py-4 font-semibold text-slate-900">DBSCAN</td>
+                            <td class="px-6 py-4">Regroupe les points qui sont densément proches, marquant comme outliers les points isolés.</td>
+                            <td class="px-6 py-4">Peut trouver des formes de clusters arbitraires, robuste aux outliers.</td>
+                            <td class="px-6 py-4">Ne fonctionne pas bien avec des densités variables.</td>
+                            <td class="px-6 py-4"><div><code class="prose-code">eps</code><p class="param-desc">Le rayon du voisinage. Un `eps` petit ne regroupera que les points très proches.</p></div><div><code class="prose-code">min_samples</code><p class="param-desc">Le nombre de voisins requis dans le rayon `eps` pour qu'un point soit considéré comme un point central (core point).</p></div></td>
+                        </tr>
+                        
+                        <!-- Catégorie Autres -->
+                         <tr class="border-t-2 border-slate-200 hover:bg-slate-50/50 animate-on-scroll">
+                             <td class="px-6 py-4 align-top text-center" rowspan="1">
+                                <div class="flex flex-col items-center">
+                                    <svg class="category-icon text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+                                    <span class="mt-2 text-xs font-semibold text-slate-600">Autres</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 font-semibold text-slate-900">ACP (PCA)</td>
+                            <td class="px-6 py-4">Technique qui transforme les données en un nouveau système de coordonnées (composantes principales) pour capturer le maximum de variance.</td>
+                            <td class="px-6 py-4">Réduit le bruit, accélère les autres algorithmes, aide à la visualisation.</td>
+                            <td class="px-6 py-4">Peut perdre de l'information, composantes moins interprétables.</td>
+                            <td class="px-6 py-4"><div><code class="prose-code">n_components</code><p class="param-desc">Le nombre de nouvelles dimensions à conserver. Peut être un entier (ex: 2 pour visualiser) ou un float (ex: 0.95 pour conserver 95% de la variance des données).</p></div></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+        
+        <footer class="text-center mt-12 text-slate-500">
+            <p>&copy; 2025 Synapse Learners. Tous droits réservés.</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const animatedElements = document.querySelectorAll('.animate-on-scroll');
+            const animationObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach((entry, index) => {
+                    if (entry.isIntersecting) {
+                        // Apply a staggered delay
+                        entry.target.style.transitionDelay = `${index * 50}ms`;
+                        entry.target.classList.add('is-visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1 });
+            animatedElements.forEach(el => animationObserver.observe(el));
+        });
+    </script>
+</body>
+</html>
+
+
+
