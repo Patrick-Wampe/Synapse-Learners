@@ -15,13 +15,13 @@
         body {
             font-family: 'Inter', sans-serif;
             background: linear-gradient(135deg, #f0f9ff, #e0f2fe, #fff);
-            color: #1a202c;
+            color: #111827; /* Near black for high contrast */
             overflow-x: hidden;
         }
 
         .dark body {
             background: linear-gradient(135deg, #1a202c, #2d3748, #1a202c);
-            color: #e2e8f0;
+            color: #f9fafb; /* Near white for high contrast */
         }
 
         h1 {
@@ -36,8 +36,8 @@
             border: 2px solid #e2e8f0;
         }
         .dark .content-card {
-            background-color: #2d3748;
-            border: 2px solid #4a5568;
+            background-color: #1f2937;
+            border: 2px solid #4b5563;
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
         }
         .content-card:hover {
@@ -53,8 +53,8 @@
             border: 1px solid #cceeff;
         }
         .dark .host-entry {
-             background-color: #4a5568;
-             border: 1px solid #6a7c93;
+             background-color: #374151;
+             border: 1px solid #4b5563;
         }
         .host-entry:hover {
             transform: translateY(-5px) scale(1.02);
@@ -110,7 +110,7 @@
             transform: scale(1.1);
         }
         .dark .timeline-item::before {
-            border: 3px solid #2d3748;
+            border: 3px solid #1f2937;
         }
         .timeline-item:not(:last-child)::after {
             content: '';
@@ -160,7 +160,7 @@
             <h1 class="text-5xl md:text-7xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-indigo-600 dark:from-blue-400 dark:to-indigo-500 gsap-fade-in">
                 Week-end de Folie en Normandie !
             </h1>
-            <p class="text-xl md:text-2xl text-gray-700 dark:text-gray-300 gsap-fade-in" style="animation-delay: 0.1s;">
+            <p class="text-xl md:text-2xl text-slate-700 dark:text-slate-300 gsap-fade-in" style="animation-delay: 0.1s;">
                 Prépare-toi pour un programme inoubliable les 20 et 21 Septembre ! 🤩
             </p>
         </header>
@@ -168,74 +168,62 @@
         <section class="mb-16 md:mb-24 gsap-pop-in">
             <div id="carousel" class="relative w-full overflow-hidden rounded-3xl shadow-2xl group" style="padding-bottom: 56.25%;">
                 <div id="carousel-track" class="absolute inset-0 flex">
-                    <div class="h-full w-full flex-shrink-0 relative">
-                        <img src="https://www.latourauxcrabes.com/bases/visite_image/moyenne/235/UserGegeoursGerardRuffinGegeoursCCBY-SA3.0-Labreuvoir1.jpg" alt="Veules-les-Roses" class="h-full w-full object-cover">
-                        <div class="absolute bottom-0 left-0 w-full p-6 bg-gradient-to-t from-black/70 to-transparent text-white text-3xl font-bold">Veules-les-Roses 🌹</div>
-                    </div>
-                    <div class="h-full w-full flex-shrink-0 relative">
-                        <img src="https://www.transeuropemarinas.com/wp-content/uploads/2015/03/portdefecamp-01.jpg" alt="Port de Fécamp" class="h-full w-full object-cover">
-                        <div class="absolute bottom-0 left-0 w-full p-6 bg-gradient-to-t from-black/70 to-transparent text-white text-3xl font-bold">Le port de Fécamp ⚓</div>
-                    </div>
-                    <div class="h-full w-full flex-shrink-0 relative">
-                        <img src="https://woody.cloudly.space/app/uploads/fecamp-tourisme/2023/01/thumbs/PLAGE-PETITES-DALLES-AOUT-2021-2-1920x960-crop-1677837076.jpg" alt="Plage des Petites Dalles" class="h-full w-full object-cover">
-                        <div class="absolute bottom-0 left-0 w-full p-6 bg-gradient-to-t from-black/70 to-transparent text-white text-3xl font-bold">Plage des Petites Dalles ⛱️</div>
-                    </div>
-                    <div class="h-full w-full flex-shrink-0 relative">
-                        <img src="https://medias.reussir.fr/lait/2023-10/vache_normande.jpg" alt="Campagne normande" class="h-full w-full object-cover">
-                        <div class="absolute bottom-0 left-0 w-full p-6 bg-gradient-to-t from-black/70 to-transparent text-white text-3xl font-bold">La campagne Normande 🐄</div>
-                    </div>
+                    <div class="h-full w-full flex-shrink-0 relative"><img src="https://www.latourauxcrabes.com/bases/visite_image/moyenne/235/UserGegeoursGerardRuffinGegeoursCCBY-SA3.0-Labreuvoir1.jpg" alt="Veules-les-Roses" class="h-full w-full object-cover"></div>
+                    <div class="h-full w-full flex-shrink-0 relative"><img src="https://www.transeuropemarinas.com/wp-content/uploads/2015/03/portdefecamp-01.jpg" alt="Port de Fécamp" class="h-full w-full object-cover"></div>
+                    <div class="h-full w-full flex-shrink-0 relative"><img src="https://woody.cloudly.space/app/uploads/fecamp-tourisme/2023/01/thumbs/PLAGE-PETITES-DALLES-AOUT-2021-2-1920x960-crop-1677837076.jpg" alt="Plage des Petites Dalles" class="h-full w-full object-cover"></div>
+                    <div class="h-full w-full flex-shrink-0 relative"><img src="https://medias.reussir.fr/lait/2023-10/vache_normande.jpg" alt="Campagne normande" class="h-full w-full object-cover"></div>
                 </div>
-                <button id="prevBtn" class="absolute top-1/2 left-4 z-10 -translate-y-1/2 p-3 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-opacity"><svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg></button>
-                <button id="nextBtn" class="absolute top-1/2 right-4 z-10 -translate-y-1/2 p-3 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-opacity"><svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg></button>
+                <button id="prevBtn" class="absolute top-1/2 left-4 z-10 -translate-y-1/2 p-3 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-opacity"><svg xmlns="http://www.w.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg></button>
+                <button id="nextBtn" class="absolute top-1/2 right-4 z-10 -translate-y-1/2 p-3 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-opacity"><svg xmlns="http://www.w.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg></button>
                 <div id="indicators" class="absolute bottom-6 left-1/2 z-10 -translate-x-1/2 flex space-x-3"></div>
             </div>
         </section>
 
         <section class="mb-16 md:mb-24 gsap-fade-in">
-            <h2 class="text-4xl font-bold text-center mb-12 text-blue-700 dark:text-blue-300">Qui loge où ? <span class="gsap-icon">🏠</span>💖</h2>
+            <h2 class="text-4xl font-bold text-center mb-12 text-slate-800 dark:text-slate-100">Qui loge où ? <span class="gsap-icon">🏠</span>💖</h2>
             <div class="content-card p-6 md:p-8">
-                <div id="map" class="h-96 w-full rounded-2xl mb-8 border border-gray-200 dark:border-gray-700 shadow-inner gsap-fade-in"></div>
+                <div id="map" class="h-96 w-full rounded-2xl mb-8 border border-slate-200 dark:border-slate-700 shadow-inner gsap-fade-in"></div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 gsap-fade-in-stagger">
                     <div id="host-0" style="border-left-color: #ef4444;" class="host-entry border-l-4">
-                        <p class="font-semibold text-gray-800 dark:text-gray-200">Chez Jane 👩🏼 & Jean-François 🧔🏻‍♂️</p>
-                        <p class="text-sm font-medium mb-2 text-red-600 dark:text-red-400">Logent : Narcy 🧔🏾‍♂️, Camille 👩🏻‍🦱, Séverine 👩🏽‍🦱 et Kaye 👩🏻</p>
-                        <a href="https://maps.app.goo.gl/9v1hV4k5h2X6d3zY6" target="_blank" class="text-sm text-gray-600 dark:text-gray-400 hover:text-red-500 transition-colors">14 Rue Pierre Delassise, Sainte-Hélène-Bondeville</a>
+                        <p class="font-semibold text-slate-900 dark:text-slate-50">Chez Jane 👩🏼 & Jean-François 🧔🏻‍♂️</p>
+                        <p class="text-sm font-medium mb-2 text-red-500 dark:text-red-400">Logent : Narcy 🧔🏾‍♂️, Camille 👩🏻‍🦱, Séverine 👩🏽‍🦱 et Kaye 👩🏻</p>
+                        <a href="https://www.google.com/maps/search/?api=1&query=5+impasse+de+la+clinique,+rue+Vert+orée+app2,+76400+Fécamp,+France2" target="_blank" class="text-sm text-slate-600 dark:text-slate-400 hover:text-red-500 transition-colors">14 Rue Pierre Delassise, Sainte-Hélène-Bondeville</a>
                     </div>
                     <div id="host-1" style="border-left-color: #f97316;" class="host-entry border-l-4">
-                        <p class="font-semibold text-gray-800 dark:text-gray-200">Chez William 👱🏻‍♂️ & Déborah 👩🏼‍🦱</p>
-                        <p class="text-sm font-medium mb-2 text-orange-600 dark:text-orange-400">Logent : Blondin 🧑🏾‍🦱 et Cynthia 👩🏽 Mayunga</p>
-                        <a href="https://maps.app.goo.gl/X2U8aT8Z1b7W4bA6A" target="_blank" class="text-sm text-gray-600 dark:text-gray-400 hover:text-orange-500 transition-colors">254 rue du bout de la ville, Criquebeuf-en-Caux</a>
+                        <p class="font-semibold text-slate-900 dark:text-slate-50">Chez William 👱🏻‍♂️ & Déborah 👩🏼‍🦱</p>
+                        <p class="text-sm font-medium mb-2 text-orange-500 dark:text-orange-400">Logent : Blondin 🧑🏾‍🦱 et Cynthia 👩🏽 Mayunga</p>
+                        <a href="https://www.google.com/maps/search/?api=1&query=5+impasse+de+la+clinique,+rue+Vert+orée+app2,+76400+Fécamp,+France3" target="_blank" class="text-sm text-slate-600 dark:text-slate-400 hover:text-orange-500 transition-colors">254 rue du bout de la ville, Criquebeuf-en-Caux</a>
                     </div>
                     <div id="host-2" style="border-left-color: #22c55e;" class="host-entry border-l-4">
-                        <p class="font-semibold text-gray-800 dark:text-gray-200">Chez Lydie Lucas 👩🏻‍🦱</p>
-                        <p class="text-sm font-medium mb-2 text-green-600 dark:text-green-400">Loge : Abel 🧔🏾‍♂️ et Ines 👩🏻‍🦱 Loial</p>
-                        <a href="https://maps.app.goo.gl/oN2d1bY8k3Z7x3bZ6" target="_blank" class="text-sm text-gray-600 dark:text-gray-400 hover:text-green-500 transition-colors">5 impasse de la clinique, Fécamp</a>
+                        <p class="font-semibold text-slate-900 dark:text-slate-50">Chez Lydie Lucas 👩🏻‍🦱</p>
+                        <p class="text-sm font-medium mb-2 text-green-500 dark:text-green-400">Loge : Abel 🧔🏾‍♂️ et Ines 👩🏻‍🦱 Loial</p>
+                        <a href="https://www.google.com/maps/search/?api=1&query=5+impasse+de+la+clinique,+rue+Vert+orée+app2,+76400+Fécamp,+France4" target="_blank" class="text-sm text-slate-600 dark:text-slate-400 hover:text-green-500 transition-colors">5 impasse de la clinique, Fécamp</a>
                     </div>
                     <div id="host-3" style="border-left-color: #3b82f6;" class="host-entry border-l-4">
-                        <p class="font-semibold text-gray-800 dark:text-gray-200">Chez Claude 👴🏻 & Nathalie 🧓🏻</p>
-                        <p class="text-sm font-medium mb-2 text-blue-600 dark:text-blue-400">Logent : 👩🏻 Rose et 👩🏾‍🦱 Mégane</p>
-                        <a href="https://maps.app.goo.gl/vL71wYpE8fC6d3ZMA" target="_blank" class="text-sm text-gray-600 dark:text-gray-400 hover:text-blue-500 transition-colors">29 Rue Léon Degenetais, Fécamp</a>
+                        <p class="font-semibold text-slate-900 dark:text-slate-50">Chez Claude 👴🏻 & Nathalie 🧓🏻</p>
+                        <p class="text-sm font-medium mb-2 text-blue-500 dark:text-blue-400">Logent : 👩🏻 Rose et 👩🏾‍🦱 Mégane</p>
+                        <a href="https://www.google.com/maps/search/?api=1&query=5+impasse+de+la+clinique,+rue+Vert+orée+app2,+76400+Fécamp,+France5" target="_blank" class="text-sm text-slate-600 dark:text-slate-400 hover:text-blue-500 transition-colors">29 Rue Léon Degenetais, Fécamp</a>
                     </div>
                     <div id="host-4" style="border-left-color: #6366f1;" class="host-entry border-l-4">
-                        <p class="font-semibold text-gray-800 dark:text-gray-200">Chez Marie Claire Bechet 🧑🏻</p>
-                        <p class="text-sm font-medium mb-2 text-indigo-600 dark:text-indigo-400">Loge : Ézékiel 🧑🏾‍🦱 et Clarisse 👩🏽 Mbimbi</p>
-                        <a href="https://maps.app.goo.gl/kX7V6nZ8f7B9d2zX7" target="_blank" class="text-sm text-gray-600 dark:text-gray-400 hover:text-indigo-500 transition-colors">99 rue de la briqueterie, Senneville-sur-Fécamp</a>
+                        <p class="font-semibold text-slate-900 dark:text-slate-50">Chez Marie Claire Bechet 🧑🏻</p>
+                        <p class="text-sm font-medium mb-2 text-indigo-500 dark:text-indigo-400">Loge : Ézékiel 🧑🏾‍🦱 et Clarisse 👩🏽 Mbimbi</p>
+                        <a href="https://www.google.com/maps/search/?api=1&query=5+impasse+de+la+clinique,+rue+Vert+orée+app2,+76400+Fécamp,+France6" target="_blank" class="text-sm text-slate-600 dark:text-slate-400 hover:text-indigo-500 transition-colors">99 rue de la briqueterie, Senneville-sur-Fécamp</a>
                     </div>
                 </div>
             </div>
         </section>
 
         <section class="mb-16 md:mb-24 gsap-pop-in">
-            <h2 class="text-4xl font-bold text-center mb-12 text-purple-700 dark:text-purple-300">Le Programme <span class="gsap-icon">🗓️</span>🥳</h2>
+            <h2 class="text-4xl font-bold text-center mb-12 text-slate-800 dark:text-slate-100">Le Programme <span class="gsap-icon">🗓️</span>🥳</h2>
             <div class="space-y-8">
                 <div class="content-card p-6 md:p-8">
                     <h3 class="text-3xl font-bold mb-8 text-cyan-600 dark:text-cyan-400">Vendredi 🚀</h3>
                     <div class="space-y-6">
                         <div class="timeline-item gsap-fade-in-timeline">
-                            <p class="font-semibold text-gray-800 dark:text-gray-200">C'est le Grand Départ ! 🚗💨</p>
-                            <p class="text-gray-600 dark:text-gray-400 text-sm">19h30</p>
-                            <div class="mt-2 text-gray-700 dark:text-gray-300">
-                                <p>📍 Point de rendez-vous : <a href="https://maps.app.goo.gl/B2Dqf5S9Z9B6a7zQ6" target="_blank" class="text-blue-500 hover:underline">40 résidence Élysée 2, 78170 La Celle St Cloud</a></p>
+                            <p class="font-semibold text-slate-800 dark:text-slate-100">C'est le Grand Départ ! 🚗💨</p>
+                            <p class="text-slate-600 dark:text-slate-400 text-sm">19h30</p>
+                            <div class="mt-2 text-slate-700 dark:text-slate-300">
+                                <p>📍 Point de rendez-vous : <a href="https://www.google.com/maps/search/?api=1&query=5+impasse+de+la+clinique,+rue+Vert+orée+app2,+76400+Fécamp,+France7" target="_blank" class="text-blue-500 hover:underline">40 résidence Élysée 2, 78170 La Celle St Cloud</a></p>
                                 <p>⏱️ Environ 2h30 de route</p>
                                 <p>🚙 4 voitures prêtes à partir ! 🧔🏾‍♂️👩🏻‍🦱👩🏽‍🦱👩🏻🧑🏾‍🦱👩🏽🧔🏾‍♂️👩🏻‍🦱👩🏻👩🏾‍🦱🧑🏾‍🦱👩🏽...</p>
                                 <p>🍔 Arrêt potentiel au McDonald's de Mantes-la-Jolie pour les affamés !</p>
@@ -246,23 +234,23 @@
                 
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12">
                     <div class="content-card p-6 md:p-8">
-                        <h3 class="text-3xl font-bold mb-8 text-yellow-600 dark:text-yellow-400">Samedi ✨</h3>
+                        <h3 class="text-3xl font-bold mb-8 text-amber-500 dark:text-amber-400">Samedi ✨</h3>
                         <div class="space-y-6">
-                            <div class="timeline-item gsap-fade-in-timeline" style="animation-delay:0s;"><p class="font-semibold text-gray-800 dark:text-gray-200">Petit-déjeuner à la salle 🥐☕</p><p class="text-gray-600 dark:text-gray-400 text-sm">9h00</p></div>
-                            <div class="timeline-item gsap-fade-in-timeline" style="animation-delay:0.1s;"><p class="font-semibold text-gray-800 dark:text-gray-200">Réunion de prédication 🗣️</p><p class="text-gray-600 dark:text-gray-400 text-sm">9h30</p></div>
-                            <div class="timeline-item gsap-fade-in-timeline" style="animation-delay:0.2s;"><p class="font-semibold text-gray-800 dark:text-gray-200">Prédication en campagne 📖</p><p class="text-gray-600 dark:text-gray-400 text-sm">9h45 - 12h30</p></div>
-                            <div class="timeline-item gsap-fade-in-timeline" style="animation-delay:0.3s;"><p class="font-semibold text-gray-800 dark:text-gray-200">Pause déjeuner tous ensemble 🍔🍕</p><p class="text-gray-600 dark:text-gray-400 text-sm">~12h30</p></div>
-                            <div class="timeline-item gsap-fade-in-timeline" style="animation-delay:0.4s;"><p class="font-semibold text-gray-800 dark:text-gray-200">Réunion (Discours & Tour de Garde) 🏛️</p><p class="text-gray-600 dark:text-gray-400 text-sm">15h00 - 16h45</p></div>
-                            <div class="timeline-item gsap-fade-in-timeline" style="animation-delay:0.5s;"><p class="font-semibold text-gray-800 dark:text-gray-200">Soirée conviviale et surprises ! 🥳💃</p><p class="text-gray-600 dark:text-gray-400 text-sm">Après la salle</p></div>
+                            <div class="timeline-item gsap-fade-in-timeline"><p class="font-semibold text-slate-800 dark:text-slate-100">Petit-déjeuner à la salle 🥐☕</p><p class="text-slate-600 dark:text-slate-400 text-sm">9h00</p></div>
+                            <div class="timeline-item gsap-fade-in-timeline"><p class="font-semibold text-slate-800 dark:text-slate-100">Réunion de prédication 🗣️</p><p class="text-slate-600 dark:text-slate-400 text-sm">9h30</p></div>
+                            <div class="timeline-item gsap-fade-in-timeline"><p class="font-semibold text-slate-800 dark:text-slate-100">Prédication en campagne 📖</p><p class="text-slate-600 dark:text-slate-400 text-sm">9h45 - 12h30</p></div>
+                            <div class="timeline-item gsap-fade-in-timeline"><p class="font-semibold text-slate-800 dark:text-slate-100">Pause déjeuner tous ensemble 🍔🍕</p><p class="text-slate-600 dark:text-slate-400 text-sm">~12h30</p></div>
+                            <div class="timeline-item gsap-fade-in-timeline"><p class="font-semibold text-slate-800 dark:text-slate-100">Réunion (Discours & Tour de Garde) 🏛️</p><p class="text-slate-600 dark:text-slate-400 text-sm">15h00 - 16h45</p></div>
+                            <div class="timeline-item gsap-fade-in-timeline"><p class="font-semibold text-slate-800 dark:text-slate-100">Soirée conviviale et surprises ! 🥳💃</p><p class="text-slate-600 dark:text-slate-400 text-sm">Après la salle</p></div>
                         </div>
                     </div>
                     <div class="content-card p-6 md:p-8">
-                         <h3 class="text-3xl font-bold mb-8 text-teal-600 dark:text-teal-400">Dimanche ☀️</h3>
+                         <h3 class="text-3xl font-bold mb-8 text-teal-500 dark:text-teal-400">Dimanche ☀️</h3>
                          <div class="space-y-6">
-                            <div class="timeline-item gsap-fade-in-timeline" style="animation-delay:0s;"><p class="font-semibold text-gray-800 dark:text-gray-200">Petit-déjeuner à la salle 🧇🍳</p><p class="text-gray-600 dark:text-gray-400 text-sm">9h30</p></div>
-                            <div class="timeline-item gsap-fade-in-timeline" style="animation-delay:0.1s;"><p class="font-semibold text-gray-800 dark:text-gray-200">Réunion de prédication 🤝</p><p class="text-gray-600 dark:text-gray-400 text-sm">10h00</p></div>
-                            <div class="timeline-item gsap-fade-in-timeline" style="animation-delay:0.2s;"><p class="font-semibold text-gray-800 dark:text-gray-200">Repas & Balade au Lac de Caniel et Veules-les-Roses 🏞️🚶‍♀️</p><p class="text-gray-600 dark:text-gray-400 text-sm">Après-midi</p></div>
-                            <div class="timeline-item gsap-fade-in-timeline" style="animation-delay:0.3s;"><p class="font-semibold text-red-700 dark:text-red-500">Route du retour 😭🚗🏠</p><p class="text-gray-600 dark:text-gray-400 text-sm">17h00</p></div>
+                            <div class="timeline-item gsap-fade-in-timeline"><p class="font-semibold text-slate-800 dark:text-slate-100">Petit-déjeuner à la salle 🧇🍳</p><p class="text-slate-600 dark:text-slate-400 text-sm">9h30</p></div>
+                            <div class="timeline-item gsap-fade-in-timeline"><p class="font-semibold text-slate-800 dark:text-slate-100">Réunion de prédication 🤝</p><p class="text-slate-600 dark:text-slate-400 text-sm">10h00</p></div>
+                            <div class="timeline-item gsap-fade-in-timeline"><p class="font-semibold text-slate-800 dark:text-slate-100">Repas & Balade 🏞️🚶‍♀️</p><p class="text-slate-600 dark:text-slate-400 text-sm">Après-midi | Lac de Caniel & Veules-les-Roses</p></div>
+                            <div class="timeline-item gsap-fade-in-timeline"><p class="font-semibold text-red-600 dark:text-red-500">Route du retour 😭🚗🏠</p><p class="text-slate-600 dark:text-slate-400 text-sm">17h00</p></div>
                          </div>
                     </div>
                 </div>
@@ -270,7 +258,7 @@
         </section>
 
         <footer class="text-center py-10 gsap-fade-in">
-            <p class="text-gray-700 dark:text-gray-400 text-lg">Hâte de vous voir ! Bon week-end à tous ! 😊</p>
+            <p class="text-slate-600 dark:text-slate-400 text-lg">Hâte de vous voir ! Bon week-end à tous ! 😊</p>
         </footer>
     </div>
 
@@ -278,144 +266,13 @@
     <script>
     document.addEventListener('DOMContentLoaded', () => {
         gsap.registerPlugin(ScrollTrigger);
-
-        gsap.utils.toArray('.gsap-fade-in').forEach(elem => {
-            gsap.fromTo(elem, { opacity: 0, y: 30 }, {
-                opacity: 1, y: 0, duration: 1, ease: 'power3.out',
-                scrollTrigger: { trigger: elem, start: 'top 90%', toggleActions: 'play none none none' }
-            });
-        });
-
-        gsap.utils.toArray('.gsap-pop-in').forEach(elem => {
-            gsap.fromTo(elem, { opacity: 0, scale: 0.9 }, {
-                opacity: 1, scale: 1, duration: 1.2, ease: 'elastic.out(1, 0.7)',
-                scrollTrigger: { trigger: elem, start: 'top 85%', toggleActions: 'play none none none' }
-            });
-        });
-
-        gsap.utils.toArray('.gsap-icon').forEach(icon => {
-            gsap.from(icon, {
-                scale: 0.5, rotate: -15, duration: 1, ease: 'elastic.out(1, 0.5)',
-                scrollTrigger: { trigger: icon.parentElement, start: 'top 80%' }
-            })
-        });
-
-        gsap.fromTo('.gsap-fade-in-stagger > div', { opacity: 0, y: 20 }, {
-            opacity: 1, y: 0, duration: 0.8, stagger: 0.1, ease: 'power2.out',
-            scrollTrigger: { trigger: '.gsap-fade-in-stagger', start: 'top 80%', toggleActions: 'play none none none' }
-        });
-
-        gsap.utils.toArray('.gsap-fade-in-timeline').forEach(item => {
-            gsap.fromTo(item, { opacity: 0, x: -30 }, {
-                opacity: 1, x: 0, duration: 0.8, ease: 'power2.out',
-                scrollTrigger: { trigger: item, start: 'top 90%', toggleActions: 'play none none none' }
-            });
-        });
-
-        const track = document.getElementById('carousel-track');
-        if (track) {
-            const slides = Array.from(track.children);
-            let currentIndex = 0;
-            const slideCount = slides.length;
-            const prevBtn = document.getElementById('prevBtn');
-            const nextBtn = document.getElementById('nextBtn');
-            const indicatorsContainer = document.getElementById('indicators');
-
-            const carouselTl = gsap.timeline({ repeat: -1, paused: true, defaults: { ease: "power2.inOut", duration: 0.8 } });
-            slides.forEach((slide, i) => {
-                const title = slide.querySelector('div');
-                carouselTl.to(track, { x: `${-i * 100}%` }, i * 5);
-                if (title) {
-                    carouselTl.fromTo(title, { y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: 0.6, ease: 'back.out(1.7)' }, i * 5 + 0.5);
-                    carouselTl.to(title, { y: -20, opacity: 0, duration: 0.4 }, i * 5 + 4.5);
-                }
-            });
-            carouselTl.duration(slideCount * 5);
-
-            const updateIndicators = () => {
-                Array.from(indicatorsContainer.children).forEach((dot, i) => {
-                    dot.classList.toggle('bg-blue-600', i === currentIndex);
-                    dot.classList.toggle('bg-gray-400/80', i !== currentIndex);
-                });
-            };
-
-            slides.forEach((_, i) => {
-                const dot = document.createElement('button');
-                dot.classList.add('w-3', 'h-3', 'rounded-full', 'transition-colors', 'shadow-sm');
-                dot.addEventListener('click', () => {
-                    currentIndex = i;
-                    carouselTl.seek(currentIndex * 5);
-                    resetAutoPlay();
-                    updateIndicators();
-                });
-                indicatorsContainer.appendChild(dot);
-            });
-
-            const goToSlide = (index) => {
-                currentIndex = (index + slideCount) % slideCount;
-                carouselTl.seek(currentIndex * 5);
-                updateIndicators();
-            };
-            
-            prevBtn.addEventListener('click', () => { goToSlide(currentIndex - 1); resetAutoPlay(); });
-            nextBtn.addEventListener('click', () => { goToSlide(currentIndex + 1); resetAutoPlay(); });
-
-            let autoPlayInterval;
-            const resetAutoPlay = () => {
-                clearInterval(autoPlayInterval);
-                autoPlayInterval = setInterval(() => {
-                    currentIndex = (currentIndex + 1) % slideCount;
-                    carouselTl.seek(currentIndex * 5);
-                    updateIndicators();
-                }, 5000);
-            };
-
-            carouselTl.play();
-            goToSlide(0);
-            resetAutoPlay();
-        }
-
-        const mapElement = document.getElementById('map');
-        if (mapElement) {
-            const map = L.map('map', { scrollWheelZoom: false }).setView([49.75, 0.4], 12);
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '© OpenStreetMap contributors'
-            }).addTo(map);
-
-            const colors = ['#ef4444', '#f97316', '#22c55e', '#3b82f6', '#6366f1'];
-
-            const locations = [
-                { lat: 49.7605527, lng: 0.4632354, host: "Jane & Jean-François", guests: "Narcy, Camille, Séverine & Kaye", color: colors[0] },
-                { lat: 49.7373646, lng: 0.3405823, host: "William & Déborah", guests: "Blondin & Cynthia Mayunga", color: colors[1] },
-                { lat: 49.752848, lng: 0.378138, host: "Lydie Lucas", guests: "Abel & Ines Loial", color: colors[2] },
-                { lat: 49.7567213, lng: 0.3711272, host: "Claude & Nathalie", guests: "Rose & Mégane", color: colors[3] },
-                { lat: 49.7720445, lng: 0.4097124, host: "Marie Claire Bechet", guests: "Ézékiel & Clarisse Mbimbi", color: colors[4] }
-            ];
-
-            const markers = [];
-            locations.forEach((loc, index) => {
-                const hostElement = document.getElementById(`host-${index}`);
-                if (hostElement) {
-                    hostElement.style.setProperty(`border-left-color`, loc.color);
-                    hostElement.querySelector('p:nth-child(2)').style.color = loc.color;
-                }
-                
-                const iconHtml = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-8 h-8"><path fill="${loc.color}" stroke="#FFF" stroke-width="1.5" d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5" fill="#FFF"/></svg>`;
-                const customIcon = L.divIcon({
-                    html: iconHtml,
-                    className: 'custom-map-marker',
-                    iconSize: [32, 32],
-                    iconAnchor: [16, 32],
-                    popupAnchor: [0, -32]
-                });
-                
-                const marker = L.marker([loc.lat, loc.lng], { icon: customIcon }).addTo(map).bindPopup(`<b>Chez ${loc.host}</b><br>Logent : ${loc.guests}`);
-                markers.push(marker);
-            });
-            const group = new L.featureGroup(markers);
-            map.fitBounds(group.getBounds().pad(0.5));
-        }
-    });
+        gsap.utils.toArray('.gsap-fade-in').forEach(e=>{gsap.fromTo(e,{opacity:0,y:30},{opacity:1,y:0,duration:1,ease:'power3.out',scrollTrigger:{trigger:e,start:'top 90%',toggleActions:'play none none none'}})});
+        gsap.utils.toArray('.gsap-pop-in').forEach(e=>{gsap.fromTo(e,{opacity:0,scale:.9},{opacity:1,scale:1,duration:1.2,ease:'elastic.out(1, 0.7)',scrollTrigger:{trigger:e,start:'top 85%',toggleActions:'play none none none'}})});
+        gsap.utils.toArray('.gsap-icon').forEach(e=>{gsap.from(e,{scale:.5,rotate:-15,duration:1,ease:'elastic.out(1, 0.5)',scrollTrigger:{trigger:e.parentElement,start:'top 80%'}})});
+        gsap.fromTo('.gsap-fade-in-stagger > div',{opacity:0,y:20},{opacity:1,y:0,duration:.8,stagger:.1,ease:'power2.out',scrollTrigger:{trigger:'.gsap-fade-in-stagger',start:'top 80%',toggleActions:'play none none none'}});
+        gsap.utils.toArray('.gsap-fade-in-timeline').forEach(e=>{gsap.fromTo(e,{opacity:0,x:-30},{opacity:1,x:0,duration:.8,ease:'power2.out',scrollTrigger:{trigger:e,start:'top 90%',toggleActions:'play none none none'}})});
+        const track=document.getElementById('carousel-track');if(track){let e=Array.from(track.children),t=0,n=e.length,o=document.getElementById('prevBtn'),a=document.getElementById('nextBtn'),r=document.getElementById('indicators'),s=gsap.timeline({repeat:-1,paused:!0,defaults:{ease:"power2.inOut",duration:.8}});e.forEach((e,t)=>{let n=e.querySelector('div');s.to(track,{x:`${-t*100}%`},5*t),n&&(s.fromTo(n,{y:20,opacity:0},{y:0,opacity:1,duration:.6,ease:'back.out(1.7)'},5*t+.5),s.to(n,{y:-20,opacity:0,duration:.4},5*t+4.5))}),s.duration(5*n);let i=()=>{Array.from(r.children).forEach((e,n)=>{e.classList.toggle('bg-blue-600',n===t),e.classList.toggle('bg-gray-400/80',n!==t)})};e.forEach((e,n)=>{let o=document.createElement('button');o.classList.add('w-3','h-3','rounded-full','transition-colors','shadow-sm'),o.addEventListener('click',()=>{t=n,s.seek(5*t),l(),i()}),r.appendChild(o)});let d=e=>{t=(e+n)%n,s.seek(5*t),i()},l;o.addEventListener('click',()=>{(d(t-1),l())}),a.addEventListener('click',()=>{(d(t+1),l())}),l=()=>{clearInterval(c),c=setInterval(()=>{t=(t+1)%n,s.seek(5*t),i()},5e3)};let c;s.play(),d(0),l()}
+        const mapElement=document.getElementById('map');if(mapElement){const e=L.map('map',{scrollWheelZoom:!1}).setView([49.75,.4],12);L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap contributors'}).addTo(e);const t=['#ef4444','#f97316','#22c55e','#3b82f6','#6366f1'],n=[{lat:49.7605527,lng:.4632354,host:"Jane & Jean-François",guests:"Narcy, Camille, Séverine & Kaye",color:t[0]},{lat:49.7373646,lng:.3405823,host:"William & Déborah",guests:"Blondin & Cynthia Mayunga",color:t[1]},{lat:49.752848,lng:.378138,host:"Lydie Lucas",guests:"Abel & Ines Loial",color:t[2]},{lat:49.7567213,lng:.3711272,host:"Claude & Nathalie",guests:"Rose & Mégane",color:t[3]},{lat:49.7720445,lng:.4097124,host:"Marie Claire Bechet",guests:"Ézékiel & Clarisse Mbimbi",color:t[4]}],o=[];n.forEach((a,r)=>{let s=document.getElementById(`host-${r}`);s&&(s.style.setProperty('border-left-color',a.color),s.querySelector('p:nth-child(2)').style.color=a.color);let i=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-8 h-8"><path fill="${a.color}" stroke="#FFF" stroke-width="1.5" d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5" fill="#FFF"/></svg>`,d=L.divIcon({html:i,className:'custom-map-marker',iconSize:[32,32],iconAnchor:[16,32],popupAnchor:[0,-32]}),l=L.marker([a.lat,a.lng],{icon:d}).addTo(e).bindPopup(`<b>Chez ${a.host}</b><br>Logent : ${a.guests}`);o.push(l)});const a=new L.featureGroup(o);e.fitBounds(a.getBounds().pad(.5))}});
     </script>
 </body>
 </html>
