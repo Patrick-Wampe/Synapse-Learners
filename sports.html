@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mon Programme Sportif 🏋️‍♂️</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+            color: #1f2937;
+        }
+        .editable {
+            cursor: pointer;
+        }
+        .editable:hover {
+            outline: 2px dashed #a0aec0;
+            border-radius: 0.5rem;
+        }
+    </style>
+</head>
+<body class="p-4 sm:p-8">
+
+    <div class="max-w-4xl mx-auto bg-white p-6 sm:p-10 rounded-3xl shadow-xl" id="programme">
+        <header class="text-center mb-10">
+            <h1 class="text-3xl sm:text-5xl font-bold text-gray-800 mb-2">Mon Programme Sportif 🏋️‍♂️</h1>
+            <p class="text-lg text-gray-600">Pour atteindre mes objectifs de perte de poids et de musculation 💪</p>
+            <button onclick="downloadProgramme()" class="mt-6 px-6 py-3 bg-blue-500 text-white rounded-full font-semibold shadow-md hover:bg-blue-600 transition-colors">
+                Télécharger le programme ⬇️
+            </button>
+        </header>
+
+        <section class="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+
+            <!-- Lundi -->
+            <div class="bg-blue-50 p-6 rounded-2xl shadow-md" data-day="lundi">
+                <h2 class="text-2xl font-bold text-blue-700 flex items-center justify-between mb-4 editable" contenteditable="true">
+                    Lundi 💪
+                    <button class="add-exercise-btn text-blue-700 text-3xl font-bold leading-none px-2 rounded-full hover:bg-blue-200 transition-colors">+</button>
+                </h2>
+                <h3 class="font-semibold text-xl text-gray-700 mb-2">Pectoraux & Triceps</h3>
+                <ul class="text-gray-600 space-y-2">
+                    <li class="flex items-center editable" contenteditable="true">
+                        <span class="mr-2 text-xl">🔥</span> Échauffement (10 min) : Corde à sauter & Pompes
+                    </li>
+                    <li class="flex items-center editable" contenteditable="true">
+                        <span class="mr-2 text-xl">➡️</span> Pompes (4 séries)
+                    </li>
+                    <li class="flex items-center editable" contenteditable="true">
+                        <span class="mr-2 text-xl">➡️</span> Dips (4 séries)
+                    </li>
+                    <li class="flex items-center editable" contenteditable="true">
+                        <span class="mr-2 text-xl">➡️</span> Développé couché haltères (4x8-10)
+                    </li>
+                    <li class="flex items-center editable" contenteditable="true">
+                        <span class="mr-2 text-xl">➡️</span> Extension triceps haltère (3x12-15)
+                    </li>
+                    <li class="flex items-center editable" contenteditable="true">
+                        <span class="mr-2 text-xl">➡️</span> Crunchs (3x20)
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Mardi -->
+            <div class="bg-green-50 p-6 rounded-2xl shadow-md" data-day="mardi">
+                <h2 class="text-2xl font-bold text-green-700 flex items-center justify-between mb-4 editable" contenteditable="true">
+                    Mardi 🏃‍♂️
+                    <button class="add-exercise-btn text-green-700 text-3xl font-bold leading-none px-2 rounded-full hover:bg-green-200 transition-colors">+</button>
+                </h2>
+                <h3 class="font-semibold text-xl text-gray-700 mb-2">Dos & Biceps</h3>
+                <ul class="text-gray-600 space-y-2">
+                    <li class="flex items-center editable" contenteditable="true">
+                        <span class="mr-2 text-xl">🔥</span> Échauffement (10 min) : Corde à sauter
+                    </li>
+                    <li class="flex items-center editable" contenteditable="true">
+                        <span class="mr-2 text-xl">➡️</span> Rowing haltères (4x10-12)
+                    </li>
+                    <li class="flex items-center editable" contenteditable="true">
+                        <span class="mr-2 text-xl">➡️</span> Curl biceps haltères (4x10-12)
+                    </li>
+                    <li class="flex items-center editable" contenteditable="true">
+                        <span class="mr-2 text-xl">➡️</span> Relevés de jambes (3x15)
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Mercredi -->
+            <div class="bg-gray-100 p-6 rounded-2xl shadow-md flex flex-col justify-center items-center text-center rest-day" data-day="mercredi">
+                <span class="text-6xl mb-4">🤩</span>
+                <p class="font-semibold text-gray-500 text-lg">Jour de repos</p>
+                <p class="text-sm text-gray-400 mb-4">Récupération essentielle</p>
+                <button class="convert-btn px-4 py-2 bg-gray-300 text-gray-700 rounded-full font-semibold text-sm hover:bg-gray-400 transition-colors">
+                    Transformer en jour de sport
+                </button>
+            </div>
+
+            <!-- Jeudi -->
+            <div class="bg-yellow-50 p-6 rounded-2xl shadow-md" data-day="jeudi">
+                <h2 class="text-2xl font-bold text-yellow-700 flex items-center justify-between mb-4 editable" contenteditable="true">
+                    Jeudi 🦵
+                    <button class="add-exercise-btn text-yellow-700 text-3xl font-bold leading-none px-2 rounded-full hover:bg-yellow-200 transition-colors">+</button>
+                </h2>
+                <h3 class="font-semibold text-xl text-gray-700 mb-2">Jambes & Épaules</h3>
+                <ul class="text-gray-600 space-y-2">
+                    <li class="flex items-center editable" contenteditable="true">
+                        <span class="mr-2 text-xl">🔥</span> Échauffement (10 min) : Corde à sauter
+                    </li>
+                    <li class="flex items-center editable" contenteditable="true">
+                        <span class="mr-2 text-xl">➡️</span> Squats (4x10-15)
+                    </li>
+                    <li class="flex items-center editable" contenteditable="true">
+                        <span class="mr-2 text-xl">➡️</span> Fentes (3x10 par jambe)
+                    </li>
+                    <li class="flex items-center editable" contenteditable="true">
+                        <span class="mr-2 text-xl">➡️</span> Développé épaules haltères (4x8-10)
+                    </li>
+                    <li class="flex items-center editable" contenteditable="true">
+                        <span class="mr-2 text-xl">➡️</span> Pompes (2 séries)
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Vendredi -->
+            <div class="bg-gray-100 p-6 rounded-2xl shadow-md flex flex-col justify-center items-center text-center rest-day" data-day="vendredi">
+                <span class="text-6xl mb-4">🤩</span>
+                <p class="font-semibold text-gray-500 text-lg">Jour de repos</p>
+                <p class="text-sm text-gray-400 mb-4">Récupération essentielle</p>
+                <button class="convert-btn px-4 py-2 bg-gray-300 text-gray-700 rounded-full font-semibold text-sm hover:bg-gray-400 transition-colors">
+                    Transformer en jour de sport
+                </button>
+            </div>
+
+            <!-- Samedi -->
+            <div class="bg-purple-50 p-6 rounded-2xl shadow-md" data-day="samedi">
+                <h2 class="text-2xl font-bold text-purple-700 flex items-center justify-between mb-4 editable" contenteditable="true">
+                    Samedi 💥
+                    <button class="add-exercise-btn text-purple-700 text-3xl font-bold leading-none px-2 rounded-full hover:bg-purple-200 transition-colors">+</button>
+                </h2>
+                <h3 class="font-semibold text-xl text-gray-700 mb-2">Pectoraux & Abdos</h3>
+                <ul class="text-gray-600 space-y-2">
+                    <li class="flex items-center editable" contenteditable="true">
+                        <span class="mr-2 text-xl">🔥</span> Échauffement (10 min) : Corde à sauter
+                    </li>
+                    <li class="flex items-center editable" contenteditable="true">
+                        <span class="mr-2 text-xl">➡️</span> Pompes (3 séries)
+                    </li>
+                    <li class="flex items-center editable" contenteditable="true">
+                        <span class="mr-2 text-xl">➡️</span> Dips (3 séries)
+                    </li>
+                    <li class="flex items-center editable" contenteditable="true">
+                        <span class="mr-2 text-xl">➡️</span> Écarté couché haltères (3x12-15)
+                    </li>
+                    <li class="flex items-center editable" contenteditable="true">
+                        <span class="mr-2 text-xl">➡️</span> Crunchs (3x20)
+                    </li>
+                    <li class="flex items-center editable" contenteditable="true">
+                        <span class="mr-2 text-xl">➡️</span> Planche (3x30s)
+                    </li>
+                </ul>
+            </div>
+            
+            <!-- Dimanche -->
+            <div class="bg-red-50 p-6 rounded-2xl shadow-md" data-day="dimanche">
+                <h2 class="text-2xl font-bold text-red-700 flex items-center justify-between mb-4 editable" contenteditable="true">
+                    Dimanche 🤸‍♀️
+                    <button class="add-exercise-btn text-red-700 text-3xl font-bold leading-none px-2 rounded-full hover:bg-red-200 transition-colors">+</button>
+                </h2>
+                <h3 class="font-semibold text-xl text-gray-700 mb-2">Corps entier & Cardio</h3>
+                <ul class="text-gray-600 space-y-2">
+                    <li class="flex items-center editable" contenteditable="true">
+                        <span class="mr-2 text-xl">🔥</span> Échauffement (10 min) : Corde à sauter
+                    </li>
+                    <li class="flex items-center editable" contenteditable="true">
+                        <span class="mr-2 text-xl">➡️</span> Corde à sauter (3x3min)
+                    </li>
+                    <li class="flex items-center editable" contenteditable="true">
+                        <span class="mr-2 text-xl">➡️</span> Pompes (2 séries)
+                    </li>
+                    <li class="flex items-center editable" contenteditable="true">
+                        <span class="mr-2 text-xl">➡️</span> Squats (2 séries)
+                    </li>
+                    <li class="flex items-center editable" contenteditable="true">
+                        <span class="mr-2 text-xl">➡️</span> Rowing haltères (2 séries)
+                    </li>
+                    <li class="flex items-center editable" contenteditable="true">
+                        <span class="mr-2 text-xl">➡️</span> Planche latérale (3x30s par côté)
+                    </li>
+                </ul>
+            </div>
+
+        </section>
+
+        <footer class="mt-10 text-center text-sm text-gray-500">
+            <p>N'oubliez pas : la régularité et une bonne alimentation sont la clé du succès ! 🍏💧</p>
+        </footer>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script>
+        function downloadProgramme() {
+            const programmeElement = document.getElementById('programme');
+            
+            // Temporairement, on cache le bouton de téléchargement pour qu'il n'apparaisse pas dans l'image
+            const downloadButton = programmeElement.querySelector('button');
+            downloadButton.style.display = 'none';
+
+            html2canvas(programmeElement, {
+                scale: 2 // Améliore la qualité de l'image
+            }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = 'mon_programme_sportif.png';
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+                
+                // On réaffiche le bouton une fois la capture terminée
+                downloadButton.style.display = '';
+            });
+        }
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.add-exercise-btn').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const ul = e.target.closest('div').querySelector('ul');
+                    if (ul) {
+                        const newLi = document.createElement('li');
+                        newLi.className = 'flex items-center editable';
+                        newLi.setAttribute('contenteditable', 'true');
+                        newLi.innerHTML = '<span class="mr-2 text-xl">➡️</span> Nouvel exercice';
+                        ul.appendChild(newLi);
+                    }
+                });
+            });
+
+            document.querySelectorAll('.convert-btn').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const restDayDiv = e.target.closest('.rest-day');
+                    const day = restDayDiv.dataset.day;
+
+                    // Définir un nouveau contenu basé sur le jour
+                    let newContent = `
+                        <h2 class="text-2xl font-bold flex items-center justify-between mb-4 editable" contenteditable="true">
+                            ${day.charAt(0).toUpperCase() + day.slice(1)} 🏋️‍♀️
+                            <button class="add-exercise-btn text-3xl font-bold leading-none px-2 rounded-full hover:bg-blue-200 transition-colors">+</button>
+                        </h2>
+                        <h3 class="font-semibold text-xl text-gray-700 mb-2">Nouvelle séance</h3>
+                        <ul class="text-gray-600 space-y-2">
+                            <li class="flex items-center editable" contenteditable="true">
+                                <span class="mr-2 text-xl">🔥</span> Échauffement (10 min)
+                            </li>
+                            <li class="flex items-center editable" contenteditable="true">
+                                <span class="mr-2 text-xl">➡️</span> Exercice 1
+                            </li>
+                            <li class="flex items-center editable" contenteditable="true">
+                                <span class="mr-2 text-xl">➡️</span> Exercice 2
+                            </li>
+                        </ul>
+                    `;
+                    
+                    // Remplacer le contenu
+                    restDayDiv.classList.remove('rest-day', 'bg-gray-100', 'flex-col', 'justify-center', 'items-center', 'text-center');
+                    restDayDiv.classList.add('bg-blue-50');
+                    restDayDiv.innerHTML = newContent;
+                    
+                    // Réattacher les écouteurs d'événements
+                    restDayDiv.querySelector('.add-exercise-btn').addEventListener('click', (e) => {
+                        const ul = e.target.closest('div').querySelector('ul');
+                        if (ul) {
+                            const newLi = document.createElement('li');
+                            newLi.className = 'flex items-center editable';
+                            newLi.setAttribute('contenteditable', 'true');
+                            newLi.innerHTML = '<span class="mr-2 text-xl">➡️</span> Nouvel exercice';
+                            ul.appendChild(newLi);
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+
+</body>
+</html>
