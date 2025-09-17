@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr" class="scroll-smooth">
+<html lang="fr" class="scroll-smooth dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,14 +14,9 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #f0f9ff, #e0f2fe, #fff);
-            color: #111827; /* Near black for maximum contrast */
-            overflow-x: hidden;
-        }
-
-        .dark body {
             background: linear-gradient(135deg, #1a202c, #2d3748, #1a202c);
             color: #f9fafb; /* Near white for maximum contrast */
+            overflow-x: hidden;
         }
 
         h1 {
@@ -29,36 +24,27 @@
         }
         
         .content-card {
-            background-color: #ffffff;
-            border-radius: 24px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            border: 2px solid #e2e8f0;
-        }
-        .dark .content-card {
             background-color: #1f2937;
-            border: 2px solid #4b5563;
+            border-radius: 24px;
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 2px solid #4b5563;
         }
         .content-card:hover {
             transform: translateY(-8px) scale(1.01);
-            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.25);
         }
 
         .host-entry {
-            background-color: #f0f9ff;
-            border-radius: 16px;
-            padding: 1rem;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            border: 1px solid #cceeff;
-        }
-        .dark .host-entry {
              background-color: #374151;
+             border-radius: 16px;
+             padding: 1rem;
+             transition: transform 0.3s ease, box-shadow 0.3s ease;
              border: 1px solid #4b5563;
         }
         .host-entry:hover {
             transform: translateY(-5px) scale(1.02);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
         }
 
         #carousel-track img {
@@ -69,21 +55,14 @@
         }
         #carousel button {
             transition: background-color 0.3s ease, transform 0.2s ease;
-            background-color: rgba(255, 255, 255, 0.6);
-            color: #333;
-        }
-        #carousel button:hover {
-            background-color: rgba(255, 255, 255, 0.9);
-            transform: scale(1.1);
-        }
-        .dark #carousel button {
             background-color: rgba(0, 0, 0, 0.6);
             color: #eee;
         }
-        .dark #carousel button:hover {
+        #carousel button:hover {
             background-color: rgba(0, 0, 0, 0.9);
+            transform: scale(1.1);
         }
-
+        
         .timeline-item {
             position: relative;
             padding-left: 3rem;
@@ -104,12 +83,10 @@
             background: linear-gradient(45deg, #60a5fa, #3b82f6);
             box-shadow: 0 2px 8px rgba(0,0,0,0.2);
             transition: transform 0.2s ease-out;
+            border: 3px solid #1f2937;
         }
         .timeline-item:hover::before {
             transform: scale(1.1);
-        }
-        .dark .timeline-item::before {
-            border: 3px solid #1f2937;
         }
         .timeline-item:not(:last-child)::after {
             content: '';
@@ -146,18 +123,21 @@
             0%, 100% { transform: translateY(0); }
             50% { transform: translateY(-12px); }
         }
+        .leaflet-layer, .leaflet-control-zoom-in, .leaflet-control-zoom-out, .leaflet-control-attribution {
+            filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);
+        }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-900 dark:bg-slate-900 dark:text-slate-50">
+<body class="bg-slate-900 text-slate-50">
 
     <div class="container mx-auto p-4 sm:p-6 lg:p-8 max-w-5xl">
 
         <header class="text-center py-16 sm:py-24 space-y-4">
-            <h1 class="text-5xl md:text-7xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-indigo-600 dark:from-blue-400 dark:to-indigo-500 gsap-fade-in">
-                Week-end de folie en Normandie !
+            <h1 class="text-5xl md:text-7xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-500 gsap-fade-in">
+                Week-end de Folie en Normandie !
             </h1>
-            <p class="text-xl md:text-2xl text-slate-700 dark:text-slate-300 gsap-fade-in" style="animation-delay: 0.1s;">
-                Prépare-toi pour un week-end de pionniers les 20 et 21 Septembre ! 🤩
+            <p class="text-xl md:text-2xl text-slate-300 gsap-fade-in" style="animation-delay: 0.1s;">
+                Prépare-toi pour un programme inoubliable les 20 et 21 Septembre ! 🤩
             </p>
         </header>
 
@@ -167,63 +147,63 @@
                     <div class="h-full w-full flex-shrink-0 relative"><img src="https://www.latourauxcrabes.com/bases/visite_image/moyenne/235/UserGegeoursGerardRuffinGegeoursCCBY-SA3.0-Labreuvoir1.jpg" alt="Veules-les-Roses" class="h-full w-full object-cover"></div>
                     <div class="h-full w-full flex-shrink-0 relative"><img src="https://www.transeuropemarinas.com/wp-content/uploads/2015/03/portdefecamp-01.jpg" alt="Port de Fécamp" class="h-full w-full object-cover"></div>
                     <div class="h-full w-full flex-shrink-0 relative"><img src="https://woody.cloudly.space/app/uploads/fecamp-tourisme/2023/01/thumbs/PLAGE-PETITES-DALLES-AOUT-2021-2-1920x960-crop-1677837076.jpg" alt="Plage des Petites Dalles" class="h-full w-full object-cover"></div>
-                    <div class="h-full w-full flex-shrink-0 relative"><img src="https://medias.reussir.fr/lait/2023-10/vache_normande.jpg" alt="Campagne normande" class="h-full w-full object-cover"></div>
+                    <div class="h-full w-full flex-shrink-0 relative"><img src="https://medias.reussir.fr/lait/2023/10/vache_normande.jpg" alt="Campagne normande" class="h-full w-full object-cover"></div>
                 </div>
-                <button id="prevBtn" class="absolute top-1/2 left-4 z-10 -translate-y-1/2 bg-white/60 dark:bg-black/60 p-3 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-opacity"><svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-slate-800 dark:text-slate-200" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg></button>
-                <button id="nextBtn" class="absolute top-1/2 right-4 z-10 -translate-y-1/2 bg-white/60 dark:bg-black/60 p-3 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-opacity"><svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-slate-800 dark:text-slate-200" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg></button>
+                <button id="prevBtn" class="absolute top-1/2 left-4 z-10 -translate-y-1/2 bg-black/60 p-3 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-opacity"><svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-slate-200" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg></button>
+                <button id="nextBtn" class="absolute top-1/2 right-4 z-10 -translate-y-1/2 bg-black/60 p-3 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-opacity"><svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-slate-200" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg></button>
                 <div id="indicators" class="absolute bottom-6 left-1/2 z-10 -translate-x-1/2 flex space-x-3"></div>
             </div>
         </section>
 
         <section class="mb-16 md:mb-24 gsap-fade-in">
-            <h2 class="text-4xl font-bold text-center mb-12 text-slate-900 dark:text-white">Qui loge où ? <span class="gsap-icon">🏠</span>💖</h2>
-            <div class="content-card bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 p-6 md:p-8">
-                <div id="map" class="h-96 w-full rounded-2xl mb-8 border border-slate-200 dark:border-slate-700 shadow-inner gsap-fade-in"></div>
+            <h2 class="text-4xl font-bold text-center mb-12 text-white">Qui loge où ? <span class="gsap-icon">🏠</span>💖</h2>
+            <div class="content-card bg-slate-800 border-slate-700 p-6 md:p-8">
+                <div id="map" class="h-96 w-full rounded-2xl mb-8 border border-slate-700 shadow-inner gsap-fade-in"></div>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 gsap-fade-in-stagger">
-                    <div id="host-0" style="border-left-color: #ef4444;" class="host-entry bg-slate-100 dark:bg-slate-700 border-slate-200 dark:border-slate-600 border-l-4">
-                        <p class="font-semibold text-slate-900 dark:text-white">Chez Jane 👩🏼 & Jean-François 🧔🏻‍♂️</p>
-                        <p class="text-sm font-semibold mb-2 text-red-500 dark:text-red-400">Qui : Narcy 🧔🏾‍♂️, Camille 👩🏻‍🦱 et Rose 👩🏻</p>
-                        <a href="https://www.google.com/maps/place/254+Rue+du+Bout+de+la+ville,+76111+Criquebeuf-en-Caux/@49.737315,0.3381451,17z/data=!3m1!4b1!4m6!3m5!1s0x47e014da3ace54c7:0xc9b80313862c5de6!8m2!3d49.737315!4d0.34072!16s%2Fg%2F11c879dn17?entry=ttu&g_ep=EgoyMDI1MDkxNC4wIKXMDSoASAFQAw%3D%3D" target="_blank" class="text-sm text-slate-700 dark:text-slate-300 hover:text-red-500 transition-colors inline-flex items-center gap-1.5 underline">
+                    <div id="host-0" style="border-left-color: #ef4444;" class="host-entry bg-slate-700 border-slate-600 border-l-4">
+                        <p class="font-semibold text-white">Chez Jane 👩🏼 & Jean-François 🧔🏻‍♂️</p>
+                        <p class="text-sm font-semibold mb-2 text-red-400">Qui : Narcy 🧔🏾‍♂️, Camille 👩🏻‍🦱 et Rose 👩🏻</p>
+                        <a href="https://www.google.com/maps/search/?api=1&query=5+impasse+de+la+clinique,+rue+Vert+orée+app2,+76400+Fécamp1" target="_blank" class="text-sm text-slate-300 hover:text-red-400 transition-colors inline-flex items-center gap-1.5 underline">
                             14 Rue Pierre Delassise, Sainte-Hélène-Bondeville
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
                         </a>
                     </div>
-                    <div id="host-1" style="border-left-color: #f97316;" class="host-entry bg-slate-100 dark:bg-slate-700 border-slate-200 dark:border-slate-600 border-l-4">
-                        <p class="font-semibold text-slate-900 dark:text-white">Chez William 👱🏻‍♂️ & Déborah 👩🏼‍🦱</p>
-                        <p class="text-sm font-semibold mb-2 text-orange-500 dark:text-orange-400">Qui : Blondin 🧑🏾‍🦱 et Cynthia 👩🏽 Mayunga</p>
-                        <a href="https://www.google.com/maps/place/5+Imp.+de+la+Clinique,+76400+F%C3%A9camp/@49.752848,0.378138,17z/data=!3m1!4b1!4m6!3m5!1s0x47e06b6cbf6ecc85:0x65025b9df70d6f25!8m2!3d49.7528481!4d0.3830089!16s%2Fg%2F11c1d96rpy?entry=ttu&g_ep=EgoyMDI1MDkxNC4wIKXMDSoASAFQAw%3D%3D" target="_blank" class="text-sm text-slate-700 dark:text-slate-300 hover:text-orange-500 transition-colors inline-flex items-center gap-1.5 underline">
+                    <div id="host-1" style="border-left-color: #f97316;" class="host-entry bg-slate-700 border-slate-600 border-l-4">
+                        <p class="font-semibold text-white">Chez William 👱🏻‍♂️ & Déborah 👩🏼‍🦱</p>
+                        <p class="text-sm font-semibold mb-2 text-orange-400">Qui : Blondin 🧑🏾‍🦱 et Cynthia 👩🏽 Mayunga</p>
+                        <a href="https://www.google.com/maps/search/?api=1&query=5+impasse+de+la+clinique,+rue+Vert+orée+app2,+76400+Fécamp2" target="_blank" class="text-sm text-slate-300 hover:text-orange-400 transition-colors inline-flex items-center gap-1.5 underline">
                             254 rue du bout de la ville, Criquebeuf-en-Caux
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
                         </a>
                     </div>
-                    <div id="host-2" style="border-left-color: #22c55e;" class="host-entry bg-slate-100 dark:bg-slate-700 border-slate-200 dark:border-slate-600 border-l-4">
-                        <p class="font-semibold text-slate-900 dark:text-white">Chez Lydie 👩🏻‍🦱</p>
-                        <p class="text-sm font-semibold mb-2 text-green-500 dark:text-green-400">Qui : Abel 🧔🏾‍♂️ et Ines 👩🏻‍🦱 Loial</p>
-                        <a href="https://www.google.com/maps/place/29+Rue+L%C3%A9on+Degenetais,+76400+F%C3%A9camp/@49.7567213,0.3711272,17z/data=!3m1!4b1!4m6!3m5!1s0x47e06b41813a1f8b:0x2f3bc53eb52e21dc!8m2!3d49.7567213!4d0.3737021!16s%2Fg%2F11c2c7mmrs?entry=ttu&g_ep=EgoyMDI1MDkxNC4wIKXMDSoASAFQAw%3D%3D" target="_blank" class="text-sm text-slate-700 dark:text-slate-300 hover:text-green-500 transition-colors inline-flex items-center gap-1.5 underline">
+                    <div id="host-2" style="border-left-color: #22c55e;" class="host-entry bg-slate-700 border-slate-600 border-l-4">
+                        <p class="font-semibold text-white">Chez Lydie 👩🏻‍🦱</p>
+                        <p class="text-sm font-semibold mb-2 text-green-400">Qui : Abel 🧔🏾‍♂️ et Ines 👩🏻‍🦱 Loial</p>
+                        <a href="https://www.google.com/maps/search/?api=1&query=5+impasse+de+la+clinique,+rue+Vert+orée+app2,+76400+Fécamp3" target="_blank" class="text-sm text-slate-300 hover:text-green-400 transition-colors inline-flex items-center gap-1.5 underline">
                             5 impasse de la clinique, Fécamp
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
                         </a>
                     </div>
-                    <div id="host-3" style="border-left-color: #3b82f6;" class="host-entry bg-slate-100 dark:bg-slate-700 border-slate-200 dark:border-slate-600 border-l-4">
-                        <p class="font-semibold text-slate-900 dark:text-white">Chez Claude 👴🏻 & Nathalie 🧓🏻</p>
-                        <p class="text-sm font-semibold mb-2 text-blue-500 dark:text-blue-400">Qui : 🧔🏾‍♂️ Kenny et 👩🏾‍🦱 Clémence</p>
-                        <a href="https://www.google.com/maps/place/99+Rue+de+la+Briqueterie,+76400+Senneville-sur-F%C3%A9camp/@49.7720445,0.4097124,17z/data=!3m1!4b1!4m6!3m5!1s0x47e06b882a412813:0x97271287eb433664!8m2!3d49.7720445!4d0.4122873!16s%2Fg%2F11pc1pywtj?entry=ttu&g_ep=EgoyMDI1MDkxNC4wIKXMDSoASAFQAw%3D%3D" target="_blank" class="text-sm text-slate-700 dark:text-slate-300 hover:text-blue-500 transition-colors inline-flex items-center gap-1.5 underline">
+                    <div id="host-3" style="border-left-color: #3b82f6;" class="host-entry bg-slate-700 border-slate-600 border-l-4">
+                        <p class="font-semibold text-white">Chez Claude 👴🏻 & Nathalie 🧓🏻</p>
+                        <p class="text-sm font-semibold mb-2 text-blue-400">Qui : 🧔🏾‍♂️ Kenny et 👩🏾‍🦱 Clémence</p>
+                        <a href="https://www.google.com/maps/search/?api=1&query=5+impasse+de+la+clinique,+rue+Vert+orée+app2,+76400+Fécamp4" target="_blank" class="text-sm text-slate-300 hover:text-blue-400 transition-colors inline-flex items-center gap-1.5 underline">
                             29 Rue Léon Degenetais, Fécamp
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
                         </a>
                     </div>
-                    <div id="host-4" style="border-left-color: #6366f1;" class="host-entry bg-slate-100 dark:bg-slate-700 border-slate-200 dark:border-slate-600 border-l-4">
-                        <p class="font-semibold text-slate-900 dark:text-white">Chez Marie Claire 🧑🏻</p>
-                        <p class="text-sm font-semibold mb-2 text-indigo-500 dark:text-indigo-400">Qui : Ézékiel 🧑🏾‍🦱 et Clarisse 👩🏽 Mbimbi</p>
-                        <a href="https://www.google.com/maps/place/42+Rue+Robert+Dugl%C3%A9,+76400+F%C3%A9camp/@49.7531709,0.3738101,17z/data=!3m1!4b1!4m6!3m5!1s0x47e06b6ae0ed31c1:0xe9542ac58ce2cdf5!8m2!3d49.753171!4d0.378681!16s%2Fg%2F11c100rcw3?entry=ttu&g_ep=EgoyMDI1MDkxNC4wIKXMDSoASAFQAw%3D%3D" target="_blank" class="text-sm text-slate-700 dark:text-slate-300 hover:text-indigo-500 transition-colors inline-flex items-center gap-1.5 underline">
+                    <div id="host-4" style="border-left-color: #6366f1;" class="host-entry bg-slate-700 border-slate-600 border-l-4">
+                        <p class="font-semibold text-white">Chez Marie Claire 🧑🏻</p>
+                        <p class="text-sm font-semibold mb-2 text-indigo-400">Qui : Ézékiel 🧑🏾‍🦱 et Clarisse 👩🏽 Mbimbi</p>
+                        <a href="https://www.google.com/maps/search/?api=1&query=5+impasse+de+la+clinique,+rue+Vert+orée+app2,+76400+Fécamp5" target="_blank" class="text-sm text-slate-300 hover:text-indigo-400 transition-colors inline-flex items-center gap-1.5 underline">
                             99 rue de la briqueterie, Senneville-sur-Fécamp
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
                         </a>
                     </div>
-                    <div id="host-5" style="border-left-color: #a855f7;" class="host-entry bg-slate-100 dark:bg-slate-700 border-slate-200 dark:border-slate-600 border-l-4">
-                        <p class="font-semibold text-slate-900 dark:text-white">Chez Ophélie 👩🏼 & Jean-Baptiste 🧔🏻‍♂️</p>
-                        <p class="text-sm font-semibold mb-2 text-purple-500 dark:text-purple-400">Qui : Séverine 👩🏽‍🦱 et Kaye 👩🏻</p>
-                        <a href="https://www.google.com/maps/search/?api=1&query=5+impasse+de+la+clinique,+rue+Vert+orée+app2,+76400+Fécamp0" target="_blank" class="text-sm text-slate-700 dark:text-slate-300 hover:text-purple-500 transition-colors inline-flex items-center gap-1.5 underline">
+                    <div id="host-5" style="border-left-color: #a855f7;" class="host-entry bg-slate-700 border-slate-600 border-l-4">
+                        <p class="font-semibold text-white">Chez Ophélie 👩🏼 & Jean-Baptiste 🧔🏻‍♂️</p>
+                        <p class="text-sm font-semibold mb-2 text-purple-400">Qui : Séverine 👩🏽‍🦱 et Kaye 👩🏻</p>
+                        <a href="https://www.google.com/maps/search/?api=1&query=5+impasse+de+la+clinique,+rue+Vert+orée+app2,+76400+Fécamp6" target="_blank" class="text-sm text-slate-300 hover:text-purple-400 transition-colors inline-flex items-center gap-1.5 underline">
                            42 rue Robert Duglé, Fécamp
                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
                         </a>
@@ -233,16 +213,16 @@
         </section>
 
         <section class="mb-16 md:mb-24 gsap-pop-in">
-            <h2 class="text-4xl font-bold text-center mb-12 text-slate-900 dark:text-white">Le Programme <span class="gsap-icon">🗓️</span>🥳</h2>
+            <h2 class="text-4xl font-bold text-center mb-12 text-white">Le Programme <span class="gsap-icon">🗓️</span>🥳</h2>
             <div class="space-y-8">
-                <div class="content-card bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 p-6 md:p-8">
-                    <h3 class="text-3xl font-bold mb-8 text-cyan-600 dark:text-cyan-400">Vendredi 🚀</h3>
+                <div class="content-card bg-slate-800 border-slate-700 p-6 md:p-8">
+                    <h3 class="text-3xl font-bold mb-8 text-cyan-400">Vendredi 🚀</h3>
                     <div class="space-y-6">
                         <div class="timeline-item gsap-fade-in-timeline">
-                            <p class="font-semibold text-slate-900 dark:text-white">C'est le Grand Départ ! 🚗💨</p>
-                            <p class="text-slate-600 dark:text-slate-400 text-sm">19h30</p>
-                            <div class="mt-2 text-slate-800 dark:text-slate-200">
-                                <p>📍 Point de rendez-vous : <a href="https://www.google.com/maps/search/?api=1&query=254+rue+du+bout+de+la+ville,+76111+Criquebeuf-en-Caux4" target="_blank" class="text-blue-500 hover:underline">40 résidence Élysée 2, 78170 La Celle St Cloud</a></p>
+                            <p class="font-semibold text-white">C'est le Grand Départ ! 🚗💨</p>
+                            <p class="text-slate-400 text-sm">19h30</p>
+                            <div class="mt-2 text-slate-200">
+                                <p>📍 Point de rendez-vous : <a href="https://www.google.com/maps/search/?api=1&query=254+rue+du+bout+de+la+ville,+76111+Criquebeuf-en-Caux4" target="_blank" class="text-blue-400 hover:underline">40 résidence Élysée 2, 78170 La Celle St Cloud</a></p>
                                 <p>⏱️ Environ 2h30 de route</p>
                                 <p>🚙 4 voitures prêtes à partir ! 🧔🏾‍♂️👩🏻‍🦱👩🏽‍🦱👩🏻🧑🏾‍🦱👩🏽🧔🏾‍♂️👩🏻‍🦱👩🏻👩🏾‍🦱🧑🏾‍🦱👩🏽...</p>
                                 <p>🍔 Arrêt potentiel au McDonald's de Mantes-la-Jolie pour les affamés !</p>
@@ -252,24 +232,24 @@
                 </div>
                 
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12">
-                    <div class="content-card bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 p-6 md:p-8">
-                        <h3 class="text-3xl font-bold mb-8 text-amber-500 dark:text-amber-400">Samedi ✨</h3>
+                    <div class="content-card bg-slate-800 border-slate-700 p-6 md:p-8">
+                        <h3 class="text-3xl font-bold mb-8 text-amber-400">Samedi ✨</h3>
                         <div class="space-y-6">
-                            <div class="timeline-item gsap-fade-in-timeline"><p class="font-semibold text-slate-900 dark:text-white">Petit-déjeuner à la salle 🥐☕</p><p class="text-slate-700 dark:text-slate-300 text-sm">9h00</p></div>
-                            <div class="timeline-item gsap-fade-in-timeline"><p class="font-semibold text-slate-900 dark:text-white">Réunion de prédication 🗣️</p><p class="text-slate-700 dark:text-slate-300 text-sm">9h30</p></div>
-                            <div class="timeline-item gsap-fade-in-timeline"><p class="font-semibold text-slate-900 dark:text-white">Prédication en campagne 📖</p><p class="text-slate-700 dark:text-slate-300 text-sm">9h45 - 12h30</p></div>
-                            <div class="timeline-item gsap-fade-in-timeline"><p class="font-semibold text-slate-900 dark:text-white">Pause déjeuner tous ensemble 🍔🍕</p><p class="text-slate-700 dark:text-slate-300 text-sm">~12h30</p></div>
-                            <div class="timeline-item gsap-fade-in-timeline"><p class="font-semibold text-slate-900 dark:text-white">Réunion (Discours & Tour de Garde) 🏛️</p><p class="text-slate-700 dark:text-slate-300 text-sm">15h00 - 16h45</p></div>
-                            <div class="timeline-item gsap-fade-in-timeline"><p class="font-semibold text-slate-900 dark:text-white">Soirée conviviale 🥳</p><p class="text-slate-700 dark:text-slate-300 text-sm">Après la salle</p></div>
+                            <div class="timeline-item gsap-fade-in-timeline"><p class="font-semibold text-white">Petit-déjeuner à la salle 🥐☕</p><p class="text-slate-300 text-sm">9h00</p></div>
+                            <div class="timeline-item gsap-fade-in-timeline"><p class="font-semibold text-white">Réunion de prédication 🗣️</p><p class="text-slate-300 text-sm">9h30</p></div>
+                            <div class="timeline-item gsap-fade-in-timeline"><p class="font-semibold text-white">Prédication en campagne 📖</p><p class="text-slate-300 text-sm">9h45 - 12h30</p></div>
+                            <div class="timeline-item gsap-fade-in-timeline"><p class="font-semibold text-white">Pause déjeuner tous ensemble 🍔🍕</p><p class="text-slate-300 text-sm">~12h30</p></div>
+                            <div class="timeline-item gsap-fade-in-timeline"><p class="font-semibold text-white">Réunion (Discours & Tour de Garde) 🏛️</p><p class="text-slate-300 text-sm">15h00 - 16h45</p></div>
+                            <div class="timeline-item gsap-fade-in-timeline"><p class="font-semibold text-white">Soirée conviviale 🥳</p><p class="text-slate-300 text-sm">Après la salle</p></div>
                         </div>
                     </div>
-                    <div class="content-card bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 p-6 md:p-8">
-                         <h3 class="text-3xl font-bold mb-8 text-teal-500 dark:text-teal-400">Dimanche ☀️</h3>
+                    <div class="content-card bg-slate-800 border-slate-700 p-6 md:p-8">
+                         <h3 class="text-3xl font-bold mb-8 text-teal-400">Dimanche ☀️</h3>
                          <div class="space-y-6">
-                            <div class="timeline-item gsap-fade-in-timeline"><p class="font-semibold text-slate-900 dark:text-white">Petit-déjeuner à la salle 🧇🍳</p><p class="text-slate-700 dark:text-slate-300 text-sm">9h30</p></div>
-                            <div class="timeline-item gsap-fade-in-timeline"><p class="font-semibold text-slate-900 dark:text-white">Réunion de prédication 🤝</p><p class="text-slate-700 dark:text-slate-300 text-sm">10h00</p></div>
-                            <div class="timeline-item gsap-fade-in-timeline"><p class="font-semibold text-slate-900 dark:text-white">Repas & Balade 🏞️🚶‍♀️</p><p class="text-slate-700 dark:text-slate-300 text-sm">Après-midi | Lac de Caniel & Veules-les-Roses</p></div>
-                            <div class="timeline-item gsap-fade-in-timeline"><p class="font-semibold text-red-600 dark:text-red-500">Route du retour 😭🚗🏠</p><p class="text-slate-700 dark:text-slate-300 text-sm">18h00</p></div>
+                            <div class="timeline-item gsap-fade-in-timeline"><p class="font-semibold text-white">Petit-déjeuner à la salle 🧇🍳</p><p class="text-slate-300 text-sm">9h30</p></div>
+                            <div class="timeline-item gsap-fade-in-timeline"><p class="font-semibold text-white">Réunion de prédication 🤝</p><p class="text-slate-300 text-sm">10h00</p></div>
+                            <div class="timeline-item gsap-fade-in-timeline"><p class="font-semibold text-white">Repas & Balade 🏞️🚶‍♀️</p><p class="text-slate-300 text-sm">Après-midi | Lac de Caniel & Veules-les-Roses</p></div>
+                            <div class="timeline-item gsap-fade-in-timeline"><p class="font-semibold text-red-500">Route du retour 😭🚗🏠</p><p class="text-slate-300 text-sm">18h00</p></div>
                          </div>
                     </div>
                 </div>
@@ -277,7 +257,7 @@
         </section>
 
         <footer class="text-center py-10 gsap-fade-in">
-            <p class="text-slate-700 dark:text-slate-300 text-lg">Hâte de vous voir ! Bon week-end à tous ! 😊</p>
+            <p class="text-slate-300 text-lg">Hâte de vous voir ! Bon week-end à tous ! 😊</p>
         </footer>
     </div>
 
@@ -290,8 +270,8 @@
         gsap.utils.toArray('.gsap-icon').forEach(e=>{gsap.from(e,{scale:.5,rotate:-15,duration:1,ease:'elastic.out(1, 0.5)',scrollTrigger:{trigger:e.parentElement,start:'top 80%'}})});
         gsap.fromTo('.gsap-fade-in-stagger > div',{opacity:0,y:20},{opacity:1,y:0,duration:.8,stagger:.1,ease:'power2.out',scrollTrigger:{trigger:'.gsap-fade-in-stagger',start:'top 80%',toggleActions:'play none none none'}});
         gsap.utils.toArray('.gsap-fade-in-timeline').forEach(e=>{gsap.fromTo(e,{opacity:0,x:-30},{opacity:1,x:0,duration:.8,ease:'power2.out',scrollTrigger:{trigger:e,start:'top 90%',toggleActions:'play none none none'}})});
-        const track=document.getElementById('carousel-track');if(track){let e=Array.from(track.children),t=0,n=e.length,o=document.getElementById('prevBtn'),a=document.getElementById('nextBtn'),r=document.getElementById('indicators'),s=gsap.timeline({repeat:-1,paused:!0,defaults:{ease:"power2.inOut",duration:.8}});e.forEach((e,t)=>{s.to(track,{x:`${-t*100}%`},5*t)}),s.duration(5*n);let i=()=>{Array.from(r.children).forEach((e,n)=>{e.classList.toggle('bg-blue-600',n===t),e.classList.toggle('bg-gray-400/80',n!==t)})};e.forEach((e,n)=>{let o=document.createElement('button');o.classList.add('w-3','h-3','rounded-full','transition-colors','shadow-sm'),o.addEventListener('click',()=>{t=n,s.seek(5*t),l(),i()}),r.appendChild(o)});let d=e=>{t=(e+n)%n,s.seek(5*t),i()},l;o.addEventListener('click',()=>{(d(t-1),l())}),a.addEventListener('click',()=>{(d(t+1),l())}),l=()=>{clearInterval(c),c=setInterval(()=>{t=(t+1)%n,s.seek(5*t),i()},5e3)};let c;s.play(),d(0),l()}
-        const mapElement=document.getElementById('map');if(mapElement){const e=L.map('map',{scrollWheelZoom:!1}).setView([49.75,.4],12);L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap contributors'}).addTo(e);const t=['#ef4444','#f97316','#22c55e','#3b82f6','#6366f1','#a855f7'],n=[{lat:49.7605527,lng:.4632354,host:"Jane & Jean-François",guests:"Narcy, Camille & Rose",color:t[0]},{lat:49.7373646,lng:.3405823,host:"William & Déborah",guests:"Blondin & Cynthia Mayunga",color:t[1]},{lat:49.752848,lng:.378138,host:"Lydie Lucas",guests:"Abel & Ines Loial",color:t[2]},{lat:49.7567213,lng:.3711272,host:"Claude & Nathalie",guests:"Kenny & Clémence",color:t[3]},{lat:49.7720445,lng:.4097124,host:"Marie Claire Bechet",guests:"Ézékiel & Clarisse Mbimbi",color:t[4]},{lat:49.75783,lng:0.37055,host:"Ophélie & Jean-Baptise",guests:"Séverine & Kaye",color:t[5]}],o=[];n.forEach((a,r)=>{let s=document.getElementById(`host-${r}`);s&&(s.style.setProperty('border-left-color',a.color),s.querySelector('p:nth-child(2)').style.color=a.color);if(a.lat&&a.lng){let i=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-8 h-8"><path fill="${a.color}" stroke="#FFF" stroke-width="1.5" d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5" fill="#FFF"/></svg>`,d=L.divIcon({html:i,className:'custom-map-marker',iconSize:[32,32],iconAnchor:[16,32],popupAnchor:[0,-32]}),l=L.marker([a.lat,a.lng],{icon:d}).addTo(e).bindPopup(`<b>Chez ${a.host}</b><br>Loge : ${a.guests}`);o.push(l)}});const a=new L.featureGroup(o);e.fitBounds(a.getBounds().pad(.5))}});
+        const track=document.getElementById('carousel-track');if(track){let e=Array.from(track.children),t=0,n=e.length,o=document.getElementById('prevBtn'),a=document.getElementById('nextBtn'),r=document.getElementById('indicators'),s=gsap.timeline({repeat:-1,paused:!0,defaults:{ease:"power2.inOut",duration:.8}});e.forEach((e,t)=>{s.to(track,{x:`${-t*100}%`},5*t)}),s.duration(5*n);let i=()=>{Array.from(r.children).forEach((e,n)=>{e.classList.toggle('bg-blue-400',n===t),e.classList.toggle('bg-gray-600',n!==t)})};e.forEach((e,n)=>{let o=document.createElement('button');o.classList.add('w-3','h-3','rounded-full','transition-colors','shadow-sm'),o.addEventListener('click',()=>{t=n,s.seek(5*t),l(),i()}),r.appendChild(o)});let d=e=>{t=(e+n)%n,s.seek(5*t),i()},l;o.addEventListener('click',()=>{(d(t-1),l())}),a.addEventListener('click',()=>{(d(t+1),l())}),l=()=>{clearInterval(c),c=setInterval(()=>{t=(t+1)%n,s.seek(5*t),i()},5e3)};let c;s.play(),d(0),l()}
+        const mapElement=document.getElementById('map');if(mapElement){const e=L.map('map',{scrollWheelZoom:!1}).setView([49.75,.4],12);L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap contributors'}).addTo(e);const t=['#ef4444','#f97316','#22c55e','#3b82f6','#6366f1','#a855f7'],n=[{lat:49.7605527,lng:.4632354,host:"Jane & Jean-François",guests:"Narcy, Camille & Rose",color:t[0]},{lat:49.7373646,lng:.3405823,host:"William & Déborah",guests:"Blondin & Cynthia Mayunga",color:t[1]},{lat:49.752848,lng:.378138,host:"Lydie",guests:"Abel & Ines Loial",color:t[2]},{lat:49.7567213,lng:.3711272,host:"Claude & Nathalie",guests:"Kenny & Clémence",color:t[3]},{lat:49.7720445,lng:.4097124,host:"Marie Claire",guests:"Ézékiel & Clarisse Mbimbi",color:t[4]},{lat:49.75783,lng:0.37055,host:"Ophélie & Jean-Baptiste",guests:"Séverine & Kaye",color:t[5]}],o=[];n.forEach((a,r)=>{let s=document.getElementById(`host-${r}`);s&&(s.style.setProperty('border-left-color',a.color),s.querySelector('p:nth-child(2)').style.color=a.color);if(a.lat&&a.lng){let i=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-8 h-8"><path fill="${a.color}" stroke="#FFF" stroke-width="1.5" d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5" fill="#FFF"/></svg>`,d=L.divIcon({html:i,className:'custom-map-marker',iconSize:[32,32],iconAnchor:[16,32],popupAnchor:[0,-32]}),l=L.marker([a.lat,a.lng],{icon:d}).addTo(e).bindPopup(`<b>Chez ${a.host}</b><br>Loge : ${a.guests}`);o.push(l)}});const a=new L.featureGroup(o);e.fitBounds(a.getBounds().pad(.5))}});
     </script>
 </body>
 </html>
