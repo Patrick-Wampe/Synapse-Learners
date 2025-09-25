@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mode d'emploi : Devenir non-résident fiscal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" xintegrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2k5V/5G380fFvT/m0p9sQ5g2T9F1y15l5aP1g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+            color: #1f2937;
+        }
+        .text-section p {
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+        .text-section ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        .text-section li {
+            position: relative;
+            padding-left: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .text-section li::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: #3b82f6;
+            font-size: 1.2rem;
+            line-height: 1;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+        
+        @keyframes rotateIn {
+            from { transform: rotate(-5deg); opacity: 0; }
+            to { transform: rotate(0deg); opacity: 1; }
+        }
+
+        .animated-fade-in {
+            animation: fadeIn 0.8s ease-out forwards;
+        }
+
+        .animated-section h2 {
+            animation: rotateIn 0.5s ease-out both;
+        }
+
+        .animated-section p, .animated-section ul {
+            animation: fadeIn 0.8s ease-out both;
+        }
+
+        /* Staggered animation for a more dynamic effect */
+        .animated-section > *:nth-child(1) { animation-delay: 0.1s; }
+        .animated-section > *:nth-child(2) { animation-delay: 0.2s; }
+        .animated-section > *:nth-child(3) { animation-delay: 0.3s; }
+        .animated-section > *:nth-child(4) { animation-delay: 0.4s; }
+        .animated-section > *:nth-child(5) { animation-delay: 0.5s; }
+        .animated-section > *:nth-child(6) { animation-delay: 0.6s; }
+        
+        .nav-link:hover {
+            transform: scale(1.05);
+            transition: transform 0.2s ease-in-out;
+        }
+        
+    </style>
+</head>
+<body class="bg-gray-50 p-4 sm:p-8">
+
+    <div class="max-w-4xl mx-auto bg-white rounded-2xl shadow-2xl p-6 sm:p-10 border border-gray-200 animated-fade-in">
+
+        <header class="text-center mb-10">
+            <h1 class="text-3xl sm:text-4xl font-bold text-gray-900 mb-2 animated-fade-in">Mode d'emploi : Devenir non-résident fiscal ✈️</h1>
+            <p class="text-gray-500 text-lg animated-fade-in" style="animation-delay: 0.3s;">Un guide simple pour une transition en toute sérénité.</p>
+        </header>
+
+        <nav class="mb-10 text-center">
+            <ul class="flex flex-wrap justify-center space-x-2 sm:space-x-4">
+                <li><a href="#principe" class="nav-link text-blue-600 hover:text-blue-800 font-medium transition-colors duration-200">1. Le principe</a></li>
+                <li><a href="#plan" class="nav-link text-blue-600 hover:text-blue-800 font-medium transition-colors duration-200">2. Le plan d'action</a></li>
+                <li><a href="#economies" class="nav-link text-blue-600 hover:text-blue-800 font-medium transition-colors duration-200">3. Les économies</a></li>
+            </ul>
+        </nav>
+
+        <main class="text-section">
+            <section id="principe" class="mb-12 animated-section">
+                <h2 class="text-2xl sm:text-3xl font-semibold text-gray-800 mb-4">1. Le principe de la non-résidence fiscale 🧐</h2>
+                <p>Pour ne plus être considéré comme un résident fiscal français, vous devez respecter deux règles principales.</p>
+                
+                <h3 class="text-xl font-medium text-gray-700 mt-6 mb-2">Règle n°1 : Le séjour en France 🗓️</h3>
+                <p>Vous devez passer moins de **183 jours** sur le territoire français au cours de l'année. Ce critère est simple mais insuffisant à lui seul.</p>
+
+                <h3 class="text-xl font-medium text-gray-700 mt-6 mb-2">Règle n°2 : Le "centre de vos intérêts vitaux" ❤️</h3>
+                <p>C'est le point le plus important pour le fisc. Votre "centre de vie" doit être transféré à l'étranger. Cela signifie que votre famille (conjoint, enfants), votre activité professionnelle et la majorité de vos intérêts économiques (vos revenus et vos biens) doivent se situer dans votre nouveau pays de résidence.</p>
+                <div class="p-4 bg-blue-50 rounded-lg border border-blue-200 my-4 text-blue-800">
+                    <p class="font-bold">L'idée derrière la règle :</p>
+                    <p>Le fisc ne se base pas seulement sur la date. Il cherche à savoir où se trouve réellement le "cœur" de votre vie. Partir le 1er janvier est la méthode la plus simple et la plus sûre, car elle ne laisse aucune ambiguïté. Mais si vous partez en cours d'année, vous devez être capable de prouver que votre vie est maintenant à l'étranger, et non plus en France.</p>
+                </div>
+            </section>
+
+            <hr class="border-gray-300 my-10">
+
+            <section id="plan" class="mb-12 animated-section">
+                <h2 class="text-2xl sm:text-3xl font-semibold text-gray-800 mb-4">2. Le plan d'action pour le départ ✅</h2>
+                <p>Voici les étapes à suivre pour une transition réussie.</p>
+                
+                <h3 class="text-xl font-medium text-gray-700 mt-6 mb-2">Étape 1 : Gérer la transition de vos revenus 💰</h3>
+                <p>Si vous avez des revenus pour des activités réalisées en France avant votre départ, ils seront considérés comme des "revenus de source française" et resteront imposables en France, même si vous les encaissez après votre départ.</p>
+                <ul class="list-disc ml-6 space-y-2 text-gray-600">
+                    <li>**Exemple :** Si vous encaissez en janvier le paiement d'une prestation réalisée en décembre, ce revenu sera soumis aux règles de la fiscalité française.</li>
+                    <li>**Implication :** Même si vous êtes non-résident, vous devrez déclarer ce revenu en France.</li>
+                </ul>
+
+                <h3 class="text-xl font-medium text-gray-700 mt-6 mb-2">Étape 2 : Couper les liens physiques avec la France 🇫🇷</h3>
+                <p>Le fisc vérifiera que vous n'avez plus de domicile "à votre disposition" en France.</p>
+                <ul class="list-disc ml-6 space-y-2 text-gray-600">
+                    <li>**Votre logement :** Si vous êtes propriétaire, la solution la plus sûre est de louer votre bien, soit en location longue durée, soit sur des plateformes comme Airbnb. Les contrats de location et les historiques de réservation sont des preuves solides que ce logement n'est plus votre résidence principale.</li>
+                    <li>**Visites en France :** Vous pouvez revenir en France pour des séjours courts, à condition de ne pas dépasser les 183 jours. L'idéal est d'être hébergé par des proches ou de réserver un hôtel, plutôt que de rester dans votre ancien logement. Si votre appartement est en location sur Airbnb, vous pouvez simplement le rendre indisponible pendant vos visites, ce qui est une excellente manière de le justifier.</li>
+                </ul>
+
+                <h3 class="text-xl font-medium text-gray-700 mt-6 mb-2">Étape 3 : Gérer votre identité numérique et financière 📱</h3>
+                <ul class="list-disc ml-6 space-y-2 text-gray-600">
+                    <li>**Lieu d'exercice de votre activité :** L'activité doit être exercée **depuis l'étranger, quelle que soit l'origine des clients**. Vous pouvez avoir des clients français, l'important est de ne pas travailler depuis le sol français.</li>
+                    <li>**Votre numéro de téléphone :** Vous pouvez conserver votre numéro de téléphone français. Cependant, vous devez obtenir un nouveau numéro de téléphone dans votre pays de résidence et l'utiliser pour toutes vos communications professionnelles et quotidiennes. Votre numéro français sera alors considéré comme un numéro secondaire, destiné uniquement à la famille et aux amis. Cette distinction est cruciale.</li>
+                    <li>**La preuve de votre résidence à l'étranger :** En tant que nomade digital, vous pouvez prouver votre résidence à l'étranger grâce à des factures d'hôtel ou des réservations Airbnb. Ces documents, combinés à votre visa de résidence à Dubaï, constituent une preuve solide de votre statut de nomade digital et de votre lieu de résidence fiscale.</li>
+                </ul>
+            </section>
+
+            <hr class="border-gray-300 my-10">
+
+            <section id="economies" class="animated-section">
+                <h2 class="text-2xl sm:text-3xl font-semibold text-gray-800 mb-4">3. L'évolution de vos économies 📈</h2>
+                <p class="mb-6">Le choix d'une résidence fiscale à Dubaï, où les revenus sont peu ou pas imposés, peut générer des économies substantielles à long terme.</p>
+                <div class="overflow-x-auto rounded-lg shadow-lg">
+                    <table class="w-full text-sm text-gray-500 rounded-lg overflow-hidden">
+                        <thead class="text-xs text-gray-700 uppercase bg-gray-100">
+                            <tr>
+                                <th scope="col" class="py-3 px-6"></th>
+                                <th scope="col" class="py-3 px-6">Revenu Annuel Brut</th>
+                                <th scope="col" class="py-3 px-6">Net après 1 an</th>
+                                <th scope="col" class="py-3 px-6">Net après 2 ans</th>
+                                <th scope="col" class="py-3 px-6">Net après 3 ans</th>
+                                <th scope="col" class="py-3 px-6">Net après 4 ans</th>
+                                <th scope="col" class="py-3 px-6">Net après 5 ans</th>
+                                <th scope="col" class="py-3 px-6">Net après 6 ans</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="bg-white border-b transition-all duration-300 hover:bg-gray-50 hover:shadow-lg hover:scale-105">
+                                <td class="py-4 px-6 font-semibold text-gray-900">France</td>
+                                <td class="py-4 px-6 text-center">50 000 €</td>
+                                <td class="py-4 px-6 font-medium text-center">31 500 €</td>
+                                <td class="py-4 px-6 font-medium text-center">63 000 €</td>
+                                <td class="py-4 px-6 font-medium text-center">94 500 €</td>
+                                <td class="py-4 px-6 font-medium text-center">126 000 €</td>
+                                <td class="py-4 px-6 font-medium text-center">157 500 €</td>
+                                <td class="py-4 px-6 font-medium text-center">189 000 €</td>
+                            </tr>
+                            <tr class="bg-white border-b transition-all duration-300 hover:bg-gray-50 hover:shadow-lg hover:scale-105">
+                                <td class="py-4 px-6 font-semibold text-gray-900">Dubaï</td>
+                                <td class="py-4 px-6 text-center">50 000 €</td>
+                                <td class="py-4 px-6 font-medium text-center">43 500 €</td>
+                                <td class="py-4 px-6 font-medium text-center">87 000 €</td>
+                                <td class="py-4 px-6 font-medium text-center">130 500 €</td>
+                                <td class="py-4 px-6 font-medium text-center">174 000 €</td>
+                                <td class="py-4 px-6 font-medium text-center">217 500 €</td>
+                                <td class="py-4 px-6 font-medium text-center">261 000 €</td>
+                            </tr>
+                            <tr class="bg-blue-100 border-b">
+                                <td class="py-4 px-6 font-bold text-blue-800">Différence</td>
+                                <td class="py-4 px-6"></td>
+                                <td class="py-4 px-6 font-bold text-blue-800 text-center">+12 000 €</td>
+                                <td class="py-4 px-6 font-bold text-blue-800 text-center">+24 000 €</td>
+                                <td class="py-4 px-6 font-bold text-blue-800 text-center">+36 000 €</td>
+                                <td class="py-4 px-6 font-bold text-blue-800 text-center">+48 000 €</td>
+                                <td class="py-4 px-6 font-bold text-blue-800 text-center">+60 000 €</td>
+                                <td class="py-4 px-6 font-bold text-blue-800 text-center">+72 000 €</td>
+                            </tr>
+
+                            <tr class="bg-white border-b transition-all duration-300 hover:bg-gray-50 hover:shadow-lg hover:scale-105">
+                                <td class="py-4 px-6 font-semibold text-gray-900">France</td>
+                                <td class="py-4 px-6 text-center">70 000 €</td>
+                                <td class="py-4 px-6 font-medium text-center">44 100 €</td>
+                                <td class="py-4 px-6 font-medium text-center">88 200 €</td>
+                                <td class="py-4 px-6 font-medium text-center">132 300 €</td>
+                                <td class="py-4 px-6 font-medium text-center">176 400 €</td>
+                                <td class="py-4 px-6 font-medium text-center">220 500 €</td>
+                                <td class="py-4 px-6 font-medium text-center">264 600 €</td>
+                            </tr>
+                            <tr class="bg-white border-b transition-all duration-300 hover:bg-gray-50 hover:shadow-lg hover:scale-105">
+                                <td class="py-4 px-6 font-semibold text-gray-900">Dubaï</td>
+                                <td class="py-4 px-6 text-center">70 000 €</td>
+                                <td class="py-4 px-6 font-medium text-center">63 500 €</td>
+                                <td class="py-4 px-6 font-medium text-center">127 000 €</td>
+                                <td class="py-4 px-6 font-medium text-center">190 500 €</td>
+                                <td class="py-4 px-6 font-medium text-center">254 000 €</td>
+                                <td class="py-4 px-6 font-medium text-center">317 500 €</td>
+                                <td class="py-4 px-6 font-medium text-center">381 000 €</td>
+                            </tr>
+                            <tr class="bg-blue-100 border-b">
+                                <td class="py-4 px-6 font-bold text-blue-800">Différence</td>
+                                <td class="py-4 px-6"></td>
+                                <td class="py-4 px-6 font-bold text-blue-800 text-center">+19 400 €</td>
+                                <td class="py-4 px-6 font-bold text-blue-800 text-center">+38 800 €</td>
+                                <td class="py-4 px-6 font-bold text-blue-800 text-center">+58 200 €</td>
+                                <td class="py-4 px-6 font-bold text-blue-800 text-center">+77 600 €</td>
+                                <td class="py-4 px-6 font-bold text-blue-800 text-center">+97 000 €</td>
+                                <td class="py-4 px-6 font-bold text-blue-800 text-center">+116 400 €</td>
+                            </tr>
+
+                            <tr class="bg-white border-b transition-all duration-300 hover:bg-gray-50 hover:shadow-lg hover:scale-105">
+                                <td class="py-4 px-6 font-semibold text-gray-900">France</td>
+                                <td class="py-4 px-6 text-center">100 000 €</td>
+                                <td class="py-4 px-6 font-medium text-center">63 000 €</td>
+                                <td class="py-4 px-6 font-medium text-center">126 000 €</td>
+                                <td class="py-4 px-6 font-medium text-center">189 000 €</td>
+                                <td class="py-4 px-6 font-medium text-center">252 000 €</td>
+                                <td class="py-4 px-6 font-medium text-center">315 000 €</td>
+                                <td class="py-4 px-6 font-medium text-center">378 000 €</td>
+                            </tr>
+                            <tr class="bg-white border-b transition-all duration-300 hover:bg-gray-50 hover:shadow-lg hover:scale-105">
+                                <td class="py-4 px-6 font-semibold text-gray-900">Dubaï</td>
+                                <td class="py-4 px-6 text-center">100 000 €</td>
+                                <td class="py-4 px-6 font-medium text-center">93 500 €</td>
+                                <td class="py-4 px-6 font-medium text-center">187 000 €</td>
+                                <td class="py-4 px-6 font-medium text-center">280 500 €</td>
+                                <td class="py-4 px-6 font-medium text-center">374 000 €</td>
+                                <td class="py-4 px-6 font-medium text-center">467 500 €</td>
+                                <td class="py-4 px-6 font-medium text-center">561 000 €</td>
+                            </tr>
+                            <tr class="bg-blue-100 border-b">
+                                <td class="py-4 px-6 font-bold text-blue-800">Différence</td>
+                                <td class="py-4 px-6"></td>
+                                <td class="py-4 px-6 font-bold text-blue-800 text-center">+30 500 €</td>
+                                <td class="py-4 px-6 font-bold text-blue-800 text-center">+61 000 €</td>
+                                <td class="py-4 px-6 font-bold text-blue-800 text-center">+91 500 €</td>
+                                <td class="py-4 px-6 font-bold text-blue-800 text-center">+122 000 €</td>
+                                <td class="py-4 px-6 font-bold text-blue-800 text-center">+152 500 €</td>
+                                <td class="py-4 px-6 font-bold text-blue-800 text-center">+183 000 €</td>
+                            </tr>
+                            
+                            <tr class="bg-white border-b transition-all duration-300 hover:bg-gray-50 hover:shadow-lg hover:scale-105">
+                                <td class="py-4 px-6 font-semibold text-gray-900">France</td>
+                                <td class="py-4 px-6 text-center">165 000 €</td>
+                                <td class="py-4 px-6 font-medium text-center">103 950 €</td>
+                                <td class="py-4 px-6 font-medium text-center">207 900 €</td>
+                                <td class="py-4 px-6 font-medium text-center">311 850 €</td>
+                                <td class="py-4 px-6 font-medium text-center">415 800 €</td>
+                                <td class="py-4 px-6 font-medium text-center">519 750 €</td>
+                                <td class="py-4 px-6 font-medium text-center">623 700 €</td>
+                            </tr>
+                            <tr class="bg-white border-b transition-all duration-300 hover:bg-gray-50 hover:shadow-lg hover:scale-105">
+                                <td class="py-4 px-6 font-semibold text-gray-900">Dubaï</td>
+                                <td class="py-4 px-6 text-center">165 000 €</td>
+                                <td class="py-4 px-6 font-medium text-center">152 650 €</td>
+                                <td class="py-4 px-6 font-medium text-center">305 300 €</td>
+                                <td class="py-4 px-6 font-medium text-center">457 950 €</td>
+                                <td class="py-4 px-6 font-medium text-center">610 600 €</td>
+                                <td class="py-4 px-6 font-medium text-center">763 250 €</td>
+                                <td class="py-4 px-6 font-medium text-center">915 900 €</td>
+                            </tr>
+                            <tr class="bg-blue-100">
+                                <td class="py-4 px-6 font-bold text-blue-800">Différence</td>
+                                <td class="py-4 px-6"></td>
+                                <td class="py-4 px-6 font-bold text-blue-800 text-center">+48 700 €</td>
+                                <td class="py-4 px-6 font-bold text-blue-800 text-center">+97 400 €</td>
+                                <td class="py-4 px-6 font-bold text-blue-800 text-center">+146 100 €</td>
+                                <td class="py-4 px-6 font-bold text-blue-800 text-center">+194 800 €</td>
+                                <td class="py-4 px-6 font-bold text-blue-800 text-center">+243 500 €</td>
+                                <td class="py-4 px-6 font-bold text-blue-800 text-center">+292 200 €</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+</body>
+</html>
