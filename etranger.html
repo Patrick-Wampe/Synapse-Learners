@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mode d'emploi : Devenir non-résident fiscal</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" xintegrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2k5V/5G380fFvT/m0p9sQ5g2T9F1y15l5aP1g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
         body {
@@ -13,69 +13,28 @@
             background-color: #f3f4f6;
             color: #1f2937;
         }
-        .text-section p {
-            margin-bottom: 1rem;
-            line-height: 1.6;
-        }
-        .text-section ul {
-            list-style-type: none;
-            padding-left: 0;
-        }
+        .text-section p { margin-bottom: 1rem; line-height: 1.6; }
+        .text-section ul { list-style-type: none; padding-left: 0; }
         .text-section li {
-            position: relative;
-            padding-left: 1.5rem;
-            margin-bottom: 0.5rem;
+            position: relative; padding-left: 1.5rem; margin-bottom: 0.5rem;
         }
         .text-section li::before {
-            content: "•";
-            position: absolute;
-            left: 0;
-            color: #3b82f6;
-            font-size: 1.2rem;
-            line-height: 1;
+            content: "•"; position: absolute; left: 0;
+            color: #3b82f6; font-size: 1.2rem; line-height: 1;
         }
 
-        /* Animations */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.02); }
-        }
-        
-        @keyframes rotateIn {
-            from { transform: rotate(-5deg); opacity: 0; }
-            to { transform: rotate(0deg); opacity: 1; }
-        }
-
-        .animated-fade-in {
-            animation: fadeIn 0.8s ease-out forwards;
-        }
-
-        .animated-section h2 {
-            animation: rotateIn 0.5s ease-out both;
-        }
-
-        .animated-section p, .animated-section ul {
-            animation: fadeIn 0.8s ease-out both;
-        }
-
-        /* Staggered animation for a more dynamic effect */
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes rotateIn { from { transform: rotate(-5deg); opacity: 0; } to { transform: rotate(0deg); opacity: 1; } }
+        .animated-fade-in { animation: fadeIn 0.8s ease-out forwards; }
+        .animated-section h2 { animation: rotateIn 0.5s ease-out both; }
+        .animated-section p, .animated-section ul { animation: fadeIn 0.8s ease-out both; }
         .animated-section > *:nth-child(1) { animation-delay: 0.1s; }
         .animated-section > *:nth-child(2) { animation-delay: 0.2s; }
         .animated-section > *:nth-child(3) { animation-delay: 0.3s; }
         .animated-section > *:nth-child(4) { animation-delay: 0.4s; }
         .animated-section > *:nth-child(5) { animation-delay: 0.5s; }
         .animated-section > *:nth-child(6) { animation-delay: 0.6s; }
-        
-        .nav-link:hover {
-            transform: scale(1.05);
-            transition: transform 0.2s ease-in-out;
-        }
-        
+        .nav-link:hover { transform: scale(1.05); transition: transform 0.2s ease-in-out; }
     </style>
 </head>
 <body class="bg-gray-50 p-4 sm:p-8">
@@ -89,56 +48,77 @@
 
         <nav class="mb-10 text-center">
             <ul class="flex flex-wrap justify-center space-x-2 sm:space-x-4">
-                <li><a href="#principe" class="nav-link text-blue-600 hover:text-blue-800 font-medium transition-colors duration-200">1. Le principe</a></li>
-                <li><a href="#plan" class="nav-link text-blue-600 hover:text-blue-800 font-medium transition-colors duration-200">2. Le plan d'action</a></li>
-                <li><a href="#economies" class="nav-link text-blue-600 hover:text-blue-800 font-medium transition-colors duration-200">3. Les économies</a></li>
+                <li><a href="#principe" class="nav-link text-blue-600 hover:text-blue-800 font-medium">1. Le principe</a></li>
+                <li><a href="#plan" class="nav-link text-blue-600 hover:text-blue-800 font-medium">2. Le plan d'action</a></li>
+                <li><a href="#economies" class="nav-link text-blue-600 hover:text-blue-800 font-medium">3. Les économies</a></li>
             </ul>
         </nav>
 
         <main class="text-section">
+            <!-- PRINCIPE -->
             <section id="principe" class="mb-12 animated-section">
                 <h2 class="text-2xl sm:text-3xl font-semibold text-gray-800 mb-4">1. Le principe de la non-résidence fiscale 🧐</h2>
-                <p>Pour ne plus être considéré comme un résident fiscal français, vous devez respecter deux règles principales.</p>
+                <p>Pour ne plus être considéré comme résident fiscal français, vous devez respecter deux règles principales.</p>
                 
                 <h3 class="text-xl font-medium text-gray-700 mt-6 mb-2">Règle n°1 : Le séjour en France 🗓️</h3>
-                <p>Vous devez passer moins de **183 jours** sur le territoire français au cours de l'année. Ce critère est simple mais insuffisant à lui seul.</p>
+                <p>Vous devez passer moins de <strong>183 jours</strong> sur le territoire français au cours de l'année. Ce critère est simple mais insuffisant à lui seul.</p>
 
                 <h3 class="text-xl font-medium text-gray-700 mt-6 mb-2">Règle n°2 : Le "centre de vos intérêts vitaux" ❤️</h3>
-                <p>C'est le point le plus important pour le fisc. Votre "centre de vie" doit être transféré à l'étranger. Cela signifie que votre famille (conjoint, enfants), votre activité professionnelle et la majorité de vos intérêts économiques (vos revenus et vos biens) doivent se situer dans votre nouveau pays de résidence.</p>
+                <p>Votre "centre de vie" doit être transféré à l'étranger. Cela signifie que votre famille (conjoint, enfants), votre activité professionnelle et la majorité de vos intérêts économiques (vos revenus et vos biens) doivent être réaliser à l'étranger, en cohérence avec votre nouveau pays de résidence.</p>
                 <div class="p-4 bg-blue-50 rounded-lg border border-blue-200 my-4 text-blue-800">
-                    <p class="font-bold">L'idée derrière la règle :</p>
-                    <p>Le fisc ne se base pas seulement sur la date. Il cherche à savoir où se trouve réellement le "cœur" de votre vie. Partir le 1er janvier est la méthode la plus simple et la plus sûre, car elle ne laisse aucune ambiguïté. Mais si vous partez en cours d'année, vous devez être capable de prouver que votre vie est maintenant à l'étranger, et non plus en France.</p>
+                    <p class="font-bold">À retenir :</p>
+                    <ul class="list-disc ml-6 text-blue-700">
+                        <li>Les 183 jours ne suffisent pas : le fisc regarde où est votre vie réelle. Il cherche à savoir où se trouve réellement le "cœur" de votre vie.</li>
+                        <li>Le fisc ne se base pas seulement sur la date. Un départ le <strong>1er janvier</strong> simplifie les choses car elle ne laisse aucune ambiguïté.</li>
+                        <li>Partir en cours d'année est possible. Vous devrez alors déclarer vos revenus français jusqu'à la date de départ, puis vos revenus étrangers ailleurs, et être capable de prouver que votre vie est maintenant à l'étranger, et non plus en France.</li>
+                    </ul>
                 </div>
             </section>
 
             <hr class="border-gray-300 my-10">
 
+            <!-- PLAN -->
             <section id="plan" class="mb-12 animated-section">
                 <h2 class="text-2xl sm:text-3xl font-semibold text-gray-800 mb-4">2. Le plan d'action pour le départ ✅</h2>
-                <p>Voici les étapes à suivre pour une transition réussie.</p>
+                <p>Voici les étapes clés pour sécuriser votre non-résidence.</p>
                 
+                <!-- Revenus -->
                 <h3 class="text-xl font-medium text-gray-700 mt-6 mb-2">Étape 1 : Gérer la transition de vos revenus 💰</h3>
-                <p>Si vous avez des revenus pour des activités réalisées en France avant votre départ, ils seront considérés comme des "revenus de source française" et resteront imposables en France, même si vous les encaissez après votre départ.</p>
+                <p>Si vous avez des revenus pour des activités réalisées en France avant votre départ, ils seront considérés comme des "revenus de source française" et resteront imposables en France, même si vous les encaissez après votre départ. Par exemple, si vous encaissez en janvier le paiement d'une prestation réalisée en décembre, ce revenu sera soumis aux règles de la fiscalité française.</p>
                 <ul class="list-disc ml-6 space-y-2 text-gray-600">
-                    <li>**Exemple :** Si vous encaissez en janvier le paiement d'une prestation réalisée en décembre, ce revenu sera soumis aux règles de la fiscalité française.</li>
-                    <li>**Implication :** Même si vous êtes non-résident, vous devrez déclarer ce revenu en France.</li>
+                    <li><strong>Revenus professionnels</strong> : Vous pouvez avoir des clients français, mais l'activité doit être exercée depuis l'étranger. Tout travail effectué en France est théoriquement imposable en France. Mais si vous travaillez depuis la France de manière ponctuelle (vacances, imprévus familiaux, séjours...) et que votre activité est basée à l'étranger, ces revenus restent imposés dans votre nouveau pays. L'important est de pouvoir prouver que votre base de vie et votre activité est essentiellement exercé depuis l’étranger et délocalisable, ce qui implique que l'exercice en France n'est pas un impératif.</li>
+                    <li><strong>Revenus de source française</strong> (ex : loyers Airbnb, salaires français) : ils restent imposables en France même après le départ.</li>
+                    <li><strong>Exemple</strong> : vous partez en avril. Vous déclarez vos revenus français de janvier à avril en France, puis de mai à décembre dans votre nouveau pays.</li>
                 </ul>
 
-                <h3 class="text-xl font-medium text-gray-700 mt-6 mb-2">Étape 2 : Couper les liens physiques avec la France 🇫🇷</h3>
-                <p>Le fisc vérifiera que vous n'avez plus de domicile "à votre disposition" en France.</p>
+                <!-- Logement -->
+                <h3 class="text-xl font-medium text-gray-700 mt-6 mb-2">Étape 2 : Couper les liens physiques 🇫🇷</h3>
                 <ul class="list-disc ml-6 space-y-2 text-gray-600">
-                    <li>**Votre logement :** Si vous êtes propriétaire, la solution la plus sûre est de louer votre bien, soit en location longue durée, soit sur des plateformes comme Airbnb. Les contrats de location et les historiques de réservation sont des preuves solides que ce logement n'est plus votre résidence principale.</li>
-                    <li>**Visites en France :** Vous pouvez revenir en France pour des séjours courts, à condition de ne pas dépasser les 183 jours. L'idéal est d'être hébergé par des proches ou de réserver un hôtel, plutôt que de rester dans votre ancien logement. Si votre appartement est en location sur Airbnb, vous pouvez simplement le rendre indisponible pendant vos visites, ce qui est une excellente manière de le justifier.</li>
+                    <li>Ne gardez pas de logement à disposition : Si vous êtes propriétaire, la solution la plus sûre est de louer votre bien, soit en location longue durée, soit sur des plateformes comme Airbnb. Les contrats de location et les historiques de réservation sont des preuves solides que ce logement n'est plus votre résidence principale.</li>
+                    <li>Vous pouvez revenir en France pour des séjours courts, à condition de ne pas dépasser les 183 jours. L'idéal est d'être hébergé par des proches ou de réserver un hôtel, plutôt que de rester dans votre ancien logement. Si votre appartement est en location sur Airbnb, vous pouvez simplement le rendre indisponible pendant vos visites, ce qui est une excellente manière de le justifier.</li>
+                </ul>
+                
+                 <h3 class="text-xl font-medium text-gray-700 mt-6 mb-2">Étape 3 : Gérer votre identité numérique et financière 📱</h3>
+                <ul class="list-disc ml-6 space-y-2 text-gray-600">
+                    <li><b>Lieu d'exercice de votre activité :</b> L'activité doit être exercée <b>depuis l'étranger, quelle que soit l'origine des clients</b>. Vous pouvez avoir des clients français.</li>
+                    <li><b>Votre numéro de téléphone :</b> Vous pouvez conserver votre numéro de téléphone français. Cependant, vous devez obtenir un nouveau numéro de téléphone dans votre pays de résidence et l'utiliser pour toutes vos communications professionnelles et quotidiennes. Votre numéro français sera alors considéré comme un numéro secondaire, destiné uniquement à la famille et aux amis. Cette distinction est cruciale.</li>
+                    <li><b>La preuve de votre résidence à l'étranger :</b> En tant que nomade digital, vous pouvez prouver votre résidence à l'étranger grâce à des factures d'hôtel ou des réservations Airbnb. Ces documents, combinés à votre visa de résidence à Dubaï, constituent une preuve solide de votre statut de nomade digital et de votre lieu de résidence fiscale.</li>
                 </ul>
 
-                <h3 class="text-xl font-medium text-gray-700 mt-6 mb-2">Étape 3 : Gérer votre identité numérique et financière 📱</h3>
+                <!-- Preuves -->
+                <h3 class="text-xl font-medium text-gray-700 mt-6 mb-2">Étape 4 : Constituer vos preuves 📑</h3>
+                <p>Le fisc peut demander à vérifier que vous vivez réellement à l’étranger. Conservez :</p>
                 <ul class="list-disc ml-6 space-y-2 text-gray-600">
-                    <li>**Lieu d'exercice de votre activité :** L'activité doit être exercée **depuis l'étranger, quelle que soit l'origine des clients**. Vous pouvez avoir des clients français.</li>
-                    <li>**Votre numéro de téléphone :** Vous pouvez conserver votre numéro de téléphone français. Cependant, vous devez obtenir un nouveau numéro de téléphone dans votre pays de résidence et l'utiliser pour toutes vos communications professionnelles et quotidiennes. Votre numéro français sera alors considéré comme un numéro secondaire, destiné uniquement à la famille et aux amis. Cette distinction est cruciale.</li>
-                    <li>**La preuve de votre résidence à l'étranger :** En tant que nomade digital, vous pouvez prouver votre résidence à l'étranger grâce à des factures d'hôtel ou des réservations Airbnb. Ces documents, combinés à votre visa de résidence à Dubaï, constituent une preuve solide de votre statut de nomade digital et de votre lieu de résidence fiscale.</li>
+                    <li>Bail, factures d’énergie, abonnement internet dans votre pays.</li>
+                    <li>Un numéro de téléphone local (le numéro français devient secondaire).</li>
+                    <li>Contrats et factures clients avec adresse étrangère.</li>
+                    <li>Justificatifs de séjour (factures Airbnb, hôtels, visa, carte de résident).</li>
                 </ul>
             </section>
 
+            <hr class="border-gray-300 my-10">
+
+            <!-- ECONOMIES -->
             <hr class="border-gray-300 my-10">
 
             <section id="economies" class="animated-section">
