@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exercice: Le PC Idéal du Data Analyst Écolo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+        .exercise-card, .table-container {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .exercise-card:hover, .table-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animated-section {
+            animation: fadeIn 0.8s ease-out both;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <div class="container mx-auto p-4 sm:p-6 md:p-8">
+
+        <!-- Header -->
+        <header class="text-center mb-10 p-6 bg-white rounded-xl shadow-md border border-gray-200 animated-section">
+            <h1 class="text-3xl md:text-4xl font-bold text-green-700">🌲 Exercice : Le PC du Data Analyst Écolo 🌍</h1>
+            <p class="mt-2 text-lg text-gray-600">Votre mission : choisir l'outil parfait pour analyser des données au service de la planète.</p>
+        </header>
+
+        <!-- Contexte -->
+        <div class="mb-10 p-6 bg-green-100 border-l-4 border-green-500 rounded-lg animated-section">
+            <h2 class="text-2xl font-semibold mb-3 text-green-800">Mise en Situation</h2>
+            <p>Vous êtes Data Analyst pour "Green Future", une ONG qui lutte contre la déforestation. Votre prochaine mission est d'entraîner des modèles de <b>Machine Learning</b> complexes (Gradient Boosting, Random Forests, etc.) pour analyser de grands jeux de données sur la biodiversité et les facteurs climatiques. L'objectif est de prédire les zones à risque et d'identifier les facteurs d'impact les plus importants.</p>
+            <p class="mt-2">Votre PC actuel n'est plus assez puissant. L'ONG vous a donné un budget de <b>3 000 € HT</b> pour acheter une nouvelle machine de travail parmi les options pré-sélectionnées ci-dessous. Vous devez présenter une justification technique claire pour votre choix final.</p>
+        </div>
+
+        <!-- Tableau Comparatif -->
+        <section class="mb-12 animated-section">
+            <h2 class="text-2xl font-bold text-center mb-6 text-gray-800">✨ Les Quatre Candidats en Lice</h2>
+            <div class="table-container rounded-lg shadow-md border border-gray-200 overflow-x-auto">
+                <table class="w-full min-w-max text-sm text-left text-gray-600 bg-white">
+                    <thead class="text-xs text-gray-800 uppercase bg-gray-100">
+                        <tr>
+                            <th scope="col" class="py-3 px-4 font-bold">Caractéristique</th>
+                            <th scope="col" class="py-3 px-4">PC A (Le Polyvalent - Windows)</th>
+                            <th scope="col" class="py-3 px-4">PC B (L'Écosystème - Mac)</th>
+                            <th scope="col" class="py-3 px-4">PC C (Le Sage - Linux)</th>
+                            <th scope="col" class="py-3 px-4 text-white bg-green-600">PC D (La Station de Travail - Linux)</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200">
+                        <tr class="hover:bg-gray-50">
+                            <td class="py-4 px-4 font-semibold text-gray-900">CPU</td>
+                            <td class="py-4 px-4">Intel Core i7-14700K</td>
+                            <td class="py-4 px-4">Apple M3 Pro (12 cœurs)</td>
+                            <td class="py-4 px-4">AMD Ryzen 7 7700X</td>
+                            <td class="py-4 px-4 font-semibold">AMD Ryzen 9 7900X</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="py-4 px-4 font-semibold text-gray-900">RAM</td>
+                            <td class="py-4 px-4">32 Go DDR5 @ 5600 MHz</td>
+                            <td class="py-4 px-4">18 Go (Unifiée)</td>
+                            <td class="py-4 px-4">32 Go DDR5 @ 6000 MHz</td>
+                            <td class="py-4 px-4 font-semibold text-green-700">64 Go DDR5 @ 6000 MHz</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="py-4 px-4 font-semibold text-gray-900">GPU</td>
+                            <td class="py-4 px-4">NVIDIA RTX 4070 (12 Go VRAM)</td>
+                            <td class="py-4 px-4">Intégré au M3 Pro (18 cœurs GPU)</td>
+                            <td class="py-4 px-4">NVIDIA RTX 4070 Ti (12 Go VRAM)</td>
+                            <td class="py-4 px-4 font-semibold text-green-700">NVIDIA RTX 4080 (16 Go VRAM)</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="py-4 px-4 font-semibold text-gray-900">Stockage</td>
+                            <td class="py-4 px-4">1 To SSD NVMe PCIe 4.0</td>
+                            <td class="py-4 px-4">1 To SSD</td>
+                            <td class="py-4 px-4">2 To SSD NVMe PCIe 4.0</td>
+                            <td class="py-4 px-4 font-semibold text-green-700">2 To SSD NVMe PCIe 5.0</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="py-4 px-4 font-semibold text-gray-900">OS</td>
+                            <td class="py-4 px-4">Windows 11 Pro</td>
+                            <td class="py-4 px-4">macOS Sonoma</td>
+                            <td class="py-4 px-4">Ubuntu 22.04 LTS</td>
+                            <td class="py-4 px-4 font-semibold">Ubuntu 22.04 LTS</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="py-4 px-4 font-semibold text-gray-900">Prix Estimé</td>
+                            <td class="py-4 px-4">~2 200 €</td>
+                            <td class="py-4 px-4">~2 800 €</td>
+                            <td class="py-4 px-4">~2 500 €</td>
+                            <td class="py-4 px-4 font-semibold text-red-600">~2 950 €</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Questions d'Analyse -->
+        <main class="space-y-8">
+            <h2 class="text-2xl font-bold text-center mb-4 text-gray-800">🎯 Questions d'Analyse</h2>
+
+            <section class="exercise-card bg-white p-6 rounded-xl shadow-md border border-gray-200">
+                <h3 class="text-xl font-bold mb-2">1. Les Critères Clés</h3>
+                <p>Pour des tâches de Machine Learning variées (allant de la manipulation de lourds datasets à l'entraînement de modèles), quels sont les <b>deux</b> composants les plus importants et pourquoi ?</p>
+            </section>
+            
+            <section class="exercise-card bg-white p-6 rounded-xl shadow-md border border-gray-200">
+                <h3 class="text-xl font-bold mb-2">2. Le Goulot d'Étranglement</h3>
+                <p>Expliquez la différence entre la <b>mémoire unifiée</b> du Mac (PC B) et la <b>RAM DDR5</b> des autres PC. Pourquoi la mémoire unifiée du Mac pourrait-elle limiter l'entraînement de grands modèles ?</p>
+            </section>
+
+            <section class="exercise-card bg-white p-6 rounded-xl shadow-md border border-gray-200">
+                <h3 class="text-xl font-bold mb-2">3. Le Choix Final</h3>
+                <p>Quel PC (A, B, C ou D) est le plus adapté pour cet usage ? Justifiez votre choix en mentionnant les deux spécifications techniques les plus avantageuses. Expliquez aussi pourquoi vous avez écarté l'option qui arrivait en deuxième position.</p>
+            </section>
+
+            <section class="exercise-card bg-white p-6 rounded-xl shadow-md border border-gray-200">
+                <h3 class="text-xl font-bold mb-2">4. Le Rôle de l'OS</h3>
+                <p>Au-delà des composants, quel rôle le choix du système d'exploitation (Windows, macOS ou Linux) et des frameworks (Scikit-learn, PyTorch, TensorFlow) joue-t-il dans cette décision ?</p>
+            </section>
+
+            <!-- Conclusion -->
+            <section class="mt-10 p-6 bg-blue-100 border-l-4 border-blue-500 rounded-lg">
+                <h2 class="text-2xl font-semibold mb-3 text-blue-800">✍️ Votre Synthèse pour l'ONG</h2>
+                <p class="font-semibold text-gray-900">Maintenant, rassemblez vos réponses ! Rédigez un court paragraphe de synthèse destiné à la direction de "Green Future". Présentez votre configuration idéale et argumentez de manière concise pourquoi cet investissement est le plus judicieux pour accélérer leur mission.</p>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="text-center mt-12 text-gray-500 text-sm">
+            <p>Exercice créé avec ❤️ pour les futurs héros de la data.</p>
+        </footer>
+
+    </div>
+
+</body>
+</html>
+
