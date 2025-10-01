@@ -1,0 +1,1116 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rapport Mondial des Témoins de Jéhovah (2022-2024)</title>
+    <style>
+        /* --- Styles Généraux --- */
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+        :root {
+            --primary-color: #4a00e0;
+            --secondary-color: #8e2de2;
+            --background-color: #f4f7fc;
+            --font-color: #333;
+            --border-color: #e0e0e0;
+            --card-bg: #ffffff;
+            --shadow: 0 10px 20px rgba(0,0,0,0.08);
+            --success-color: #28a745;
+            --danger-color: #dc3545;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--background-color);
+            color: var(--font-color);
+            margin: 0;
+            padding: 25px;
+        }
+
+        /* --- Conteneur Principal --- */
+        .container {
+            width: 100%;
+            max-width: 1800px;
+            margin: auto;
+            padding: 30px;
+            background: var(--card-bg);
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+        }
+
+        /* --- En-tête --- */
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        header h1 { margin: 0; font-weight: 700; }
+        header p { opacity: 0.9; margin-top: 5px; }
+
+        /* --- Panneau de Filtres --- */
+        .filters-panel {
+            margin-bottom: 20px;
+            padding: 20px;
+            background-color: #fafafa;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+        
+        .filter-section { margin-bottom: 20px; }
+        .filter-section:last-child { margin-bottom: 0; }
+
+        .filter-section h3 {
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 5px;
+        }
+
+        .quick-filters, .advanced-filter-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .filters-panel input[type="text"], 
+        .filters-panel input[type="number"], 
+        .filters-panel select {
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        
+        .filters-panel input:focus, .filters-panel select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(74, 0, 224, 0.2);
+        }
+        
+        #continent-checkboxes, #year-checkboxes {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .filter-checkbox-label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 20px;
+            background: #eee;
+            transition: all 0.3s ease;
+            user-select: none;
+        }
+        .filter-checkbox-label input { display: none; }
+        .filter-checkbox-label span { margin-left: 8px; }
+        .filter-checkbox-label:hover { background: #ddd; }
+        .filter-checkbox-label input:checked + span { font-weight: 600; }
+        .filter-checkbox-label input:checked + span:before {
+            content: '✓';
+            margin-right: 5px;
+            color: var(--success-color);
+        }
+        .select-all-label {
+            font-weight: 700;
+            border: 1px dashed var(--primary-color);
+        }
+        
+        #add-filter-btn {
+            background-color: var(--secondary-color);
+            color: white; border: none; cursor: pointer;
+            padding: 10px 15px; border-radius: 8px;
+            font-weight: bold; transition: all 0.3s ease;
+        }
+        #add-filter-btn:hover { transform: scale(1.05); }
+
+        #active-filters {
+            display: flex; flex-wrap: wrap;
+            gap: 10px; margin-top: 15px;
+        }
+
+        .filter-tag {
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            color: white; padding: 8px 15px;
+            border-radius: 20px; display: flex;
+            align-items: center; gap: 10px;
+            animation: popIn 0.3s ease-out; font-size: 0.9em;
+        }
+        .filter-tag .remove-filter { cursor: pointer; font-weight: bold; }
+
+        /* --- Tableau de Données --- */
+        .table-container { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; }
+
+        th, td {
+            padding: 14px 18px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+            white-space: nowrap;
+        }
+
+        thead th {
+            background-color: #333; color: white;
+            font-weight: 600; cursor: pointer;
+            position: sticky; top: 0; z-index: 10;
+        }
+        
+        tbody tr {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: rowFadeInUp 0.5s forwards ease-out;
+        }
+        
+        tbody tr:nth-child(even) { background-color: #fdfdff; }
+        tbody tr:hover { background-color: #e9f5ff; }
+        
+        td:nth-child(n+4) {
+            text-align: right;
+            font-variant-numeric: tabular-nums;
+        }
+        
+        .growth-positive { color: var(--success-color); font-weight: 600; }
+        .growth-negative { color: var(--danger-color); font-weight: 600; }
+        
+        .sort-indicator { margin-left: 8px; opacity: 0.7; }
+
+        /* --- Animations --- */
+        @keyframes popIn {
+            from { transform: scale(0.5); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        @keyframes rowFadeInUp { to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>🚀 Rapport Mondial des Témoins de Jéhovah (2022-2024)</h1>
+            <p>Comparez les données sur plusieurs années avec des filtres dynamiques !</p>
+        </header>
+
+        <div class="filters-panel">
+            <div class="filter-section">
+                <h3>🔎 Filtres Rapides</h3>
+                <div class="quick-filters">
+                    <input type="text" id="country-search" placeholder="Rechercher un pays...">
+                </div>
+                 <div id="year-checkboxes" style="margin-top: 15px;">
+                    </div>
+                <div id="continent-checkboxes" style="margin-top: 15px;">
+                    </div>
+            </div>
+            
+            <div class="filter-section">
+                <h3>⚙️ Filtres Avancés (par colonne)</h3>
+                 <div class="advanced-filter-controls">
+                    <select id="column-select"></select>
+                    <select id="operator-select">
+                        <option value=">=">≥</option>
+                        <option value="<=">≤</option>
+                    </select>
+                    <input type="number" id="value-input" placeholder="Valeur...">
+                    <button id="add-filter-btn">➕ Ajouter</button>
+                </div>
+                <div id="active-filters"></div>
+            </div>
+        </div>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th data-column="year">Année <span class="sort-indicator"></span></th>
+                        <th data-column="country">Pays ou territoire <span class="sort-indicator"></span></th>
+                        <th data-column="continent">Continent <span class="sort-indicator"></span></th>
+                        <th data-column="population">Population <span class="sort-indicator"></span></th>
+                        <th data-column="maxProcl">Max. Procl. <span class="sort-indicator"></span></th>
+                        <th data-column="proportion">Proportion (1 pour X) <span class="sort-indicator"></span></th>
+                        <th data-column="avgProcl">Moy. Procl. <span class="sort-indicator"></span></th>
+                        <th data-column="growth">Accr. (%) <span class="sort-indicator"></span></th>
+                        <th data-column="baptized">Nbre bapt. <span class="sort-indicator"></span></th>
+                        <th data-column="pioneers">Moy. pionn. <span class="sort-indicator"></span></th>
+                        <th data-column="congregations">Nbre ass. <span class="sort-indicator"></span></th>
+                        <th data-column="bibleStudies">Moy. cours bibl. <span class="sort-indicator"></span></th>
+                        <th data-column="memorialAttendance">Assis. Mémorial <span class="sort-indicator"></span></th>
+                    </tr>
+                </thead>
+                <tbody id="data-table"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+    // --- INTÉGRATION DES DONNÉES DE 2024, 2023, 2022 ---
+    const rawData2024 = [
+    { country: 'Açores', continent: 'Europe', population: 241000, maxProcl: 813, proportion: 300, avgProcl: 804, growth: 1, baptized: 22, pioneers: 152, congregations: 15, bibleStudies: 536, memorialAttendance: 1627 },
+    { country: 'Afrique du Sud', continent: 'Afrique', population: 61997000, maxProcl: 105359, proportion: 615, avgProcl: 100889, growth: 3, baptized: 4798, pioneers: 15784, congregations: 1929, bibleStudies: 102414, memorialAttendance: 270310 },
+    { country: 'Albanie', continent: 'Europe', population: 2402000, maxProcl: 5380, proportion: 449, avgProcl: 5352, growth: -1, baptized: 137, pioneers: 1381, congregations: 78, bibleStudies: 3229, memorialAttendance: 10447 },
+    { country: 'Allemagne', continent: 'Europe', population: 83445000, maxProcl: 177240, proportion: 475, avgProcl: 175678, growth: 2, baptized: 2800, pioneers: 23199, congregations: 1979, bibleStudies: 48001, memorialAttendance: 277109 },
+    { country: 'Andorre', continent: 'Europe', population: 86000, maxProcl: 165, proportion: 534, avgProcl: 161, growth: -2, baptized: 0, pioneers: 23, congregations: 3, bibleStudies: 95, memorialAttendance: 340 },
+    { country: 'Angola', continent: 'Afrique', population: 37805000, maxProcl: 180925, proportion: 217, avgProcl: 174283, growth: 6, baptized: 9674, pioneers: 31995, congregations: 2578, bibleStudies: 492430, memorialAttendance: 673685 },
+    { country: 'Anguilla', continent: 'Amérique du Nord', population: 16000, maxProcl: 67, proportion: 258, avgProcl: 62, growth: 13, baptized: 0, pioneers: 11, congregations: 1, bibleStudies: 52, memorialAttendance: 201 },
+    { country: 'Antigua', continent: 'Amérique du Nord', population: 104000, maxProcl: 468, proportion: 232, avgProcl: 449, growth: -3, baptized: 15, pioneers: 49, congregations: 7, bibleStudies: 287, memorialAttendance: 1264 },
+    { country: 'Argentine', continent: 'Amérique du Sud', population: 46235000, maxProcl: 156673, proportion: 298, avgProcl: 154970, growth: 1, baptized: 4612, pioneers: 37500, congregations: 1928, bibleStudies: 81696, memorialAttendance: 307955 },
+    { country: 'Arménie', continent: 'Asie', population: 3040000, maxProcl: 11575, proportion: 267, avgProcl: 11388, growth: 5, baptized: 396, pioneers: 2558, congregations: 128, bibleStudies: 4626, memorialAttendance: 25606 },
+    { country: 'Aruba', continent: 'Amérique du Sud', population: 106000, maxProcl: 1112, proportion: 98, avgProcl: 1086, growth: 1, baptized: 24, pioneers: 157, congregations: 13, bibleStudies: 606, memorialAttendance: 2662 },
+    { country: 'Australie', continent: 'Océanie', population: 27317000, maxProcl: 71726, proportion: 384, avgProcl: 71140, growth: 1, baptized: 1696, pioneers: 9894, congregations: 717, bibleStudies: 20683, memorialAttendance: 115566 },
+    { country: 'Autriche', continent: 'Europe', population: 9105000, maxProcl: 22630, proportion: 406, avgProcl: 22449, growth: 1, baptized: 306, pioneers: 2684, congregations: 283, bibleStudies: 6919, memorialAttendance: 35446 },
+    { country: 'Azerbaïdjan', continent: 'Asie', population: 10303000, maxProcl: 2072, proportion: 5581, avgProcl: 1846, growth: -9, baptized: 60, pioneers: 574, congregations: 29, bibleStudies: 1737, memorialAttendance: 3866 },
+    { country: 'Bahamas', continent: 'Amérique du Nord', population: 415000, maxProcl: 1723, proportion: 253, avgProcl: 1643, growth: -3, baptized: 42, pioneers: 315, congregations: 28, bibleStudies: 1284, memorialAttendance: 4361 },
+    { country: 'Bangladesh', continent: 'Asie', population: 174701000, maxProcl: 388, proportion: 470892, avgProcl: 371, growth: 10, baptized: 33, pioneers: 140, congregations: 11, bibleStudies: 492, memorialAttendance: 1116 },
+    { country: 'Barbade', continent: 'Amérique du Nord', population: 282000, maxProcl: 2356, proportion: 122, avgProcl: 2318, growth: 1, baptized: 40, pioneers: 222, congregations: 30, bibleStudies: 1438, memorialAttendance: 5957 },
+    { country: 'Belgique', continent: 'Europe', population: 11764000, maxProcl: 26568, proportion: 446, avgProcl: 26359, growth: 1, baptized: 541, pioneers: 2784, congregations: 330, bibleStudies: 9628, memorialAttendance: 45170 },
+    { country: 'Bélize', continent: 'Amérique du Nord', population: 411000, maxProcl: 2494, proportion: 167, avgProcl: 2456, growth: 0, baptized: 98, pioneers: 475, congregations: 52, bibleStudies: 2031, memorialAttendance: 7598 },
+    { country: 'Bénin', continent: 'Afrique', population: 14463000, maxProcl: 15596, proportion: 971, avgProcl: 14896, growth: 6, baptized: 815, pioneers: 2384, congregations: 283, bibleStudies: 29160, memorialAttendance: 49214 },
+    { country: 'Bermudes', continent: 'Amérique du Nord', population: 64000, maxProcl: 425, proportion: 164, avgProcl: 391, growth: 2, baptized: 0, pioneers: 71, congregations: 5, bibleStudies: 153, memorialAttendance: 850 },
+    { country: 'Biélorussie', continent: 'Europe', population: 9156000, maxProcl: 6100, proportion: 1508, avgProcl: 6070, growth: 0, baptized: 111, pioneers: 1587, congregations: 81, bibleStudies: 2722, memorialAttendance: 10711 },
+    { country: 'Birmanie', continent: 'Asie', population: 56624000, maxProcl: 5296, proportion: 10845, avgProcl: 5221, growth: 2, baptized: 359, pioneers: 1093, congregations: 98, bibleStudies: 5747, memorialAttendance: 11948 },
+    { country: 'Bolivie', continent: 'Amérique du Sud', population: 12567000, maxProcl: 30258, proportion: 423, avgProcl: 29693, growth: 2, baptized: 1017, pioneers: 9229, congregations: 452, bibleStudies: 32749, memorialAttendance: 79880 },
+    { country: 'Bonaire', continent: 'Amérique du Sud', population: 25000, maxProcl: 148, proportion: 176, avgProcl: 142, growth: 8, baptized: 0, pioneers: 28, congregations: 2, bibleStudies: 116, memorialAttendance: 423 },
+    { country: 'Bosnie-Herzégovine', continent: 'Europe', population: 3194000, maxProcl: 955, proportion: 3420, avgProcl: 934, growth: -1, baptized: 12, pioneers: 190, congregations: 16, bibleStudies: 190, memorialAttendance: 1400 },
+    { country: 'Botswana', continent: 'Afrique', population: 2360000, maxProcl: 2473, proportion: 1002, avgProcl: 2355, growth: 2, baptized: 142, pioneers: 403, congregations: 43, bibleStudies: 3629, memorialAttendance: 6321 },
+    { country: 'Brésil', continent: 'Amérique du Sud', population: 203081000, maxProcl: 926480, proportion: 222, avgProcl: 913789, growth: 2, baptized: 27652, pioneers: 180508, congregations: 12704, bibleStudies: 524507, memorialAttendance: 1810952 },
+    { country: 'Bulgarie', continent: 'Europe', population: 6448000, maxProcl: 2953, proportion: 2226, avgProcl: 2897, growth: 4, baptized: 94, pioneers: 835, congregations: 57, bibleStudies: 1817, memorialAttendance: 6475 },
+    { country: 'Burkina', continent: 'Afrique', population: 23840000, maxProcl: 2123, proportion: 12417, avgProcl: 1920, growth: 5, baptized: 85, pioneers: 279, congregations: 55, bibleStudies: 2459, memorialAttendance: 4984 },
+    { country: 'Burundi', continent: 'Afrique', population: 13345000, maxProcl: 20040, proportion: 713, avgProcl: 18729, growth: 8, baptized: 1663, pioneers: 3620, congregations: 394, bibleStudies: 39820, memorialAttendance: 77037 },
+    { country: 'Caïman (îles)', continent: 'Amérique du Nord', population: 86000, maxProcl: 304, proportion: 293, avgProcl: 294, growth: 5, baptized: 0, pioneers: 45, congregations: 3, bibleStudies: 174, memorialAttendance: 757 },
+    { country: 'Cambodge', continent: 'Asie', population: 17091000, maxProcl: 1213, proportion: 14721, avgProcl: 1161, growth: 5, baptized: 56, pioneers: 571, congregations: 21, bibleStudies: 1454, memorialAttendance: 2956 },
+    { country: 'Cameroun', continent: 'Afrique', population: 28608000, maxProcl: 44670, proportion: 648, avgProcl: 44144, growth: 3, baptized: 2128, pioneers: 7109, congregations: 579, bibleStudies: 57745, memorialAttendance: 109064 },
+    { country: 'Canada', continent: 'Amérique du Nord', population: 41013000, maxProcl: 124407, proportion: 335, avgProcl: 122291, growth: 3, baptized: 1867, pioneers: 18609, congregations: 1159, bibleStudies: 40981, memorialAttendance: 196562 },
+    { country: 'Cap-Vert', continent: 'Afrique', population: 604000, maxProcl: 2280, proportion: 270, avgProcl: 2239, growth: 0, baptized: 89, pioneers: 455, congregations: 35, bibleStudies: 3329, memorialAttendance: 7595 },
+    { country: 'Centrafrique', continent: 'Afrique', population: 5916000, maxProcl: 3352, proportion: 1867, avgProcl: 3169, growth: 11, baptized: 269, pioneers: 402, congregations: 69, bibleStudies: 9044, memorialAttendance: 26006 },
+    { country: 'Chili', continent: 'Amérique du Sud', population: 20086000, maxProcl: 88592, proportion: 230, avgProcl: 87419, growth: 2, baptized: 2333, pioneers: 21963, congregations: 974, bibleStudies: 41097, memorialAttendance: 188741 },
+    { country: 'Chuuk', continent: 'Océanie', population: 54000, maxProcl: 32, proportion: 1929, avgProcl: 28, growth: 22, baptized: 6, pioneers: 7, congregations: 2, bibleStudies: 56, memorialAttendance: 143 },
+    { country: 'Chypre', continent: 'Europe', population: 1268000, maxProcl: 3171, proportion: 406, avgProcl: 3126, growth: 3, baptized: 72, pioneers: 714, congregations: 42, bibleStudies: 1485, memorialAttendance: 5723 },
+    { country: 'Colombie', continent: 'Amérique du Sud', population: 52215000, maxProcl: 191405, proportion: 277, avgProcl: 188819, growth: 2, baptized: 5775, pioneers: 39886, congregations: 2306, bibleStudies: 147916, memorialAttendance: 552793 },
+    { country: 'Congo', continent: 'Afrique', population: 6244000, maxProcl: 10303, proportion: 652, avgProcl: 9579, growth: 7, baptized: 598, pioneers: 1804, congregations: 131, bibleStudies: 25481, memorialAttendance: 33768 },
+    { country: 'Congo (République dém. du)', continent: 'Afrique', population: 105625000, maxProcl: 280107, proportion: 396, avgProcl: 266689, growth: 9, baptized: 19017, pioneers: 31097, congregations: 4590, bibleStudies: 709804, memorialAttendance: 1403269 },
+    { country: 'Cook (îles)', continent: 'Océanie', population: 20000, maxProcl: 204, proportion: 103, avgProcl: 194, growth: 5, baptized: 6, pioneers: 36, congregations: 3, bibleStudies: 91, memorialAttendance: 572 },
+    { country: 'Corée du Sud', continent: 'Asie', population: 51285000, maxProcl: 106036, proportion: 484, avgProcl: 105873, growth: 0, baptized: 1868, pioneers: 54342, congregations: 1245, bibleStudies: 35731, memorialAttendance: 137662 },
+    { country: 'Costa Rica', continent: 'Amérique du Nord', population: 5247000, maxProcl: 32501, proportion: 163, avgProcl: 32175, growth: 1, baptized: 852, pioneers: 5136, congregations: 422, bibleStudies: 19495, memorialAttendance: 70135 },
+    { country: 'Côte d’Ivoire', continent: 'Afrique', population: 31934000, maxProcl: 13331, proportion: 2502, avgProcl: 12761, growth: 6, baptized: 532, pioneers: 1754, congregations: 231, bibleStudies: 22040, memorialAttendance: 57615 },
+    { country: 'Croatie', continent: 'Europe', population: 3851000, maxProcl: 4671, proportion: 835, avgProcl: 4612, growth: -1, baptized: 47, pioneers: 474, congregations: 56, bibleStudies: 853, memorialAttendance: 7179 },
+    { country: 'Cuba', continent: 'Amérique du Nord', population: 10056000, maxProcl: 84508, proportion: 120, avgProcl: 83579, growth: -3, baptized: 1416, pioneers: 10155, congregations: 1315, bibleStudies: 83462, memorialAttendance: 194715 },
+    { country: 'Curaçao', continent: 'Amérique du Sud', population: 149000, maxProcl: 1946, proportion: 78, avgProcl: 1906, growth: -2, baptized: 44, pioneers: 278, congregations: 24, bibleStudies: 1240, memorialAttendance: 4963 },
+    { country: 'Danemark', continent: 'Europe', population: 5970000, maxProcl: 14667, proportion: 409, avgProcl: 14579, growth: 1, baptized: 213, pioneers: 1502, congregations: 173, bibleStudies: 3780, memorialAttendance: 20690 },
+    { country: 'Dominicaine (République)', continent: 'Amérique du Nord', population: 11434000, maxProcl: 38466, proportion: 300, avgProcl: 38107, growth: 0, baptized: 1115, pioneers: 8482, congregations: 532, bibleStudies: 44933, memorialAttendance: 117648 },
+    { country: 'Dominique', continent: 'Amérique du Nord', population: 73000, maxProcl: 397, proportion: 190, avgProcl: 385, growth: -2, baptized: 2, pioneers: 57, congregations: 10, bibleStudies: 438, memorialAttendance: 1240 },
+    { country: 'Équateur', continent: 'Amérique du Sud', population: 17893000, maxProcl: 102793, proportion: 177, avgProcl: 100824, growth: 2, baptized: 4156, pioneers: 25316, congregations: 1196, bibleStudies: 94966, memorialAttendance: 275229 },
+    { country: 'Espagne', continent: 'Europe', population: 48693000, maxProcl: 125359, proportion: 391, avgProcl: 124427, growth: 3, baptized: 2299, pioneers: 26976, congregations: 1369, bibleStudies: 38040, memorialAttendance: 208794 },
+    { country: 'Estonie', continent: 'Europe', population: 1375000, maxProcl: 4122, proportion: 334, avgProcl: 4114, growth: 1, baptized: 64, pioneers: 701, congregations: 53, bibleStudies: 1383, memorialAttendance: 6630 },
+    { country: 'Eswatini', continent: 'Afrique', population: 1222000, maxProcl: 3420, proportion: 370, avgProcl: 3301, growth: 4, baptized: 149, pioneers: 428, congregations: 74, bibleStudies: 4551, memorialAttendance: 8116 },
+    { country: 'États-Unis', continent: 'Amérique du Nord', population: 336751000, maxProcl: 1259538, proportion: 272, avgProcl: 1236274, growth: 1, baptized: 23367, pioneers: 243002, congregations: 11858, bibleStudies: 455800, memorialAttendance: 2408873 },
+    { country: 'Éthiopie', continent: 'Afrique', population: 129720000, maxProcl: 12166, proportion: 10982, avgProcl: 11812, growth: 5, baptized: 675, pioneers: 3076, congregations: 204, bibleStudies: 8545, memorialAttendance: 27357 },
+    { country: 'Féroé (îles)', continent: 'Europe', population: 55000, maxProcl: 146, proportion: 414, avgProcl: 133, growth: 1, baptized: 1, pioneers: 20, congregations: 4, bibleStudies: 64, memorialAttendance: 197 },
+    { country: 'Fidji', continent: 'Océanie', population: 901000, maxProcl: 3001, proportion: 310, avgProcl: 2907, growth: -1, baptized: 171, pioneers: 557, congregations: 59, bibleStudies: 3561, memorialAttendance: 12047 },
+    { country: 'Finlande', continent: 'Europe', population: 5604000, maxProcl: 18384, proportion: 308, avgProcl: 18224, growth: 1, baptized: 284, pioneers: 2551, congregations: 270, bibleStudies: 6801, memorialAttendance: 25989 },
+    { country: 'France', continent: 'Europe', population: 68128000, maxProcl: 139932, proportion: 491, avgProcl: 138624, growth: 1, baptized: 2890, pioneers: 21933, congregations: 1461, bibleStudies: 42784, memorialAttendance: 233207 },
+    { country: 'Gabon', continent: 'Afrique', population: 2384000, maxProcl: 4895, proportion: 515, avgProcl: 4629, growth: 4, baptized: 251, pioneers: 742, congregations: 61, bibleStudies: 8107, memorialAttendance: 13343 },
+    { country: 'Gambie', continent: 'Afrique', population: 2760000, maxProcl: 334, proportion: 8790, avgProcl: 314, growth: 7, baptized: 10, pioneers: 59, congregations: 6, bibleStudies: 438, memorialAttendance: 774 },
+    { country: 'Géorgie', continent: 'Asie', population: 3695000, maxProcl: 19372, proportion: 193, avgProcl: 19130, growth: 2, baptized: 685, pioneers: 4009, congregations: 217, bibleStudies: 4830, memorialAttendance: 33706 },
+    { country: 'Ghana', continent: 'Afrique', population: 33008000, maxProcl: 159140, proportion: 213, avgProcl: 155026, growth: 3, baptized: 8877, pioneers: 19208, congregations: 2585, bibleStudies: 326967, memorialAttendance: 402031 },
+    { country: 'Gibraltar', continent: 'Europe', population: 34000, maxProcl: 168, proportion: 207, avgProcl: 164, growth: 6, baptized: 0, pioneers: 34, congregations: 2, bibleStudies: 27, memorialAttendance: 225 },
+    { country: 'Grande-Bretagne', continent: 'Europe', population: 69196000, maxProcl: 144579, proportion: 484, avgProcl: 143033, growth: 2, baptized: 2395, pioneers: 21632, congregations: 1579, bibleStudies: 43452, memorialAttendance: 229344 },
+    { country: 'Grèce', continent: 'Europe', population: 10482000, maxProcl: 27760, proportion: 379, avgProcl: 27661, growth: 0, baptized: 413, pioneers: 5003, congregations: 340, bibleStudies: 6763, memorialAttendance: 43584 },
+    { country: 'Grenade', continent: 'Amérique du Nord', population: 127000, maxProcl: 536, proportion: 247, avgProcl: 514, growth: -2, baptized: 9, pioneers: 83, congregations: 9, bibleStudies: 330, memorialAttendance: 1408 },
+    { country: 'Groenland', continent: 'Amérique du Nord', population: 57000, maxProcl: 132, proportion: 460, avgProcl: 124, growth: 9, baptized: 0, pioneers: 38, congregations: 5, bibleStudies: 70, memorialAttendance: 330 },
+    { country: 'Guadeloupe', continent: 'Amérique du Nord', population: 379000, maxProcl: 8524, proportion: 45, avgProcl: 8407, growth: 1, baptized: 233, pioneers: 1084, congregations: 115, bibleStudies: 5413, memorialAttendance: 19236 },
+    { country: 'Guam', continent: 'Océanie', population: 174000, maxProcl: 761, proportion: 240, avgProcl: 726, growth: 5, baptized: 11, pioneers: 182, congregations: 9, bibleStudies: 555, memorialAttendance: 1650 },
+    { country: 'Guatémala', continent: 'Amérique du Nord', population: 17843000, maxProcl: 39191, proportion: 459, avgProcl: 38886, growth: 0, baptized: 1109, pioneers: 7266, congregations: 788, bibleStudies: 27129, memorialAttendance: 94610 },
+    { country: 'Guinée', continent: 'Afrique', population: 14529000, maxProcl: 1367, proportion: 11605, avgProcl: 1252, growth: 9, baptized: 104, pioneers: 195, congregations: 30, bibleStudies: 2495, memorialAttendance: 5018 },
+    { country: 'Guinée-Bissao', continent: 'Afrique', population: 2197000, maxProcl: 215, proportion: 10665, avgProcl: 206, growth: 7, baptized: 13, pioneers: 52, congregations: 4, bibleStudies: 492, memorialAttendance: 792 },
+    { country: 'Guinée équatoriale', continent: 'Afrique', population: 1543000, maxProcl: 2863, proportion: 583, avgProcl: 2646, growth: 9, baptized: 181, pioneers: 386, congregations: 34, bibleStudies: 7321, memorialAttendance: 8482 },
+    { country: 'Guyana', continent: 'Amérique du Sud', population: 820000, maxProcl: 3324, proportion: 253, avgProcl: 3238, growth: 1, baptized: 98, pioneers: 507, congregations: 45, bibleStudies: 3219, memorialAttendance: 12288 },
+    { country: 'Guyane', continent: 'Amérique du Sud', population: 309000, maxProcl: 3064, proportion: 105, avgProcl: 2944, growth: 3, baptized: 108, pioneers: 687, congregations: 42, bibleStudies: 4596, memorialAttendance: 11545 },
+    { country: 'Haïti', continent: 'Amérique du Nord', population: 11867000, maxProcl: 16821, proportion: 715, avgProcl: 16589, growth: -4, baptized: 754, pioneers: 2748, congregations: 251, bibleStudies: 26370, memorialAttendance: 70473 },
+    { country: 'Honduras', continent: 'Amérique du Nord', population: 9876000, maxProcl: 21638, proportion: 458, avgProcl: 21546, growth: 0, baptized: 649, pioneers: 4692, congregations: 406, bibleStudies: 16403, memorialAttendance: 57560 },
+    { country: 'Hong Kong', continent: 'Asie', population: 7497000, maxProcl: 5530, proportion: 1367, avgProcl: 5485, growth: 1, baptized: 259, pioneers: 1536, congregations: 72, bibleStudies: 3935, memorialAttendance: 9661 },
+    { country: 'Hongrie', continent: 'Europe', population: 9600000, maxProcl: 21559, proportion: 449, avgProcl: 21401, growth: 1, baptized: 487, pioneers: 2402, congregations: 279, bibleStudies: 6278, memorialAttendance: 38516 },
+    { country: 'Inde', continent: 'Asie', population: 1441720000, maxProcl: 59122, proportion: 24716, avgProcl: 58332, growth: 2, baptized: 3102, pioneers: 11958, congregations: 1017, bibleStudies: 57418, memorialAttendance: 158775 },
+    { country: 'Indonésie', continent: 'Asie', population: 281604000, maxProcl: 32345, proportion: 8958, avgProcl: 31435, growth: 3, baptized: 1205, pioneers: 6782, congregations: 488, bibleStudies: 25288, memorialAttendance: 61140 },
+    { country: 'Irlande', continent: 'Europe', population: 7192000, maxProcl: 8269, proportion: 892, avgProcl: 8063, growth: 4, baptized: 125, pioneers: 1638, congregations: 122, bibleStudies: 2712, memorialAttendance: 13860 },
+    { country: 'Islande', continent: 'Europe', population: 394000, maxProcl: 452, proportion: 895, avgProcl: 440, growth: 10, baptized: 5, pioneers: 97, congregations: 7, bibleStudies: 170, memorialAttendance: 724 },
+    { country: 'Israël', continent: 'Asie', population: 9907000, maxProcl: 2127, proportion: 4733, avgProcl: 2093, growth: 0, baptized: 38, pioneers: 422, congregations: 33, bibleStudies: 978, memorialAttendance: 3762 },
+    { country: 'Italie', continent: 'Europe', population: 58990000, maxProcl: 251493, proportion: 235, avgProcl: 250754, growth: 0, baptized: 4261, pioneers: 50661, congregations: 2723, bibleStudies: 76648, memorialAttendance: 420423 },
+    { country: 'Jamaïque', continent: 'Amérique du Nord', population: 2825000, maxProcl: 11088, proportion: 262, avgProcl: 10769, growth: 0, baptized: 266, pioneers: 1566, congregations: 153, bibleStudies: 6462, memorialAttendance: 33310 },
+    { country: 'Japon', continent: 'Asie', population: 124143000, maxProcl: 214020, proportion: 581, avgProcl: 213719, growth: 0, baptized: 1936, pioneers: 72546, congregations: 2866, bibleStudies: 87769, memorialAttendance: 290165 },
+    { country: 'Kazakhstan', continent: 'Asie', population: 20140000, maxProcl: 17188, proportion: 1178, avgProcl: 17093, growth: 0, baptized: 410, pioneers: 4823, congregations: 224, bibleStudies: 6402, memorialAttendance: 29488 },
+    { country: 'Kenya', continent: 'Afrique', population: 52428000, maxProcl: 33107, proportion: 1665, avgProcl: 31492, growth: 6, baptized: 1800, pioneers: 4466, congregations: 598, bibleStudies: 43530, memorialAttendance: 80371 },
+    { country: 'Kirghizstan', continent: 'Asie', population: 7162000, maxProcl: 5268, proportion: 1394, avgProcl: 5138, growth: 1, baptized: 167, pioneers: 1560, congregations: 78, bibleStudies: 2597, memorialAttendance: 10211 },
+    { country: 'Kiribati', continent: 'Océanie', population: 134000, maxProcl: 155, proportion: 978, avgProcl: 137, growth: 41, baptized: 29, pioneers: 39, congregations: 2, bibleStudies: 260, memorialAttendance: 430 },
+    { country: 'Kosovo', continent: 'Europe', population: 1587000, maxProcl: 251, proportion: 6640, avgProcl: 239, growth: 3, baptized: 1, pioneers: 108, congregations: 7, bibleStudies: 233, memorialAttendance: 478 },
+    { country: 'Kosrae', continent: 'Océanie', population: 8000, maxProcl: 10, proportion: 889, avgProcl: 9, growth: 0, baptized: 4, pioneers: 1, congregations: 0, bibleStudies: 24, memorialAttendance: 45 },
+    { country: 'Lesotho', continent: 'Afrique', population: 2337000, maxProcl: 4340, proportion: 569, avgProcl: 4104, growth: 6, baptized: 110, pioneers: 714, congregations: 82, bibleStudies: 6023, memorialAttendance: 11737 },
+    { country: 'Lettonie', continent: 'Europe', population: 1872000, maxProcl: 2115, proportion: 899, avgProcl: 2082, growth: -1, baptized: 23, pioneers: 383, congregations: 29, bibleStudies: 769, memorialAttendance: 3301 },
+    { country: 'Libéria', continent: 'Afrique', population: 5613000, maxProcl: 8800, proportion: 706, avgProcl: 7954, growth: 9, baptized: 657, pioneers: 1028, congregations: 150, bibleStudies: 22732, memorialAttendance: 42384 },
+    { country: 'Liechtenstein', continent: 'Europe', population: 40000, maxProcl: 105, proportion: 392, avgProcl: 102, growth: 9, baptized: 0, pioneers: 12, congregations: 1, bibleStudies: 23, memorialAttendance: 181 },
+    { country: 'Lituanie', continent: 'Europe', population: 2893000, maxProcl: 2925, proportion: 998, avgProcl: 2899, growth: -1, baptized: 42, pioneers: 476, congregations: 39, bibleStudies: 905, memorialAttendance: 4601 },
+    { country: 'Luxembourg', continent: 'Europe', population: 672000, maxProcl: 2240, proportion: 304, avgProcl: 2209, growth: 2, baptized: 0, pioneers: 288, congregations: 32, bibleStudies: 800, memorialAttendance: 4116 },
+    { country: 'Macao', continent: 'Asie', population: 686000, maxProcl: 413, proportion: 1759, avgProcl: 390, growth: 6, baptized: 2, pioneers: 128, congregations: 6, bibleStudies: 407, memorialAttendance: 914 },
+    { country: 'Macédoine du Nord', continent: 'Europe', population: 1830000, maxProcl: 1276, proportion: 1473, avgProcl: 1242, growth: 2, baptized: 24, pioneers: 195, congregations: 23, bibleStudies: 508, memorialAttendance: 2529 },
+    { country: 'Madagascar', continent: 'Afrique', population: 31965000, maxProcl: 43217, proportion: 768, avgProcl: 41619, growth: 8, baptized: 3358, pioneers: 8219, congregations: 863, bibleStudies: 80802, memorialAttendance: 169469 },
+    { country: 'Madère', continent: 'Europe', population: 257000, maxProcl: 1199, proportion: 217, avgProcl: 1186, growth: 1, baptized: 19, pioneers: 167, congregations: 19, bibleStudies: 395, memorialAttendance: 1921 },
+    { country: 'Malaisie', continent: 'Asie', population: 33380000, maxProcl: 5697, proportion: 5908, avgProcl: 5650, growth: 1, baptized: 190, pioneers: 1628, congregations: 118, bibleStudies: 5528, memorialAttendance: 12315 },
+    { country: 'Malawi', continent: 'Afrique', population: 21655000, maxProcl: 117602, proportion: 205, avgProcl: 105680, growth: 7, baptized: 9804, pioneers: 8740, congregations: 1997, bibleStudies: 141711, memorialAttendance: 414897 },
+    { country: 'Mali', continent: 'Afrique', population: 24479000, maxProcl: 378, proportion: 67809, avgProcl: 361, growth: 3, baptized: 15, pioneers: 47, congregations: 6, bibleStudies: 467, memorialAttendance: 934 },
+    { country: 'Malouines (îles)', continent: 'Amérique du Sud', population: 4000, maxProcl: 13, proportion: 400, avgProcl: 10, growth: -17, baptized: 1, pioneers: 5, congregations: 1, bibleStudies: 10, memorialAttendance: 21 },
+    { country: 'Malte', continent: 'Europe', population: 542000, maxProcl: 958, proportion: 644, avgProcl: 841, growth: 0, baptized: 23, pioneers: 162, congregations: 10, bibleStudies: 270, memorialAttendance: 1503 },
+    { country: 'Marshall', continent: 'Océanie', population: 55000, maxProcl: 136, proportion: 420, avgProcl: 131, growth: 7, baptized: 5, pioneers: 27, congregations: 4, bibleStudies: 242, memorialAttendance: 651 },
+    { country: 'Martinique', continent: 'Amérique du Nord', population: 350000, maxProcl: 4847, proportion: 73, avgProcl: 4776, growth: -1, baptized: 98, pioneers: 795, congregations: 56, bibleStudies: 3350, memorialAttendance: 10581 },
+    { country: 'Maurice', continent: 'Afrique', population: 1218000, maxProcl: 2160, proportion: 573, avgProcl: 2125, growth: 2, baptized: 59, pioneers: 349, congregations: 27, bibleStudies: 1671, memorialAttendance: 5036 },
+    { country: 'Mayotte', continent: 'Afrique', population: 321000, maxProcl: 181, proportion: 2229, avgProcl: 144, growth: 7, baptized: 6, pioneers: 45, congregations: 3, bibleStudies: 205, memorialAttendance: 363 },
+    { country: 'Mexique', continent: 'Amérique du Nord', population: 130861000, maxProcl: 878990, proportion: 151, avgProcl: 866247, growth: 1, baptized: 24946, pioneers: 165269, congregations: 12310, bibleStudies: 584904, memorialAttendance: 2157985 },
+    { country: 'Moldavie', continent: 'Europe', population: 2888000, maxProcl: 20538, proportion: 147, avgProcl: 19673, growth: 10, baptized: 461, pioneers: 3036, congregations: 191, bibleStudies: 7284, memorialAttendance: 36328 },
+    { country: 'Monaco', continent: 'Europe', population: 38000, maxProcl: 46, proportion: 864, avgProcl: 44, growth: 100, baptized: 0, pioneers: 11, congregations: 1, bibleStudies: 17, memorialAttendance: 96 },
+    { country: 'Mongolie', continent: 'Asie', population: 3505000, maxProcl: 449, proportion: 7948, avgProcl: 441, growth: 9, baptized: 15, pioneers: 206, congregations: 8, bibleStudies: 556, memorialAttendance: 1216 },
+    { country: 'Monténégro', continent: 'Europe', population: 638000, maxProcl: 432, proportion: 1541, avgProcl: 414, growth: 12, baptized: 1, pioneers: 141, congregations: 7, bibleStudies: 119, memorialAttendance: 769 },
+    { country: 'Montserrat', continent: 'Amérique du Nord', population: 4000, maxProcl: 33, proportion: 133, avgProcl: 30, growth: -14, baptized: 0, pioneers: 11, congregations: 1, bibleStudies: 41, memorialAttendance: 101 },
+    { country: 'Mozambique', continent: 'Afrique', population: 32420000, maxProcl: 99705, proportion: 352, avgProcl: 91998, growth: 13, baptized: 10775, pioneers: 10742, congregations: 1942, bibleStudies: 163859, memorialAttendance: 411440 },
+    { country: 'Namibie', continent: 'Afrique', population: 3020000, maxProcl: 2962, proportion: 1079, avgProcl: 2800, growth: 8, baptized: 229, pioneers: 404, congregations: 50, bibleStudies: 4451, memorialAttendance: 9706 },
+    { country: 'Nauru', continent: 'Océanie', population: 12000, maxProcl: 17, proportion: 857, avgProcl: 14, growth: -7, baptized: 1, pioneers: 2, congregations: 1, bibleStudies: 15, memorialAttendance: 154 },
+    { country: 'Népal', continent: 'Asie', population: 29651000, maxProcl: 2913, proportion: 10324, avgProcl: 2872, growth: 3, baptized: 179, pioneers: 896, congregations: 58, bibleStudies: 3827, memorialAttendance: 7477 },
+    { country: 'Nicaragua', continent: 'Amérique du Nord', population: 6916000, maxProcl: 28885, proportion: 242, avgProcl: 28536, growth: 0, baptized: 873, pioneers: 5460, congregations: 440, bibleStudies: 23091, memorialAttendance: 79346 },
+    { country: 'Niger', continent: 'Afrique', population: 26312000, maxProcl: 378, proportion: 82225, avgProcl: 320, growth: -1, baptized: 21, pioneers: 52, congregations: 9, bibleStudies: 427, memorialAttendance: 897 },
+    { country: 'Nigéria', continent: 'Afrique', population: 232679000, maxProcl: 406732, proportion: 596, avgProcl: 390623, growth: 4, baptized: 18930, pioneers: 47987, congregations: 6145, bibleStudies: 748645, memorialAttendance: 857080 },
+    { country: 'Niue', continent: 'Océanie', population: 2000, maxProcl: 20, proportion: 105, avgProcl: 19, growth: 0, baptized: 4, pioneers: 1, congregations: 0, bibleStudies: 9, memorialAttendance: 68 },
+    { country: 'Norvège', continent: 'Europe', population: 5562000, maxProcl: 12047, proportion: 464, avgProcl: 11977, growth: 1, baptized: 166, pioneers: 1565, congregations: 161, bibleStudies: 3181, memorialAttendance: 17986 },
+    { country: 'Nouvelle-Calédonie', continent: 'Océanie', population: 269000, maxProcl: 2745, proportion: 101, avgProcl: 2660, growth: 1, baptized: 108, pioneers: 366, congregations: 34, bibleStudies: 2516, memorialAttendance: 7833 },
+    { country: 'Nouvelle-Zélande', continent: 'Océanie', population: 5339000, maxProcl: 14732, proportion: 366, avgProcl: 14576, growth: 1, baptized: 411, pioneers: 2009, congregations: 168, bibleStudies: 5673, memorialAttendance: 27088 },
+    { country: 'Ouganda', continent: 'Afrique', population: 45900000, maxProcl: 10261, proportion: 4632, avgProcl: 9909, growth: 5, baptized: 698, pioneers: 1467, congregations: 183, bibleStudies: 22678, memorialAttendance: 36204 },
+    { country: 'Pakistan', continent: 'Asie', population: 241499000, maxProcl: 1265, proportion: 207117, avgProcl: 1166, growth: 4, baptized: 59, pioneers: 120, congregations: 16, bibleStudies: 973, memorialAttendance: 4389 },
+    { country: 'Palaos', continent: 'Océanie', population: 18000, maxProcl: 77, proportion: 257, avgProcl: 70, growth: -3, baptized: 1, pioneers: 26, congregations: 2, bibleStudies: 124, memorialAttendance: 182 },
+    { country: 'Panama', continent: 'Amérique du Nord', population: 4065000, maxProcl: 18867, proportion: 218, avgProcl: 18663, growth: 2, baptized: 609, pioneers: 3972, congregations: 302, bibleStudies: 15790, memorialAttendance: 53614 },
+    { country: 'Papouasie-Nouvelle-Guinée', continent: 'Océanie', population: 11782000, maxProcl: 5130, proportion: 2394, avgProcl: 4921, growth: 4, baptized: 176, pioneers: 997, congregations: 170, bibleStudies: 7854, memorialAttendance: 42591 },
+    { country: 'Paraguay', continent: 'Amérique du Sud', population: 7656000, maxProcl: 11532, proportion: 678, avgProcl: 11285, growth: 3, baptized: 344, pioneers: 2613, congregations: 183, bibleStudies: 10269, memorialAttendance: 24613 },
+    { country: 'Pays-Bas', continent: 'Europe', population: 17951000, maxProcl: 29618, proportion: 610, avgProcl: 29425, growth: 1, baptized: 456, pioneers: 3190, congregations: 340, bibleStudies: 8494, memorialAttendance: 48810 },
+    { country: 'Pérou', continent: 'Amérique du Sud', population: 34038000, maxProcl: 138118, proportion: 254, avgProcl: 134261, growth: 3, baptized: 5453, pioneers: 36455, congregations: 1672, bibleStudies: 138835, memorialAttendance: 380481 },
+    { country: 'Philippines', continent: 'Asie', population: 113000000, maxProcl: 266410, proportion: 439, avgProcl: 257621, growth: 5, baptized: 12201, pioneers: 68764, congregations: 3662, bibleStudies: 252392, memorialAttendance: 680399 },
+    { country: 'Pohnpei', continent: 'Océanie', population: 34000, maxProcl: 57, proportion: 642, avgProcl: 53, growth: 6, baptized: 1, pioneers: 16, congregations: 1, bibleStudies: 97, memorialAttendance: 226 },
+    { country: 'Pologne', continent: 'Europe', population: 37582000, maxProcl: 114894, proportion: 328, avgProcl: 114437, growth: -1, baptized: 1465, pioneers: 11663, congregations: 1268, bibleStudies: 24114, memorialAttendance: 181252 },
+    { country: 'Porto Rico', continent: 'Amérique du Nord', population: 3222000, maxProcl: 23000, proportion: 142, avgProcl: 22697, growth: 0, baptized: 394, pioneers: 4381, congregations: 226, bibleStudies: 7090, memorialAttendance: 43407 },
+    { country: 'Portugal', continent: 'Europe', population: 10142000, maxProcl: 54601, proportion: 189, avgProcl: 53651, growth: 3, baptized: 1046, pioneers: 7239, congregations: 649, bibleStudies: 20219, memorialAttendance: 97193 },
+    { country: 'Réunion', continent: 'Afrique', population: 886000, maxProcl: 3602, proportion: 251, avgProcl: 3531, growth: 2, baptized: 85, pioneers: 621, congregations: 41, bibleStudies: 1593, memorialAttendance: 6837 },
+    { country: 'Rodrigues', continent: 'Afrique', population: 45000, maxProcl: 69, proportion: 682, avgProcl: 66, growth: 2, baptized: 1, pioneers: 8, congregations: 1, bibleStudies: 61, memorialAttendance: 174 },
+    { country: 'Rota', continent: 'Océanie', population: 2000, maxProcl: 4, proportion: 1000, avgProcl: 2, growth: -50, baptized: 0, pioneers: 1, congregations: 1, bibleStudies: 2, memorialAttendance: 2 },
+    { country: 'Roumanie', continent: 'Europe', population: 19064000, maxProcl: 40216, proportion: 477, avgProcl: 39965, growth: 1, baptized: 959, pioneers: 6059, congregations: 527, bibleStudies: 16291, memorialAttendance: 83695 },
+    { country: 'Rwanda', continent: 'Afrique', population: 13800000, maxProcl: 37013, proportion: 403, avgProcl: 34252, growth: 8, baptized: 2656, pioneers: 6676, congregations: 633, bibleStudies: 61953, memorialAttendance: 112816 },
+    { country: 'Saba', continent: 'Amérique du Nord', population: 2000, maxProcl: 20, proportion: 125, avgProcl: 16, growth: 0, baptized: 4, pioneers: 1, congregations: 0, bibleStudies: 13, memorialAttendance: 58 },
+    { country: 'Saint-Barthélemy', continent: 'Amérique du Nord', population: 11000, maxProcl: 38, proportion: 314, avgProcl: 35, growth: -5, baptized: 0, pioneers: 5, congregations: 1, bibleStudies: 22, memorialAttendance: 96 },
+    { country: 'Saint-Christophe', continent: 'Amérique du Nord', population: 40000, maxProcl: 246, proportion: 168, avgProcl: 238, growth: -1, baptized: 3, pioneers: 50, congregations: 3, bibleStudies: 182, memorialAttendance: 739 },
+    { country: 'Sainte-Hélène', continent: 'Afrique', population: 4000, maxProcl: 119, proportion: 35, avgProcl: 113, growth: 0, baptized: 3, pioneers: 43, congregations: 0, bibleStudies: 0, memorialAttendance: 268 },
+    { country: 'Sainte-Lucie', continent: 'Amérique du Nord', population: 184000, maxProcl: 800, proportion: 237, avgProcl: 775, growth: 0, baptized: 13, pioneers: 123, congregations: 11, bibleStudies: 535, memorialAttendance: 2205 },
+    { country: 'Saint-Eustache', continent: 'Amérique du Nord', population: 3000, maxProcl: 37, proportion: 103, avgProcl: 29, growth: 7, baptized: 0, pioneers: 7, congregations: 1, bibleStudies: 15, memorialAttendance: 85 },
+    { country: 'Saint-Marin', continent: 'Europe', population: 34000, maxProcl: 212, proportion: 167, avgProcl: 204, growth: 5, baptized: 0, pioneers: 42, congregations: 2, bibleStudies: 69, memorialAttendance: 329 },
+    { country: 'Saint-Martin (franç.)', continent: 'Amérique du Nord', population: 26000, maxProcl: 324, proportion: 88, avgProcl: 296, growth: 6, baptized: 3, pioneers: 36, congregations: 5, bibleStudies: 302, memorialAttendance: 1067 },
+    { country: 'Saint-Martin (néerl.)', continent: 'Amérique du Nord', population: 43000, maxProcl: 308, proportion: 146, avgProcl: 295, growth: -2, baptized: 11, pioneers: 45, congregations: 4, bibleStudies: 184, memorialAttendance: 956 },
+    { country: 'Saint-Pierre-et-Miquelon', continent: 'Amérique du Nord', population: 6000, maxProcl: 18, proportion: 375, avgProcl: 16, growth: -6, baptized: 0, pioneers: 4, congregations: 1, bibleStudies: 12, memorialAttendance: 31 },
+    { country: 'Saint-Vincent-et-les-Grenadines', continent: 'Amérique du Nord', population: 110000, maxProcl: 321, proportion: 377, avgProcl: 292, growth: 4, baptized: 6, pioneers: 48, congregations: 8, bibleStudies: 266, memorialAttendance: 906 },
+    { country: 'Saipan', continent: 'Océanie', population: 43000, maxProcl: 236, proportion: 188, avgProcl: 229, growth: 7, baptized: 17, pioneers: 60, congregations: 3, bibleStudies: 187, memorialAttendance: 546 },
+    { country: 'Salomon', continent: 'Océanie', population: 757000, maxProcl: 1904, proportion: 450, avgProcl: 1681, growth: -2, baptized: 104, pioneers: 240, congregations: 46, bibleStudies: 1719, memorialAttendance: 10678 },
+    { country: 'Salvador', continent: 'Amérique du Nord', population: 6339000, maxProcl: 37271, proportion: 171, avgProcl: 37135, growth: -1, baptized: 772, pioneers: 5638, congregations: 589, bibleStudies: 20172, memorialAttendance: 79753 },
+    { country: 'Samoa', continent: 'Océanie', population: 206000, maxProcl: 600, proportion: 369, avgProcl: 558, growth: 6, baptized: 41, pioneers: 138, congregations: 12, bibleStudies: 615, memorialAttendance: 2587 },
+    { country: 'Samoa américaines', continent: 'Océanie', population: 44000, maxProcl: 152, proportion: 324, avgProcl: 136, growth: 10, baptized: 5, pioneers: 31, congregations: 3, bibleStudies: 126, memorialAttendance: 545 },
+    { country: 'Sao Tomé-et-Principe', continent: 'Afrique', population: 235000, maxProcl: 897, proportion: 279, avgProcl: 841, growth: -4, baptized: 62, pioneers: 180, congregations: 14, bibleStudies: 2378, memorialAttendance: 3459 },
+    { country: 'Sénégal', continent: 'Afrique', population: 18502000, maxProcl: 1606, proportion: 11815, avgProcl: 1566, growth: 4, baptized: 51, pioneers: 243, congregations: 28, bibleStudies: 1781, memorialAttendance: 3264 },
+    { country: 'Serbie', continent: 'Europe', population: 6605000, maxProcl: 3759, proportion: 1783, avgProcl: 3705, growth: 0, baptized: 104, pioneers: 762, congregations: 60, bibleStudies: 1342, memorialAttendance: 7134 },
+    { country: 'Seychelles', continent: 'Afrique', population: 121000, maxProcl: 373, proportion: 351, avgProcl: 345, growth: 2, baptized: 4, pioneers: 42, congregations: 5, bibleStudies: 309, memorialAttendance: 1044 },
+    { country: 'Sierra Leone', continent: 'Afrique', population: 8642000, maxProcl: 2659, proportion: 3539, avgProcl: 2442, growth: 4, baptized: 189, pioneers: 355, congregations: 43, bibleStudies: 4525, memorialAttendance: 9081 },
+    { country: 'Slovaquie', continent: 'Europe', population: 5427000, maxProcl: 11333, proportion: 485, avgProcl: 11191, growth: 0, baptized: 145, pioneers: 1139, congregations: 135, bibleStudies: 2662, memorialAttendance: 21419 },
+    { country: 'Slovénie', continent: 'Europe', population: 2124000, maxProcl: 1735, proportion: 1233, avgProcl: 1722, growth: 0, baptized: 22, pioneers: 291, congregations: 24, bibleStudies: 522, memorialAttendance: 2700 },
+    { country: 'Soudan', continent: 'Afrique', population: 49358000, maxProcl: 367, proportion: 352557, avgProcl: 140, growth: -73, baptized: 22, pioneers: 29, congregations: 3, bibleStudies: 233, memorialAttendance: 42 },
+    { country: 'Soudan du Sud', continent: 'Afrique', population: 15254000, maxProcl: 2319, proportion: 7209, avgProcl: 2116, growth: 22, baptized: 195, pioneers: 332, congregations: 35, bibleStudies: 4252, memorialAttendance: 8313 },
+    { country: 'Sri Lanka', continent: 'Asie', population: 22037000, maxProcl: 7013, proportion: 3191, avgProcl: 6907, growth: -1, baptized: 251, pioneers: 1257, congregations: 95, bibleStudies: 6918, memorialAttendance: 15745 },
+    { country: 'Suède', continent: 'Europe', population: 10549000, maxProcl: 22465, proportion: 471, avgProcl: 22383, growth: 0, baptized: 311, pioneers: 3062, congregations: 274, bibleStudies: 6098, memorialAttendance: 34215 },
+    { country: 'Suisse', continent: 'Europe', population: 8961000, maxProcl: 20367, proportion: 444, avgProcl: 20180, growth: 2, baptized: 356, pioneers: 2380, congregations: 251, bibleStudies: 6542, memorialAttendance: 33366 },
+    { country: 'Suriname', continent: 'Amérique du Sud', population: 634000, maxProcl: 3410, proportion: 201, avgProcl: 3158, growth: 0, baptized: 130, pioneers: 422, congregations: 57, bibleStudies: 3372, memorialAttendance: 9816 },
+    { country: 'Tahiti', continent: 'Océanie', population: 282000, maxProcl: 3305, proportion: 88, avgProcl: 3202, growth: 1, baptized: 90, pioneers: 563, congregations: 46, bibleStudies: 2654, memorialAttendance: 10242 },
+    { country: 'Taïwan', continent: 'Asie', population: 23407000, maxProcl: 11761, proportion: 2015, avgProcl: 11615, growth: 2, baptized: 310, pioneers: 4364, congregations: 178, bibleStudies: 8887, memorialAttendance: 20475 },
+    { country: 'Tanzanie', continent: 'Afrique', population: 61741000, maxProcl: 22347, proportion: 2910, avgProcl: 21217, growth: 7, baptized: 1458, pioneers: 2835, congregations: 418, bibleStudies: 38968, memorialAttendance: 66944 },
+    { country: 'Tchad', continent: 'Afrique', population: 18847000, maxProcl: 1016, proportion: 20309, avgProcl: 928, growth: 11, baptized: 74, pioneers: 120, congregations: 25, bibleStudies: 1137, memorialAttendance: 4647 },
+    { country: 'Tchéquie', continent: 'Europe', population: 10859000, maxProcl: 17296, proportion: 636, avgProcl: 17066, growth: 3, baptized: 310, pioneers: 1939, congregations: 219, bibleStudies: 4827, memorialAttendance: 30629 },
+    { country: 'Territoires palestiniens', continent: 'Asie', population: 5613000, maxProcl: 80, proportion: 71962, avgProcl: 78, growth: 3, baptized: 1, pioneers: 15, congregations: 2, bibleStudies: 57, memorialAttendance: 201 },
+    { country: 'Thaïlande', continent: 'Asie', population: 71668000, maxProcl: 5526, proportion: 13153, avgProcl: 5449, growth: 3, baptized: 164, pioneers: 2121, congregations: 149, bibleStudies: 5136, memorialAttendance: 11118 },
+    { country: 'Timor oriental', continent: 'Asie', population: 1401000, maxProcl: 396, proportion: 3706, avgProcl: 378, growth: -1, baptized: 25, pioneers: 113, congregations: 5, bibleStudies: 472, memorialAttendance: 1048 },
+    { country: 'Tinian', continent: 'Océanie', population: 2000, maxProcl: 10, proportion: 200, avgProcl: 10, growth: 0, baptized: 2, pioneers: 1, congregations: 0, bibleStudies: 12, memorialAttendance: 26 },
+    { country: 'Togo', continent: 'Afrique', population: 9515000, maxProcl: 24471, proportion: 398, avgProcl: 23886, growth: 5, baptized: 1248, pioneers: 3223, congregations: 392, bibleStudies: 52321, memorialAttendance: 70943 },
+    { country: 'Tonga', continent: 'Océanie', population: 104000, maxProcl: 256, proportion: 495, avgProcl: 210, growth: 4, baptized: 11, pioneers: 47, congregations: 3, bibleStudies: 196, memorialAttendance: 594 },
+    { country: 'Trinité-et-Tobago', continent: 'Amérique du Sud', population: 1367000, maxProcl: 10547, proportion: 131, avgProcl: 10449, growth: 0, baptized: 296, pioneers: 1668, congregations: 127, bibleStudies: 7876, memorialAttendance: 26029 },
+    { country: 'Turks-et-Caïcos', continent: 'Amérique du Nord', population: 49000, maxProcl: 352, proportion: 149, avgProcl: 329, growth: 0, baptized: 3, pioneers: 65, congregations: 6, bibleStudies: 341, memorialAttendance: 914 },
+    { country: 'Turquie', continent: 'Asie', population: 85372000, maxProcl: 5318, proportion: 17233, avgProcl: 4954, growth: -11, baptized: 196, pioneers: 1706, congregations: 65, bibleStudies: 2276, memorialAttendance: 8239 },
+    { country: 'Tuvalu', continent: 'Océanie', population: 10000, maxProcl: 103, proportion: 175, avgProcl: 57, growth: 14, baptized: 0, pioneers: 4, congregations: 1, bibleStudies: 34, memorialAttendance: 222 },
+    { country: 'Ukraine', continent: 'Europe', population: 37860000, maxProcl: 102972, proportion: 377, avgProcl: 100478, growth: -5, baptized: 1698, pioneers: 15655, congregations: 1164, bibleStudies: 25530, memorialAttendance: 173551 },
+    { country: 'Uruguay', continent: 'Amérique du Sud', population: 3444000, maxProcl: 11995, proportion: 290, avgProcl: 11871, growth: 0, baptized: 294, pioneers: 2025, congregations: 150, bibleStudies: 6855, memorialAttendance: 22441 },
+    { country: 'Vanuatu', continent: 'Océanie', population: 328000, maxProcl: 858, proportion: 511, avgProcl: 642, growth: 8, baptized: 43, pioneers: 109, congregations: 13, bibleStudies: 1034, memorialAttendance: 4046 },
+    { country: 'Vénézuéla', continent: 'Amérique du Sud', population: 28405000, maxProcl: 138146, proportion: 209, avgProcl: 136000, growth: 3, baptized: 4285, pioneers: 40484, congregations: 1716, bibleStudies: 118742, memorialAttendance: 413102 },
+    { country: 'Vierges britanniques (îles)', continent: 'Amérique du Nord', population: 39000, maxProcl: 231, proportion: 180, avgProcl: 217, growth: -2, baptized: 0, pioneers: 32, congregations: 4, bibleStudies: 128, memorialAttendance: 734 },
+    { country: 'Vierges des États-Unis (îles)', continent: 'Amérique du Nord', population: 104000, maxProcl: 517, proportion: 208, avgProcl: 499, growth: -2, baptized: 10, pioneers: 109, congregations: 8, bibleStudies: 346, memorialAttendance: 1264 },
+    { country: 'Wallis et Futuna (îles)', continent: 'Océanie', population: 11000, maxProcl: 84, proportion: 143, avgProcl: 77, growth: 24, baptized: 0, pioneers: 11, congregations: 2, bibleStudies: 76, memorialAttendance: 277 },
+    { country: 'Yap', continent: 'Océanie', population: 11000, maxProcl: 32, proportion: 355, avgProcl: 31, growth: 0, baptized: 10, pioneers: 1, congregations: 0, bibleStudies: 124, memorialAttendance: 161 },
+    { country: 'Zambie', continent: 'Afrique', population: 21315000, maxProcl: 258013, proportion: 93, avgProcl: 228281, growth: 8, baptized: 18073, pioneers: 23330, congregations: 3654, bibleStudies: 421860, memorialAttendance: 1085831 },
+    { country: 'Zimbabwe', continent: 'Afrique', population: 15675000, maxProcl: 52895, proportion: 314, avgProcl: 50000, growth: 7, baptized: 3208, pioneers: 8636, congregations: 974, bibleStudies: 90494, memorialAttendance: 131488 }
+];
+    
+    const rawData2023 = [
+    { country: 'Açores', continent: 'Europe', population: 240000, maxProcl: 802, proportion: 302, avgProcl: 796, growth: 1, baptized: 16, pioneers: 139, congregations: 15, bibleStudies: 523, memorialAttendance: 1651 },
+    { country: 'Afrique du Sud', continent: 'Afrique', population: 60605000, maxProcl: 100331, proportion: 617, avgProcl: 98175, growth: 2, baptized: 1923, pioneers: 14367, congregations: 1966, bibleStudies: 94890, memorialAttendance: 249364 },
+    { country: 'Albanie', continent: 'Europe', population: 2762000, maxProcl: 5461, proportion: 511, avgProcl: 5406, growth: -2, baptized: 90, pioneers: 1354, congregations: 83, bibleStudies: 3581, memorialAttendance: 10644 },
+    { country: 'Allemagne', continent: 'Europe', population: 84359000, maxProcl: 174907, proportion: 488, avgProcl: 172974, growth: 3, baptized: 3020, pioneers: 21801, congregations: 2002, bibleStudies: 50612, memorialAttendance: 273222 },
+    { country: 'Andorre', continent: 'Europe', population: 84000, maxProcl: 174, proportion: 509, avgProcl: 165, growth: -1, baptized: 0, pioneers: 23, congregations: 3, bibleStudies: 86, memorialAttendance: 351 },
+    { country: 'Angola', continent: 'Afrique', population: 36149000, maxProcl: 169960, proportion: 221, avgProcl: 163705, growth: 6, baptized: 12182, pioneers: 28019, congregations: 2567, bibleStudies: 504213, memorialAttendance: 643854 },
+    { country: 'Anguilla', continent: 'Amérique du Nord', population: 15000, maxProcl: 62, proportion: 273, avgProcl: 55, growth: -5, baptized: 0, pioneers: 10, congregations: 1, bibleStudies: 45, memorialAttendance: 254 },
+    { country: 'Antigua', continent: 'Amérique du Nord', population: 100000, maxProcl: 481, proportion: 216, avgProcl: 462, growth: -1, baptized: 5, pioneers: 45, congregations: 7, bibleStudies: 325, memorialAttendance: 1301 },
+    { country: 'Argentine', continent: 'Amérique du Sud', population: 46045000, maxProcl: 153751, proportion: 301, avgProcl: 152782, growth: -1, baptized: 3120, pioneers: 36889, congregations: 1938, bibleStudies: 87893, memorialAttendance: 306400 },
+    { country: 'Arménie', continent: 'Asie', population: 3103000, maxProcl: 11313, proportion: 277, avgProcl: 11194, growth: 1, baptized: 374, pioneers: 2429, congregations: 134, bibleStudies: 4650, memorialAttendance: 25977 },
+    { country: 'Aruba', continent: 'Amérique du Sud', population: 108000, maxProcl: 1097, proportion: 100, avgProcl: 1077, growth: -2, baptized: 30, pioneers: 147, congregations: 14, bibleStudies: 633, memorialAttendance: 2725 },
+    { country: 'Australie', continent: 'Océanie', population: 26636000, maxProcl: 71188, proportion: 379, avgProcl: 70244, growth: -1, baptized: 925, pioneers: 9920, congregations: 726, bibleStudies: 21347, memorialAttendance: 114089 },
+    { country: 'Autriche', continent: 'Europe', population: 9105000, maxProcl: 22443, proportion: 411, avgProcl: 22162, growth: 2, baptized: 371, pioneers: 2524, congregations: 283, bibleStudies: 7322, memorialAttendance: 35177 },
+    { country: 'Azerbaïdjan', continent: 'Asie', population: 10127000, maxProcl: 1736, proportion: 5912, avgProcl: 1713, growth: 3, baptized: 79, pioneers: 496, congregations: 23, bibleStudies: 2179, memorialAttendance: 3642 },
+    { country: 'Bahamas', continent: 'Amérique du Nord', population: 404000, maxProcl: 1750, proportion: 239, avgProcl: 1690, growth: -3, baptized: 33, pioneers: 301, congregations: 28, bibleStudies: 1595, memorialAttendance: 4489 },
+    { country: 'Bangladesh', continent: 'Asie', population: 172075000, maxProcl: 346, proportion: 509098, avgProcl: 338, growth: 1, baptized: 12, pioneers: 131, congregations: 6, bibleStudies: 484, memorialAttendance: 1189 },
+    { country: 'Barbade', continent: 'Amérique du Nord', population: 288000, maxProcl: 2350, proportion: 126, avgProcl: 2290, growth: -3, baptized: 57, pioneers: 206, congregations: 30, bibleStudies: 1724, memorialAttendance: 6020 },
+    { country: 'Belgique', continent: 'Europe', population: 11698000, maxProcl: 26424, proportion: 449, avgProcl: 26048, growth: 1, baptized: 497, pioneers: 2617, congregations: 338, bibleStudies: 10340, memorialAttendance: 44558 },
+    { country: 'Bélize', continent: 'Amérique du Nord', population: 441000, maxProcl: 2492, proportion: 180, avgProcl: 2452, growth: -3, baptized: 54, pioneers: 478, congregations: 53, bibleStudies: 2135, memorialAttendance: 7698 },
+    { country: 'Bénin', continent: 'Afrique', population: 13124000, maxProcl: 14838, proportion: 930, avgProcl: 14115, growth: 5, baptized: 901, pioneers: 2004, congregations: 260, bibleStudies: 26080, memorialAttendance: 44735 },
+    { country: 'Bermudes', continent: 'Amérique du Nord', population: 62000, maxProcl: 425, proportion: 161, avgProcl: 385, growth: -1, baptized: 4, pioneers: 70, congregations: 5, bibleStudies: 167, memorialAttendance: 870 },
+    { country: 'Biélorussie', continent: 'Europe', population: 9419000, maxProcl: 6082, proportion: 1554, avgProcl: 6061, growth: -1, baptized: 130, pioneers: 1552, congregations: 82, bibleStudies: 3556, memorialAttendance: 11235 },
+    { country: 'Birmanie', continent: 'Asie', population: 56145000, maxProcl: 5171, proportion: 10962, avgProcl: 5122, growth: 1, baptized: 145, pioneers: 935, congregations: 96, bibleStudies: 5527, memorialAttendance: 11975 },
+    { country: 'Bolivie', continent: 'Amérique du Sud', population: 12152000, maxProcl: 29440, proportion: 419, avgProcl: 29034, growth: 0, baptized: 1073, pioneers: 8633, congregations: 452, bibleStudies: 30288, memorialAttendance: 79933 },
+    { country: 'Bonaire', continent: 'Amérique du Sud', population: 24000, maxProcl: 139, proportion: 182, avgProcl: 132, growth: 10, baptized: 0, pioneers: 31, congregations: 2, bibleStudies: 100, memorialAttendance: 392 },
+    { country: 'Bosnie-Herzégovine', continent: 'Europe', population: 3237000, maxProcl: 969, proportion: 3418, avgProcl: 947, growth: -4, baptized: 5, pioneers: 192, congregations: 16, bibleStudies: 263, memorialAttendance: 1507 },
+    { country: 'Botswana', continent: 'Afrique', population: 2346000, maxProcl: 2391, proportion: 1016, avgProcl: 2308, growth: 1, baptized: 36, pioneers: 364, congregations: 42, bibleStudies: 3658, memorialAttendance: 6115 },
+    { country: 'Brésil', continent: 'Amérique du Sud', population: 203063000, maxProcl: 907121, proportion: 226, avgProcl: 898785, growth: 0, baptized: 22660, pioneers: 177715, congregations: 12637, bibleStudies: 543098, memorialAttendance: 1819948 },
+    { country: 'Bulgarie', continent: 'Europe', population: 6792000, maxProcl: 2832, proportion: 2443, avgProcl: 2780, growth: 4, baptized: 79, pioneers: 794, congregations: 57, bibleStudies: 1841, memorialAttendance: 6181 },
+    { country: 'Burkina', continent: 'Afrique', population: 22721000, maxProcl: 1986, proportion: 12470, avgProcl: 1822, growth: 6, baptized: 82, pioneers: 243, congregations: 50, bibleStudies: 2350, memorialAttendance: 4462 },
+    { country: 'Burundi', continent: 'Afrique', population: 12999000, maxProcl: 18129, proportion: 749, avgProcl: 17351, growth: 5, baptized: 1032, pioneers: 2979, congregations: 374, bibleStudies: 38920, memorialAttendance: 65540 },
+    { country: 'Caïman (îles)', continent: 'Amérique du Nord', population: 68000, maxProcl: 301, proportion: 242, avgProcl: 281, growth: 5, baptized: 0, pioneers: 41, congregations: 3, bibleStudies: 154, memorialAttendance: 728 },
+    { country: 'Cambodge', continent: 'Asie', population: 16855000, maxProcl: 1116, proportion: 15295, avgProcl: 1102, growth: 0, baptized: 35, pioneers: 540, congregations: 17, bibleStudies: 1314, memorialAttendance: 2545 },
+    { country: 'Cameroun', continent: 'Afrique', population: 28608000, maxProcl: 44558, proportion: 665, avgProcl: 43022, growth: 2, baptized: 2139, pioneers: 6317, congregations: 500, bibleStudies: 56561, memorialAttendance: 103587 },
+    { country: 'Canada', continent: 'Amérique du Nord', population: 38704000, maxProcl: 120388, proportion: 325, avgProcl: 118942, growth: 1, baptized: 1797, pioneers: 18041, congregations: 1164, bibleStudies: 42070, memorialAttendance: 189604 },
+    { country: 'Cap-Vert', continent: 'Afrique', population: 573000, maxProcl: 2277, proportion: 256, avgProcl: 2242, growth: -1, baptized: 86, pioneers: 401, congregations: 35, bibleStudies: 3136, memorialAttendance: 7802 },
+    { country: 'Centrafrique', continent: 'Afrique', population: 5119000, maxProcl: 2932, proportion: 1791, avgProcl: 2858, growth: 17, baptized: 224, pioneers: 300, congregations: 64, bibleStudies: 7575, memorialAttendance: 20176 },
+    { country: 'Chili', continent: 'Amérique du Sud', population: 19961000, maxProcl: 87175, proportion: 232, avgProcl: 85938, growth: 0, baptized: 1442, pioneers: 21308, congregations: 964, bibleStudies: 44353, memorialAttendance: 192704 },
+    { country: 'Chuuk', continent: 'Océanie', population: 54000, maxProcl: 30, proportion: 2348, avgProcl: 23, growth: -15, baptized: 0, pioneers: 7, congregations: 2, bibleStudies: 47, memorialAttendance: 103 },
+    { country: 'Chypre', continent: 'Europe', population: 1231000, maxProcl: 3116, proportion: 404, avgProcl: 3047, growth: 5, baptized: 62, pioneers: 650, congregations: 41, bibleStudies: 1644, memorialAttendance: 5673 },
+    { country: 'Colombie', continent: 'Amérique du Sud', population: 51673000, maxProcl: 186712, proportion: 279, avgProcl: 185002, growth: 0, baptized: 6305, pioneers: 35049, congregations: 2271, bibleStudies: 148657, memorialAttendance: 544651 },
+    { country: 'Congo', continent: 'Afrique', population: 5941000, maxProcl: 9517, proportion: 661, avgProcl: 8992, growth: 10, baptized: 784, pioneers: 1527, congregations: 123, bibleStudies: 23885, memorialAttendance: 30468 },
+    { country: 'Congo (République dém. du)', continent: 'Afrique', population: 98152000, maxProcl: 257672, proportion: 402, avgProcl: 244336, growth: 12, baptized: 23141, pioneers: 24413, congregations: 4385, bibleStudies: 640428, memorialAttendance: 1243439 },
+    { country: 'Cook (îles)', continent: 'Océanie', population: 17000, maxProcl: 193, proportion: 92, avgProcl: 184, growth: -8, baptized: 0, pioneers: 31, congregations: 3, bibleStudies: 105, memorialAttendance: 538 },
+    { country: 'Corée du Sud', continent: 'Asie', population: 51408000, maxProcl: 106161, proportion: 485, avgProcl: 106073, growth: 0, baptized: 1695, pioneers: 51908, congregations: 1252, bibleStudies: 36482, memorialAttendance: 138920 },
+    { country: 'Costa Rica', continent: 'Amérique du Nord', population: 5213000, maxProcl: 32084, proportion: 163, avgProcl: 31936, growth: -1, baptized: 807, pioneers: 4683, congregations: 429, bibleStudies: 21398, memorialAttendance: 70119 },
+    { country: 'Côte d’Ivoire', continent: 'Afrique', population: 29389000, maxProcl: 12712, proportion: 2436, avgProcl: 12062, growth: 3, baptized: 577, pioneers: 1636, congregations: 227, bibleStudies: 21548, memorialAttendance: 52398 },
+    { country: 'Croatie', continent: 'Europe', population: 4038000, maxProcl: 4687, proportion: 870, avgProcl: 4642, growth: -1, baptized: 50, pioneers: 477, congregations: 57, bibleStudies: 1039, memorialAttendance: 7256 },
+    { country: 'Cuba', continent: 'Amérique du Nord', population: 11090000, maxProcl: 87907, proportion: 129, avgProcl: 86048, growth: -5, baptized: 1615, pioneers: 8880, congregations: 1366, bibleStudies: 80336, memorialAttendance: 194684 },
+    { country: 'Curaçao', continent: 'Amérique du Sud', population: 166000, maxProcl: 1967, proportion: 85, avgProcl: 1949, growth: -2, baptized: 36, pioneers: 242, congregations: 24, bibleStudies: 1360, memorialAttendance: 5219 },
+    { country: 'Danemark', continent: 'Europe', population: 5941000, maxProcl: 14639, proportion: 410, avgProcl: 14491, growth: 0, baptized: 216, pioneers: 1421, congregations: 172, bibleStudies: 4013, memorialAttendance: 20460 },
+    { country: 'Dominicaine (République)', continent: 'Amérique du Nord', population: 11156000, maxProcl: 38792, proportion: 293, avgProcl: 38074, growth: 0, baptized: 1016, pioneers: 7938, congregations: 536, bibleStudies: 45943, memorialAttendance: 117176 },
+    { country: 'Dominique', continent: 'Amérique du Nord', population: 73000, maxProcl: 413, proportion: 187, avgProcl: 391, growth: -3, baptized: 6, pioneers: 54, congregations: 10, bibleStudies: 473, memorialAttendance: 1272 },
+    { country: 'Équateur', continent: 'Amérique du Sud', population: 16939000, maxProcl: 100195, proportion: 171, avgProcl: 98869, growth: -1, baptized: 3153, pioneers: 22943, congregations: 1212, bibleStudies: 93088, memorialAttendance: 282370 },
+    { country: 'Espagne', continent: 'Europe', population: 48197000, maxProcl: 122061, proportion: 397, avgProcl: 121384, growth: 1, baptized: 2245, pioneers: 24881, congregations: 1397, bibleStudies: 38467, memorialAttendance: 201792 },
+    { country: 'Estonie', continent: 'Europe', population: 1366000, maxProcl: 4110, proportion: 335, avgProcl: 4075, growth: 2, baptized: 65, pioneers: 695, congregations: 54, bibleStudies: 1636, memorialAttendance: 6719 },
+    { country: 'Eswatini', continent: 'Afrique', population: 1198000, maxProcl: 3269, proportion: 377, avgProcl: 3174, growth: 0, baptized: 43, pioneers: 390, congregations: 76, bibleStudies: 4148, memorialAttendance: 8345 },
+    { country: 'États-Unis', continent: 'Amérique du Nord', population: 336679000, maxProcl: 1233609, proportion: 276, avgProcl: 1220070, growth: -1, baptized: 23029, pioneers: 238987, congregations: 11942, bibleStudies: 466083, memorialAttendance: 2355217 },
+    { country: 'Éthiopie', continent: 'Afrique', population: 123771000, maxProcl: 11512, proportion: 11053, avgProcl: 11198, growth: 2, baptized: 404, pioneers: 2573, congregations: 206, bibleStudies: 9226, memorialAttendance: 26409 },
+    { country: 'Féroé (îles)', continent: 'Europe', population: 55000, maxProcl: 137, proportion: 417, avgProcl: 132, growth: 1, baptized: 3, pioneers: 28, congregations: 4, bibleStudies: 67, memorialAttendance: 187 },
+    { country: 'Fidji', continent: 'Océanie', population: 916000, maxProcl: 3005, proportion: 312, avgProcl: 2932, growth: -3, baptized: 107, pioneers: 539, congregations: 60, bibleStudies: 3611, memorialAttendance: 12901 },
+    { country: 'Finlande', continent: 'Europe', population: 5564000, maxProcl: 18186, proportion: 307, avgProcl: 18112, growth: 0, baptized: 239, pioneers: 2493, congregations: 272, bibleStudies: 8201, memorialAttendance: 26038 },
+    { country: 'France', continent: 'Europe', population: 64793000, maxProcl: 138133, proportion: 474, avgProcl: 136770, growth: 1, baptized: 2739, pioneers: 21069, congregations: 1461, bibleStudies: 46500, memorialAttendance: 230018 },
+    { country: 'Gabon', continent: 'Afrique', population: 2384000, maxProcl: 4570, proportion: 538, avgProcl: 4434, growth: 2, baptized: 225, pioneers: 659, congregations: 59, bibleStudies: 7131, memorialAttendance: 12446 },
+    { country: 'Gambie', continent: 'Afrique', population: 2631000, maxProcl: 316, proportion: 8949, avgProcl: 294, growth: 10, baptized: 17, pioneers: 54, congregations: 5, bibleStudies: 418, memorialAttendance: 687 },
+    { country: 'Géorgie', continent: 'Asie', population: 3736000, maxProcl: 18841, proportion: 199, avgProcl: 18752, growth: 1, baptized: 704, pioneers: 3867, congregations: 224, bibleStudies: 5081, memorialAttendance: 34169 },
+    { country: 'Ghana', continent: 'Afrique', population: 33063000, maxProcl: 153657, proportion: 220, avgProcl: 150307, growth: 2, baptized: 9500, pioneers: 17327, congregations: 2484, bibleStudies: 318431, memorialAttendance: 368436 },
+    { country: 'Gibraltar', continent: 'Europe', population: 34000, maxProcl: 161, proportion: 221, avgProcl: 154, growth: 12, baptized: 0, pioneers: 26, congregations: 2, bibleStudies: 27, memorialAttendance: 213 },
+    { country: 'Grande-Bretagne', continent: 'Europe', population: 66357000, maxProcl: 142073, proportion: 474, avgProcl: 140109, growth: 1, baptized: 2361, pioneers: 20744, congregations: 1599, bibleStudies: 44362, memorialAttendance: 224661 },
+    { country: 'Grèce', continent: 'Europe', population: 10482000, maxProcl: 27759, proportion: 379, avgProcl: 27644, growth: -1, baptized: 490, pioneers: 4819, congregations: 345, bibleStudies: 7669, memorialAttendance: 43572 },
+    { country: 'Grenade', continent: 'Amérique du Nord', population: 114000, maxProcl: 557, proportion: 218, avgProcl: 523, growth: -1, baptized: 9, pioneers: 85, congregations: 9, bibleStudies: 390, memorialAttendance: 1388 },
+    { country: 'Groenland', continent: 'Amérique du Nord', population: 57000, maxProcl: 119, proportion: 500, avgProcl: 114, growth: -9, baptized: 2, pioneers: 31, congregations: 5, bibleStudies: 74, memorialAttendance: 278 },
+    { country: 'Guadeloupe', continent: 'Amérique du Nord', population: 396000, maxProcl: 8488, proportion: 47, avgProcl: 8352, growth: 0, baptized: 159, pioneers: 1036, congregations: 118, bibleStudies: 6407, memorialAttendance: 19549 },
+    { country: 'Guam', continent: 'Océanie', population: 173000, maxProcl: 709, proportion: 250, avgProcl: 692, growth: -5, baptized: 19, pioneers: 177, congregations: 9, bibleStudies: 513, memorialAttendance: 1622 },
+    { country: 'Guatémala', continent: 'Amérique du Nord', population: 18918000, maxProcl: 39022, proportion: 488, avgProcl: 38765, growth: -1, baptized: 1255, pioneers: 6768, congregations: 825, bibleStudies: 27091, memorialAttendance: 93889 },
+    { country: 'Guinée', continent: 'Afrique', population: 14239000, maxProcl: 1217, proportion: 12403, avgProcl: 1148, growth: 5, baptized: 34, pioneers: 176, congregations: 27, bibleStudies: 2407, memorialAttendance: 4616 },
+    { country: 'Guinée-Bissao', continent: 'Afrique', population: 2112000, maxProcl: 205, proportion: 11000, avgProcl: 192, growth: -1, baptized: 12, pioneers: 50, congregations: 4, bibleStudies: 474, memorialAttendance: 719 },
+    { country: 'Guinée équatoriale', continent: 'Afrique', population: 1543000, maxProcl: 2542, proportion: 638, avgProcl: 2417, growth: 4, baptized: 189, pioneers: 304, congregations: 30, bibleStudies: 6627, memorialAttendance: 7944 },
+    { country: 'Guyana', continent: 'Amérique du Sud', population: 798000, maxProcl: 3280, proportion: 249, avgProcl: 3201, growth: -3, baptized: 111, pioneers: 519, congregations: 46, bibleStudies: 3455, memorialAttendance: 12125 },
+    { country: 'Guyane', continent: 'Amérique du Sud', population: 312000, maxProcl: 2937, proportion: 109, avgProcl: 2869, growth: -1, baptized: 90, pioneers: 606, congregations: 46, bibleStudies: 4597, memorialAttendance: 10469 },
+    { country: 'Haïti', continent: 'Amérique du Nord', population: 11818000, maxProcl: 17870, proportion: 683, avgProcl: 17297, growth: -3, baptized: 581, pioneers: 2547, congregations: 262, bibleStudies: 25855, memorialAttendance: 68862 },
+    { country: 'Honduras', continent: 'Amérique du Nord', population: 9727000, maxProcl: 21646, proportion: 452, avgProcl: 21533, growth: -2, baptized: 711, pioneers: 4372, congregations: 418, bibleStudies: 16669, memorialAttendance: 58906 },
+    { country: 'Hong Kong', continent: 'Asie', population: 7498000, maxProcl: 5464, proportion: 1380, avgProcl: 5432, growth: -1, baptized: 173, pioneers: 1451, congregations: 70, bibleStudies: 4274, memorialAttendance: 9349 },
+    { country: 'Hongrie', continent: 'Europe', population: 9597000, maxProcl: 21332, proportion: 453, avgProcl: 21177, growth: 1, baptized: 465, pioneers: 2249, congregations: 283, bibleStudies: 7113, memorialAttendance: 38999 },
+    { country: 'Inde', continent: 'Asie', population: 1419656000, maxProcl: 57795, proportion: 24739, avgProcl: 57386, growth: 2, baptized: 2811, pioneers: 10791, congregations: 999, bibleStudies: 55195, memorialAttendance: 166521 },
+    { country: 'Indonésie', continent: 'Asie', population: 281844000, maxProcl: 31023, proportion: 9275, avgProcl: 30389, growth: 2, baptized: 1190, pioneers: 6143, congregations: 491, bibleStudies: 23517, memorialAttendance: 61059 },
+    { country: 'Irlande', continent: 'Europe', population: 7052000, maxProcl: 7974, proportion: 907, avgProcl: 7775, growth: 6, baptized: 107, pioneers: 1610, congregations: 121, bibleStudies: 2738, memorialAttendance: 13498 },
+    { country: 'Islande', continent: 'Europe', population: 388000, maxProcl: 418, proportion: 970, avgProcl: 400, growth: 2, baptized: 3, pioneers: 69, congregations: 7, bibleStudies: 169, memorialAttendance: 728 },
+    { country: 'Israël', continent: 'Asie', population: 9888000, maxProcl: 2129, proportion: 4731, avgProcl: 2090, growth: 4, baptized: 63, pioneers: 429, congregations: 32, bibleStudies: 1106, memorialAttendance: 3835 },
+    { country: 'Italie', continent: 'Europe', population: 58851000, maxProcl: 250193, proportion: 236, avgProcl: 249588, growth: 0, baptized: 3879, pioneers: 49027, congregations: 2804, bibleStudies: 85997, memorialAttendance: 424115 },
+    { country: 'Jamaïque', continent: 'Amérique du Nord', population: 2996000, maxProcl: 10988, proportion: 279, avgProcl: 10741, growth: -2, baptized: 262, pioneers: 1535, congregations: 152, bibleStudies: 7233, memorialAttendance: 31924 },
+    { country: 'Japon', continent: 'Asie', population: 124752000, maxProcl: 214457, proportion: 583, avgProcl: 214144, growth: 0, baptized: 2106, pioneers: 71282, congregations: 2888, bibleStudies: 89612, memorialAttendance: 296139 },
+    { country: 'Kazakhstan', continent: 'Asie', population: 19899000, maxProcl: 17287, proportion: 1164, avgProcl: 17100, growth: 0, baptized: 382, pioneers: 4706, congregations: 229, bibleStudies: 7485, memorialAttendance: 31006 },
+    { country: 'Kenya', continent: 'Afrique', population: 55101000, maxProcl: 31017, proportion: 1863, avgProcl: 29572, growth: 5, baptized: 1454, pioneers: 3805, congregations: 605, bibleStudies: 41549, memorialAttendance: 70228 },
+    { country: 'Kirghizstan', continent: 'Asie', population: 7038000, maxProcl: 5167, proportion: 1387, avgProcl: 5073, growth: 0, baptized: 180, pioneers: 1481, congregations: 86, bibleStudies: 2801, memorialAttendance: 10146 },
+    { country: 'Kiribati', continent: 'Océanie', population: 123000, maxProcl: 118, proportion: 1268, avgProcl: 97, growth: 17, baptized: 0, pioneers: 24, congregations: 2, bibleStudies: 159, memorialAttendance: 433 },
+    { country: 'Kosovo', continent: 'Europe', population: 1800000, maxProcl: 240, proportion: 7792, avgProcl: 231, growth: -4, baptized: 6, pioneers: 101, congregations: 8, bibleStudies: 233, memorialAttendance: 440 },
+    { country: 'Kosrae', continent: 'Océanie', population: 8000, maxProcl: 10, proportion: 889, avgProcl: 9, growth: 13, baptized: 0, pioneers: 5, congregations: 1, bibleStudies: 15, memorialAttendance: 56 },
+    { country: 'Lesotho', continent: 'Afrique', population: 2192000, maxProcl: 4222, proportion: 566, avgProcl: 3875, growth: 7, baptized: 178, pioneers: 596, congregations: 81, bibleStudies: 4955, memorialAttendance: 10221 },
+    { country: 'Lettonie', continent: 'Europe', population: 1883000, maxProcl: 2135, proportion: 898, avgProcl: 2098, growth: 1, baptized: 37, pioneers: 385, congregations: 29, bibleStudies: 931, memorialAttendance: 3279 },
+    { country: 'Libéria', continent: 'Afrique', population: 5432000, maxProcl: 7922, proportion: 745, avgProcl: 7296, growth: 9, baptized: 380, pioneers: 863, congregations: 146, bibleStudies: 20920, memorialAttendance: 39656 },
+    { country: 'Liechtenstein', continent: 'Europe', population: 39000, maxProcl: 98, proportion: 415, avgProcl: 94, growth: 3, baptized: 0, pioneers: 9, congregations: 1, bibleStudies: 27, memorialAttendance: 146 },
+    { country: 'Lituanie', continent: 'Europe', population: 2811000, maxProcl: 2945, proportion: 963, avgProcl: 2919, growth: 2, baptized: 39, pioneers: 479, congregations: 41, bibleStudies: 1073, memorialAttendance: 4761 },
+    { country: 'Luxembourg', continent: 'Europe', population: 649000, maxProcl: 2183, proportion: 300, avgProcl: 2165, growth: 0, baptized: 0, pioneers: 273, congregations: 31, bibleStudies: 861, memorialAttendance: 3954 },
+    { country: 'Macao', continent: 'Asie', population: 679000, maxProcl: 379, proportion: 1850, avgProcl: 367, growth: -7, baptized: 6, pioneers: 111, congregations: 6, bibleStudies: 397, memorialAttendance: 824 },
+    { country: 'Macédoine du Nord', continent: 'Europe', population: 1830000, maxProcl: 1233, proportion: 1505, avgProcl: 1216, growth: -2, baptized: 14, pioneers: 191, congregations: 23, bibleStudies: 548, memorialAttendance: 2540 },
+    { country: 'Madagascar', continent: 'Afrique', population: 29443000, maxProcl: 40035, proportion: 763, avgProcl: 38580, growth: 14, baptized: 2858, pioneers: 7151, congregations: 841, bibleStudies: 75846, memorialAttendance: 157128 },
+    { country: 'Madère', continent: 'Europe', population: 253000, maxProcl: 1188, proportion: 215, avgProcl: 1177, growth: -1, baptized: 19, pioneers: 151, congregations: 19, bibleStudies: 378, memorialAttendance: 1846 },
+    { country: 'Malaisie', continent: 'Asie', population: 33200000, maxProcl: 5645, proportion: 5959, avgProcl: 5571, growth: 0, baptized: 221, pioneers: 1560, congregations: 119, bibleStudies: 5025, memorialAttendance: 11982 },
+    { country: 'Malawi', continent: 'Afrique', population: 20728000, maxProcl: 109108, proportion: 211, avgProcl: 98392, growth: 7, baptized: 6543, pioneers: 7396, congregations: 1882, bibleStudies: 135485, memorialAttendance: 353572 },
+    { country: 'Mali', continent: 'Afrique', population: 22106000, maxProcl: 367, proportion: 63160, avgProcl: 350, growth: 0, baptized: 12, pioneers: 51, congregations: 6, bibleStudies: 568, memorialAttendance: 914 },
+    { country: 'Malouines (îles)', continent: 'Amérique du Sud', population: 4000, maxProcl: 17, proportion: 333, avgProcl: 12, growth: -25, baptized: 0, pioneers: 4, congregations: 1, bibleStudies: 8, memorialAttendance: 16 },
+    { country: 'Malte', continent: 'Europe', population: 542000, maxProcl: 877, proportion: 643, avgProcl: 843, growth: 1, baptized: 7, pioneers: 147, congregations: 11, bibleStudies: 279, memorialAttendance: 1416 },
+    { country: 'Marshall', continent: 'Océanie', population: 61000, maxProcl: 138, proportion: 496, avgProcl: 123, growth: 3, baptized: 2, pioneers: 27, congregations: 4, bibleStudies: 225, memorialAttendance: 742 },
+    { country: 'Martinique', continent: 'Amérique du Nord', population: 367000, maxProcl: 4882, proportion: 76, avgProcl: 4814, growth: -3, baptized: 102, pioneers: 741, congregations: 57, bibleStudies: 3737, memorialAttendance: 10497 },
+    { country: 'Maurice', continent: 'Afrique', population: 1216000, maxProcl: 2124, proportion: 582, avgProcl: 2088, growth: -1, baptized: 66, pioneers: 329, congregations: 27, bibleStudies: 1984, memorialAttendance: 5017 },
+    { country: 'Mayotte', continent: 'Afrique', population: 336000, maxProcl: 144, proportion: 2507, avgProcl: 134, growth: -8, baptized: 3, pioneers: 51, congregations: 3, bibleStudies: 237, memorialAttendance: 366 },
+    { country: 'Mexique', continent: 'Amérique du Nord', population: 132834000, maxProcl: 864738, proportion: 155, avgProcl: 856289, growth: 0, baptized: 25897, pioneers: 152723, congregations: 12706, bibleStudies: 582908, memorialAttendance: 2184372 },
+    { country: 'Moldavie', continent: 'Europe', population: 2978000, maxProcl: 17979, proportion: 167, avgProcl: 17816, growth: -2, baptized: 460, pioneers: 2587, congregations: 195, bibleStudies: 8372, memorialAttendance: 33198 },
+    { country: 'Monaco', continent: 'Europe', population: 0, maxProcl: 0, proportion: 0, avgProcl: 0, growth: 0, baptized: 0, pioneers: 0, congregations: 0, bibleStudies: 0, memorialAttendance: 0 },
+    { country: 'Mongolie', continent: 'Asie', population: 3423000, maxProcl: 432, proportion: 8431, avgProcl: 406, growth: -4, baptized: 9, pioneers: 188, congregations: 8, bibleStudies: 648, memorialAttendance: 1337 },
+    { country: 'Monténégro', continent: 'Europe', population: 628000, maxProcl: 397, proportion: 1693, avgProcl: 371, growth: 13, baptized: 5, pioneers: 120, congregations: 7, bibleStudies: 140, memorialAttendance: 823 },
+    { country: 'Montserrat', continent: 'Amérique du Nord', population: 5000, maxProcl: 36, proportion: 143, avgProcl: 35, growth: 0, baptized: 0, pioneers: 13, congregations: 1, bibleStudies: 55, memorialAttendance: 138 },
+    { country: 'Mozambique', continent: 'Afrique', population: 32420000, maxProcl: 87668, proportion: 398, avgProcl: 81454, growth: 10, baptized: 6763, pioneers: 7929, congregations: 1651, bibleStudies: 139864, memorialAttendance: 352094 },
+    { country: 'Namibie', continent: 'Afrique', population: 2680000, maxProcl: 2711, proportion: 1030, avgProcl: 2603, growth: 4, baptized: 134, pioneers: 362, congregations: 47, bibleStudies: 4391, memorialAttendance: 8793 },
+    { country: 'Nauru', continent: 'Océanie', population: 11000, maxProcl: 18, proportion: 733, avgProcl: 15, growth: -6, baptized: 0, pioneers: 2, congregations: 1, bibleStudies: 12, memorialAttendance: 85 },
+    { country: 'Népal', continent: 'Asie', population: 29165000, maxProcl: 2823, proportion: 10465, avgProcl: 2787, growth: -1, baptized: 136, pioneers: 818, congregations: 43, bibleStudies: 3591, memorialAttendance: 8064 },
+    { country: 'Nicaragua', continent: 'Amérique du Nord', population: 6855000, maxProcl: 28843, proportion: 240, avgProcl: 28545, growth: -1, baptized: 933, pioneers: 5131, congregations: 466, bibleStudies: 24100, memorialAttendance: 81770 },
+    { country: 'Niévès', continent: 'Amérique du Nord', population: 11000, maxProcl: 89, proportion: 145, avgProcl: 76, growth: 7, baptized: 0, pioneers: 7, congregations: 1, bibleStudies: 56, memorialAttendance: 234 },
+    { country: 'Niger', continent: 'Afrique', population: 27066000, maxProcl: 373, proportion: 83796, avgProcl: 323, growth: 6, baptized: 10, pioneers: 46, congregations: 9, bibleStudies: 415, memorialAttendance: 881 },
+    { country: 'Nigéria', continent: 'Afrique', population: 222182000, maxProcl: 400375, proportion: 589, avgProcl: 377184, growth: 7, baptized: 13378, pioneers: 42575, congregations: 6071, bibleStudies: 666328, memorialAttendance: 820920 },
+    { country: 'Niue', continent: 'Océanie', population: 2000, maxProcl: 20, proportion: 105, avgProcl: 19, growth: -5, baptized: 0, pioneers: 3, congregations: 1, bibleStudies: 6, memorialAttendance: 78 },
+    { country: 'Norvège', continent: 'Europe', population: 5504000, maxProcl: 12034, proportion: 464, avgProcl: 11869, growth: 1, baptized: 184, pioneers: 1488, congregations: 162, bibleStudies: 3483, memorialAttendance: 17728 },
+    { country: 'Nouvelle-Calédonie', continent: 'Océanie', population: 271000, maxProcl: 2693, proportion: 103, avgProcl: 2631, growth: 2, baptized: 97, pioneers: 343, congregations: 34, bibleStudies: 2810, memorialAttendance: 7604 },
+    { country: 'Nouvelle-Zélande', continent: 'Océanie', population: 5199000, maxProcl: 14607, proportion: 360, avgProcl: 14430, growth: -1, baptized: 238, pioneers: 2023, congregations: 170, bibleStudies: 5669, memorialAttendance: 26669 },
+    { country: 'Ouganda', continent: 'Afrique', population: 4591000, maxProcl: 9669, proportion: 4884, avgProcl: 9400, growth: 3, baptized: 460, pioneers: 1275, congregations: 175, bibleStudies: 21598, memorialAttendance: 30841 },
+    { country: 'Pakistan', continent: 'Asie', population: 233757000, maxProcl: 1259, proportion: 207784, avgProcl: 1125, growth: 3, baptized: 53, pioneers: 76, congregations: 16, bibleStudies: 911, memorialAttendance: 4378 },
+    { country: 'Palaos', continent: 'Océanie', population: 18000, maxProcl: 81, proportion: 250, avgProcl: 72, growth: 7, baptized: 2, pioneers: 27, congregations: 2, bibleStudies: 112, memorialAttendance: 205 },
+    { country: 'Panama', continent: 'Amérique du Nord', population: 4511000, maxProcl: 18525, proportion: 247, avgProcl: 18288, growth: 0, baptized: 687, pioneers: 3605, congregations: 310, bibleStudies: 15123, memorialAttendance: 53366 },
+    { country: 'Papouasie-Nouvelle-Guinée', continent: 'Océanie', population: 9466000, maxProcl: 5692, proportion: 1999, avgProcl: 4735, growth: 1, baptized: 280, pioneers: 784, congregations: 89, bibleStudies: 7263, memorialAttendance: 41613 },
+    { country: 'Paraguay', continent: 'Amérique du Sud', population: 7391000, maxProcl: 11042, proportion: 676, avgProcl: 10932, growth: -1, baptized: 319, pioneers: 2394, congregations: 186, bibleStudies: 10261, memorialAttendance: 22816 },
+    { country: 'Pays-Bas', continent: 'Europe', population: 17878000, maxProcl: 29584, proportion: 612, avgProcl: 29234, growth: 1, baptized: 448, pioneers: 2943, congregations: 346, bibleStudies: 8982, memorialAttendance: 49084 },
+    { country: 'Pérou', continent: 'Amérique du Sud', population: 33966000, maxProcl: 133366, proportion: 261, avgProcl: 130156, growth: 1, baptized: 4177, pioneers: 32622, congregations: 1551, bibleStudies: 134295, memorialAttendance: 372007 },
+    { country: 'Philippines', continent: 'Asie', population: 113964000, maxProcl: 253876, proportion: 464, avgProcl: 245475, growth: 5, baptized: 12954, pioneers: 59244, congregations: 3552, bibleStudies: 227611, memorialAttendance: 665087 },
+    { country: 'Pohnpei', continent: 'Océanie', population: 34000, maxProcl: 54, proportion: 680, avgProcl: 50, growth: -6, baptized: 2, pioneers: 16, congregations: 1, bibleStudies: 66, memorialAttendance: 145 },
+    { country: 'Pologne', continent: 'Europe', population: 37749000, maxProcl: 116307, proportion: 328, avgProcl: 115149, growth: 2, baptized: 1530, pioneers: 11323, congregations: 1267, bibleStudies: 27666, memorialAttendance: 185930 },
+    { country: 'Porto Rico', continent: 'Amérique du Nord', population: 2854000, maxProcl: 23032, proportion: 126, avgProcl: 22715, growth: -1, baptized: 335, pioneers: 4225, congregations: 227, bibleStudies: 7551, memorialAttendance: 43543 },
+    { country: 'Portugal', continent: 'Europe', population: 9974000, maxProcl: 52498, proportion: 192, avgProcl: 51998, growth: 2, baptized: 929, pioneers: 6649, congregations: 653, bibleStudies: 19182, memorialAttendance: 93441 },
+    { country: 'Réunion', continent: 'Afrique', population: 982000, maxProcl: 3571, proportion: 284, avgProcl: 3452, growth: 1, baptized: 73, pioneers: 621, congregations: 41, bibleStudies: 1783, memorialAttendance: 6839 },
+    { country: 'Rodrigues', continent: 'Afrique', population: 45000, maxProcl: 68, proportion: 692, avgProcl: 65, growth: -2, baptized: 0, pioneers: 11, congregations: 1, bibleStudies: 76, memorialAttendance: 166 },
+    { country: 'Rota', continent: 'Océanie', population: 3000, maxProcl: 7, proportion: 750, avgProcl: 4, growth: 0, baptized: 0, pioneers: 3, congregations: 0, bibleStudies: 4, memorialAttendance: 16 },
+    { country: 'Roumanie', continent: 'Europe', population: 18944000, maxProcl: 39723, proportion: 480, avgProcl: 39498, growth: 0, baptized: 784, pioneers: 5833, congregations: 528, bibleStudies: 18182, memorialAttendance: 81896 },
+    { country: 'Rwanda', continent: 'Afrique', population: 13246000, maxProcl: 33664, proportion: 418, avgProcl: 31716, growth: 6, baptized: 2945, pioneers: 5565, congregations: 593, bibleStudies: 58265, memorialAttendance: 105966 },
+    { country: 'Saba', continent: 'Amérique du Nord', population: 2000, maxProcl: 18, proportion: 125, avgProcl: 16, growth: 23, baptized: 0, pioneers: 6, congregations: 0, bibleStudies: 14, memorialAttendance: 55 },
+    { country: 'Saint-Barthélemy', continent: 'Amérique du Nord', population: 11000, maxProcl: 40, proportion: 297, avgProcl: 37, growth: 16, baptized: 0, pioneers: 7, congregations: 1, bibleStudies: 24, memorialAttendance: 87 },
+    { country: 'Saint-Christophe', continent: 'Amérique du Nord', population: 35000, maxProcl: 341, proportion: 146, avgProcl: 240, growth: 10, baptized: 7, pioneers: 43, congregations: 3, bibleStudies: 208, memorialAttendance: 754 },
+    { country: 'Sainte-Hélène', continent: 'Afrique', population: 4000, maxProcl: 125, proportion: 35, avgProcl: 113, growth: 1, baptized: 0, pioneers: 3, congregations: 0, bibleStudies: 47, memorialAttendance: 314 },
+    { country: 'Sainte-Lucie', continent: 'Amérique du Nord', population: 186000, maxProcl: 787, proportion: 241, avgProcl: 772, growth: -1, baptized: 10, pioneers: 120, congregations: 11, bibleStudies: 667, memorialAttendance: 2129 },
+    { country: 'Saint-Eustache', continent: 'Amérique du Nord', population: 3000, maxProcl: 27, proportion: 111, avgProcl: 27, growth: 0, baptized: 0, pioneers: 7, congregations: 1, bibleStudies: 25, memorialAttendance: 87 },
+    { country: 'Saint-Marin', continent: 'Europe', population: 34000, maxProcl: 203, proportion: 174, avgProcl: 195, growth: 3, baptized: 0, pioneers: 44, congregations: 2, bibleStudies: 76, memorialAttendance: 342 },
+    { country: 'Saint-Martin (franç.)', continent: 'Amérique du Nord', population: 32000, maxProcl: 303, proportion: 115, avgProcl: 278, growth: 0, baptized: 7, pioneers: 31, congregations: 5, bibleStudies: 344, memorialAttendance: 952 },
+    { country: 'Saint-Martin (néerl.)', continent: 'Amérique du Nord', population: 45000, maxProcl: 324, proportion: 149, avgProcl: 302, growth: -8, baptized: 14, pioneers: 40, congregations: 4, bibleStudies: 220, memorialAttendance: 848 },
+    { country: 'Saint-Pierre-et-Miquelon', continent: 'Amérique du Nord', population: 6000, maxProcl: 18, proportion: 353, avgProcl: 17, growth: 13, baptized: 0, pioneers: 5, congregations: 1, bibleStudies: 12, memorialAttendance: 19 },
+    { country: 'Saint-Vincent-et-les-Grenadines', continent: 'Amérique du Nord', population: 112000, maxProcl: 295, proportion: 397, avgProcl: 282, growth: -1, baptized: 2, pioneers: 46, congregations: 8, bibleStudies: 314, memorialAttendance: 911 },
+    { country: 'Saipan', continent: 'Océanie', population: 48000, maxProcl: 220, proportion: 224, avgProcl: 214, growth: -2, baptized: 9, pioneers: 55, congregations: 3, bibleStudies: 213, memorialAttendance: 529 },
+    { country: 'Salomon', continent: 'Océanie', population: 738000, maxProcl: 1907, proportion: 430, avgProcl: 1715, growth: 14, baptized: 108, pioneers: 208, congregations: 50, bibleStudies: 1703, memorialAttendance: 11887 },
+    { country: 'Salvador', continent: 'Amérique du Nord', population: 6582000, maxProcl: 37680, proportion: 176, avgProcl: 37431, growth: -2, baptized: 677, pioneers: 5294, congregations: 607, bibleStudies: 20137, memorialAttendance: 81625 },
+    { country: 'Samoa', continent: 'Océanie', population: 206000, maxProcl: 552, proportion: 392, avgProcl: 525, growth: 2, baptized: 40, pioneers: 119, congregations: 12, bibleStudies: 587, memorialAttendance: 2311 },
+    { country: 'Samoa américaines', continent: 'Océanie', population: 49000, maxProcl: 140, proportion: 395, avgProcl: 124, growth: -5, baptized: 3, pioneers: 27, congregations: 3, bibleStudies: 152, memorialAttendance: 568 },
+    { country: 'Sao Tomé-et-Principe', continent: 'Afrique', population: 232000, maxProcl: 901, proportion: 265, avgProcl: 876, growth: -2, baptized: 36, pioneers: 154, congregations: 14, bibleStudies: 2525, memorialAttendance: 3412 },
+    { country: 'Sénégal', continent: 'Afrique', population: 18117000, maxProcl: 1564, proportion: 12014, avgProcl: 1508, growth: 5, baptized: 58, pioneers: 212, congregations: 29, bibleStudies: 1784, memorialAttendance: 3384 },
+    { country: 'Serbie', continent: 'Europe', population: 6641000, maxProcl: 3733, proportion: 1800, avgProcl: 3690, growth: -1, baptized: 82, pioneers: 730, congregations: 60, bibleStudies: 1667, memorialAttendance: 6906 },
+    { country: 'Seychelles', continent: 'Afrique', population: 108000, maxProcl: 360, proportion: 319, avgProcl: 339, growth: -5, baptized: 11, pioneers: 46, congregations: 5, bibleStudies: 400, memorialAttendance: 1047 },
+    { country: 'Sierra Leone', continent: 'Afrique', population: 8472000, maxProcl: 2564, proportion: 3621, avgProcl: 2340, growth: 5, baptized: 94, pioneers: 312, congregations: 42, bibleStudies: 4395, memorialAttendance: 8034 },
+    { country: 'Slovaquie', continent: 'Europe', population: 5432000, maxProcl: 11276, proportion: 485, avgProcl: 11200, growth: 1, baptized: 192, pioneers: 1177, congregations: 134, bibleStudies: 3249, memorialAttendance: 21751 },
+    { country: 'Slovénie', continent: 'Europe', population: 2117000, maxProcl: 1726, proportion: 1232, avgProcl: 1719, growth: 0, baptized: 29, pioneers: 270, congregations: 27, bibleStudies: 652, memorialAttendance: 2727 },
+    { country: 'Soudan', continent: 'Afrique', population: 48109000, maxProcl: 643, proportion: 91116, avgProcl: 528, growth: -17, baptized: 25, pioneers: 102, congregations: 13, bibleStudies: 1094, memorialAttendance: 2491 },
+    { country: 'Soudan du Sud', continent: 'Afrique', population: 11089000, maxProcl: 1910, proportion: 6402, avgProcl: 1732, growth: 9, baptized: 134, pioneers: 232, congregations: 34, bibleStudies: 3838, memorialAttendance: 6857 },
+    { country: 'Sri Lanka', continent: 'Asie', population: 22181000, maxProcl: 7003, proportion: 3195, avgProcl: 6942, growth: -2, baptized: 206, pioneers: 1199, congregations: 98, bibleStudies: 7451, memorialAttendance: 15721 },
+    { country: 'Suède', continent: 'Europe', population: 10541000, maxProcl: 22454, proportion: 472, avgProcl: 22319, growth: 0, baptized: 303, pioneers: 2984, congregations: 280, bibleStudies: 6736, memorialAttendance: 33899 },
+    { country: 'Suisse', continent: 'Europe', population: 8813000, maxProcl: 20024, proportion: 445, avgProcl: 19803, growth: 2, baptized: 282, pioneers: 2246, congregations: 258, bibleStudies: 6715, memorialAttendance: 32786 },
+    { country: 'Suriname', continent: 'Amérique du Sud', population: 567000, maxProcl: 3397, proportion: 179, avgProcl: 3171, growth: -1, baptized: 81, pioneers: 401, congregations: 55, bibleStudies: 3587, memorialAttendance: 9970 },
+    { country: 'Tahiti', continent: 'Océanie', population: 280000, maxProcl: 3194, proportion: 88, avgProcl: 3166, growth: 0, baptized: 111, pioneers: 498, congregations: 45, bibleStudies: 2874, memorialAttendance: 10450 },
+    { country: 'Taïwan', continent: 'Asie', population: 23375000, maxProcl: 11460, proportion: 2060, avgProcl: 11346, growth: 0, baptized: 368, pioneers: 4013, congregations: 177, bibleStudies: 8868, memorialAttendance: 20436 },
+    { country: 'Tanzanie', continent: 'Afrique', population: 67438000, maxProcl: 20846, proportion: 3392, avgProcl: 19881, growth: 6, baptized: 1415, pioneers: 2311, congregations: 417, bibleStudies: 36357, memorialAttendance: 61072 },
+    { country: 'Tchad', continent: 'Afrique', population: 17921000, maxProcl: 912, proportion: 21360, avgProcl: 839, growth: 10, baptized: 38, pioneers: 101, congregations: 23, bibleStudies: 1246, memorialAttendance: 4045 },
+    { country: 'Tchéquie', continent: 'Europe', population: 10851000, maxProcl: 16764, proportion: 657, avgProcl: 16515, growth: 6, baptized: 238, pioneers: 1818, congregations: 217, bibleStudies: 5472, memorialAttendance: 30590 },
+    { country: 'Territoires palestiniens', continent: 'Asie', population: 5490000, maxProcl: 78, proportion: 72237, avgProcl: 76, growth: 25, baptized: 2, pioneers: 14, congregations: 2, bibleStudies: 61, memorialAttendance: 213 },
+    { country: 'Thaïlande', continent: 'Asie', population: 70183000, maxProcl: 5350, proportion: 13275, avgProcl: 5287, growth: 1, baptized: 203, pioneers: 1983, congregations: 144, bibleStudies: 4813, memorialAttendance: 10214 },
+    { country: 'Timor oriental', continent: 'Asie', population: 1395000, maxProcl: 391, proportion: 3661, avgProcl: 381, growth: 1, baptized: 12, pioneers: 101, congregations: 5, bibleStudies: 541, memorialAttendance: 1185 },
+    { country: 'Tinian', continent: 'Océanie', population: 3000, maxProcl: 10, proportion: 300, avgProcl: 10, growth: 0, baptized: 0, pioneers: 2, congregations: 0, bibleStudies: 13, memorialAttendance: 33 },
+    { country: 'Togo', continent: 'Afrique', population: 8887000, maxProcl: 23432, proportion: 391, avgProcl: 22710, growth: 4, baptized: 1143, pioneers: 2786, congregations: 363, bibleStudies: 49963, memorialAttendance: 65534 },
+    { country: 'Tonga', continent: 'Océanie', population: 109000, maxProcl: 212, proportion: 542, avgProcl: 201, growth: 2, baptized: 2, pioneers: 42, congregations: 3, bibleStudies: 180, memorialAttendance: 666 },
+    { country: 'Trinité-et-Tobago', continent: 'Amérique du Nord', population: 1409000, maxProcl: 10529, proportion: 135, avgProcl: 10420, growth: -1, baptized: 226, pioneers: 1632, congregations: 130, bibleStudies: 8277, memorialAttendance: 26040 },
+    { country: 'Turks-et-Caïcos', continent: 'Amérique du Nord', population: 40000, maxProcl: 340, proportion: 122, avgProcl: 329, growth: 3, baptized: 4, pioneers: 63, congregations: 7, bibleStudies: 336, memorialAttendance: 1024 },
+    { country: 'Turquie', continent: 'Asie', population: 85957000, maxProcl: 5692, proportion: 15502, avgProcl: 5545, growth: 5, baptized: 182, pioneers: 2074, congregations: 71, bibleStudies: 2619, memorialAttendance: 8873 },
+    { country: 'Tuvalu', continent: 'Océanie', population: 12000, maxProcl: 93, proportion: 240, avgProcl: 50, growth: 2, baptized: 0, pioneers: 3, congregations: 1, bibleStudies: 35, memorialAttendance: 202 },
+    { country: 'Ukraine', continent: 'Europe', population: 41130000, maxProcl: 109375, proportion: 391, avgProcl: 105235, growth: -14, baptized: 1819, pioneers: 15961, congregations: 1234, bibleStudies: 28342, memorialAttendance: 185910 },
+    { country: 'Uruguay', continent: 'Amérique du Sud', population: 3506000, maxProcl: 12000, proportion: 296, avgProcl: 11825, growth: 0, baptized: 165, pioneers: 1971, congregations: 149, bibleStudies: 8326, memorialAttendance: 22407 },
+    { country: 'Vanuatu', continent: 'Océanie', population: 334000, maxProcl: 694, proportion: 560, avgProcl: 596, growth: -2, baptized: 34, pioneers: 91, congregations: 13, bibleStudies: 887, memorialAttendance: 4308 },
+    { country: 'Vénézuéla', continent: 'Amérique du Sud', population: 28302000, maxProcl: 134096, proportion: 215, avgProcl: 131934, growth: 1, baptized: 5644, pioneers: 34854, congregations: 1700, bibleStudies: 115824, memorialAttendance: 419189 },
+    { country: 'Vierges britanniques (îles)', continent: 'Amérique du Nord', population: 31000, maxProcl: 222, proportion: 140, avgProcl: 221, growth: 4, baptized: 0, pioneers: 32, congregations: 4, bibleStudies: 146, memorialAttendance: 668 },
+    { country: 'Vierges des États-Unis (îles)', continent: 'Amérique du Nord', population: 104000, maxProcl: 536, proportion: 205, avgProcl: 508, growth: -2, baptized: 9, pioneers: 107, congregations: 8, bibleStudies: 396, memorialAttendance: 1355 },
+    { country: 'Wallis et Futuna (îles)', continent: 'Océanie', population: 11000, maxProcl: 70, proportion: 177, avgProcl: 62, growth: -2, baptized: 2, pioneers: 7, congregations: 2, bibleStudies: 86, memorialAttendance: 272 },
+    { country: 'Yap', continent: 'Océanie', population: 11000, maxProcl: 36, proportion: 355, avgProcl: 31, growth: 0, baptized: 2, pioneers: 9, congregations: 1, bibleStudies: 109, memorialAttendance: 134 },
+    { country: 'Zambie', continent: 'Afrique', population: 20018000, maxProcl: 239427, proportion: 95, avgProcl: 211048, growth: 10, baptized: 11081, pioneers: 19960, congregations: 3605, bibleStudies: 396733, memorialAttendance: 969298 },
+    { country: 'Zimbabwe', continent: 'Afrique', population: 15179000, maxProcl: 48748, proportion: 324, avgProcl: 46826, growth: 9, baptized: 2727, pioneers: 7615, congregations: 961, bibleStudies: 81159, memorialAttendance: 120702 }
+];
+    
+    const rawData2022 = [
+    { country: 'Açores', continent: 'Europe', population: 236000, maxProcl: 802, proportion: 298, avgProcl: 791, growth: -1, baptized: 14, pioneers: 131, congregations: 15, bibleStudies: 465, memorialAttendance: 1685 },
+    { country: 'Afrique du Sud', continent: 'Afrique', population: 60605000, maxProcl: 97639, proportion: 629, avgProcl: 96385, growth: 0, baptized: 1953, pioneers: 13591, congregations: 1999, bibleStudies: 69207, memorialAttendance: 228102 },
+    { country: 'Albanie', continent: 'Europe', population: 2866000, maxProcl: 5577, proportion: 518, avgProcl: 5531, growth: -1, baptized: 112, pioneers: 1363, congregations: 83, bibleStudies: 4156, memorialAttendance: 12106 },
+    { country: 'Allemagne', continent: 'Europe', population: 83237000, maxProcl: 170491, proportion: 498, avgProcl: 167230, growth: 1, baptized: 2209, pioneers: 18808, congregations: 2020, bibleStudies: 47374, memorialAttendance: 267452 },
+    { country: 'Andorre', continent: 'Europe', population: 77000, maxProcl: 169, proportion: 461, avgProcl: 167, growth: -1, baptized: 0, pioneers: 23, congregations: 3, bibleStudies: 92, memorialAttendance: 331 },
+    { country: 'Angola', continent: 'Afrique', population: 35027000, maxProcl: 159384, proportion: 226, avgProcl: 154953, growth: 3, baptized: 3273, pioneers: 25609, congregations: 2539, bibleStudies: 247508, memorialAttendance: 485484 },
+    { country: 'Anguilla', continent: 'Amérique du Nord', population: 15000, maxProcl: 67, proportion: 259, avgProcl: 58, growth: 5, baptized: 0, pioneers: 11, congregations: 1, bibleStudies: 52, memorialAttendance: 208 },
+    { country: 'Antigua', continent: 'Amérique du Nord', population: 100000, maxProcl: 478, proportion: 215, avgProcl: 466, growth: 1, baptized: 0, pioneers: 41, congregations: 7, bibleStudies: 332, memorialAttendance: 1244 },
+    { country: 'Argentine', continent: 'Amérique du Sud', population: 47327000, maxProcl: 155443, proportion: 308, avgProcl: 153787, growth: -2, baptized: 2869, pioneers: 35977, congregations: 1945, bibleStudies: 100541, memorialAttendance: 345669 },
+    { country: 'Arménie', continent: 'Asie', population: 2964000, maxProcl: 11191, proportion: 267, avgProcl: 11093, growth: -1, baptized: 192, pioneers: 2259, congregations: 135, bibleStudies: 3903, memorialAttendance: 26543 },
+    { country: 'Aruba', continent: 'Amérique du Sud', population: 108000, maxProcl: 1127, proportion: 98, avgProcl: 1100, growth: -1, baptized: 15, pioneers: 139, congregations: 14, bibleStudies: 695, memorialAttendance: 2978 },
+    { country: 'Australie', continent: 'Océanie', population: 26069000, maxProcl: 71355, proportion: 369, avgProcl: 70663, growth: 1, baptized: 1047, pioneers: 9485, congregations: 739, bibleStudies: 20388, memorialAttendance: 113915 },
+    { country: 'Autriche', continent: 'Europe', population: 8979000, maxProcl: 21966, proportion: 412, avgProcl: 21788, growth: 1, baptized: 231, pioneers: 2209, congregations: 287, bibleStudies: 6804, memorialAttendance: 34282 },
+    { country: 'Azerbaïdjan', continent: 'Asie', population: 10156000, maxProcl: 1674, proportion: 6118, avgProcl: 1660, growth: 2, baptized: 77, pioneers: 451, congregations: 18, bibleStudies: 2551, memorialAttendance: 3647 },
+    { country: 'Bahamas', continent: 'Amérique du Nord', population: 401000, maxProcl: 1868, proportion: 231, avgProcl: 1737, growth: -1, baptized: 28, pioneers: 277, congregations: 28, bibleStudies: 1686, memorialAttendance: 4351 },
+    { country: 'Bangladesh', continent: 'Asie', population: 170298000, maxProcl: 338, proportion: 509874, avgProcl: 334, growth: 2, baptized: 7, pioneers: 140, congregations: 6, bibleStudies: 481, memorialAttendance: 1048 },
+    { country: 'Barbade', continent: 'Amérique du Nord', population: 288000, maxProcl: 2389, proportion: 122, avgProcl: 2360, growth: -1, baptized: 38, pioneers: 191, congregations: 30, bibleStudies: 2016, memorialAttendance: 6732 },
+    { country: 'Belgique', continent: 'Europe', population: 11584000, maxProcl: 25970, proportion: 448, avgProcl: 25835, growth: 0, baptized: 334, pioneers: 2441, congregations: 336, bibleStudies: 10646, memorialAttendance: 44337 },
+    { country: 'Bélize', continent: 'Amérique du Nord', population: 441000, maxProcl: 2614, proportion: 174, avgProcl: 2539, growth: -1, baptized: 49, pioneers: 487, congregations: 54, bibleStudies: 2066, memorialAttendance: 8317 },
+    { country: 'Bénin', continent: 'Afrique', population: 12782000, maxProcl: 14202, proportion: 953, avgProcl: 13410, growth: 2, baptized: 380, pioneers: 1841, congregations: 246, bibleStudies: 17068, memorialAttendance: 38932 },
+    { country: 'Bermudes', continent: 'Amérique du Nord', population: 62000, maxProcl: 443, proportion: 159, avgProcl: 389, growth: -3, baptized: 0, pioneers: 73, congregations: 5, bibleStudies: 172, memorialAttendance: 963 },
+    { country: 'Biélorussie', continent: 'Europe', population: 9433000, maxProcl: 6167, proportion: 1546, avgProcl: 6100, growth: -1, baptized: 125, pioneers: 1475, congregations: 83, bibleStudies: 4516, memorialAttendance: 11784 },
+    { country: 'Birmanie', continent: 'Asie', population: 55680000, maxProcl: 5115, proportion: 10952, avgProcl: 5084, growth: 1, baptized: 211, pioneers: 902, congregations: 91, bibleStudies: 4339, memorialAttendance: 11670 },
+    { country: 'Bolivie', continent: 'Amérique du Sud', population: 11993000, maxProcl: 29268, proportion: 411, avgProcl: 29147, growth: -1, baptized: 559, pioneers: 8269, congregations: 448, bibleStudies: 25747, memorialAttendance: 83177 },
+    { country: 'Bonaire', continent: 'Amérique du Sud', population: 22000, maxProcl: 138, proportion: 183, avgProcl: 120, growth: 3, baptized: 0, pioneers: 25, congregations: 2, bibleStudies: 71, memorialAttendance: 352 },
+    { country: 'Bosnie-Herzégovine', continent: 'Europe', population: 3249000, maxProcl: 1011, proportion: 3285, avgProcl: 989, growth: -4, baptized: 8, pioneers: 188, congregations: 16, bibleStudies: 382, memorialAttendance: 1574 },
+    { country: 'Botswana', continent: 'Afrique', population: 2346000, maxProcl: 2345, proportion: 1026, avgProcl: 2286, growth: 1, baptized: 73, pioneers: 344, congregations: 43, bibleStudies: 3000, memorialAttendance: 5913 },
+    { country: 'Brésil', continent: 'Amérique du Sud', population: 214886000, maxProcl: 909879, proportion: 238, avgProcl: 902121, growth: 0, baptized: 15338, pioneers: 173032, congregations: 12439, bibleStudies: 709982, memorialAttendance: 1808720 },
+    { country: 'Bulgarie', continent: 'Europe', population: 6845000, maxProcl: 2724, proportion: 2558, avgProcl: 2676, growth: 1, baptized: 83, pioneers: 725, congregations: 58, bibleStudies: 1600, memorialAttendance: 5958 },
+    { country: 'Burkina', continent: 'Afrique', population: 22103000, maxProcl: 1944, proportion: 12813, avgProcl: 1725, growth: 1, baptized: 36, pioneers: 232, congregations: 48, bibleStudies: 1784, memorialAttendance: 4251 },
+    { country: 'Burundi', continent: 'Afrique', population: 12625000, maxProcl: 17019, proportion: 767, avgProcl: 16460, growth: 5, baptized: 575, pioneers: 2585, congregations: 281, bibleStudies: 24765, memorialAttendance: 53130 },
+    { country: 'Caïman (îles)', continent: 'Amérique du Nord', population: 67000, maxProcl: 280, proportion: 251, avgProcl: 267, growth: -1, baptized: 0, pioneers: 41, congregations: 3, bibleStudies: 147, memorialAttendance: 638 },
+    { country: 'Cambodge', continent: 'Asie', population: 16681000, maxProcl: 1125, proportion: 15082, avgProcl: 1106, growth: -2, baptized: 32, pioneers: 554, congregations: 17, bibleStudies: 945, memorialAttendance: 2047 },
+    { country: 'Cameroun', continent: 'Afrique', population: 27912000, maxProcl: 43217, proportion: 660, avgProcl: 42315, growth: 1, baptized: 791, pioneers: 5863, congregations: 499, bibleStudies: 32287, memorialAttendance: 89171 },
+    { country: 'Canada', continent: 'Amérique du Nord', population: 38388000, maxProcl: 118607, proportion: 325, avgProcl: 118004, growth: 0, baptized: 1399, pioneers: 16980, congregations: 1177, bibleStudies: 44174, memorialAttendance: 188701 },
+    { country: 'Cap-Vert', continent: 'Afrique', population: 568000, maxProcl: 2296, proportion: 251, avgProcl: 2265, growth: 0, baptized: 52, pioneers: 397, congregations: 35, bibleStudies: 2222, memorialAttendance: 7336 },
+    { country: 'Centrafrique', continent: 'Afrique', population: 5017000, maxProcl: 2661, proportion: 2053, avgProcl: 2444, growth: 4, baptized: 61, pioneers: 265, congregations: 65, bibleStudies: 4021, memorialAttendance: 16500 },
+    { country: 'Chili', continent: 'Amérique du Sud', population: 19829000, maxProcl: 86746, proportion: 230, avgProcl: 86316, growth: 0, baptized: 1301, pioneers: 20069, congregations: 955, bibleStudies: 44009, memorialAttendance: 218637 },
+    { country: 'Chuuk', continent: 'Océanie', population: 54000, maxProcl: 32, proportion: 2000, avgProcl: 27, growth: -13, baptized: 0, pioneers: 8, congregations: 2, bibleStudies: 61, memorialAttendance: 180 },
+    { country: 'Chypre', continent: 'Europe', population: 1224000, maxProcl: 2960, proportion: 421, avgProcl: 2908, growth: 3, baptized: 28, pioneers: 571, congregations: 40, bibleStudies: 1355, memorialAttendance: 5178 },
+    { country: 'Colombie', continent: 'Amérique du Sud', population: 51513000, maxProcl: 188219, proportion: 278, avgProcl: 185586, growth: -2, baptized: 3187, pioneers: 31715, congregations: 2267, bibleStudies: 142917, memorialAttendance: 568136 },
+    { country: 'Congo', continent: 'Afrique', population: 5798000, maxProcl: 8556, proportion: 707, avgProcl: 8200, growth: 2, baptized: 194, pioneers: 1250, congregations: 116, bibleStudies: 12653, memorialAttendance: 25093 },
+    { country: 'Congo (République dém. du)', continent: 'Afrique', population: 95241000, maxProcl: 223678, proportion: 437, avgProcl: 217977, growth: 8, baptized: 5173, pioneers: 20239, congregations: 4037, bibleStudies: 335763, memorialAttendance: 1107590 },
+    { country: 'Cook (îles)', continent: 'Océanie', population: 18000, maxProcl: 211, proportion: 90, avgProcl: 199, growth: 1, baptized: 2, pioneers: 27, congregations: 3, bibleStudies: 122, memorialAttendance: 500 },
+    { country: 'Corée du Sud', continent: 'Asie', population: 51574000, maxProcl: 105977, proportion: 488, avgProcl: 105629, growth: 1, baptized: 1169, pioneers: 50279, congregations: 1261, bibleStudies: 36678, memorialAttendance: 138655 },
+    { country: 'Costa Rica', continent: 'Amérique du Nord', population: 5213000, maxProcl: 32504, proportion: 161, avgProcl: 32290, growth: 0, baptized: 546, pioneers: 4275, congregations: 435, bibleStudies: 23398, memorialAttendance: 72360 },
+    { country: 'Côte d’Ivoire', continent: 'Afrique', population: 29389000, maxProcl: 11877, proportion: 2521, avgProcl: 11657, growth: 0, baptized: 255, pioneers: 1577, congregations: 231, bibleStudies: 19033, memorialAttendance: 37361 },
+    { country: 'Croatie', continent: 'Europe', population: 4069000, maxProcl: 4736, proportion: 867, avgProcl: 4693, growth: -2, baptized: 40, pioneers: 462, congregations: 57, bibleStudies: 1123, memorialAttendance: 7218 },
+    { country: 'Cuba', continent: 'Amérique du Nord', population: 11113000, maxProcl: 91710, proportion: 123, avgProcl: 90315, growth: -3, baptized: 1216, pioneers: 8932, congregations: 1399, bibleStudies: 38669, memorialAttendance: 166891 },
+    { country: 'Curaçao', continent: 'Amérique du Sud', population: 166000, maxProcl: 2040, proportion: 83, avgProcl: 1991, growth: -1, baptized: 40, pioneers: 254, congregations: 25, bibleStudies: 1420, memorialAttendance: 5629 },
+    { country: 'Danemark', continent: 'Europe', population: 5884000, maxProcl: 14534, proportion: 407, avgProcl: 14470, growth: 0, baptized: 129, pioneers: 1316, congregations: 174, bibleStudies: 3906, memorialAttendance: 20688 },
+    { country: 'Dominicaine (République)', continent: 'Amérique du Nord', population: 11056000, maxProcl: 40149, proportion: 290, avgProcl: 38131, growth: -1, baptized: 578, pioneers: 7580, congregations: 539, bibleStudies: 41581, memorialAttendance: 115138 },
+    { country: 'Dominique', continent: 'Amérique du Nord', population: 76000, maxProcl: 439, proportion: 189, avgProcl: 403, growth: -1, baptized: 0, pioneers: 56, congregations: 10, bibleStudies: 408, memorialAttendance: 1215 },
+    { country: 'Équateur', continent: 'Amérique du Sud', population: 18113000, maxProcl: 100090, proportion: 182, avgProcl: 99399, growth: -1, baptized: 1908, pioneers: 21404, congregations: 1204, bibleStudies: 84545, memorialAttendance: 294770 },
+    { country: 'Espagne', continent: 'Europe', population: 46719000, maxProcl: 120614, proportion: 389, avgProcl: 119965, growth: 1, baptized: 1847, pioneers: 23736, congregations: 1416, bibleStudies: 37022, memorialAttendance: 198162 },
+    { country: 'Estonie', continent: 'Europe', population: 1331000, maxProcl: 4018, proportion: 335, avgProcl: 3976, growth: 0, baptized: 48, pioneers: 643, congregations: 55, bibleStudies: 1732, memorialAttendance: 6853 },
+    { country: 'Eswatini', continent: 'Afrique', population: 1185000, maxProcl: 3305, proportion: 372, avgProcl: 3186, growth: 0, baptized: 64, pioneers: 371, congregations: 76, bibleStudies: 3241, memorialAttendance: 7896 },
+    { country: 'États-Unis', continent: 'Amérique du Nord', population: 334805000, maxProcl: 1238431, proportion: 272, avgProcl: 1230463, growth: -1, baptized: 16200, pioneers: 229730, congregations: 12040, bibleStudies: 453281, memorialAttendance: 2344212 },
+    { country: 'Éthiopie', continent: 'Afrique', population: 120813000, maxProcl: 11074, proportion: 11046, avgProcl: 10937, growth: 1, baptized: 218, pioneers: 2391, congregations: 183, bibleStudies: 10712, memorialAttendance: 24477 },
+    { country: 'Féroé (îles)', continent: 'Europe', population: 54000, maxProcl: 135, proportion: 412, avgProcl: 131, growth: 2, baptized: 1, pioneers: 27, congregations: 4, bibleStudies: 57, memorialAttendance: 184 },
+    { country: 'Fidji', continent: 'Océanie', population: 909000, maxProcl: 3186, proportion: 301, avgProcl: 3023, growth: -2, baptized: 95, pioneers: 513, congregations: 62, bibleStudies: 3205, memorialAttendance: 12452 },
+    { country: 'Finlande', continent: 'Europe', population: 5548000, maxProcl: 18108, proportion: 307, avgProcl: 18068, growth: 0, baptized: 155, pioneers: 2429, congregations: 275, bibleStudies: 9689, memorialAttendance: 26435 },
+    { country: 'France', continent: 'Europe', population: 64663000, maxProcl: 136419, proportion: 476, avgProcl: 135723, growth: 1, baptized: 2026, pioneers: 20092, congregations: 1477, bibleStudies: 47209, memorialAttendance: 228072 },
+    { country: 'Gabon', continent: 'Afrique', population: 2332000, maxProcl: 4460, proportion: 535, avgProcl: 4356, growth: 0, baptized: 108, pioneers: 592, congregations: 59, bibleStudies: 4784, memorialAttendance: 11657 },
+    { country: 'Gambie', continent: 'Afrique', population: 2558000, maxProcl: 280, proportion: 9545, avgProcl: 268, growth: 3, baptized: 7, pioneers: 44, congregations: 5, bibleStudies: 339, memorialAttendance: 582 },
+    { country: 'Géorgie', continent: 'Asie', population: 3689000, maxProcl: 18782, proportion: 198, avgProcl: 18653, growth: 1, baptized: 278, pioneers: 3695, congregations: 224, bibleStudies: 4677, memorialAttendance: 34969 },
+    { country: 'Ghana', continent: 'Afrique', population: 32395000, maxProcl: 149275, proportion: 220, avgProcl: 147047, growth: 0, baptized: 4221, pioneers: 16131, congregations: 2396, bibleStudies: 245305, memorialAttendance: 322892 },
+    { country: 'Gibraltar', continent: 'Europe', population: 34000, maxProcl: 159, proportion: 248, avgProcl: 137, growth: 12, baptized: 0, pioneers: 23, congregations: 2, bibleStudies: 25, memorialAttendance: 179 },
+    { country: 'Grande-Bretagne', continent: 'Europe', population: 65954000, maxProcl: 139960, proportion: 474, avgProcl: 139106, growth: 1, baptized: 1665, pioneers: 19696, congregations: 1614, bibleStudies: 42225, memorialAttendance: 220438 },
+    { country: 'Grèce', continent: 'Europe', population: 10432000, maxProcl: 27995, proportion: 374, avgProcl: 27887, growth: -1, baptized: 420, pioneers: 4658, congregations: 354, bibleStudies: 8041, memorialAttendance: 43608 },
+    { country: 'Grenade', continent: 'Amérique du Nord', population: 113000, maxProcl: 553, proportion: 214, avgProcl: 528, growth: 0, baptized: 10, pioneers: 80, congregations: 9, bibleStudies: 455, memorialAttendance: 1470 },
+    { country: 'Groenland', continent: 'Amérique du Nord', population: 57000, maxProcl: 129, proportion: 456, avgProcl: 125, growth: -8, baptized: 2, pioneers: 32, congregations: 5, bibleStudies: 73, memorialAttendance: 297 },
+    { country: 'Guadeloupe', continent: 'Amérique du Nord', population: 396000, maxProcl: 8534, proportion: 48, avgProcl: 8323, growth: 1, baptized: 118, pioneers: 951, congregations: 118, bibleStudies: 6211, memorialAttendance: 20016 },
+    { country: 'Guam', continent: 'Océanie', population: 172000, maxProcl: 742, proportion: 236, avgProcl: 730, growth: -3, baptized: 14, pioneers: 181, congregations: 9, bibleStudies: 571, memorialAttendance: 1892 },
+    { country: 'Guatémala', continent: 'Amérique du Nord', population: 18584000, maxProcl: 39452, proportion: 477, avgProcl: 38974, growth: -2, baptized: 512, pioneers: 6614, congregations: 852, bibleStudies: 23370, memorialAttendance: 98300 },
+    { country: 'Guinée', continent: 'Afrique', population: 13866000, maxProcl: 1150, proportion: 12663, avgProcl: 1095, growth: 1, baptized: 36, pioneers: 156, congregations: 25, bibleStudies: 1844, memorialAttendance: 3913 },
+    { country: 'Guinée-Bissao', continent: 'Afrique', population: 2063000, maxProcl: 207, proportion: 10634, avgProcl: 194, growth: -3, baptized: 8, pioneers: 49, congregations: 4, bibleStudies: 443, memorialAttendance: 592 },
+    { country: 'Guinée équatoriale', continent: 'Afrique', population: 1497000, maxProcl: 2411, proportion: 643, avgProcl: 2327, growth: -3, baptized: 68, pioneers: 312, congregations: 31, bibleStudies: 3554, memorialAttendance: 6803 },
+    { country: 'Guyana', continent: 'Amérique du Sud', population: 794000, maxProcl: 3337, proportion: 242, avgProcl: 3284, growth: -1, baptized: 53, pioneers: 532, congregations: 47, bibleStudies: 3447, memorialAttendance: 12471 },
+    { country: 'Guyane', continent: 'Amérique du Sud', population: 305000, maxProcl: 2933, proportion: 105, avgProcl: 2892, growth: -2, baptized: 66, pioneers: 563, congregations: 45, bibleStudies: 3908, memorialAttendance: 10154 },
+    { country: 'Haïti', continent: 'Amérique du Nord', population: 1168000, maxProcl: 18234, proportion: 657, avgProcl: 17774, growth: -5, baptized: 281, pioneers: 2556, congregations: 271, bibleStudies: 20714, memorialAttendance: 64155 },
+    { country: 'Honduras', continent: 'Amérique du Nord', population: 9611000, maxProcl: 22324, proportion: 439, avgProcl: 21891, growth: -3, baptized: 253, pioneers: 4234, congregations: 429, bibleStudies: 15131, memorialAttendance: 60259 },
+    { country: 'Hong Kong', continent: 'Asie', population: 7292000, maxProcl: 5510, proportion: 1331, avgProcl: 5477, growth: -2, baptized: 147, pioneers: 1361, congregations: 66, bibleStudies: 4405, memorialAttendance: 13484 },
+    { country: 'Hongrie', continent: 'Europe', population: 9689000, maxProcl: 21180, proportion: 462, avgProcl: 20959, growth: 1, baptized: 314, pioneers: 2070, congregations: 288, bibleStudies: 6863, memorialAttendance: 39452 },
+    { country: 'Inde', continent: 'Asie', population: 1406632000, maxProcl: 56747, proportion: 25038, avgProcl: 56181, growth: 3, baptized: 2817, pioneers: 9634, congregations: 947, bibleStudies: 52177, memorialAttendance: 152011 },
+    { country: 'Indonésie', continent: 'Asie', population: 279135000, maxProcl: 30306, proportion: 9345, avgProcl: 29869, growth: 1, baptized: 716, pioneers: 5721, congregations: 476, bibleStudies: 19773, memorialAttendance: 60144 },
+    { country: 'Irlande', continent: 'Europe', population: 8859000, maxProcl: 7533, proportion: 1207, avgProcl: 7341, growth: 2, baptized: 126, pioneers: 1465, congregations: 121, bibleStudies: 2519, memorialAttendance: 12561 },
+    { country: 'Islande', continent: 'Europe', population: 377000, maxProcl: 399, proportion: 964, avgProcl: 391, growth: 2, baptized: 9, pioneers: 63, congregations: 7, bibleStudies: 185, memorialAttendance: 686 },
+    { country: 'Israël', continent: 'Asie', population: 9676000, maxProcl: 2067, proportion: 4797, avgProcl: 2017, growth: 1, baptized: 28, pioneers: 395, congregations: 33, bibleStudies: 1214, memorialAttendance: 3670 },
+    { country: 'Italie', continent: 'Europe', population: 60263000, maxProcl: 250624, proportion: 241, avgProcl: 250116, growth: 0, baptized: 3181, pioneers: 47826, congregations: 2843, bibleStudies: 90566, memorialAttendance: 426019 },
+    { country: 'Jamaïque', continent: 'Amérique du Nord', population: 2985000, maxProcl: 11124, proportion: 274, avgProcl: 10906, growth: -1, baptized: 169, pioneers: 1527, congregations: 152, bibleStudies: 8236, memorialAttendance: 35992 },
+    { country: 'Japon', continent: 'Asie', population: 125194000, maxProcl: 214359, proportion: 585, avgProcl: 213828, growth: 0, baptized: 1858, pioneers: 69606, congregations: 2893, bibleStudies: 74891, memorialAttendance: 310692 },
+    { country: 'Kazakhstan', continent: 'Asie', population: 19205000, maxProcl: 17259, proportion: 1122, avgProcl: 17124, growth: -1, baptized: 283, pioneers: 4500, congregations: 232, bibleStudies: 8070, memorialAttendance: 30324 },
+    { country: 'Kenya', continent: 'Afrique', population: 56215000, maxProcl: 29534, proportion: 1990, avgProcl: 28243, growth: 2, baptized: 536, pioneers: 3578, congregations: 623, bibleStudies: 27036, memorialAttendance: 68579 },
+    { country: 'Kirghizstan', continent: 'Asie', population: 6747000, maxProcl: 5097, proportion: 1336, avgProcl: 5050, growth: -3, baptized: 87, pioneers: 1372, congregations: 89, bibleStudies: 2480, memorialAttendance: 10054 },
+    { country: 'Kiribati', continent: 'Océanie', population: 123000, maxProcl: 91, proportion: 1482, avgProcl: 83, growth: -17, baptized: 6, pioneers: 24, congregations: 2, bibleStudies: 87, memorialAttendance: 441 },
+    { country: 'Kosovo', continent: 'Europe', population: 1795000, maxProcl: 244, proportion: 7479, avgProcl: 240, growth: -2, baptized: 4, pioneers: 107, congregations: 8, bibleStudies: 257, memorialAttendance: 491 },
+    { country: 'Kosrae', continent: 'Océanie', population: 8000, maxProcl: 13, proportion: 1000, avgProcl: 8, growth: -33, baptized: 0, pioneers: 4, congregations: 1, bibleStudies: 12, memorialAttendance: 56 },
+    { country: 'Lesotho', continent: 'Afrique', population: 2176000, maxProcl: 3729, proportion: 601, avgProcl: 3619, growth: -1, baptized: 103, pioneers: 545, congregations: 82, bibleStudies: 2991, memorialAttendance: 8348 },
+    { country: 'Lettonie', continent: 'Europe', population: 1893000, maxProcl: 2101, proportion: 916, avgProcl: 2067, growth: -1, baptized: 27, pioneers: 367, congregations: 30, bibleStudies: 1140, memorialAttendance: 3537 },
+    { country: 'Libéria', continent: 'Afrique', population: 5305000, maxProcl: 7391, proportion: 792, avgProcl: 6702, growth: 0, baptized: 235, pioneers: 771, congregations: 141, bibleStudies: 14351, memorialAttendance: 28935 },
+    { country: 'Liechtenstein', continent: 'Europe', population: 39000, maxProcl: 94, proportion: 429, avgProcl: 91, growth: 5, baptized: 0, pioneers: 7, congregations: 1, bibleStudies: 26, memorialAttendance: 157 },
+    { country: 'Lituanie', continent: 'Europe', population: 2806000, maxProcl: 2924, proportion: 982, avgProcl: 2857, growth: 0, baptized: 40, pioneers: 443, congregations: 40, bibleStudies: 1194, memorialAttendance: 4895 },
+    { country: 'Luxembourg', continent: 'Europe', population: 645000, maxProcl: 2188, proportion: 297, avgProcl: 2170, growth: -1, baptized: 0, pioneers: 254, congregations: 30, bibleStudies: 945, memorialAttendance: 4054 },
+    { country: 'Macao', continent: 'Asie', population: 677000, maxProcl: 404, proportion: 1718, avgProcl: 394, growth: -2, baptized: 18, pioneers: 128, congregations: 6, bibleStudies: 529, memorialAttendance: 1122 },
+    { country: 'Macédoine du Nord', continent: 'Europe', population: 1837000, maxProcl: 1259, proportion: 1478, avgProcl: 1243, growth: -1, baptized: 15, pioneers: 201, congregations: 24, bibleStudies: 635, memorialAttendance: 2859 },
+    { country: 'Madagascar', continent: 'Afrique', population: 29178000, maxProcl: 35748, proportion: 863, avgProcl: 33800, growth: 2, baptized: 975, pioneers: 6548, congregations: 826, bibleStudies: 51947, memorialAttendance: 129313 },
+    { country: 'Madère', continent: 'Europe', population: 251000, maxProcl: 1203, proportion: 212, avgProcl: 1185, growth: 1, baptized: 20, pioneers: 141, congregations: 19, bibleStudies: 310, memorialAttendance: 1829 },
+    { country: 'Malaisie', continent: 'Asie', population: 32700000, maxProcl: 5637, proportion: 5849, avgProcl: 5591, growth: 0, baptized: 178, pioneers: 1569, congregations: 121, bibleStudies: 4252, memorialAttendance: 12301 },
+    { country: 'Malawi', continent: 'Afrique', population: 20181000, maxProcl: 108044, proportion: 220, avgProcl: 91694, growth: 3, baptized: 2823, pioneers: 7827, congregations: 1831, bibleStudies: 84846, memorialAttendance: 305182 },
+    { country: 'Mali', continent: 'Afrique', population: 21474000, maxProcl: 365, proportion: 61530, avgProcl: 349, growth: 1, baptized: 6, pioneers: 63, congregations: 6, bibleStudies: 622, memorialAttendance: 982 },
+    { country: 'Malouines (îles)', continent: 'Amérique du Sud', population: 4000, maxProcl: 16, proportion: 250, avgProcl: 16, growth: 14, baptized: 0, pioneers: 5, congregations: 1, bibleStudies: 12, memorialAttendance: 20 },
+    { country: 'Malte', continent: 'Europe', population: 521000, maxProcl: 874, proportion: 627, avgProcl: 831, growth: 4, baptized: 11, pioneers: 140, congregations: 11, bibleStudies: 277, memorialAttendance: 1368 },
+    { country: 'Marshall', continent: 'Océanie', population: 60000, maxProcl: 147, proportion: 504, avgProcl: 119, growth: 2, baptized: 0, pioneers: 30, congregations: 4, bibleStudies: 168, memorialAttendance: 708 },
+    { country: 'Martinique', continent: 'Amérique du Nord', population: 368000, maxProcl: 5050, proportion: 74, avgProcl: 4945, growth: 0, baptized: 87, pioneers: 700, congregations: 57, bibleStudies: 3881, memorialAttendance: 11315 },
+    { country: 'Maurice', continent: 'Afrique', population: 1255000, maxProcl: 2158, proportion: 597, avgProcl: 2103, growth: 4, baptized: 52, pioneers: 308, congregations: 27, bibleStudies: 2215, memorialAttendance: 5575 },
+    { country: 'Mayotte', continent: 'Afrique', population: 326000, maxProcl: 171, proportion: 2233, avgProcl: 146, growth: -3, baptized: 3, pioneers: 55, congregations: 3, bibleStudies: 185, memorialAttendance: 306 },
+    { country: 'Mexique', continent: 'Amérique du Nord', population: 131563000, maxProcl: 864689, proportion: 154, avgProcl: 856224, growth: -1, baptized: 10832, pioneers: 144181, congregations: 12881, bibleStudies: 479281, memorialAttendance: 2208399 },
+    { country: 'Moldavie', continent: 'Europe', population: 3161000, maxProcl: 18301, proportion: 174, avgProcl: 18154, growth: -1, baptized: 424, pioneers: 2551, congregations: 201, bibleStudies: 10650, memorialAttendance: 34957 },
+    { country: 'Monaco', continent: 'Europe', population: 0, maxProcl: 0, proportion: 0, avgProcl: 0, growth: 0, baptized: 0, pioneers: 0, congregations: 0, bibleStudies: 0, memorialAttendance: 0 },
+    { country: 'Mongolie', continent: 'Asie', population: 3373000, maxProcl: 437, proportion: 7993, avgProcl: 422, growth: -3, baptized: 11, pioneers: 190, congregations: 8, bibleStudies: 855, memorialAttendance: 1365 },
+    { country: 'Monténégro', continent: 'Europe', population: 629000, maxProcl: 341, proportion: 1918, avgProcl: 328, growth: 2, baptized: 5, pioneers: 97, congregations: 7, bibleStudies: 139, memorialAttendance: 884 },
+    { country: 'Montserrat', continent: 'Amérique du Nord', population: 5000, maxProcl: 36, proportion: 143, avgProcl: 35, growth: -3, baptized: 0, pioneers: 14, congregations: 1, bibleStudies: 46, memorialAttendance: 132 },
+    { country: 'Mozambique', continent: 'Afrique', population: 31616000, maxProcl: 81719, proportion: 427, avgProcl: 73993, growth: 7, baptized: 2728, pioneers: 6854, congregations: 1551, bibleStudies: 87042, memorialAttendance: 286696 },
+    { country: 'Namibie', continent: 'Afrique', population: 2634000, maxProcl: 2558, proportion: 1055, avgProcl: 2496, growth: -2, baptized: 102, pioneers: 320, congregations: 46, bibleStudies: 3372, memorialAttendance: 7539 },
+    { country: 'Nauru', continent: 'Océanie', population: 11000, maxProcl: 18, proportion: 688, avgProcl: 16, growth: 7, baptized: 0, pioneers: 2, congregations: 1, bibleStudies: 9, memorialAttendance: 100 },
+    { country: 'Népal', continent: 'Asie', population: 29192000, maxProcl: 2823, proportion: 10415, avgProcl: 2803, growth: 1, baptized: 96, pioneers: 869, congregations: 43, bibleStudies: 2735, memorialAttendance: 7529 },
+    { country: 'Nicaragua', continent: 'Amérique du Nord', population: 6779000, maxProcl: 29326, proportion: 235, avgProcl: 28857, growth: -1, baptized: 450, pioneers: 4853, congregations: 471, bibleStudies: 19752, memorialAttendance: 81225 },
+    { country: 'Niévès', continent: 'Amérique du Nord', population: 14000, maxProcl: 74, proportion: 197, avgProcl: 71, growth: 0, baptized: 0, pioneers: 5, congregations: 1, bibleStudies: 51, memorialAttendance: 249 },
+    { country: 'Niger', continent: 'Afrique', population: 26084000, maxProcl: 346, proportion: 85521, avgProcl: 305, growth: 7, baptized: 5, pioneers: 44, congregations: 9, bibleStudies: 293, memorialAttendance: 804 },
+    { country: 'Nigéria', continent: 'Afrique', population: 216747000, maxProcl: 389961, proportion: 616, avgProcl: 351732, growth: 8, baptized: 4521, pioneers: 40227, congregations: 6081, bibleStudies: 347454, memorialAttendance: 742933 },
+    { country: 'Niue', continent: 'Océanie', population: 2000, maxProcl: 22, proportion: 100, avgProcl: 20, growth: 0, baptized: 0, pioneers: 3, congregations: 1, bibleStudies: 9, memorialAttendance: 74 },
+    { country: 'Norvège', continent: 'Europe', population: 5436000, maxProcl: 11877, proportion: 461, avgProcl: 11794, growth: 0, baptized: 109, pioneers: 1419, congregations: 163, bibleStudies: 3606, memorialAttendance: 17681 },
+    { country: 'Nouvelle-Calédonie', continent: 'Océanie', population: 271000, maxProcl: 2636, proportion: 105, avgProcl: 2573, growth: -1, baptized: 96, pioneers: 317, congregations: 36, bibleStudies: 2436, memorialAttendance: 7265 },
+    { country: 'Nouvelle-Zélande', continent: 'Océanie', population: 4898000, maxProcl: 14669, proportion: 337, avgProcl: 14542, growth: 1, baptized: 231, pioneers: 1924, congregations: 170, bibleStudies: 5399, memorialAttendance: 26131 },
+    { country: 'Ouganda', continent: 'Afrique', population: 44900000, maxProcl: 9262, proportion: 4942, avgProcl: 9085, growth: 1, baptized: 419, pioneers: 1208, congregations: 167, bibleStudies: 17855, memorialAttendance: 28907 },
+    { country: 'Pakistan', continent: 'Asie', population: 229489000, maxProcl: 1154, proportion: 209579, avgProcl: 1095, growth: 3, baptized: 83, pioneers: 62, congregations: 16, bibleStudies: 633, memorialAttendance: 3615 },
+    { country: 'Palaos', continent: 'Océanie', population: 18000, maxProcl: 73, proportion: 269, avgProcl: 67, growth: -8, baptized: 0, pioneers: 24, congregations: 2, bibleStudies: 113, memorialAttendance: 164 },
+    { country: 'Panama', continent: 'Amérique du Nord', population: 4447000, maxProcl: 18414, proportion: 243, avgProcl: 18291, growth: -1, baptized: 295, pioneers: 3357, congregations: 317, bibleStudies: 12803, memorialAttendance: 57464 },
+    { country: 'Papouasie-Nouvelle-Guinée', continent: 'Océanie', population: 9292000, maxProcl: 5197, proportion: 1987, avgProcl: 4677, growth: -8, baptized: 131, pioneers: 710, congregations: 91, bibleStudies: 5367, memorialAttendance: 35414 },
+    { country: 'Paraguay', continent: 'Amérique du Sud', population: 7306000, maxProcl: 11164, proportion: 664, avgProcl: 10996, growth: -2, baptized: 271, pioneers: 2273, congregations: 197, bibleStudies: 9226, memorialAttendance: 25946 },
+    { country: 'Pays-Bas', continent: 'Europe', population: 17714000, maxProcl: 29240, proportion: 609, avgProcl: 29078, growth: 1, baptized: 340, pioneers: 2688, congregations: 353, bibleStudies: 9175, memorialAttendance: 49218 },
+    { country: 'Pérou', continent: 'Amérique du Sud', population: 33397000, maxProcl: 131346, proportion: 258, avgProcl: 129198, growth: -1, baptized: 2499, pioneers: 30457, congregations: 1551, bibleStudies: 133339, memorialAttendance: 420405 },
+    { country: 'Philippines', continent: 'Asie', population: 112509000, maxProcl: 238609, proportion: 482, avgProcl: 233488, growth: 2, baptized: 7228, pioneers: 51854, congregations: 3511, bibleStudies: 159420, memorialAttendance: 664989 },
+    { country: 'Pohnpei', continent: 'Océanie', population: 37000, maxProcl: 60, proportion: 698, avgProcl: 53, growth: -4, baptized: 0, pioneers: 17, congregations: 1, bibleStudies: 63, memorialAttendance: 138 },
+    { country: 'Pologne', continent: 'Europe', population: 38180000, maxProcl: 114673, proportion: 337, avgProcl: 113276, growth: 1, baptized: 1054, pioneers: 10200, congregations: 1272, bibleStudies: 27664, memorialAttendance: 191572 },
+    { country: 'Porto Rico', continent: 'Amérique du Nord', population: 2830000, maxProcl: 23170, proportion: 123, avgProcl: 22980, growth: -1, baptized: 238, pioneers: 4009, congregations: 230, bibleStudies: 8390, memorialAttendance: 45579 },
+    { country: 'Portugal', continent: 'Europe', population: 9858000, maxProcl: 51334, proportion: 193, avgProcl: 51116, growth: 1, baptized: 676, pioneers: 6147, congregations: 656, bibleStudies: 17137, memorialAttendance: 86422 },
+    { country: 'Réunion', continent: 'Afrique', population: 974000, maxProcl: 3468, proportion: 284, avgProcl: 3426, growth: 0, baptized: 77, pioneers: 599, congregations: 41, bibleStudies: 1942, memorialAttendance: 6686 },
+    { country: 'Rodrigues', continent: 'Afrique', population: 44000, maxProcl: 70, proportion: 667, avgProcl: 66, growth: 2, baptized: 2, pioneers: 13, congregations: 1, bibleStudies: 78, memorialAttendance: 215 },
+    { country: 'Rota', continent: 'Océanie', population: 3000, maxProcl: 5, proportion: 750, avgProcl: 4, growth: 0, baptized: 0, pioneers: 2, congregations: 0, bibleStudies: 2, memorialAttendance: 8 },
+    { country: 'Roumanie', continent: 'Europe', population: 19202000, maxProcl: 39444, proportion: 488, avgProcl: 39350, growth: 0, baptized: 656, pioneers: 5532, congregations: 533, bibleStudies: 19731, memorialAttendance: 79758 },
+    { country: 'Rwanda', continent: 'Afrique', population: 13372000, maxProcl: 31541, proportion: 449, avgProcl: 29794, growth: 1, baptized: 1240, pioneers: 5103, congregations: 562, bibleStudies: 33913, memorialAttendance: 76441 },
+    { country: 'Saba', continent: 'Amérique du Nord', population: 2000, maxProcl: 17, proportion: 154, avgProcl: 13, growth: 8, baptized: 0, pioneers: 3, congregations: 0, bibleStudies: 12, memorialAttendance: 71 },
+    { country: 'Saint-Barthélemy', continent: 'Amérique du Nord', population: 11000, maxProcl: 34, proportion: 344, avgProcl: 32, growth: -9, baptized: 0, pioneers: 5, congregations: 1, bibleStudies: 20, memorialAttendance: 61 },
+    { country: 'Saint-Christophe', continent: 'Amérique du Nord', population: 40000, maxProcl: 225, proportion: 183, avgProcl: 219, growth: -1, baptized: 3, pioneers: 30, congregations: 3, bibleStudies: 190, memorialAttendance: 721 },
+    { country: 'Sainte-Hélène', continent: 'Afrique', population: 4000, maxProcl: 116, proportion: 36, avgProcl: 112, growth: 5, baptized: 2, pioneers: 3, congregations: 0, bibleStudies: 32, memorialAttendance: 283 },
+    { country: 'Sainte-Lucie', continent: 'Amérique du Nord', population: 185000, maxProcl: 806, proportion: 237, avgProcl: 780, growth: 1, baptized: 0, pioneers: 120, congregations: 11, bibleStudies: 776, memorialAttendance: 2334 },
+    { country: 'Saint-Eustache', continent: 'Amérique du Nord', population: 3000, maxProcl: 34, proportion: 111, avgProcl: 27, growth: 0, baptized: 0, pioneers: 5, congregations: 1, bibleStudies: 31, memorialAttendance: 61 },
+    { country: 'Saint-Marin', continent: 'Europe', population: 34000, maxProcl: 191, proportion: 180, avgProcl: 189, growth: -1, baptized: 0, pioneers: 41, congregations: 2, bibleStudies: 83, memorialAttendance: 312 },
+    { country: 'Saint-Martin (franç.)', continent: 'Amérique du Nord', population: 32000, maxProcl: 291, proportion: 116, avgProcl: 277, growth: -1, baptized: 5, pioneers: 30, congregations: 5, bibleStudies: 329, memorialAttendance: 844 },
+    { country: 'Saint-Martin (néerl.)', continent: 'Amérique du Nord', population: 44000, maxProcl: 344, proportion: 134, avgProcl: 328, growth: 1, baptized: 10, pioneers: 42, congregations: 4, bibleStudies: 264, memorialAttendance: 1007 },
+    { country: 'Saint-Pierre-et-Miquelon', continent: 'Amérique du Nord', population: 6000, maxProcl: 15, proportion: 400, avgProcl: 15, growth: 7, baptized: 0, pioneers: 6, congregations: 1, bibleStudies: 4, memorialAttendance: 21 },
+    { country: 'Saint-Vincent-et-les-Grenadines', continent: 'Amérique du Nord', population: 112000, maxProcl: 293, proportion: 394, avgProcl: 284, growth: -2, baptized: 2, pioneers: 46, congregations: 8, bibleStudies: 297, memorialAttendance: 958 },
+    { country: 'Saipan', continent: 'Océanie', population: 48000, maxProcl: 226, proportion: 219, avgProcl: 219, growth: 0, baptized: 4, pioneers: 46, congregations: 3, bibleStudies: 227, memorialAttendance: 564 },
+    { country: 'Salomon', continent: 'Océanie', population: 721000, maxProcl: 1631, proportion: 477, avgProcl: 1510, growth: -1, baptized: 14, pioneers: 186, congregations: 49, bibleStudies: 1027, memorialAttendance: 9317 },
+    { country: 'Salvador', continent: 'Amérique du Nord', population: 6550000, maxProcl: 38717, proportion: 172, avgProcl: 38016, growth: -2, baptized: 407, pioneers: 5043, congregations: 654, bibleStudies: 19313, memorialAttendance: 84039 },
+    { country: 'Samoa', continent: 'Océanie', population: 203000, maxProcl: 545, proportion: 393, avgProcl: 517, growth: -3, baptized: 16, pioneers: 108, congregations: 12, bibleStudies: 542, memorialAttendance: 2748 },
+    { country: 'Samoa américaines', continent: 'Océanie', population: 55000, maxProcl: 154, proportion: 420, avgProcl: 131, growth: -9, baptized: 0, pioneers: 32, congregations: 3, bibleStudies: 202, memorialAttendance: 647 },
+    { country: 'Sao Tomé-et-Principe', continent: 'Afrique', population: 227000, maxProcl: 907, proportion: 254, avgProcl: 895, growth: -2, baptized: 22, pioneers: 153, congregations: 14, bibleStudies: 1763, memorialAttendance: 3532 },
+    { country: 'Sénégal', continent: 'Afrique', population: 17654000, maxProcl: 1461, proportion: 12285, avgProcl: 1437, growth: 2, baptized: 13, pioneers: 192, congregations: 29, bibleStudies: 1802, memorialAttendance: 3051 },
+    { country: 'Serbie', continent: 'Europe', population: 6797000, maxProcl: 3764, proportion: 1829, avgProcl: 3716, growth: -2, baptized: 72, pioneers: 700, congregations: 61, bibleStudies: 2152, memorialAttendance: 7254 },
+    { country: 'Seychelles', continent: 'Afrique', population: 107000, maxProcl: 371, proportion: 301, avgProcl: 356, growth: -1, baptized: 16, pioneers: 42, congregations: 5, bibleStudies: 480, memorialAttendance: 1181 },
+    { country: 'Sierra Leone', continent: 'Afrique', population: 8306000, maxProcl: 2525, proportion: 3721, avgProcl: 2232, growth: -2, baptized: 79, pioneers: 304, congregations: 41, bibleStudies: 3488, memorialAttendance: 7252 },
+    { country: 'Slovaquie', continent: 'Europe', population: 5439000, maxProcl: 11250, proportion: 488, avgProcl: 11137, growth: 0, baptized: 211, pioneers: 1106, congregations: 133, bibleStudies: 3602, memorialAttendance: 23373 },
+    { country: 'Slovénie', continent: 'Europe', population: 2106000, maxProcl: 1731, proportion: 1224, avgProcl: 1721, growth: -1, baptized: 14, pioneers: 254, congregations: 28, bibleStudies: 769, memorialAttendance: 2847 },
+    { country: 'Soudan', continent: 'Afrique', population: 45992000, maxProcl: 666, proportion: 72201, avgProcl: 637, growth: -3, baptized: 26, pioneers: 121, congregations: 13, bibleStudies: 839, memorialAttendance: 1836 },
+    { country: 'Soudan du Sud', continent: 'Afrique', population: 11619000, maxProcl: 1677, proportion: 7308, avgProcl: 1590, growth: 6, baptized: 56, pioneers: 216, congregations: 33, bibleStudies: 2083, memorialAttendance: 5289 },
+    { country: 'Sri Lanka', continent: 'Asie', population: 22156000, maxProcl: 7136, proportion: 3130, avgProcl: 7078, growth: 1, baptized: 155, pioneers: 1207, congregations: 100, bibleStudies: 7631, memorialAttendance: 16020 },
+    { country: 'Suède', continent: 'Europe', population: 10482000, maxProcl: 22464, proportion: 469, avgProcl: 22346, growth: 0, baptized: 220, pioneers: 2871, congregations: 281, bibleStudies: 7242, memorialAttendance: 34365 },
+    { country: 'Suisse', continent: 'Europe', population: 8737000, maxProcl: 19462, proportion: 451, avgProcl: 19380, growth: 0, baptized: 218, pioneers: 2009, congregations: 258, bibleStudies: 6605, memorialAttendance: 31115 },
+    { country: 'Suriname', continent: 'Amérique du Sud', population: 592000, maxProcl: 3649, proportion: 185, avgProcl: 3194, growth: 2, baptized: 130, pioneers: 377, congregations: 56, bibleStudies: 3426, memorialAttendance: 10209 },
+    { country: 'Tahiti', continent: 'Océanie', population: 280000, maxProcl: 3251, proportion: 88, avgProcl: 3171, growth: 0, baptized: 44, pioneers: 497, congregations: 45, bibleStudies: 2756, memorialAttendance: 10300 },
+    { country: 'Taïwan', continent: 'Asie', population: 23186000, maxProcl: 11375, proportion: 2047, avgProcl: 11325, growth: 0, baptized: 299, pioneers: 3924, congregations: 179, bibleStudies: 8620, memorialAttendance: 20804 },
+    { country: 'Tanzanie', continent: 'Afrique', population: 63299000, maxProcl: 19998, proportion: 3365, avgProcl: 18809, growth: 5, baptized: 547, pioneers: 2137, congregations: 416, bibleStudies: 22384, memorialAttendance: 54088 },
+    { country: 'Tchad', continent: 'Afrique', population: 17414000, maxProcl: 806, proportion: 22734, avgProcl: 766, growth: -1, baptized: 30, pioneers: 93, congregations: 22, bibleStudies: 866, memorialAttendance: 3501 },
+    { country: 'Tchéquie', continent: 'Europe', population: 10520000, maxProcl: 15957, proportion: 678, avgProcl: 15518, growth: 1, baptized: 143, pioneers: 1567, congregations: 212, bibleStudies: 5541, memorialAttendance: 29183 },
+    { country: 'Territoires palestiniens', continent: 'Asie', population: 5599000, maxProcl: 62, proportion: 91787, avgProcl: 61, growth: 3, baptized: 0, pioneers: 12, congregations: 2, bibleStudies: 58, memorialAttendance: 131 },
+    { country: 'Thaïlande', continent: 'Asie', population: 70078000, maxProcl: 5248, proportion: 13453, avgProcl: 5209, growth: 0, baptized: 153, pioneers: 1932, congregations: 142, bibleStudies: 3592, memorialAttendance: 9548 },
+    { country: 'Timor oriental', continent: 'Asie', population: 1369000, maxProcl: 397, proportion: 3622, avgProcl: 378, growth: 2, baptized: 13, pioneers: 94, congregations: 5, bibleStudies: 442, memorialAttendance: 1152 },
+    { country: 'Tinian', continent: 'Océanie', population: 3000, maxProcl: 10, proportion: 300, avgProcl: 10, growth: 0, baptized: 0, pioneers: 1, congregations: 0, bibleStudies: 12, memorialAttendance: 30 },
+    { country: 'Togo', continent: 'Afrique', population: 8681000, maxProcl: 22500, proportion: 399, avgProcl: 21780, growth: 2, baptized: 588, pioneers: 2590, congregations: 349, bibleStudies: 26650, memorialAttendance: 54625 },
+    { country: 'Tonga', continent: 'Océanie', population: 108000, maxProcl: 211, proportion: 548, avgProcl: 197, growth: 9, baptized: 5, pioneers: 41, congregations: 3, bibleStudies: 216, memorialAttendance: 647 },
+    { country: 'Trinité-et-Tobago', continent: 'Amérique du Nord', population: 1407000, maxProcl: 10623, proportion: 133, avgProcl: 10557, growth: 1, baptized: 192, pioneers: 1578, congregations: 130, bibleStudies: 8825, memorialAttendance: 27960 },
+    { country: 'Turks-et-Caïcos', continent: 'Amérique du Nord', population: 40000, maxProcl: 352, proportion: 125, avgProcl: 319, growth: -5, baptized: 0, pioneers: 58, congregations: 7, bibleStudies: 296, memorialAttendance: 976 },
+    { country: 'Turquie', continent: 'Asie', population: 85562000, maxProcl: 5438, proportion: 16132, avgProcl: 5304, growth: 6, baptized: 110, pioneers: 1928, congregations: 70, bibleStudies: 2546, memorialAttendance: 9244 },
+    { country: 'Tuvalu', continent: 'Océanie', population: 12000, maxProcl: 97, proportion: 245, avgProcl: 49, growth: -22, baptized: 0, pioneers: 3, congregations: 1, bibleStudies: 42, memorialAttendance: 210 },
+    { country: 'Ukraine', continent: 'Europe', population: 41130000, maxProcl: 127378, proportion: 335, avgProcl: 122694, growth: -4, baptized: 1941, pioneers: 18592, congregations: 1429, bibleStudies: 32037, memorialAttendance: 211528 },
+    { country: 'Uruguay', continent: 'Amérique du Sud', population: 3496000, maxProcl: 11960, proportion: 294, avgProcl: 11878, growth: -2, baptized: 193, pioneers: 1885, congregations: 149, bibleStudies: 10564, memorialAttendance: 25010 },
+    { country: 'Vanuatu', continent: 'Océanie', population: 322000, maxProcl: 635, proportion: 530, avgProcl: 607, growth: -15, baptized: 19, pioneers: 99, congregations: 13, bibleStudies: 734, memorialAttendance: 3584 },
+    { country: 'Vénézuéla', continent: 'Amérique du Sud', population: 28705000, maxProcl: 131634, proportion: 221, avgProcl: 130055, growth: -2, baptized: 2758, pioneers: 31316, congregations: 1714, bibleStudies: 69536, memorialAttendance: 355695 },
+    { country: 'Vierges britanniques (îles)', continent: 'Amérique du Nord', population: 31000, maxProcl: 218, proportion: 146, avgProcl: 213, growth: -5, baptized: 0, pioneers: 30, congregations: 4, bibleStudies: 140, memorialAttendance: 765 },
+    { country: 'Vierges des États-Unis (îles)', continent: 'Amérique du Nord', population: 104000, maxProcl: 592, proportion: 200, avgProcl: 521, growth: -2, baptized: 1, pioneers: 108, congregations: 8, bibleStudies: 487, memorialAttendance: 1289 },
+    { country: 'Wallis et Futuna (îles)', continent: 'Océanie', population: 11000, maxProcl: 66, proportion: 175, avgProcl: 63, growth: 0, baptized: 2, pioneers: 6, congregations: 1, bibleStudies: 41, memorialAttendance: 212 },
+    { country: 'Yap', continent: 'Océanie', population: 12000, maxProcl: 34, proportion: 387, avgProcl: 31, growth: 0, baptized: 2, pioneers: 7, congregations: 1, bibleStudies: 68, memorialAttendance: 132 },
+    { country: 'Zambie', continent: 'Afrique', population: 18921000, maxProcl: 215382, proportion: 99, avgProcl: 191372, growth: 5, baptized: 4770, pioneers: 18034, congregations: 3529, bibleStudies: 245959, memorialAttendance: 864131 },
+    { country: 'Zimbabwe', continent: 'Afrique', population: 15179000, maxProcl: 45582, proportion: 355, avgProcl: 42810, growth: 2, baptized: 730, pioneers: 7190, congregations: 1036, bibleStudies: 43528, memorialAttendance: 105824 }
+];
+
+    // --- Fusion et Normalisation des Données ---
+    // Cette fonction ajoute la propriété 'year' à chaque entrée
+    const addYear = (data, year) => data.map(item => ({ ...item, year }));
+
+    // Création de la base de données principale
+    const allData = [
+        ...addYear(rawData2024, 2024),
+        ...addYear(rawData2023, 2023),
+        ...addYear(rawData2022, 2022),
+    ];
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const tableBody = document.getElementById('data-table');
+        const continentCheckboxesContainer = document.getElementById('continent-checkboxes');
+        const yearCheckboxesContainer = document.getElementById('year-checkboxes');
+        const countrySearch = document.getElementById('country-search');
+        const columnSelect = document.getElementById('column-select');
+        const addFilterBtn = document.getElementById('add-filter-btn');
+        const activeFiltersContainer = document.getElementById('active-filters');
+        
+        let activeNumericFilters = [];
+        let sortConfig = { column: 'year', direction: 'desc' };
+
+        // --- Initialisation ---
+        function init() {
+            populateYears();
+            populateContinents();
+            populateColumnSelect();
+            renderTable(); // Affichage initial
+            setupEventListeners();
+        }
+
+        // --- Fonctions de Population des Filtres ---
+        function populateYears() {
+            const years = [...new Set(allData.map(item => item.year))].sort((a, b) => b - a);
+            createCheckboxGroup(yearCheckboxesContainer, years, 'year', '📅', 'Toutes les années');
+        }
+
+        function populateContinents() {
+            const continents = [...new Set(allData.map(item => item.continent))].sort();
+            const continentEmojis = {'Afrique': '🌍', 'Amérique du Nord': '🌎', 'Amérique du Sud': '🌎', 'Asie': '🌏', 'Europe': '🌍', 'Océanie': '🌏'};
+            createCheckboxGroup(continentCheckboxesContainer, continents, 'continent', '🌍', 'Tous les continents', continentEmojis);
+        }
+
+        function createCheckboxGroup(container, items, name, emoji, selectAllText, emojiMap = {}) {
+            const selectAllLabel = document.createElement('label');
+            selectAllLabel.className = 'filter-checkbox-label select-all-label';
+            selectAllLabel.innerHTML = `<input type="checkbox" data-group="${name}" class="select-all" checked><span>${emoji} ${selectAllText}</span>`;
+            container.appendChild(selectAllLabel);
+
+            items.forEach(item => {
+                const itemEmoji = emojiMap[item] || '';
+                const label = document.createElement('label');
+                label.className = 'filter-checkbox-label';
+                label.innerHTML = `<input type="checkbox" name="${name}" value="${item}" checked><span>${itemEmoji} ${item}</span>`;
+                container.appendChild(label);
+            });
+        }
+        
+        function populateColumnSelect() {
+            const columns = [
+                { key: 'population', name: 'Population' }, { key: 'maxProcl', name: 'Max. Procl.' },
+                { key: 'proportion', name: 'Proportion' }, { key: 'avgProcl', name: 'Moy. Procl.' },
+                { key: 'growth', name: 'Accr. (%)' }, { key: 'baptized', name: 'Nbre bapt.' },
+                { key: 'pioneers', name: 'Moy. pionn.' }, { key: 'congregations', name: 'Nbre ass.' },
+                { key: 'bibleStudies', name: 'Moy. cours bibl.' }, { key: 'memorialAttendance', name: 'Assis. Mémorial' },
+            ];
+            columns.forEach(col => columnSelect.innerHTML += `<option value="${col.key}">${col.name}</option>`);
+        }
+        
+        // --- Écouteurs d'Événements ---
+        function setupEventListeners() {
+            countrySearch.addEventListener('input', renderTable);
+            
+            // Écouteur unifié pour tous les groupes de checkboxes
+            [continentCheckboxesContainer, yearCheckboxesContainer].forEach(container => {
+                container.addEventListener('change', (e) => {
+                    const groupName = e.target.dataset.group || e.target.name;
+                    if (e.target.classList.contains('select-all')) {
+                        handleSelectAll(e.target.checked, groupName);
+                    } else {
+                        updateSelectAllState(groupName);
+                    }
+                    renderTable();
+                });
+            });
+
+            addFilterBtn.addEventListener('click', addNumericFilter);
+            document.querySelector('thead').addEventListener('click', handleSort);
+        }
+        
+        // --- Logique de Sélection Multiple ---
+        function handleSelectAll(isChecked, groupName) {
+            document.querySelectorAll(`input[name="${groupName}"]`).forEach(cb => cb.checked = isChecked);
+        }
+
+        function updateSelectAllState(groupName) {
+            const allBoxes = document.querySelectorAll(`input[name="${groupName}"]`);
+            const allChecked = [...allBoxes].every(cb => cb.checked);
+            document.querySelector(`.select-all[data-group="${groupName}"]`).checked = allChecked;
+        }
+
+        // --- Rendu et Filtrage Principal ---
+        function renderTable() {
+            const filteredData = getFilteredAndSortedData();
+            tableBody.innerHTML = '';
+            
+            filteredData.forEach((item, index) => {
+                const row = document.createElement('tr');
+                const growthClass = item.growth > 0 ? 'growth-positive' : item.growth < 0 ? 'growth-negative' : '';
+                row.style.animationDelay = `${index * 0.015}s`;
+                
+                row.innerHTML = `
+                    <td><b>${item.year}</b></td>
+                    <td>${item.country}</td>
+                    <td>${item.continent}</td>
+                    <td>${item.population.toLocaleString('fr-FR')}</td>
+                    <td>${item.maxProcl.toLocaleString('fr-FR')}</td>
+                    <td>${item.proportion.toLocaleString('fr-FR')}</td>
+                    <td>${item.avgProcl.toLocaleString('fr-FR')}</td>
+                    <td class="${growthClass}">${item.growth > 0 ? '+' : ''}${item.growth}%</td>
+                    <td>${item.baptized.toLocaleString('fr-FR')}</td>
+                    <td>${item.pioneers.toLocaleString('fr-FR')}</td>
+                    <td>${item.congregations.toLocaleString('fr-FR')}</td>
+                    <td>${item.bibleStudies.toLocaleString('fr-FR')}</td>
+                    <td>${item.memorialAttendance.toLocaleString('fr-FR')}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        function getFilteredAndSortedData() {
+            const countryTerm = countrySearch.value.toLowerCase();
+            const selectedContinents = [...document.querySelectorAll('input[name="continent"]:checked')].map(cb => cb.value);
+            const selectedYears = [...document.querySelectorAll('input[name="year"]:checked')].map(cb => parseInt(cb.value));
+            
+            let filtered = allData.filter(item => {
+                const matchesCountry = item.country.toLowerCase().includes(countryTerm);
+                const matchesContinent = selectedContinents.includes(item.continent);
+                const matchesYear = selectedYears.includes(item.year);
+                const matchesNumeric = activeNumericFilters.every(filter => {
+                    const itemValue = item[filter.column];
+                    if (filter.operator === '>=') return itemValue >= filter.value;
+                    if (filter.operator === '<=') return itemValue <= filter.value;
+                    return true;
+                });
+                return matchesCountry && matchesContinent && matchesYear && matchesNumeric;
+            });
+
+            filtered.sort((a, b) => {
+                const valA = a[sortConfig.column];
+                const valB = b[sortConfig.column];
+                let comparison = (typeof valA === 'string') ? valA.localeCompare(valB, 'fr') : valA - valB;
+                return sortConfig.direction === 'asc' ? comparison : -comparison;
+            });
+            
+            return filtered;
+        }
+
+        // --- Filtres Numériques & Tri ---
+        function addNumericFilter() {
+            const column = columnSelect.value;
+            const operator = document.getElementById('operator-select').value;
+            const value = parseFloat(document.getElementById('value-input').value);
+
+            if (isNaN(value)) { alert("Veuillez entrer une valeur numérique valide."); return; }
+            
+            const filter = { 
+                id: Date.now(), column, operator, value,
+                columnName: columnSelect.options[columnSelect.selectedIndex].textContent
+            };
+            
+            activeNumericFilters.push(filter);
+            renderActiveFilters();
+            renderTable();
+            document.getElementById('value-input').value = '';
+        }
+        
+        function removeNumericFilter(id) {
+            activeNumericFilters = activeNumericFilters.filter(f => f.id !== id);
+            renderActiveFilters();
+            renderTable();
+        }
+
+        function renderActiveFilters() {
+            activeFiltersContainer.innerHTML = '';
+            activeNumericFilters.forEach(filter => {
+                const tag = document.createElement('div');
+                tag.className = 'filter-tag';
+                tag.innerHTML = `
+                    <span>${filter.columnName} ${filter.operator} ${filter.value.toLocaleString('fr-FR')}</span>
+                    <span class="remove-filter" data-id="${filter.id}">✖</span>
+                `;
+                tag.querySelector('.remove-filter').addEventListener('click', () => removeNumericFilter(filter.id));
+                activeFiltersContainer.appendChild(tag);
+            });
+        }
+
+        function handleSort(event) {
+            const header = event.target.closest('th');
+            if (!header) return;
+            
+            const column = header.dataset.column;
+            
+            if (sortConfig.column === column) {
+                sortConfig.direction = sortConfig.direction === 'asc' ? 'desc' : 'asc';
+            } else {
+                sortConfig.column = column;
+                sortConfig.direction = 'asc';
+            }
+            
+            updateSortIndicators();
+            renderTable();
+        }
+        
+        function updateSortIndicators() {
+            document.querySelectorAll('thead th .sort-indicator').forEach(span => span.textContent = '');
+            const activeIndicator = document.querySelector(`th[data-column="${sortConfig.column}"] .sort-indicator`);
+            if(activeIndicator) {
+                activeIndicator.textContent = sortConfig.direction === 'asc' ? '🔼' : '🔽';
+            }
+        }
+
+        // --- Démarrage de l'application ---
+        init();
+    });
+    </script>
+
+</body>
+</html>
