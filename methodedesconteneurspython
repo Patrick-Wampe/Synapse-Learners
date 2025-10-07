@@ -1,0 +1,1508 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cheat Sheet Python - Synapse Learners</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --couleur-principale: #6a3093;
+            --couleur-secondaire: #a044ff;
+            --couleur-vert: #28a745;
+            --couleur-orange: #fd7e14;
+            --couleur-fond: #f4f7f9;
+            --couleur-texte: #333;
+            --couleur-texte-clair: #555;
+            --couleur-blanc: #ffffff;
+            --couleur-gris-clair: #e9ecef;
+            --code-bg: #2b2b2b;
+            --ombre: 0 4px 15px rgba(0, 0, 0, 0.05);
+            --gradient-principal: linear-gradient(45deg, var(--couleur-principale), var(--couleur-secondaire));
+        }
+
+        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--couleur-fond);
+            color: var(--couleur-texte);
+            margin: 0; padding: 0; overflow-x: hidden;
+        }
+        .container { width: 100%; max-width: 1100px; margin: 0 auto; padding: 2rem; box-sizing: border-box; }
+        .page-title { text-align: center; margin-bottom: 3rem; }
+        .page-title h1 {
+            font-size: 3.5rem; font-weight: 700;
+            background: var(--gradient-principal);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem; animation: fadeInDown 0.8s ease-out;
+        }
+        .page-title p { font-size: 1.2rem; color: var(--couleur-texte-clair); max-width: 700px; margin: 0 auto; animation: fadeInUp 0.8s ease-out 0.2s backwards; }
+        
+        /* --- NOUVEAU: Barre de recherche --- */
+        .search-container {
+            margin-bottom: 2.5rem;
+            animation: fadeInUp 0.8s ease-out 0.4s backwards;
+        }
+        #search-input {
+            width: 100%;
+            padding: 1rem 1.5rem;
+            font-size: 1.1rem;
+            font-family: 'Poppins', sans-serif;
+            border-radius: 50px;
+            border: 2px solid var(--couleur-gris-clair);
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            box-sizing: border-box;
+        }
+        #search-input:focus, #search-input:focus-visible {
+            outline: none;
+            border-color: var(--couleur-secondaire);
+            box-shadow: 0 0 0 4px rgba(160, 68, 255, 0.2);
+        }
+
+        .legend-section { background-color: var(--couleur-blanc); padding: 1.5rem 2rem; border-radius: 12px; margin-bottom: 4rem; box-shadow: var(--ombre); display: flex; justify-content: center; align-items: center; gap: 2.5rem; flex-wrap: wrap; border: 1px solid var(--couleur-gris-clair); }
+        .legend-item { display: flex; align-items: center; gap: 0.75rem; font-size: 1rem; font-weight: 500; }
+        .indicator { width: 18px; height: 18px; border-radius: 50%; flex-shrink: 0; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        .returns-value { background-color: var(--couleur-vert); }
+        .modifies-inplace { background-color: var(--couleur-orange); }
+        .cheatsheet-section { margin-bottom: 1.5rem; }
+        .section-header {
+            font-size: 2.5rem; color: var(--couleur-principale);
+            margin-bottom: 1rem; border-bottom: 3px solid;
+            border-image: var(--gradient-principal) 1;
+            padding-bottom: 0.75rem; display: flex; align-items: center;
+            justify-content: space-between; cursor: pointer;
+            -webkit-tap-highlight-color: transparent; transition: margin-bottom 0.5s ease-in-out;
+        }
+        .section-header > span { display: flex; align-items: center; gap: 1rem; }
+        .section-header.collapsed { margin-bottom: 0; }
+        .section-toggle-icon { transition: transform 0.5s ease-in-out; }
+        .section-toggle-icon.collapsed { transform: rotate(-180deg); }
+        .section-content { display: grid; grid-template-rows: 1fr; transition: grid-template-rows 0.5s ease-in-out; overflow: hidden; }
+        .section-content.collapsed { grid-template-rows: 0fr; }
+        .section-content > .inner-content { overflow: hidden; padding-top: 1rem; }
+
+        .section-controls { display: flex; gap: 0.75rem; margin-bottom: 1.5rem; }
+        .control-btn {
+            background: none;
+            border: 1px solid var(--couleur-principale);
+            color: var(--couleur-principale);
+            padding: 0.4rem 1rem; border-radius: 20px; cursor: pointer;
+            font-size: 0.8rem; font-weight: 600; font-family: 'Poppins', sans-serif;
+            transition: all 0.2s ease;
+        }
+        .control-btn:hover { background-color: var(--couleur-principale); color: white; }
+        .control-btn:focus-visible {
+             outline: 2px solid var(--couleur-secondaire);
+             outline-offset: 2px;
+        }
+        
+        .code-block { background-color: var(--code-bg); border-radius: 12px; margin-bottom: 1.5rem; border: 1px solid #444; box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2); opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease-out, transform 0.6s ease-out; }
+        .code-block.is-visible { opacity: 1; transform: translateY(0); }
+        
+        .code-header { background-color: #3a3a3a; padding: 0.75rem 1.5rem; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
+        .code-title-container { display: flex; align-items: center; gap: 1rem; flex-grow: 1; flex-wrap: wrap; }
+        .code-title { color: #e0e0e0; font-family: 'Source Code Pro', monospace; font-weight: 600; font-size: 1.1rem; }
+        .code-subtitle { color: #b0b0b0; font-family: 'Poppins', sans-serif; font-size: 0.9rem; font-weight: 400; font-style: italic; white-space: nowrap; }
+        .copy-btn { background-color: #555; color: #fff; border: none; padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer; font-size: 0.9rem; transition: all 0.2s ease; flex-shrink: 0; z-index: 10; }
+        .copy-btn:hover { background-color: var(--couleur-secondaire); transform: scale(1.05); }
+        .toggle-explanation { color: #f5a623; transition: transform 0.4s ease; margin-left: auto; }
+        .toggle-explanation.open { transform: rotate(180deg); }
+
+        .code-content-wrapper { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.5s ease-in-out; }
+        .code-content-wrapper.open { grid-template-rows: 1fr; }
+        .code-content { overflow: hidden; }
+
+        .explanation-content { padding: 1.5rem; border-top: 1px solid #555; background-color: #3a3a3a; color: #e0e0e0; font-size: 0.95rem; line-height: 1.6; }
+        .explanation-content h4 { color: #f5a623; margin-top: 0; margin-bottom: 0.5rem; font-weight: 600; }
+        .explanation-content p, .explanation-content ul { margin-top: 0; margin-bottom: 1rem; }
+        .explanation-content ul { padding-left: 20px; }
+        .explanation-content li { margin-bottom: 0.5rem; }
+        .explanation-content code { background-color: #555; padding: 0.2em 0.4em; border-radius: 3px; font-size: 0.9em; }
+        pre { margin: 0; padding: 1.5rem; white-space: pre-wrap; word-wrap: break-word; }
+        code { color: #f1f1f1; font-family: 'Source Code Pro', monospace; font-size: 1rem; line-height: 1.5; }
+        .comment { color: #8a8a8a; } .keyword { color: #cf8e6d; } .function { color: #6db0cf; } .string { color: #9ddc9a; } .number { color: #b5cea8; } .variable { color: #dcdcaa; }
+        footer { text-align: center; margin-top: 4rem; padding: 2rem 0; border-top: 1px solid var(--couleur-gris-clair); color: var(--couleur-texte-clair); font-size: 0.9rem; }
+        
+        @media (max-width: 768px) {
+            .page-title h1 { font-size: 2.5rem; } .page-title p { font-size: 1rem; }
+            .section-header { font-size: 2rem; }
+            .legend-section { flex-direction: column; gap: 1rem; align-items: flex-start; }
+            .code-title-container { gap: 0.5rem; }
+            .code-subtitle { width: 100%; text-align: left; margin-top: -0.5rem; }
+        }
+        
+        /* ✅ NOUVEAU STYLE À AJOUTER */
+.global-controls {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 2rem;
+    margin-top: -2rem; /* Pour réduire l'espace avec la légende */
+}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header><section class="page-title"><h1>Cheat Sheet Python</h1><p>Une liste de méthodes Python essentielles.</p></section></header>
+        <main>
+            <div class="search-container">
+                <input type="search" id="search-input" placeholder="🔎 Rechercher une méthode (ex: split, replace...)" aria-label="Rechercher une méthode">
+            </div>
+
+            <section class="legend-section"><div class="legend-item"><span class="indicator returns-value"></span><span>Renvoie un nouveau résultat</span></div><div class="legend-item"><span class="indicator modifies-inplace"></span><span>Modifie l'objet sur place</span></div></section>
+            <div class="global-controls">
+    <button class="control-btn" id="toggle-all-sections-btn" data-state="collapsed">
+        <i data-lucide="chevrons-down-up" style="width:16px; height:16px; vertical-align: middle; margin-right: 8px;"></i>
+        <span>Tout Déplier</span>
+    </button>
+</div>
+
+<section id="strings" class="cheatsheet-section">
+            
+            <section id="strings" class="cheatsheet-section">
+                <h2 class="section-header collapsed"><span>🔡 Chaînes de caractères (str)</span><i data-lucide="chevron-up" class="section-toggle-icon"></i></h2>
+                <div class="section-content collapsed">
+                    <div class="inner-content">
+                        <div class="section-controls collapsed">
+                            <button class="control-btn" id="expand-all-strings">Tout Déplier</button>
+<button class="control-btn" id="collapse-all-strings">Tout Plier</button>
+                        </div>
+                        <div id="strings-content-container"></div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="lists" class="cheatsheet-section">
+                <h2 class="section-header collapsed"><span>⛓️ Listes (list)</span><i data-lucide="chevron-up" class="section-toggle-icon collapsed"></i></h2>
+                <div class="section-content collapsed">
+    <div class="inner-content">
+        <div class="section-controls">
+            <button class="control-btn" id="expand-all-lists">Tout Déplier</button>
+            <button class="control-btn" id="collapse-all-lists">Tout Plier</button>
+        </div>
+        <!-- LE CONTENU DES LISTES SERA INJECTÉ ICI PAR JAVASCRIPT -->
+        <div id="lists-content-container"></div>
+    </div>
+</div>
+                
+            </section>
+            
+            <section id="dictionaries" class="cheatsheet-section">
+                <h2 class="section-header collapsed"><span>🔑 Dictionnaires (dict)</span><i data-lucide="chevron-up" class="section-toggle-icon collapsed"></i></h2>
+                <div class="section-content collapsed">
+    <div class="inner-content">
+        <div class="section-controls">
+            <button class="control-btn" id="expand-all-dictionaries">Tout Déplier</button>
+            <button class="control-btn" id="collapse-all-dictionaries">Tout Plier</button>
+        </div>
+        <div id="dictionaries-content-container"></div>
+    </div>
+</div>
+            </section>
+            
+            <section id="sets" class="cheatsheet-section">
+                <h2 class="section-header collapsed"><span>💠 Ensembles (set)</span><i data-lucide="chevron-up" class="section-toggle-icon collapsed"></i></h2>
+                <div class="section-content collapsed">
+    <div class="inner-content">
+        <div class="section-controls">
+            <button class="control-btn" id="expand-all-sets">Tout Déplier</button>
+            <button class="control-btn" id="collapse-all-sets">Tout Plier</button>
+        </div>
+        <div id="sets-content-container"></div>
+    </div>
+</div>
+            </section>
+            
+            <section id="tuples" class="cheatsheet-section">
+                <h2 class="section-header collapsed"><span>📦 Tuples (tuple)</span><i data-lucide="chevron-up" class="section-toggle-icon collapsed"></i></h2>
+                <div class="section-content collapsed">
+    <div class="inner-content">
+        <div class="section-controls">
+            <button class="control-btn" id="expand-all-tuples">Tout Déplier</button>
+            <button class="control-btn" id="collapse-all-tuples">Tout Plier</button>
+        </div>
+        <div id="tuples-content-container"></div>
+    </div>
+</div>
+            </section>
+
+    <script>
+    // --- Initialisation des icônes Lucide ---
+    lucide.createIcons();
+
+    // --- 1. BASE DE DONNÉES DES MÉTHODES (APPROCHE DE MAINTENABILITÉ) ---
+    // Au lieu d'écrire du HTML, on gère une structure de données simple.
+    const stringMethods = [
+        {
+            title: 'str.strip()',
+            subtitle: 'Retirer les espaces/caractères aux extrémités.',
+            type: 'returns-value',
+            explanation: {
+                description: "Retire les caractères spécifiés du début ET de la fin. Si l'argument est omis, retire les espaces blancs par défaut.",
+                arguments: "<li><code>chars</code> (optionnel) : Chaîne de caractères à retirer.</li>",
+                returns: "Une <strong>nouvelle chaîne</strong> nettoyée."
+            },
+            code: `<span class="comment"># --- Cas métier : Nettoyer une colonne Pandas ---</span>
+<span class="variable">df</span>[<span class="string">'ville_propre'</span>] = <span class="variable">df</span>[<span class="string">'ville'</span>].<span class="variable">str</span>.<span class="function">strip</span>()`
+        },
+        {
+            title: 'str.lower()',
+            subtitle: 'Convertir en minuscules.',
+            type: 'returns-value',
+            explanation: {
+                description: "Convertit toute la chaîne en minuscules.",
+                arguments: "<p>Aucun.</p>",
+                returns: "Une <strong>nouvelle chaîne</strong> en minuscules."
+            },
+            code: `<span class="comment"># --- Cas métier : Normaliser pour un 'groupby' ---</span>
+<span class="variable">df</span>[<span class="string">'pays_norm'</span>] = <span class="variable">df</span>[<span class="string">'pays'</span>].<span class="variable">str</span>.<span class="function">lower</span>()
+<span class="variable">df</span>.<span class="function">groupby</span>(<span class="string">'pays_norm'</span>)[<span class="string">'ventes'</span>].<span class="function">sum</span>()`
+        },
+        {
+            title: 'str.upper()',
+            subtitle: 'Convertir en majuscules.',
+            type: 'returns-value',
+            explanation: {
+                description: "Convertit toute la chaîne en majuscules.",
+                arguments: "<p>Aucun.</p>",
+                returns: "Une <strong>nouvelle chaîne</strong> en majuscules."
+            },
+            code: `<span class="comment"># --- Cas métier : Standardiser une colonne de sigles ---</span>
+<span class="variable">df</span>[<span class="string">'code_pays'</span>] = <span class="variable">df</span>[<span class="string">'code_pays'</span>].<span class="variable">str</span>.<span class="function">upper</span>()`
+        },
+        {
+            title: 'str.replace()',
+            subtitle: 'Remplacer une sous-chaîne.',
+            type: 'returns-value',
+            explanation: {
+                description: "Remplace les occurrences de la sous-chaîne <code>old</code> par <code>new</code>.",
+                arguments: "<li><code>old</code> (obligatoire): La sous-chaîne à remplacer.</li><li><code>new</code> (obligatoire): La chaîne de remplacement.</li><li><code>count</code> (optionnel): Nombre maximum de remplacements.</li>",
+                returns: "Une <strong>nouvelle chaîne</strong> modifiée."
+            },
+            code: `<span class="comment"># --- Cas métier : Nettoyer une colonne de prix ---</span>
+<span class="variable">df</span>[<span class="string">'prix_float'</span>] = <span class="variable">df</span>[<span class="string">'prix_str'</span>].<span class="variable">str</span>.<span class="function">replace</span>(<span class="string">' €'</span>, <span class="string">''</span>).<span class="variable">str</span>.<span class="function">replace</span>(<span class="string">','</span>, <span class="string">'.'</span>).<span class="function">astype</span>(<span class="variable">float</span>)`
+        },
+        {
+            title: 'str.split()',
+            subtitle: 'Découper la chaîne en une liste.',
+            type: 'returns-value',
+            explanation: {
+                description: "Découpe une chaîne en une liste de sous-chaînes.",
+                arguments: "<li><code>sep</code> (optionnel): Le séparateur. Par défaut, tout espace blanc.</li><li><code>maxsplit</code> (optionnel): Nombre maximum de découpes.</li>",
+                returns: "Une <strong>nouvelle liste</strong> de chaînes."
+            },
+            code: `<span class="comment"># --- Cas métier : Créer des colonnes à partir d'une seule ---</span>
+<span class="variable">df</span>[[<span class="string">'prenom'</span>, <span class="string">'nom'</span>]] = <span class="variable">df</span>[<span class="string">'nom_complet'</span>].<span class="variable">str</span>.<span class="function">split</span>(<span class="string">' '</span>, <span class="variable">n</span>=<span class="number">1</span>, <span class="variable">expand</span>=<span class="keyword">True</span>)`
+        },
+        {
+            title: 'str.join()',
+            subtitle: 'Assembler une liste en une chaîne.',
+            type: 'returns-value',
+            explanation: {
+                description: "Assemble les éléments d'un itérable en une seule chaîne, en utilisant la chaîne initiale comme \"colle\".",
+                arguments: "<li><code>iterable</code> (obligatoire): Un itérable (liste, tuple) dont tous les éléments sont des chaînes.</li>",
+                returns: "Une <strong>nouvelle chaîne</strong> concaténée."
+            },
+            code: `<span class="comment"># --- Cas métier : Concaténer des colonnes de texte ---</span>
+<span class="variable">df</span>[<span class="string">'adresse_complete'</span>] = <span class="variable">df</span>[[<span class="string">'numero'</span>, <span class="string">'rue'</span>, <span class="string">'ville'</span>]].<span class="function">astype</span>(<span class="variable">str</span>).<span class="function">agg</span>(<span class="string">', '</span>.<span class="function">join</span>, <span class="variable">axis</span>=<span class="number">1</span>)`
+        },
+        {
+            title: 'str.startswith()',
+            subtitle: 'Vérifier si la chaîne commence par...',
+            type: 'returns-value',
+            explanation: {
+                description: "Vérifie si la chaîne commence par le <code>prefix</code> spécifié.",
+                arguments: "<li><code>prefix</code> (obligatoire): La sous-chaîne à rechercher. Peut aussi être un tuple de préfixes.</li>",
+                returns: "Un <strong>booléen</strong> (<code>True</code> ou <code>False</code>)."
+            },
+            code: `<span class="comment"># --- Cas métier : Filtrer des lignes dans Pandas ---</span>
+<span class="variable">df_clients_fr</span> = <span class="variable">df</span>[<span class="variable">df</span>[<span class="string">'id_client'</span>].<span class="variable">str</span>.<span class="function">startswith</span>(<span class="string">'FR-'</span>)]`
+        },
+        {
+            title: 'str.endswith()',
+            subtitle: 'Vérifier si la chaîne se termine par...',
+            type: 'returns-value',
+            explanation: {
+                description: "Vérifie si la chaîne se termine par le <code>suffix</code> spécifié.",
+                arguments: "<li><code>suffix</code> (obligatoire): La sous-chaîne à rechercher. Peut aussi être un tuple de suffixes.</li>",
+                returns: "Un <strong>booléen</strong> (<code>True</code> ou <code>False</code>)."
+            },
+            code: `<span class="comment"># --- Cas métier : Filtrer des domaines d'email ---</span>
+<span class="variable">df_pro</span> = <span class="variable">df</span>[<span class="variable">df</span>[<span class="string">'email'</span>].<span class="variable">str</span>.<span class="function">endswith</span>(<span class="string">'@entreprise.com'</span>)]`
+        },
+        {
+            title: 'f-string (formatage)',
+            subtitle: 'Insérer des variables dans une chaîne.',
+            type: 'returns-value',
+            explanation: {
+                description: "La méthode la plus moderne et lisible pour formater des chaînes. On préfixe la chaîne par <code>f</code> et on insère les variables entre accolades <code>{}</code>.",
+                arguments: "<p>Aucun argument direct, les variables sont capturées depuis leur contexte.</p>",
+                returns: "Une <strong>nouvelle chaîne</strong> formatée."
+            },
+            code: `<span class="comment"># --- Cas métier : Créer une colonne descriptive ---</span>
+<span class="variable">df</span>[<span class="string">'description'</span>] = <span class="variable">df</span>.<span class="function">apply</span>(<span class="keyword">lambda</span> <span class="variable">row</span>: <span class="string">f"{row['produit']} coûte {row['prix']:.2f}€"</span>, <span class="variable">axis</span>=<span class="number">1</span>)`
+        },
+        {
+            title: 'str.find()',
+            subtitle: 'Trouver l\'index d\'une sous-chaîne.',
+            type: 'returns-value',
+            explanation: {
+                description: "Retourne l'index de la première occurrence de <code>sub</code>. Retourne <code>-1</code> si non trouvée (contrairement à <code>.index()</code> qui lève une erreur).",
+                arguments: "<li><code>sub</code> (obligatoire): La sous-chaîne à rechercher.</li>",
+                returns: "L'<strong>index</strong> (entier) de la sous-chaîne, ou <strong>-1</strong>."
+            },
+            code: `<span class="comment"># --- Cas métier : Vérifier la présence d'un mot-clé ---</span>
+<span class="variable">df</span>[<span class="string">'contient_promo'</span>] = <span class="variable">df</span>[<span class="string">'commentaire'</span>].<span class="variable">str</span>.<span class="function">find</span>(<span class="string">'promotion'</span>) != -<span class="number">1</span>`
+        },
+        {
+            title: 'str.count()',
+            subtitle: "Compter les occurrences d'une sous-chaîne.",
+            type: 'returns-value',
+            explanation: {
+                description: "Compte le nombre d'occurrences non superposées de la sous-chaîne <code>sub</code>.",
+                arguments: "<li><code>sub</code> (obligatoire): La sous-chaîne à compter.</li>",
+                returns: "Un <strong>entier</strong>."
+            },
+            code: `<span class="comment"># --- Cas métier : Vérifier la validité d'une donnée ---</span>
+<span class="variable">email</span> = <span class="string">'test@test.com'</span>
+<span class="keyword">if</span> <span class="variable">email</span>.<span class="function">count</span>(<span class="string">'@'</span>) == <span class="number">1</span>: <span class="function">print</span>(<span class="string">"Format d'email potentiellement valide"</span>)`
+        },
+        {
+            title: 'str.isdigit()',
+            subtitle: 'Vérifier si la chaîne ne contient que des chiffres.',
+            type: 'returns-value',
+            explanation: {
+                description: "Vérifie si tous les caractères de la chaîne sont des chiffres (0-9).",
+                arguments: "<p>Aucun.</p>",
+                returns: "Un <strong>booléen</strong>."
+            },
+            code: `<span class="comment"># --- Cas métier : Filtrer les codes postaux valides ---</span>
+<span class="variable">df_valide</span> = <span class="variable">df</span>[<span class="variable">df</span>[<span class="string">'code_postal'</span>].<span class="variable">str</span>.<span class="function">isdigit</span>()]`
+        },
+        {
+            title: 'str.isnumeric()',
+            subtitle: 'Vérifier si la chaîne est numérique (Unicode).',
+            type: 'returns-value',
+            explanation: {
+                description: "Similaire à <code>isdigit()</code>, mais accepte une plus large gamme de caractères numériques Unicode (ex: puissances², fractions ¾).",
+                arguments: "<p>Aucun.</p>",
+                returns: "Un <strong>booléen</strong>."
+            },
+            code: `<span class="comment"># --- Exemples ---</span>
+<span class="function">print</span>(<span class="string">'123'</span>.<span class="function">isnumeric</span>()) <span class="comment"># True</span>
+<span class="function">print</span>(<span class="string">'²'</span>.<span class="function">isnumeric</span>()) <span class="comment"># True, contrairement à isdigit()</span>`
+        },
+        {
+            title: 'str.isalnum()',
+            subtitle: 'Vérifier si la chaîne est alphanumérique.',
+            type: 'returns-value',
+            explanation: {
+                description: "Vérifie si tous les caractères sont alphanumériques (lettres OU chiffres). Les espaces et la ponctuation renvoient <code>False</code>.",
+                arguments: "<p>Aucun.</p>",
+                returns: "Un <strong>booléen</strong>."
+            },
+            code: `<span class="comment"># --- Cas métier : Valider un identifiant utilisateur ---</span>
+<span class="variable">username</span> = <span class="string">"user2025"</span>
+<span class="keyword">if</span> <span class="variable">username</span>.<span class="function">isalnum</span>(): <span class="function">print</span>(<span class="string">"Format d'identifiant valide."</span>)`
+        },
+        {
+            title: 'str.isalpha()',
+            subtitle: 'Vérifier si la chaîne est alphabétique.',
+            type: 'returns-value',
+            explanation: {
+                description: "Vérifie si tous les caractères sont alphabétiques (lettres uniquement).",
+                arguments: "<p>Aucun.</p>",
+                returns: "Un <strong>booléen</strong>."
+            },
+            code: `<span class="comment"># --- Cas métier : Nettoyer des noms de personnes ---</span>
+<span class="variable">df</span>[<span class="string">'nom_valide'</span>] = <span class="variable">df</span>[<span class="string">'nom'</span>].<span class="variable">str</span>.<span class="function">isalpha</span>()`
+        },
+        {
+            title: 'str.isspace()',
+            subtitle: "Vérifier si la chaîne ne contient que des espaces.",
+            type: 'returns-value',
+            explanation: {
+                description: "Vérifie si la chaîne ne contient QUE des espaces blancs (espaces, tabulations, sauts de ligne) et n'est pas vide.",
+                arguments: "<p>Aucun.</p>",
+                returns: "Un <strong>booléen</strong>."
+            },
+            code: `<span class="comment"># --- Cas métier : Identifier les entrées vides ou manquantes ---</span>
+<span class="comment"># df['commentaire_vide'] = df['commentaire'].str.isspace()</span>`
+        },
+        {
+            title: 'str.removeprefix()',
+            subtitle: 'Retirer un préfixe (si présent).',
+            type: 'returns-value',
+            explanation: {
+                description: "Retire le préfixe de la chaîne, uniquement s'il est présent. Sinon, renvoie la chaîne inchangée.",
+                arguments: "<li><code>prefix</code> (obligatoire): La sous-chaîne à retirer au début.</li>",
+                returns: "Une <strong>nouvelle chaîne</strong>."
+            },
+            code: `<span class="comment"># --- Cas métier : Nettoyer des identifiants ---</span>
+<span class="variable">df</span>[<span class="string">'id_numerique'</span>] = <span class="variable">df</span>[<span class="string">'id_complet'</span>].<span class="variable">str</span>.<span class="function">removeprefix</span>(<span class="string">'USER_'</span>)`
+        },
+        {
+            title: 'str.removesuffix()',
+            subtitle: 'Retirer un suffixe (si présent).',
+            type: 'returns-value',
+            explanation: {
+                description: "Retire le suffixe de la chaîne, uniquement s'il est présent. Sinon, renvoie la chaîne inchangée.",
+                arguments: "<li><code>suffix</code> (obligatoire): La sous-chaîne à retirer à la fin.</li>",
+                returns: "Une <strong>nouvelle chaîne</strong>."
+            },
+            code: `<span class="comment"># --- Cas métier : Nettoyer des noms de fichiers ---</span>
+<span class="variable">df</span>[<span class="string">'nom_base'</span>] = <span class="variable">df</span>[<span class="string">'nom_fichier'</span>].<span class="variable">str</span>.<span class="function">removesuffix</span>(<span class="string">'.csv'</span>)`
+        },
+        {
+            title: 'str.capitalize()',
+            subtitle: 'Mettre la 1ère lettre en majuscule.',
+            type: 'returns-value',
+            explanation: {
+                description: "Met le premier caractère de la chaîne en majuscule et tout le reste en minuscule.",
+                arguments: "<p>Aucun.</p>",
+                returns: "Une <strong>nouvelle chaîne</strong>."
+            },
+            code: `<span class="comment"># --- Cas métier : Formater des débuts de phrases ---</span>
+<span class="variable">df</span>[<span class="string">'commentaire_formate'</span>] = <span class="variable">df</span>[<span class="string">'commentaire'</span>].<span class="variable">str</span>.<span class="function">capitalize</span>()`
+        },
+        {
+            title: 'str.title()',
+            subtitle: 'Mettre chaque mot en majuscule.',
+            type: 'returns-value',
+            explanation: {
+                description: "Met la première lettre de chaque mot en majuscule et le reste en minuscule.",
+                arguments: "<p>Aucun.</p>",
+                returns: "Une <strong>nouvelle chaîne</strong>."
+            },
+            code: `<span class="comment"># --- Cas métier : Formater des noms propres ---</span>
+<span class="variable">df</span>[<span class="string">'nom_complet_formate'</span>] = <span class="variable">df</span>[<span class="string">'nom_complet'</span>].<span class="variable">str</span>.<span class="function">title</span>()`
+        },
+        {
+            title: 'str.zfill()',
+            subtitle: 'Rembourrer à gauche avec des zéros.',
+            type: 'returns-value',
+            explanation: {
+                description: "Rembourre la chaîne à gauche avec des zéros ('0') pour atteindre une longueur totale de <code>width</code>.",
+                arguments: "<li><code>width</code> (obligatoire): La longueur totale souhaitée de la chaîne.</li>",
+                returns: "Une <strong>nouvelle chaîne</strong>."
+            },
+            code: `<span class="comment"># --- Cas métier : Standardiser des numéros de série ---</span>
+<span class="variable">df</span>[<span class="string">'numero_serie_std'</span>] = <span class="variable">df</span>[<span class="string">'numero_serie'</span>].<span class="function">astype</span>(<span class="variable">str</span>).<span class="variable">str</span>.<span class="function">zfill</span>(<span class="number">8</span>)`
+        },
+        {
+            title: 'str.partition()',
+            subtitle: 'Découper en 3 parties (avant, sep, après).',
+            type: 'returns-value',
+            explanation: {
+                description: "Découpe la chaîne à la première occurrence de <code>sep</code>. Renvoie toujours un tuple de 3 éléments, même si le séparateur n'est pas trouvé.",
+                arguments: "<li><code>sep</code> (obligatoire): Le séparateur à utiliser.</li>",
+                returns: "Un <strong>nouveau tuple</strong> de 3 éléments: (partie avant sep, sep, partie après sep)."
+            },
+            code: `<span class="comment"># --- Cas métier : Extraire le nom d'utilisateur et le domaine ---</span>
+<span class="variable">df</span>[[<span class="string">'user'</span>, <span class="string">'sep'</span>, <span class="string">'domain'</span>]] = <span class="variable">df</span>[<span class="string">'email'</span>].<span class="variable">str</span>.<span class="function">partition</span>(<span class="string">'@'</span>)`
+        },
+        {
+            title: 'str.index()',
+            subtitle: "Trouver l'index (lève une erreur si absent).",
+            type: 'returns-value',
+            explanation: {
+                description: "Similaire à <code>.find()</code>, mais lève une exception <code>ValueError</code> si la sous-chaîne n'est pas trouvée. Utile quand on est certain de la présence de la sous-chaîne.",
+                arguments: "<li><code>sub</code> (obligatoire): La sous-chaîne à rechercher.</li>",
+                returns: "L'<strong>index</strong> (entier) de la sous-chaîne."
+            },
+            code: `<span class="keyword">try</span>:
+    <span class="variable">position</span> = <span class="string">'hello'</span>.<span class="function">index</span>(<span class="string">'e'</span>) <span class="comment"># 1</span>
+<span class="keyword">except</span> <span class="variable">ValueError</span>:
+    <span class="function">print</span>(<span class="string">"Non trouvé"</span>)`
+        },
+        {
+            title: 'str.splitlines()',
+            subtitle: 'Découper la chaîne en une liste de lignes.',
+            type: 'returns-value',
+            explanation: {
+                description: "Découpe une chaîne en une liste de lignes, en se basant sur les sauts de ligne (<code>\\n</code>, <code>\\r\\n</code>, etc.).",
+                arguments: "<p>Aucun.</p>",
+                returns: "Une <strong>nouvelle liste</strong> de chaînes (lignes)."
+            },
+            code: `<span class="comment"># --- Cas métier : Traiter un fichier texte multiligne ---</span>
+<span class="variable">raw_data</span> = <span class="string">"id:1\\nnom:Alice\\nid:2\\nnom:Bob"</span>
+<span class="variable">lignes</span> = <span class="variable">raw_data</span>.<span class="function">splitlines</span>()
+<span class="function">print</span>(<span class="variable">lignes</span>) <span class="comment"># ['id:1', 'nom:Alice', 'id:2', 'nom:Bob']</span>`
+        },
+        {
+            title: 'str.center()',
+            subtitle: 'Centrer la chaîne dans un espace.',
+            type: 'returns-value',
+            explanation: {
+                description: "Centre la chaîne dans un espace de largeur <code>width</code>, en remplissant avec le caractère <code>fillchar</code>.",
+                arguments: "<li><code>width</code> (obligatoire): La longueur totale.</li><li><code>fillchar</code> (optionnel): Caractère de remplissage (espace par défaut).</li>",
+                returns: "Une <strong>nouvelle chaîne</strong>."
+            },
+            code: `<span class="comment"># --- Créer un titre formaté ---</span>
+<span class="function">print</span>(<span class="string">"Rapport des Ventes"</span>.<span class="function">center</span>(<span class="number">40</span>, <span class="string">'='</span>))
+<span class="comment"># '=========Rapport des Ventes========='</span>`
+        },
+    ];
+    
+    // --- BASE DE DONNÉES POUR LES LISTES ---
+const listMethods = [
+    {
+        title: 'list.append(x)',
+        subtitle: 'Ajouter un élément à la fin.',
+        type: 'modifies-inplace',
+        explanation: {
+            description: "Ajoute un seul élément à la fin de la liste. C'est l'une des opérations les plus courantes.",
+            arguments: "<li><code>x</code> (obligatoire): L'élément à ajouter.</li>",
+            returns: "<p>Ne retourne rien (<code>None</code>). Modifie la liste directement.</p>"
+        },
+        code: `<span class="comment"># --- Cas métier : Collecter des résultats dans une boucle ---</span>
+<span class="variable">ids_valides</span> = [<span class="number">101</span>, <span class="number">102</span>]
+<span class="variable">nouvel_id</span> = <span class="number">103</span>
+<span class="variable">ids_valides</span>.<span class="function">append</span>(<span class="variable">nouvel_id</span>)
+<span class="function">print</span>(<span class="variable">ids_valides</span>) <span class="comment"># [101, 102, 103]</span>`
+    },
+    {
+        title: 'list.extend(iterable)',
+        subtitle: 'Ajouter tous les éléments d\'un itérable.',
+        type: 'modifies-inplace',
+        explanation: {
+            description: "Fusionne une liste avec un autre itérable (liste, tuple, etc.) en ajoutant tous ses éléments à la fin.",
+            arguments: "<li><code>iterable</code> (obligatoire): L'itérable dont les éléments seront ajoutés.</li>",
+            returns: "<p>Ne retourne rien (<code>None</code>). Modifie la liste directement.</p>"
+        },
+        code: `<span class="comment"># --- Cas métier : Combiner deux listes de données ---</span>
+<span class="variable">ventes_T1</span> = [<span class="number">150</span>, <span class="number">200</span>]
+<span class="variable">ventes_T2</span> = [<span class="number">180</span>, <span class="number">210</span>]
+<span class="variable">ventes_T1</span>.<span class="function">extend</span>(<span class="variable">ventes_T2</span>)
+<span class="function">print</span>(<span class="variable">ventes_T1</span>) <span class="comment"># [150, 200, 180, 210]</span>`
+    },
+    {
+        title: 'list.insert(i, x)',
+        subtitle: 'Insérer un élément à une position donnée.',
+        type: 'modifies-inplace',
+        explanation: {
+            description: "Insère un élément <code>x</code> à l'index <code>i</code>. Tous les éléments suivants sont décalés.",
+            arguments: "<li><code>i</code> (obligatoire): L'index où insérer l'élément.</li><li><code>x</code> (obligatoire): L'élément à insérer.</li>",
+            returns: "<p>Ne retourne rien (<code>None</code>). Modifie la liste directement.</p>"
+        },
+        code: `<span class="comment"># --- Cas métier : Ajouter une étape prioritaire dans un pipeline ---</span>
+<span class="variable">pipeline</span> = [<span class="string">'load_data'</span>, <span class="string">'process_data'</span>]
+<span class="variable">pipeline</span>.<span class="function">insert</span>(<span class="number">1</span>, <span class="string">'clean_data'</span>)
+<span class="function">print</span>(<span class="variable">pipeline</span>) <span class="comment"># ['load_data', 'clean_data', 'process_data']</span>`
+    },
+    {
+        title: 'list.remove(x)',
+        subtitle: 'Retirer la première occurrence d\'un élément.',
+        type: 'modifies-inplace',
+        explanation: {
+            description: "Retire le premier élément de la liste dont la valeur est égale à <code>x</code>. Lève une <code>ValueError</code> si l'élément n'est pas trouvé.",
+            arguments: "<li><code>x</code> (obligatoire): L'élément à retirer.</li>",
+            returns: "<p>Ne retourne rien (<code>None</code>). Modifie la liste directement.</p>"
+        },
+        code: `<span class="comment"># --- Cas métier : Retirer une colonne à ne pas traiter ---</span>
+<span class="variable">colonnes</span> = [<span class="string">'id'</span>, <span class="string">'nom'</span>, <span class="string">'id_temp'</span>, <span class="string">'age'</span>]
+<span class="variable">colonnes</span>.<span class="function">remove</span>(<span class="string">'id_temp'</span>)
+<span class="function">print</span>(<span class="variable">colonnes</span>) <span class="comment"># ['id', 'nom', 'age']</span>`
+    },
+    {
+        title: 'list.pop([i])',
+        subtitle: 'Retirer et renvoyer un élément par son index.',
+        type: 'modifies-inplace',
+        explanation: {
+            description: "Retire l'élément à la position <code>i</code> et le renvoie. Si l'index est omis, retire et renvoie le dernier élément (comportement de pile LIFO).",
+            arguments: "<li><code>i</code> (optionnel): L'index de l'élément à retirer. Par défaut, -1 (le dernier).</li>",
+            returns: "L'élément qui a été retiré."
+        },
+        code: `<span class="comment"># --- Cas métier : Traiter et retirer la dernière tâche d'une file ---</span>
+<span class="variable">taches</span> = [<span class="string">'calcul_A'</span>, <span class="string">'calcul_B'</span>, <span class="string">'calcul_C'</span>]
+<span class="variable">derniere_tache</span> = <span class="variable">taches</span>.<span class="function">pop</span>()
+<span class="function">print</span>(<span class="string">f"Tâche traitée: {derniere_tache}"</span>) <span class="comment"># 'calcul_C'</span>
+<span class="function">print</span>(<span class="string">f"Tâches restantes: {taches}"</span>) <span class="comment"># ['calcul_A', 'calcul_B']</span>`
+    },
+    {
+        title: 'list.sort()',
+        subtitle: 'Trier la liste sur place.',
+        type: 'modifies-inplace',
+        explanation: {
+            description: "Trie les éléments de la liste, en place. Pour un tri sans modifier l'original, utiliser la fonction <code>sorted()</code>.",
+            arguments: "<li><code>key</code> (optionnel): Une fonction pour spécifier la clé de tri.</li><li><code>reverse</code> (optionnel): <code>True</code> pour un tri décroissant.</li>",
+            returns: "<p>Ne retourne rien (<code>None</code>). Modifie la liste directement.</p>"
+        },
+        code: `<span class="comment"># --- Cas métier : Ordonner une liste de scores ---</span>
+<span class="variable">scores</span> = [<span class="number">88</span>, <span class="number">92</span>, <span class="number">71</span>, <span class="number">92</span>]
+<span class="variable">scores</span>.<span class="function">sort</span>(<span class="variable">reverse</span>=<span class="keyword">True</span>)
+<span class="function">print</span>(<span class="variable">scores</span>) <span class="comment"># [92, 92, 88, 71]</span>`
+    },
+    {
+        title: 'list.reverse()',
+        subtitle: 'Inverser l\'ordre des éléments sur place.',
+        type: 'modifies-inplace',
+        explanation: {
+            description: "Inverse l'ordre des éléments de la liste, en place.",
+            arguments: "<p>Aucun.</p>",
+            returns: "<p>Ne retourne rien (<code>None</code>). Modifie la liste directement.</p>"
+        },
+        code: `<span class="comment"># --- Cas métier : Inverser un ordre chronologique ---</span>
+<span class="variable">evenements</span> = [<span class="string">'2023-01-01'</span>, <span class="string">'2023-01-02'</span>, <span class="string">'2023-01-03'</span>]
+<span class="variable">evenements</span>.<span class="function">reverse</span>()
+<span class="function">print</span>(<span class="variable">evenements</span>) <span class="comment"># ['2023-01-03', '2023-01-02', '2023-01-01']</span>`
+    },
+    {
+        title: 'list.copy()',
+        subtitle: 'Créer une copie superficielle (shallow copy).',
+        type: 'returns-value',
+        explanation: {
+            description: "Retourne une copie superficielle de la liste. C'est équivalent à <code>ma_liste[:]</code>. Utile pour modifier une copie sans affecter l'original.",
+            arguments: "<p>Aucun.</p>",
+            returns: "Une <strong>nouvelle liste</strong>."
+        },
+        code: `<span class="comment"># --- Cas métier : Sauvegarder l'état original d'une liste avant modification ---</span>
+<span class="variable">parametres_originaux</span> = [<span class="string">'A'</span>, <span class="string">'B'</span>]
+<span class="variable">parametres_test</span> = <span class="variable">parametres_originaux</span>.<span class="function">copy</span>()
+<span class="variable">parametres_test</span>.<span class="function">append</span>(<span class="string">'C'</span>)
+<span class="function">print</span>(<span class="variable">parametres_originaux</span>) <span class="comment"># ['A', 'B'] (inchangé)</span>
+<span class="function">print</span>(<span class="variable">parametres_test</span>) <span class="comment"># ['A', 'B', 'C']</span>`
+    },
+    {
+        title: 'list.index(x[, start[, end]])',
+        subtitle: 'Trouver l\'index de la première occurrence.',
+        type: 'returns-value',
+        explanation: {
+            description: "Retourne l'index de base zéro de la première occurrence de <code>x</code>. Lève une <code>ValueError</code> si l'élément n'est pas trouvé.",
+            arguments: "<li><code>x</code> (obligatoire): L'élément à chercher.</li><li><code>start</code>, <code>end</code> (optionnels): Pour chercher dans une sous-section de la liste.</li>",
+            returns: "L'<strong>index</strong> (entier) de l'élément."
+        },
+        code: `<span class="comment"># --- Cas métier : Trouver la position d'une colonne clé ---</span>
+<span class="variable">colonnes</span> = [<span class="string">'date'</span>, <span class="string">'produit'</span>, <span class="string">'ventes'</span>, <span class="string">'region'</span>]
+<span class="variable">index_ventes</span> = <span class="variable">colonnes</span>.<span class="function">index</span>(<span class="string">'ventes'</span>)
+<span class="function">print</span>(<span class="variable">index_ventes</span>) <span class="comment"># 2</span>`
+    },
+    {
+        title: 'list.count(x)',
+        subtitle: 'Compter les occurrences d\'un élément.',
+        type: 'returns-value',
+        explanation: {
+            description: "Retourne le nombre de fois que <code>x</code> apparaît dans la liste.",
+            arguments: "<li><code>x</code> (obligatoire): L'élément à compter.</li>",
+            returns: "Un <strong>entier</strong>."
+        },
+        code: `<span class="comment"># --- Cas métier : Compter le nombre de votes pour une option ---</span>
+<span class="variable">votes</span> = [<span class="string">'oui'</span>, <span class="string">'non'</span>, <span class="string">'oui'</span>, <span class="string">'oui'</span>, <span class="string">'blanc'</span>]
+<span class="variable">nombre_oui</span> = <span class="variable">votes</span>.<span class="function">count</span>(<span class="string">'oui'</span>)
+<span class="function">print</span>(<span class="variable">nombre_oui</span>) <span class="comment"># 3</span>`
+    },
+    {
+        title: 'list.clear()',
+        subtitle: 'Vider la liste de tous ses éléments.',
+        type: 'modifies-inplace',
+        explanation: {
+            description: "Retire tous les éléments de la liste, la laissant vide. C'est équivalent à <code>del ma_liste[:]</code>.",
+            arguments: "<p>Aucun.</p>",
+            returns: "<p>Ne retourne rien (<code>None</code>). Modifie la liste directement.</p>"
+        },
+        code: `<span class="comment"># --- Cas métier : Réinitialiser une liste de logs pour un nouveau batch ---</span>
+<span class="variable">logs_batch</span> = [<span class="string">'log1'</span>, <span class="string">'log2'</span>]
+<span class="comment"># ... traitement du batch ...</span>
+<span class="variable">logs_batch</span>.<span class="function">clear</span>()
+<span class="function">print</span>(<span class="variable">logs_batch</span>) <span class="comment"># []</span>`
+    },
+    {
+        title: 'List Slicing [:]',
+        subtitle: 'Extraire une sous-partie de la liste.',
+        type: 'returns-value',
+        explanation: {
+            description: "Permet d'extraire une partie de la liste en spécifiant <code>[start:stop:step]</code>. C'est une technique extrêmement puissante et flexible.",
+            arguments: "<li><code>start</code> (inclus), <code>stop</code> (exclu), <code>step</code> (pas).</li>",
+            returns: "Une <strong>nouvelle liste</strong> contenant les éléments extraits."
+        },
+        code: `<span class="comment"># --- Cas métier : Obtenir les 5 premiers/derniers clients ---</span>
+<span class="variable">clients</span> = [<span class="string">'A'</span>, <span class="string">'B'</span>, <span class="string">'C'</span>, <span class="string">'D'</span>, <span class="string">'E'</span>, <span class="string">'F'</span>]
+<span class="variable">top_5</span> = <span class="variable">clients</span>[:<span class="number">5</span>]
+<span class="variable">last_3</span> = <span class="variable">clients</span>[-<span class="number">3</span>:]
+<span class="function">print</span>(<span class="variable">top_5</span>) <span class="comment"># ['A', 'B', 'C', 'D', 'E']</span>
+<span class="function">print</span>(<span class="variable">last_3</span>) <span class="comment"># ['D', 'E', 'F']</span>`
+    },
+    {
+        title: 'len(list)',
+        subtitle: 'Obtenir le nombre d\'éléments.',
+        type: 'returns-value',
+        explanation: {
+            description: "Fonction intégrée (pas une méthode) qui retourne le nombre d'éléments dans une liste.",
+            arguments: "<li><code>list</code> (obligatoire): La liste à mesurer.</li>",
+            returns: "Un <strong>entier</strong>."
+        },
+        code: `<span class="comment"># --- Cas métier : Vérifier si un DataFrame importé contient des données ---</span>
+<span class="variable">lignes_csv</span> = [[<span class="string">'a'</span>,<span class="number">1</span>], [<span class="string">'b'</span>,<span class="number">2</span>]]
+<span class="keyword">if</span> <span class="function">len</span>(<span class="variable">lignes_csv</span>) > <span class="number">0</span>:
+    <span class="function">print</span>(<span class="string">f"Fichier contient {len(lignes_csv)} lignes."</span>) <span class="comment"># Affiche: Fichier contient 2 lignes.</span>`
+    },
+    {
+        title: 'sorted(iterable)',
+        subtitle: 'Créer une nouvelle liste triée.',
+        type: 'returns-value',
+        explanation: {
+            description: "Fonction intégrée qui retourne une <strong>nouvelle</strong> liste triée à partir des éléments d'un itérable, sans modifier l'original. C'est l'alternative à <code>.sort()</code>.",
+            arguments: "<li><code>iterable</code> (obligatoire): L'itérable à trier.</li><li><code>key</code>, <code>reverse</code> (optionnels): Comme pour <code>.sort()</code>.</li>",
+            returns: "Une <strong>nouvelle liste</strong> triée."
+        },
+        code: `<span class="comment"># --- Cas métier : Afficher un classement sans altérer les données brutes ---</span>
+<span class="variable">scores_bruts</span> = [<span class="number">88</span>, <span class="number">92</span>, <span class="number">71</span>]
+<span class="variable">classement</span> = <span class="function">sorted</span>(<span class="variable">scores_bruts</span>, <span class="variable">reverse</span>=<span class="keyword">True</span>)
+<span class="function">print</span>(<span class="variable">scores_bruts</span>) <span class="comment"># [88, 92, 71] (inchangé)</span>
+<span class="function">print</span>(<span class="variable">classement</span>) <span class="comment"># [92, 88, 71]</span>`
+    },
+    {
+        title: 'List Comprehension',
+        subtitle: 'Créer une liste de manière concise.',
+        type: 'returns-value',
+        explanation: {
+            description: "Une syntaxe élégante et efficace pour créer une nouvelle liste en appliquant une expression à chaque élément d'un itérable, avec une condition optionnelle.",
+            arguments: "<p>Syntaxe : <code>[expression for item in iterable if condition]</code>.</p>",
+            returns: "Une <strong>nouvelle liste</strong>."
+        },
+        code: `<span class="comment"># --- Cas métier : Extraire les prix d'une liste de produits et appliquer une TVA ---</span>
+<span class="variable">produits</span> = [{<span class="string">'nom'</span>:<span class="string">'A'</span>, <span class="string">'prix'</span>:<span class="number">100</span>}, {<span class="string">'nom'</span>:<span class="string">'B'</span>, <span class="string">'prix'</span>:<span class="number">150</span>}]
+<span class="variable">prix_ttc</span> = [<span class="variable">p</span>[<span class="string">'prix'</span>] * <span class="number">1.2</span> <span class="keyword">for</span> <span class="variable">p</span> <span class="keyword">in</span> <span class="variable">produits</span>]
+<span class="function">print</span>(<span class="variable">prix_ttc</span>) <span class="comment"># [120.0, 180.0]</span>`
+    },
+    {
+        title: 'sum(iterable)',
+        subtitle: 'Sommer les éléments (numériques).',
+        type: 'returns-value',
+        explanation: {
+            description: "Fonction intégrée qui additionne les éléments d'un itérable (doivent être des nombres).",
+            arguments: "<li><code>iterable</code> (obligatoire): L'itérable à sommer.</li>",
+            returns: "La <strong>somme</strong> (nombre)."
+        },
+        code: `<span class="comment"># --- Cas métier : Calculer le total des ventes ---</span>
+<span class="variable">ventes_journalieres</span> = [<span class="number">1500</span>, <span class="number">2100</span>, <span class="number">1850</span>]
+<span class="variable">total</span> = <span class="function">sum</span>(<span class="variable">ventes_journalieres</span>)
+<span class="function">print</span>(<span class="variable">total</span>) <span class="comment"># 5450</span>`
+    },
+    {
+        title: 'min() / max()',
+        subtitle: 'Trouver le minimum / maximum.',
+        type: 'returns-value',
+        explanation: {
+            description: "Fonctions intégrées qui retournent le plus petit ou le plus grand élément d'un itérable.",
+            arguments: "<li><code>iterable</code> (obligatoire): L'itérable à analyser.</li>",
+            returns: "L'élément <strong>minimum</strong> ou <strong>maximum</strong>."
+        },
+        code: `<span class="comment"># --- Cas métier : Identifier les performances extrêmes ---</span>
+<span class="variable">scores</span> = [<span class="number">88</span>, <span class="number">92</span>, <span class="number">71</span>, <span class="number">95</span>]
+<span class="function">print</span>(<span class="string">f"Score min: {min(scores)}, Score max: {max(scores)}"</span>) <span class="comment"># Min: 71, Max: 95</span>`
+    },
+    {
+        title: 'enumerate(iterable)',
+        subtitle: 'Obtenir l\'index et la valeur en bouclant.',
+        type: 'returns-value',
+        explanation: {
+            description: "Fonction intégrée qui retourne un objet énuméré. Très utile dans les boucles <code>for</code> pour avoir accès à la fois à l'index et à l'élément.",
+            arguments: "<li><code>iterable</code> (obligatoire): L'itérable à parcourir.</li>",
+            returns: "Un <strong>itérateur</strong> de paires (index, valeur)."
+        },
+        code: `<span class="comment"># --- Cas métier : Traiter des colonnes et afficher leur position ---</span>
+<span class="variable">colonnes</span> = [<span class="string">'date'</span>, <span class="string">'ventes'</span>, <span class="string">'region'</span>]
+<span class="keyword">for</span> <span class="variable">index</span>, <span class="variable">col</span> <span class="keyword">in</span> <span class="function">enumerate</span>(<span class="variable">colonnes</span>):
+    <span class="function">print</span>(<span class="string">f"Traitement de la colonne {index}: {col}"</span>)`
+    },
+];
+
+// --- BASE DE DONNÉES POUR LES DICTIONNAIRES ---
+const dictionaryMethods = [
+    {
+        title: 'dict.get(key, default)',
+        subtitle: 'Accéder à une valeur sans erreur.',
+        type: 'returns-value',
+        explanation: {
+            description: "Retourne la valeur pour <code>key</code> si elle existe. Sinon, retourne <code>default</code> (<code>None</code> par défaut) au lieu de lever une <code>KeyError</code>. C'est la manière la plus sûre d'accéder aux données d'un dictionnaire.",
+            arguments: "<li><code>key</code> (obligatoire): La clé à rechercher.</li><li><code>default</code> (optionnel): La valeur à retourner si la clé est absente.</li>",
+            returns: "La valeur associée à la clé, ou la valeur par défaut."
+        },
+        code: `<span class="comment"># --- Cas métier : Gérer des champs optionnels dans des données JSON ---</span>
+<span class="variable">data_point</span> = {<span class="string">'id'</span>: <span class="number">1</span>, <span class="string">'valeur'</span>: <span class="number">100</span>}
+<span class="comment"># Si 'nom' n'existe pas, on obtient 'non spécifié' au lieu d'une erreur</span>
+<span class="variable">nom</span> = <span class="variable">data_point</span>.<span class="function">get</span>(<span class="string">'nom'</span>, <span class="string">'non spécifié'</span>)
+<span class="function">print</span>(<span class="variable">nom</span>) <span class="comment"># 'non spécifié'</span>`
+    },
+    {
+        title: 'dict.keys()',
+        subtitle: 'Obtenir toutes les clés.',
+        type: 'returns-value',
+        explanation: {
+            description: "Retourne un objet 'vue' affichant une liste de toutes les clés du dictionnaire. Cet objet est dynamique : si le dictionnaire change, la vue reflète ce changement.",
+            arguments: "<p>Aucun.</p>",
+            returns: "Un objet vue des <strong>clés</strong>."
+        },
+        code: `<span class="comment"># --- Cas métier : Valider la présence des colonnes attendues ---</span>
+<span class="variable">data_row</span> = {<span class="string">'produit_id'</span>: <span class="number">123</span>, <span class="string">'prix'</span>: <span class="number">49.99</span>, <span class="string">'stock'</span>: <span class="number">200</span>}
+<span class="variable">colonnes</span> = <span class="function">list</span>(<span class="variable">data_row</span>.<span class="function">keys</span>())
+<span class="function">print</span>(<span class="variable">colonnes</span>) <span class="comment"># ['produit_id', 'prix', 'stock']</span>`
+    },
+    {
+        title: 'dict.values()',
+        subtitle: 'Obtenir toutes les valeurs.',
+        type: 'returns-value',
+        explanation: {
+            description: "Retourne un objet 'vue' de toutes les valeurs du dictionnaire.",
+            arguments: "<p>Aucun.</p>",
+            returns: "Un objet vue des <strong>valeurs</strong>."
+        },
+        code: `<span class="comment"># --- Cas métier : Calculer la moyenne des scores d'un étudiant ---</span>
+<span class="variable">scores</span> = {<span class="string">'maths'</span>: <span class="number">92</span>, <span class="string">'anglais'</span>: <span class="number">88</span>, <span class="string">'histoire'</span>: <span class="number">95</span>}
+<span class="variable">liste_scores</span> = <span class="function">list</span>(<span class="variable">scores</span>.<span class="function">values</span>())
+<span class="variable">moyenne</span> = <span class="function">sum</span>(<span class="variable">liste_scores</span>) / <span class="function">len</span>(<span class="variable">liste_scores</span>)
+<span class="function">print</span>(<span class="variable">moyenne</span>) <span class="comment"># 91.66...</span>`
+    },
+    {
+        title: 'dict.items()',
+        subtitle: 'Obtenir toutes les paires clé-valeur.',
+        type: 'returns-value',
+        explanation: {
+            description: "Retourne un objet 'vue' des paires (clé, valeur) sous forme de tuples. C'est la méthode la plus efficace pour boucler sur les clés et les valeurs en même temps.",
+            arguments: "<p>Aucun.</p>",
+            returns: "Un objet vue des <strong>paires (clé, valeur)</strong>."
+        },
+        code: `<span class="comment"># --- Cas métier : Convertir un dictionnaire en DataFrame Pandas ---</span>
+<span class="variable">metriques</span> = {<span class="string">'visites'</span>: <span class="number">1500</span>, <span class="string">'clics'</span>: <span class="number">320</span>, <span class="string">'conversions'</span>: <span class="number">45</span>}
+<span class="keyword">for</span> <span class="variable">metrique</span>, <span class="variable">valeur</span> <span class="keyword">in</span> <span class="variable">metriques</span>.<span class="function">items</span>():
+    <span class="function">print</span>(<span class="string">f"{metrique.capitalize()}: {valeur}"</span>)`
+    },
+    {
+        title: 'dict.update(other)',
+        subtitle: 'Fusionner avec un autre dictionnaire.',
+        type: 'modifies-inplace',
+        explanation: {
+            description: "Met à jour le dictionnaire avec les paires clé-valeur de <code>other</code>. Les clés existantes sont écrasées.",
+            arguments: "<li><code>other</code> (obligatoire): Un autre dictionnaire ou un itérable de paires clé-valeur.</li>",
+            returns: "<p>Ne retourne rien (<code>None</code>). Modifie le dictionnaire directement.</p>"
+        },
+        code: `<span class="comment"># --- Cas métier : Combiner des informations client de deux sources ---</span>
+<span class="variable">client_info</span> = {<span class="string">'id'</span>: <span class="number">101</span>, <span class="string">'nom'</span>: <span class="string">'Alice'</span>}
+<span class="variable">client_contact</span> = {<span class="string">'email'</span>: <span class="string">'alice@email.com'</span>, <span class="string">'nom'</span>: <span class="string">'Alice B.'</span>}
+<span class="variable">client_info</span>.<span class="function">update</span>(<span class="variable">client_contact</span>)
+<span class="function">print</span>(<span class="variable">client_info</span>)
+<span class="comment"># {'id': 101, 'nom': 'Alice B.', 'email': 'alice@email.com'}</span>`
+    },
+    {
+        title: 'dict.pop(key, default)',
+        subtitle: 'Retirer une clé et renvoyer sa valeur.',
+        type: 'modifies-inplace',
+        explanation: {
+            description: "Retire la clé <code>key</code> et retourne sa valeur. Si la clé n'est pas trouvée, <code>default</code> est retourné. Si <code>default</code> n'est pas fourni et la clé est absente, une <code>KeyError</code> est levée.",
+            arguments: "<li><code>key</code> (obligatoire): La clé à retirer.</li><li><code>default</code> (optionnel): Valeur à retourner si la clé est absente.</li>",
+            returns: "La valeur de la clé retirée."
+        },
+        code: `<span class="comment"># --- Cas métier : Extraire et traiter une information spécifique ---</span>
+<span class="variable">config</span> = {<span class="string">'user'</span>: <span class="string">'admin'</span>, <span class="string">'mode'</span>: <span class="string">'debug'</span>, <span class="string">'version'</span>: <span class="number">2</span>}
+<span class="variable">mode</span> = <span class="variable">config</span>.<span class="function">pop</span>(<span class="string">'mode'</span>)
+<span class="function">print</span>(<span class="string">f"Mode activé: {mode}"</span>) <span class="comment"># 'debug'</span>
+<span class="function">print</span>(<span class="variable">config</span>) <span class="comment"># {'user': 'admin', 'version': 2}</span>`
+    },
+    {
+        title: 'dict.popitem()',
+        subtitle: 'Retirer et renvoyer la dernière paire (clé, valeur).',
+        type: 'modifies-inplace',
+        explanation: {
+            description: "Retire et retourne la dernière paire (clé, valeur) insérée dans le dictionnaire (comportement LIFO - Last-In, First-Out). Lève une <code>KeyError</code> si le dictionnaire est vide.",
+            arguments: "<p>Aucun.</p>",
+            returns: "La paire <strong>(clé, valeur)</strong> retirée."
+        },
+        code: `<span class="comment"># --- Cas métier : Traiter des tâches dans l'ordre inverse de leur ajout ---</span>
+<span class="variable">taches</span> = {<span class="string">'t1'</span>: <span class="string">'charger'</span>, <span class="string">'t2'</span>: <span class="string">'nettoyer'</span>, <span class="string">'t3'</span>: <span class="string">'analyser'</span>}
+<span class="variable">derniere_tache</span> = <span class="variable">taches</span>.<span class="function">popitem</span>()
+<span class="function">print</span>(<span class="string">f"Tâche traitée: {derniere_tache}"</span>) <span class="comment"># ('t3', 'analyser')</span>`
+    },
+    {
+        title: 'dict.setdefault(key, default)',
+        subtitle: 'Obtenir une clé, l\'insérer si absente.',
+        type: 'modifies-inplace',
+        explanation: {
+            description: "Si <code>key</code> est dans le dictionnaire, retourne sa valeur. Sinon, insère <code>key</code> avec la valeur <code>default</code> et retourne <code>default</code>. Très utile pour initialiser des clés.",
+            arguments: "<li><code>key</code> (obligatoire): La clé à chercher/insérer.</li><li><code>default</code> (optionnel): La valeur à insérer si la clé est absente (défaut: <code>None</code>).</li>",
+            returns: "La valeur de la clé (existante ou nouvellement insérée)."
+        },
+        code: `<span class="comment"># --- Cas métier : Regrouper des données par catégorie ---</span>
+<span class="variable">ventes_par_cat</span> = {}
+<span class="variable">ventes</span> = [(<span class="string">'livre'</span>, <span class="number">50</span>), (<span class="string">'jeu'</span>, <span class="number">100</span>), (<span class="string">'livre'</span>, <span class="number">30</span>)]
+<span class="keyword">for</span> <span class="variable">cat</span>, <span class="variable">montant</span> <span class="keyword">in</span> <span class="variable">ventes</span>:
+    <span class="variable">ventes_par_cat</span>.<span class="function">setdefault</span>(<span class="variable">cat</span>, []).<span class="function">append</span>(<span class="variable">montant</span>)
+<span class="function">print</span>(<span class="variable">ventes_par_cat</span>) <span class="comment"># {'livre': [50, 30], 'jeu': [100]}</span>`
+    },
+    {
+        title: "'key' in dict",
+        subtitle: 'Vérifier la présence d\'une clé.',
+        type: 'returns-value',
+        explanation: {
+            description: "L'opérateur <code>in</code> est la manière la plus idiomatique et la plus rapide de vérifier si une clé existe dans un dictionnaire.",
+            arguments: "<p>Aucun.</p>",
+            returns: "Un <strong>booléen</strong> (<code>True</code> ou <code>False</code>)."
+        },
+        code: `<span class="comment"># --- Cas métier : Appliquer une logique conditionnelle ---</span>
+<span class="variable">params</span> = {<span class="string">'learning_rate'</span>: <span class="number">0.01</span>, <span class="string">'epochs'</span>: <span class="number">100</span>}
+<span class="keyword">if</span> <span class="string">'learning_rate'</span> <span class="keyword">in</span> <span class="variable">params</span>:
+    <span class="function">print</span>(<span class="string">"Le taux d'apprentissage est défini."</span>)`
+    },
+    {
+        title: 'del dict[key]',
+        subtitle: 'Supprimer une paire clé-valeur.',
+        type: 'modifies-inplace',
+        explanation: {
+            description: "Le mot-clé <code>del</code> supprime une clé (et sa valeur) d'un dictionnaire. Lève une <code>KeyError</code> si la clé n'existe pas.",
+            arguments: "<li><code>key</code> (obligatoire): La clé à supprimer.</li>",
+            returns: "<p>Ne retourne rien.</p>"
+        },
+        code: `<span class="comment"># --- Cas métier : Nettoyer des données en retirant des champs inutiles ---</span>
+<span class="variable">record</span> = {<span class="string">'id'</span>: <span class="number">1</span>, <span class="string">'nom'</span>: <span class="string">'test'</span>, <span class="string">'_temp_id'</span>: <span class="string">'xyz'</span>}
+<span class="keyword">if</span> <span class="string">'_temp_id'</span> <span class="keyword">in</span> <span class="variable">record</span>:
+    <span class="keyword">del</span> <span class="variable">record</span>[<span class="string">'_temp_id'</span>]
+<span class="function">print</span>(<span class="variable">record</span>) <span class="comment"># {'id': 1, 'nom': 'test'}</span>`
+    },
+    {
+        title: 'Dictionary Comprehension',
+        subtitle: 'Créer un dictionnaire de manière concise.',
+        type: 'returns-value',
+        explanation: {
+            description: "Similaire aux list comprehensions, permet de créer un nouveau dictionnaire de manière compacte et lisible.",
+            arguments: "<p>Syntaxe : <code>{key_expr: val_expr for item in iterable if condition}</code>.</p>",
+            returns: "Un <strong>nouveau dictionnaire</strong>."
+        },
+        code: `<span class="comment"># --- Cas métier : Créer un dictionnaire de features au carré ---</span>
+<span class="variable">features</span> = [<span class="string">'a'</span>, <span class="string">'b'</span>, <span class="string">'c'</span>]
+<span class="variable">valeurs</span> = [<span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>]
+<span class="variable">features_carre</span> = {<span class="variable">k</span>: <span class="variable">v</span>**<span class="number">2</span> <span class="keyword">for</span> <span class="variable">k</span>, <span class="variable">v</span> <span class="keyword">in</span> <span class="function">zip</span>(<span class="variable">features</span>, <span class="variable">valeurs</span>)}
+<span class="function">print</span>(<span class="variable">features_carre</span>) <span class="comment"># {'a': 4, 'b': 9, 'c': 16}</span>`
+    },
+];
+
+// --- BASE DE DONNÉES POUR LES ENSEMBLES (SET) ---
+const setMethods = [
+    {
+        title: 'set(iterable)',
+        subtitle: 'Créer un ensemble (et dédupliquer).',
+        type: 'returns-value',
+        explanation: {
+            description: "Crée un ensemble à partir d'un itérable (liste, tuple, etc.). L'usage le plus courant en data analysis est de l'utiliser pour obtenir instantanément les valeurs uniques d'une liste ou d'une colonne de DataFrame.",
+            arguments: "<li><code>iterable</code> (optionnel): L'itérable pour peupler l'ensemble.</li>",
+            returns: "Un <strong>nouvel ensemble</strong> avec les éléments uniques de l'itérable."
+        },
+        code: `<span class="comment"># --- Cas métier : Obtenir les catégories de produits uniques ---</span>
+<span class="variable">ventes_cat</span> = [<span class="string">'livre'</span>, <span class="string">'jeu'</span>, <span class="string">'livre'</span>, <span class="string">'film'</span>, <span class="string">'jeu'</span>]
+<span class="variable">categories_uniques</span> = <span class="function">set</span>(<span class="variable">ventes_cat</span>)
+<span class="function">print</span>(<span class="variable">categories_uniques</span>) <span class="comment"># {'jeu', 'film', 'livre'} (l'ordre n'est pas garanti)</span>`
+    },
+    {
+        title: 'set.add(elem)',
+        subtitle: 'Ajouter un élément.',
+        type: 'modifies-inplace',
+        explanation: {
+            description: "Ajoute un élément à l'ensemble. Si l'élément est déjà présent, l'ensemble reste inchangé.",
+            arguments: "<li><code>elem</code> (obligatoire): L'élément à ajouter.</li>",
+            returns: "<p>Ne retourne rien (<code>None</code>). Modifie l'ensemble directement.</p>"
+        },
+        code: `<span class="comment"># --- Cas métier : Ajouter un nouvel ID client à un groupe ---</span>
+<span class="variable">clients_vip</span> = {<span class="number">101</span>, <span class="number">102</span>, <span class="number">103</span>}
+<span class="variable">clients_vip</span>.<span class="function">add</span>(<span class="number">104</span>)
+<span class="variable">clients_vip</span>.<span class="function">add</span>(<span class="number">101</span>) <span class="comment"># Ne fait rien, 101 est déjà là</span>
+<span class="function">print</span>(<span class="variable">clients_vip</span>) <span class="comment"># {101, 102, 103, 104}</span>`
+    },
+    {
+        title: 'set.remove(elem)',
+        subtitle: 'Retirer un élément (lève une erreur si absent).',
+        type: 'modifies-inplace',
+        explanation: {
+            description: "Retire un élément de l'ensemble. Lève une exception <code>KeyError</code> si l'élément n'est pas trouvé.",
+            arguments: "<li><code>elem</code> (obligatoire): L'élément à retirer.</li>",
+            returns: "<p>Ne retourne rien (<code>None</code>).</p>"
+        },
+        code: `<span class="comment"># --- Cas métier : Retirer un ID d'une liste de diffusion ---</span>
+<span class="variable">utilisateurs_actifs</span> = {<span class="string">'a@mail.com'</span>, <span class="string">'b@mail.com'</span>, <span class="string">'c@mail.com'</span>}
+<span class="variable">utilisateurs_actifs</span>.<span class="function">remove</span>(<span class="string">'c@mail.com'</span>)
+<span class="comment"># utilisateurs_actifs.remove('d@mail.com') # Lèverait une KeyError</span>`
+    },
+    {
+        title: 'set.discard(elem)',
+        subtitle: 'Retirer un élément (sans erreur si absent).',
+        type: 'modifies-inplace',
+        explanation: {
+            description: "Retire un élément de l'ensemble s'il est présent. Ne fait rien (et ne lève pas d'erreur) si l'élément n'est pas trouvé. C'est la version 'sûre' de <code>.remove()</code>.",
+            arguments: "<li><code>elem</code> (obligatoire): L'élément à retirer.</li>",
+            returns: "<p>Ne retourne rien (<code>None</code>).</p>"
+        },
+        code: `<span class="comment"># --- Cas métier : Nettoyer une liste de stop-words ---</span>
+<span class="variable">mots</span> = {<span class="string">'ceci'</span>, <span class="string">'est'</span>, <span class="string">'un'</span>, <span class="string">'test'</span>}
+<span class="variable">mots</span>.<span class="function">discard</span>(<span class="string">'un'</span>)
+<span class="variable">mots</span>.<span class="function">discard</span>(<span class="string">'le'</span>) <span class="comment"># Ne fait rien, pas d'erreur</span>
+<span class="function">print</span>(<span class="variable">mots</span>) <span class="comment"># {'ceci', 'est', 'test'}</span>`
+    },
+    {
+        title: 'set.union(other) | set | other',
+        subtitle: 'Faire l\'union de deux ensembles.',
+        type: 'returns-value',
+        explanation: {
+            description: "Retourne un nouvel ensemble contenant tous les éléments de l'ensemble initial et de tous les autres ensembles passés en argument.",
+            arguments: "<li><code>other</code> (obligatoire): L'autre ensemble (ou itérable) à unir.</li>",
+            returns: "Un <strong>nouvel ensemble</strong>."
+        },
+        code: `<span class="comment"># --- Cas métier : Obtenir la liste de tous les clients (actifs et inactifs) ---</span>
+<span class="variable">clients_actifs</span> = {<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>}
+<span class="variable">clients_inactifs</span> = {<span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>}
+<span class="variable">tous_les_clients</span> = <span class="variable">clients_actifs</span>.<span class="function">union</span>(<span class="variable">clients_inactifs</span>)
+<span class="comment"># Version avec opérateur: tous_les_clients = clients_actifs | clients_inactifs</span>
+<span class="function">print</span>(<span class="variable">tous_les_clients</span>) <span class="comment"># {1, 2, 3, 4, 5}</span>`
+    },
+    {
+        title: 'set.intersection(other) | set & other',
+        subtitle: 'Faire l\'intersection de deux ensembles.',
+        type: 'returns-value',
+        explanation: {
+            description: "Retourne un nouvel ensemble contenant uniquement les éléments présents à la fois dans l'ensemble initial et dans tous les autres.",
+            arguments: "<li><code>other</code> (obligatoire): L'autre ensemble (ou itérable).</li>",
+            returns: "Un <strong>nouvel ensemble</strong>."
+        },
+        code: `<span class="comment"># --- Cas métier : Trouver les clients ayant acheté Produit A ET Produit B ---</span>
+<span class="variable">acheteurs_A</span> = {<span class="string">'Alice'</span>, <span class="string">'Bob'</span>, <span class="string">'Charlie'</span>}
+<span class="variable">acheteurs_B</span> = {<span class="string">'Bob'</span>, <span class="string">'David'</span>, <span class="string">'Alice'</span>}
+<span class="variable">acheteurs_AB</span> = <span class="variable">acheteurs_A</span>.<span class="function">intersection</span>(<span class="variable">acheteurs_B</span>)
+<span class="function">print</span>(<span class="variable">acheteurs_AB</span>) <span class="comment"># {'Alice', 'Bob'}</span>`
+    },
+    {
+        title: 'set.difference(other) | set - other',
+        subtitle: 'Faire la différence entre deux ensembles.',
+        type: 'returns-value',
+        explanation: {
+            description: "Retourne un nouvel ensemble contenant les éléments de l'ensemble initial qui ne sont pas dans l'autre.",
+            arguments: "<li><code>other</code> (obligatoire): L'autre ensemble (ou itérable).</li>",
+            returns: "Un <strong>nouvel ensemble</strong>."
+        },
+        code: `<span class="comment"># --- Cas métier : Trouver les clients qui ont abandonné leur panier ---</span>
+<span class="variable">visiteurs</span> = {<span class="string">'u1'</span>, <span class="string">'u2'</span>, <span class="string">'u3'</span>, <span class="string">'u4'</span>}
+<span class="variable">acheteurs</span> = {<span class="string">'u2'</span>, <span class="string">'u4'</span>}
+<span class="variable">abandons</span> = <span class="variable">visiteurs</span>.<span class="function">difference</span>(<span class="variable">acheteurs</span>)
+<span class="function">print</span>(<span class="variable">abandons</span>) <span class="comment"># {'u1', 'u3'}</span>`
+    },
+    {
+        title: 'set.symmetric_difference(other) | set ^ other',
+        subtitle: 'Faire la différence symétrique.',
+        type: 'returns-value',
+        explanation: {
+            description: "Retourne un nouvel ensemble avec les éléments qui sont dans l'un ou l'autre ensemble, mais pas dans les deux.",
+            arguments: "<li><code>other</code> (obligatoire): L'autre ensemble (ou itérable).</li>",
+            returns: "Un <strong>nouvel ensemble</strong>."
+        },
+        code: `<span class="comment"># --- Cas métier : Identifier les utilisateurs uniques à chaque test A/B ---</span>
+<span class="variable">groupe_A</span> = {<span class="string">'u1'</span>, <span class="string">'u2'</span>, <span class="string">'u3'</span>}
+<span class="variable">groupe_B</span> = {<span class="string">'u3'</span>, <span class="string">'u4'</span>, <span class="string">'u5'</span>}
+<span class="variable">uniques_a_chaque_groupe</span> = <span class="variable">groupe_A</span>.<span class="function">symmetric_difference</span>(<span class="variable">groupe_B</span>)
+<span class="function">print</span>(<span class="variable">uniques_a_chaque_groupe</span>) <span class="comment"># {'u1', 'u2', 'u4', 'u5'}</span>`
+    },
+    {
+        title: 'set.issubset(other) | set <= other',
+        subtitle: 'Vérifier si un ensemble est un sous-ensemble.',
+        type: 'returns-value',
+        explanation: {
+            description: "Teste si tous les éléments de l'ensemble se trouvent dans <code>other</code>.",
+            arguments: "<li><code>other</code> (obligatoire): L'ensemble conteneur potentiel.</li>",
+            returns: "Un <strong>booléen</strong>."
+        },
+        code: `<span class="comment"># --- Cas métier : Valider qu'un utilisateur a les permissions requises ---</span>
+<span class="variable">permissions_requises</span> = {<span class="string">'read'</span>, <span class="string">'write'</span>}
+<span class="variable">permissions_user</span> = {<span class="string">'read'</span>, <span class="string">'write'</span>, <span class="string">'execute'</span>}
+<span class="keyword">if</span> <span class="variable">permissions_requises</span>.<span class="function">issubset</span>(<span class="variable">permissions_user</span>):
+    <span class="function">print</span>(<span class="string">"Accès autorisé"</span>) <span class="comment"># Affiche "Accès autorisé"</span>`
+    },
+    {
+        title: 'set.issuperset(other) | set >= other',
+        subtitle: 'Vérifier si un ensemble est un sur-ensemble.',
+        type: 'returns-value',
+        explanation: {
+            description: "Teste si l'ensemble contient tous les éléments de <code>other</code>.",
+            arguments: "<li><code>other</code> (obligatoire): L'ensemble potentiellement contenu.</li>",
+            returns: "Un <strong>booléen</strong>."
+        },
+        code: `<span class="comment"># --- Cas métier : Vérifier si un segment de clients contient un sous-segment ---</span>
+<span class="variable">clients_europe</span> = {<span class="string">'fr'</span>, <span class="string">'de'</span>, <span class="string">'es'</span>, <span class="string">'it'</span>}
+<span class="variable">clients_strategiques</span> = {<span class="string">'fr'</span>, <span class="string">'de'</span>}
+<span class="keyword">if</span> <span class="variable">clients_europe</span>.<span class="function">issuperset</span>(<span class="variable">clients_strategiques</span>):
+    <span class="function">print</span>(<span class="string">"Tous les clients stratégiques sont en Europe."</span>)`
+    },
+    {
+        title: 'set.update(other) | set |= other',
+        subtitle: 'Mettre à jour un ensemble (union sur place).',
+        type: 'modifies-inplace',
+        explanation: {
+            description: "Ajoute tous les éléments de <code>other</code> à l'ensemble. C'est la version 'sur place' de <code>.union()</code>.",
+            arguments: "<li><code>other</code> (obligatoire): Un ou plusieurs itérables.</li>",
+            returns: "<p>Ne retourne rien (<code>None</code>).</p>"
+        },
+        code: `<span class="comment"># --- Cas métier : Agréger des listes d'utilisateurs de plusieurs campagnes ---</span>
+<span class="variable">utilisateurs</span> = {<span class="string">'u1'</span>, <span class="string">'u2'</span>}
+<span class="variable">nouveaux_users_campagne1</span> = [<span class="string">'u2'</span>, <span class="string">'u3'</span>]
+<span class="variable">nouveaux_users_campagne2</span> = {<span class="string">'u4'</span>}
+<span class="variable">utilisateurs</span>.<span class="function">update</span>(<span class="variable">nouveaux_users_campagne1</span>, <span class="variable">nouveaux_users_campagne2</span>)
+<span class="function">print</span>(<span class="variable">utilisateurs</span>) <span class="comment"># {'u1', 'u2', 'u3', 'u4'}</span>`
+    },
+];
+
+// --- BASE DE DONNÉES POUR LES TUPLES (TUPLE) ---
+const tupleMethods = [
+    {
+        title: 'Création ()',
+        subtitle: 'Créer un tuple (immutable).',
+        type: 'returns-value',
+        explanation: {
+            description: "Un tuple est une collection ordonnée et **non modifiable** (immutable). On l'utilise pour des données qui ne doivent pas changer, comme des coordonnées ou des clés de dictionnaire composites. La virgule est essentielle pour les tuples à un seul élément : <code>(item,)</code>.",
+            arguments: "<li>Les éléments sont séparés par des virgules, entre parenthèses.</li>",
+            returns: "Un <strong>nouveau tuple</strong>."
+        },
+        code: `<span class="comment"># --- Cas métier : Stocker des coordonnées géographiques immuables ---</span>
+<span class="variable">coordonnees_paris</span> = (<span class="number">48.8566</span>, <span class="number">2.3522</span>)
+<span class="function">print</span>(<span class="variable">coordonnees_paris</span>)
+
+<span class="comment"># --- Erreur car un tuple ne peut pas être modifié ---</span>
+<span class="comment"># coordonnees_paris[0] = 49.0 # Lèverait une TypeError</span>`
+    },
+    {
+        title: 'Tuple Unpacking',
+        subtitle: 'Assigner les valeurs du tuple à des variables.',
+        type: 'returns-value',
+        explanation: {
+            description: "C'est l'une des fonctionnalités les plus utiles des tuples. Elle permet d'assigner chaque élément d'un tuple à une variable distincte en une seule ligne. Très courant pour les fonctions qui retournent plusieurs valeurs.",
+            arguments: "<p>Le nombre de variables à gauche doit correspondre au nombre d'éléments dans le tuple.</p>",
+            returns: "<p>Ne retourne rien. Assigne des valeurs aux variables.</p>"
+        },
+        code: `<span class="comment"># --- Cas métier : Récupérer plusieurs résultats d'une fonction ---</span>
+<span class="keyword">def</span> <span class="function">get_min_max_sales</span>(<span class="variable">sales_list</span>):
+    <span class="keyword">return</span> <span class="function">min</span>(<span class="variable">sales_list</span>), <span class="function">max</span>(<span class="variable">sales_list</span>)
+
+<span class="variable">ventes</span> = [<span class="number">150</span>, <span class="number">450</span>, <span class="number">120</span>, <span class="number">800</span>]
+<span class="variable">vente_min</span>, <span class="variable">vente_max</span> = <span class="function">get_min_max_sales</span>(<span class="variable">ventes</span>)
+<span class="function">print</span>(<span class="string">f"Vente min: {vente_min}, Vente max: {vente_max}"</span>) <span class="comment"># Min: 120, Max: 800</span>`
+    },
+    {
+        title: 'tuple.count(value)',
+        subtitle: 'Compter les occurrences d\'une valeur.',
+        type: 'returns-value',
+        explanation: {
+            description: "Retourne le nombre de fois que la valeur <code>value</code> apparaît dans le tuple.",
+            arguments: "<li><code>value</code> (obligatoire): La valeur à compter.</li>",
+            returns: "Un <strong>entier</strong>."
+        },
+        code: `<span class="comment"># --- Cas métier : Compter les statuts dans un journal d'événements ---</span>
+<span class="variable">statuts</span> = (<span class="string">'OK'</span>, <span class="string">'OK'</span>, <span class="string">'ERROR'</span>, <span class="string">'OK'</span>, <span class="string">'TIMEOUT'</span>, <span class="string">'OK'</span>)
+<span class="variable">nb_ok</span> = <span class="variable">statuts</span>.<span class="function">count</span>(<span class="string">'OK'</span>)
+<span class="function">print</span>(<span class="string">f"Nombre de succès: {nb_ok}"</span>) <span class="comment"># 4</span>`
+    },
+    {
+        title: 'tuple.index(value)',
+        subtitle: 'Trouver l\'index de la première occurrence.',
+        type: 'returns-value',
+        explanation: {
+            description: "Retourne l'index de la première occurrence de la valeur <code>value</code>. Lève une <code>ValueError</code> si la valeur n'est pas trouvée.",
+            arguments: "<li><code>value</code> (obligatoire): La valeur à trouver.</li>",
+            returns: "L'<strong>index</strong> (entier) de la valeur."
+        },
+        code: `<span class="comment"># --- Cas métier : Trouver la position d'une colonne dans un schéma fixe ---</span>
+<span class="variable">schema_db</span> = (<span class="string">'user_id'</span>, <span class="string">'timestamp'</span>, <span class="string">'action'</span>, <span class="string">'details'</span>)
+<span class="variable">position_action</span> = <span class="variable">schema_db</span>.<span class="function">index</span>(<span class="string">'action'</span>)
+<span class="function">print</span>(<span class="string">f"La colonne 'action' est à l'index {position_action}"</span>) <span class="comment"># 2</span>`
+    },
+    {
+        title: 'Immutabilité et Hachage',
+        subtitle: 'Utiliser un tuple comme clé de dictionnaire.',
+        type: 'returns-value',
+        explanation: {
+            description: "Parce qu'ils sont immuables, les tuples sont 'hachables' (hashable). Cela signifie qu'ils peuvent être utilisés comme clés dans un dictionnaire, contrairement aux listes. C'est très utile pour des clés composites.",
+            arguments: "<p>Aucun.</p>",
+            returns: "<p>N/A</p>"
+        },
+        code: `<span class="comment"># --- Cas métier : Stocker des données par paire (pays, ville) ---</span>
+<span class="variable">ventes_par_ville</span> = {}
+<span class="variable">ventes_par_ville</span>[(<span class="string">'France'</span>, <span class="string">'Paris'</span>)] = <span class="number">15000</span>
+<span class="variable">ventes_par_ville</span>[(<span class="string">'Japon'</span>, <span class="string">'Tokyo'</span>)] = <span class="number">22000</span>
+
+<span class="function">print</span>(<span class="variable">ventes_par_ville</span>[(<span class="string">'France'</span>, <span class="string">'Paris'</span>)]) <span class="comment"># 15000</span>`
+    },
+    {
+        title: 'len(tuple)',
+        subtitle: 'Obtenir le nombre d\'éléments.',
+        type: 'returns-value',
+        explanation: {
+            description: "Fonction intégrée qui retourne la longueur (le nombre d'éléments) du tuple.",
+            arguments: "<li><code>tuple</code> (obligatoire): Le tuple à mesurer.</li>",
+            returns: "Un <strong>entier</strong>."
+        },
+        code: `<span class="comment"># --- Cas métier : Valider le format d'un enregistrement ---</span>
+<span class="variable">enregistrement</span> = (<span class="number">101</span>, <span class="string">'Alice'</span>, <span class="string">'alice@email.com'</span>)
+<span class="keyword">if</span> <span class="function">len</span>(<span class="variable">enregistrement</span>) == <span class="number">3</span>:
+    <span class="function">print</span>(<span class="string">"Format de l'enregistrement valide."</span>)`
+    },
+    {
+        title: 'Slicing [:] et Indexation []',
+        subtitle: 'Accéder aux éléments.',
+        type: 'returns-value',
+        explanation: {
+            description: "Comme les listes, les tuples permettent d'accéder à un élément par son index et de créer de nouveaux tuples en utilisant le slicing <code>[start:stop:step]</code>.",
+            arguments: "<p>Mêmes arguments que pour les listes.</p>",
+            returns: "Un élément ou un <strong>nouveau tuple</strong>."
+        },
+        code: `<span class="comment"># --- Cas métier : Extraire des parties d'une date/heure ---</span>
+<span class="variable">datetime_record</span> = (<span class="number">2023</span>, <span class="number">10</span>, <span class="number">26</span>, <span class="number">15</span>, <span class="number">45</span>, <span class="number">0</span>)
+<span class="variable">date_part</span> = <span class="variable">datetime_record</span>[:<span class="number">3</span>]
+<span class="variable">time_part</span> = <span class="variable">datetime_record</span>[<span class="number">3</span>:]
+<span class="function">print</span>(<span class="string">f"Date: {date_part}"</span>) <span class="comment"># (2023, 10, 26)</span>
+<span class="function">print</span>(<span class="string">f"Heure: {time_part}"</span>) <span class="comment"># (15, 45, 0)</span>`
+    },
+];
+
+    document.addEventListener('DOMContentLoaded', () => {
+
+        // --- 2. FONCTIONS DE GÉNÉRATION ET D'AFFICHAGE DU HTML ---
+
+        /**
+         * Génère le HTML pour un seul bloc de méthode.
+         * @param {object} method - L'objet contenant les infos de la méthode.
+         * @param {number} index - L'index de la méthode, pour des IDs uniques (accessibilité).
+         * @returns {string} Le code HTML du bloc.
+         */
+        function generateMethodHTML(method, index) {
+            const indicatorClass = method.type === 'modifies-inplace' ? 'modifies-inplace' : 'returns-value';
+            // Accessibilité: on lie le header au contenu avec des IDs uniques.
+            const headerId = `str-header-${index}`;
+            const contentId = `str-content-${index}`;
+            
+            return `
+                <div class="code-block">
+                    <div class="code-header" id="${headerId}" aria-expanded="false" aria-controls="${contentId}">
+                        <div class="code-title-container">
+                            <span class="indicator ${indicatorClass}"></span>
+                            <span class="code-title">${method.title}</span>
+                            <span class="code-subtitle">${method.subtitle}</span>
+                        </div>
+                        <i data-lucide="chevron-down" class="toggle-explanation"></i>
+                        <button class="copy-btn">Copier</button>
+                    </div>
+                    <div class="code-content-wrapper" id="${contentId}" role="region" aria-labelledby="${headerId}">
+                        <div class="code-content">
+                            <div class="explanation-content">
+                                <h4>Description</h4><p>${method.explanation.description}</p>
+                                <h4>Arguments</h4><ul>${method.explanation.arguments}</ul>
+                                <h4>Retourne</h4><p>${method.explanation.returns}</p>
+                            </div>
+                            <pre><code>${method.code}</code></pre>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        /**
+         * Affiche les méthodes dans le conteneur HTML.
+         * @param {array} methodsToRender - Le tableau de méthodes à afficher.
+         */
+        function renderMethods(methodsToRender) {
+            const container = document.getElementById('strings-content-container');
+            if (!container) return;
+
+            if (methodsToRender.length === 0) {
+                container.innerHTML = '<p style="text-align:center; color: var(--couleur-texte-clair);">Aucune méthode trouvée.</p>';
+                return;
+            }
+            
+            // On génère tout le HTML d'un coup et on l'injecte pour de meilleures performances.
+            container.innerHTML = methodsToRender.map(generateMethodHTML).join('');
+            
+            // On réactive les icônes après avoir injecté le nouveau HTML
+            lucide.createIcons();
+            
+            // On ré-observe les nouveaux éléments pour l'animation
+            document.querySelectorAll('.code-block:not(.is-visible)').forEach(block => observer.observe(block));
+        }
+
+
+        // TROUVE ET REMPLACE L'ANCIEN BLOC PAR CELUI-CI
+// --- 3. GESTION DES ÉVÉNEMENTS (VERSION AMÉLIORÉE) ---
+
+// Gère le pliage/dépliage pour TOUTES les sections principales
+document.querySelectorAll('.section-header').forEach(header => {
+    header.addEventListener('click', () => {
+        header.classList.toggle('collapsed');
+        header.nextElementSibling.classList.toggle('collapsed');
+        header.querySelector('.section-toggle-icon').classList.toggle('collapsed');
+        // NOUVEAU: Mettre à jour l'attribut ARIA pour l'accessibilité
+        const isCollapsed = header.classList.contains('collapsed');
+        header.setAttribute('aria-expanded', !isCollapsed);
+    });
+});
+
+// Gère les clics sur les méthodes (copier, déplier) pour TOUTE la page
+document.querySelector('main').addEventListener('click', (event) => {
+    const header = event.target.closest('.code-header');
+    const copyBtn = event.target.closest('.copy-btn');
+
+    if (copyBtn) {
+        const codeElement = copyBtn.closest('.code-block').querySelector('pre');
+        navigator.clipboard.writeText(codeElement.innerText).then(() => {
+            copyBtn.textContent = 'Copié !';
+            setTimeout(() => { copyBtn.textContent = 'Copier'; }, 2000);
+        });
+        return;
+    }
+
+    if (header) {
+        const wrapper = header.nextElementSibling;
+        const icon = header.querySelector('.toggle-explanation');
+        const isExpanded = header.getAttribute('aria-expanded') === 'true';
+        wrapper.classList.toggle('open');
+        icon.classList.toggle('open');
+        header.setAttribute('aria-expanded', !isExpanded);
+    }
+});
+
+// Gère les boutons "Tout Déplier/Plier" pour CHAQUE section
+function setupSectionControls(sectionId) {
+    const section = document.getElementById(sectionId);
+    if (!section) return;
+
+    const expandBtn = document.getElementById(`expand-all-${sectionId}`);
+    const collapseBtn = document.getElementById(`collapse-all-${sectionId}`);
+
+    if(expandBtn) {
+        expandBtn.addEventListener('click', () => {
+            section.querySelectorAll('.code-header').forEach(header => {
+                header.setAttribute('aria-expanded', 'true');
+                header.nextElementSibling.classList.add('open');
+                header.querySelector('.toggle-explanation').classList.add('open');
+            });
+        });
+    }
+
+    if(collapseBtn) {
+        collapseBtn.addEventListener('click', () => {
+            section.querySelectorAll('.code-header').forEach(header => {
+                header.setAttribute('aria-expanded', 'false');
+                header.nextElementSibling.classList.remove('open');
+                header.querySelector('.toggle-explanation').classList.remove('open');
+            });
+        });
+    }
+}
+
+
+// TROUVEZ ET REMPLACEZ LES BLOCS CORRESPONDANTS DANS VOTRE SCRIPT
+
+// --- 4. LOGIQUE DE RECHERCHE/FILTRAGE (VERSION FINALE) ---
+const searchInput = document.getElementById('search-input');
+// NOUVEAU: Ajout des tuples à l'objet de recherche
+const allMethods = { 
+    strings: stringMethods, 
+    lists: listMethods,
+    dictionaries: dictionaryMethods,
+    sets: setMethods,
+    tuples: tupleMethods
+};
+
+searchInput.addEventListener('input', (e) => {
+    const searchTerm = e.target.value.toLowerCase().trim();
+    Object.keys(allMethods).forEach(key => {
+        const filtered = allMethods[key].filter(method => 
+            method.title.toLowerCase().includes(searchTerm) ||
+            method.subtitle.toLowerCase().includes(searchTerm)
+        );
+        renderMethods(filtered, `${key}-content-container`);
+    });
+});
+
+
+// --- 5. ANIMATION D'APPARITION AU DÉFILEMENT ---
+// (Ce bloc ne change pas)
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            observer.unobserve(entry.target);
+        }
+    });
+}, { threshold: 0.05 });
+
+
+// --- 6. INITIALISATION DE LA PAGE (VERSION FINALE) ---
+// (La fonction renderMethods ne change pas)
+function renderMethods(methodsToRender, containerId) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+
+    if (methodsToRender.length === 0) {
+        container.innerHTML = '<p style="text-align:center; color: var(--couleur-texte-clair);">Aucune méthode trouvée.</p>';
+    } else {
+        container.innerHTML = methodsToRender.map((method, index) => 
+            generateMethodHTML(method, `${containerId}-${index}`)
+        ).join('');
+    }
+    
+    lucide.createIcons();
+    container.querySelectorAll('.code-block:not(.is-visible)').forEach(block => observer.observe(block));
+}
+
+// L'appel initial affiche les données pour chaque section
+renderMethods(stringMethods, 'strings-content-container');
+renderMethods(listMethods, 'lists-content-container');
+renderMethods(dictionaryMethods, 'dictionaries-content-container');
+renderMethods(setMethods, 'sets-content-container');
+// NOUVEAU: Appel pour afficher les tuples
+renderMethods(tupleMethods, 'tuples-content-container');
+
+
+// Active les boutons pour chaque section
+setupSectionControls('strings');
+setupSectionControls('lists');
+setupSectionControls('dictionaries');
+setupSectionControls('sets');
+// NOUVEAU: Activation des boutons pour les tuples
+setupSectionControls('tuples');
+        
+    });
+    
+    // --- GESTION DU BOUTON GLOBAL "TOUT DÉPLIER / REPLIER" ---
+const toggleAllBtn = document.getElementById('toggle-all-sections-btn');
+if (toggleAllBtn) {
+    toggleAllBtn.addEventListener('click', () => {
+        const currentState = toggleAllBtn.dataset.state;
+        const headers = document.querySelectorAll('.section-header');
+        const btnText = toggleAllBtn.querySelector('span');
+        
+        if (currentState === 'collapsed') {
+            // On déplie tout
+            headers.forEach(header => {
+                header.classList.remove('collapsed');
+                header.nextElementSibling.classList.remove('collapsed');
+                header.querySelector('.section-toggle-icon').classList.remove('collapsed');
+                header.setAttribute('aria-expanded', 'true');
+            });
+            btnText.textContent = 'Tout Replier';
+            toggleAllBtn.dataset.state = 'expanded';
+        } else {
+            // On replie tout
+            headers.forEach(header => {
+                header.classList.add('collapsed');
+                header.nextElementSibling.classList.add('collapsed');
+                header.querySelector('.section-toggle-icon').classList.add('collapsed');
+                header.setAttribute('aria-expanded', 'false');
+            });
+            btnText.textContent = 'Tout Déplier';
+            toggleAllBtn.dataset.state = 'collapsed';
+        }
+        // Recrée l'icône car on la manipule
+        lucide.createIcons();
+    });
+}
+    
+    
+    </script>
+</body>
+</html>
