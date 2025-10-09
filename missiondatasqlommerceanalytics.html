@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mission Data SQL | Commerce Analytics</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        /* --- Variables de Design --- */
+        :root {
+            --primary-color: #007bff;
+            --secondary-color: #6c757d;
+            --background-light: #f9f9fc;
+            --background-card: #ffffff;
+            --text-dark: #343a40;
+            --text-light: #f8f9fa;
+            --font-body: 'Poppins', sans-serif;
+            --font-code: 'Roboto Mono', monospace;
+            --shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+            --border-radius: 12px;
+        }
+
+        /* --- Styles Généraux --- */
+        body {
+            font-family: var(--font-body);
+            line-height: 1.7;
+            margin: 0;
+            padding: 0;
+            background-color: var(--background-light);
+            color: var(--text-dark);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        main {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 20px;
+            opacity: 0;
+            animation: fadeIn 1s ease-out forwards;
+        }
+
+        /* --- Animations --- */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* --- En-tête --- */
+        header {
+            background: linear-gradient(135deg, #343a40, #212529);
+            color: var(--text-light);
+            padding: 40px 20px;
+            text-align: center;
+            border-bottom: 5px solid var(--primary-color);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--text-light); /* Titre en blanc */
+        }
+
+        header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        /* --- Titres --- */
+        h1, h2 {
+            color: var(--text-dark);
+            border-bottom: 3px solid #eee;
+            padding-bottom: 10px;
+            margin-bottom: 25px;
+            font-weight: 600;
+        }
+
+        /* --- Cartes de Contenu --- */
+        .card {
+            background-color: var(--background-card);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            padding: 25px;
+            margin-bottom: 30px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .intro {
+            border-left: 5px solid var(--primary-color);
+            background-color: #e6f7ff;
+        }
+        
+        .intro h2 {
+            border: none;
+        }
+        
+        /* --- Liste des demandes clients --- */
+        .request-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .request-list li {
+            padding: 12px 0;
+            font-size: 1.05rem;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            align-items: center;
+        }
+        
+        .request-list li:last-child {
+            border-bottom: none;
+        }
+        
+        .request-list li::before {
+            content: "❓";
+            margin-right: 15px;
+            font-size: 1.2rem;
+        }
+        
+        /* --- Style du Code --- */
+        pre {
+            background-color: #282c34;
+            color: #abb2bf;
+            padding: 20px;
+            overflow-x: auto;
+            border-radius: 8px;
+            margin-top: 10px;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.2);
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        code {
+            font-family: var(--font-code);
+        }
+        
+        /* --- Coloration Syntaxique --- */
+        .code-comment { color: #5c6370; font-style: italic; }
+        .code-keyword { color: #c678dd; }
+        .code-variable { color: #abb2bf; }
+        .code-string { color: #98c379; }
+        .code-function { color: #61afef; }
+        .code-operator { color: #56b6c2; }
+        .code-sql-keyword { color: #e5c07b; }
+
+
+        /* --- Pied de Page --- */
+        footer {
+            text-align: center;
+            padding: 20px;
+            margin-top: 40px;
+            color: var(--secondary-color);
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Analyse de données de ventes 📊</h1>
+        <p>Mission Freelance pour Data Analysts</p>
+    </header>
+
+    <main id="main">
+
+        <div class="card intro">
+            <h2>Bienvenue, équipe de Data Analysts Freelance !</h2>
+            <p>Notre entreprise de commerce international <strong>Buy More</strong>, souhaite exploiter la puissance de ses données transactionnelles pour optimiser sa chaîne logistique et ses relations clients. Nous avons besoin de votre expertise pour transformer nos données brutes en informations stratégiques.</p>
+            <p>💰 <strong>TJM (Taux Journalier Moyen) : 350€/jour.</strong></p>
+        </div>
+
+        <div class="card">
+            <h1 id="objectif">Votre mission : un projet en plusieurs phases</h1>
+            <p>Ce projet est la première étape d'une initiative data à grande échelle. Votre succès ici est crucial pour débloquer la suite.</p>
+            <ul>
+                <li><strong>Phase 1 : Modélisation des données.</strong> Notre base de données a été conçue par un stagiaire Data, mais il ne nous a pas fourni le <strong>Modèle Conceptuel de Données (MCD)</strong> pour décrire les règles métier (ex: "un client passe plusieurs commandes") et d'un <strong>Modèle Logique de Données (MLD)</strong> pour organiser ces règles en tables et relations prêtes à l'emploi. Nous n'avons donc pas de description formelle de nos données. Pouvez-vous nous la fournir ?</li>
+                <li><strong>Phase 2 (Votre mission actuelle) : Exploration des données.</strong> Vous allez interroger nos données pour répondre à des questions business clés. L'objectif est de prouver la valeur de nos données et de valider votre compréhension de nos besoins.</li>
+                <li><strong>Phase 3 : Business Intelligence et Administration de la base de données.</strong> L'objectif futur et final est de construire des <strong>dashboards de performance (KPIs)</strong> automatisés pour que nos équipes puissent suivre l'activité en temps réel et prendre de meilleures décisions. Nous engagerons également avec vous une refonte complète de nos données, et nous y intégrerons des méthodes statistiques pour effectuer des prédictions, sachant que vous avez une appétence pour Python.</li>
+            </ul>
+        </div>
+        
+        <div class="card">
+            <h2>Accéder aux données</h2>
+            <p>Pour commencer, voici le code Python pour charger toutes les tables de la base de données dans votre environnement de travail. Vous pourrez ainsi commencer à les explorer.</p>
+            <pre><code><span class="code-comment"># Importation des bibliothèques nécessaires</span>
+<span class="code-keyword">import</span> <span class="code-variable">duckdb</span>
+<span class="code-keyword">import</span> <span class="code-variable">pandas</span> <span class="code-keyword">as</span> <span class="code-variable">pd</span>
+
+<span class="code-comment"># Pandas est une bibliothèque que nous explorerons plus en détail ultérieurement.</span>
+<span class="code-comment"># Pour l'instant, nous l'utilisons pour lire facilement nos fichiers CSV depuis une URL.</span>
+
+<span class="code-comment"># URLs de chaque table de la base de données</span>
+<span class="code-variable">urls</span> <span class="code-operator">=</span> {
+    <span class="code-string">"Categories"</span>: <span class="code-string">"https://raw.githubusercontent.com/Patrick-Wampe/datasets/refs/heads/main/Categories.csv"</span>,
+    <span class="code-string">"Clients"</span>: <span class="code-string">"https://raw.githubusercontent.com/Patrick-Wampe/datasets/refs/heads/main/Clients.csv"</span>,
+    <span class="code-string">"Employees"</span>: <span class="code-string">"https://raw.githubusercontent.com/Patrick-Wampe/datasets/refs/heads/main/Employees.csv"</span>,
+    <span class="code-string">"OrderDetails"</span>: <span class="code-string">"https://raw.githubusercontent.com/Patrick-Wampe/datasets/refs/heads/main/OrderDetails.csv"</span>,
+    <span class="code-string">"Orders"</span>: <span class="code-string">"https://raw.githubusercontent.com/Patrick-Wampe/datasets/refs/heads/main/Orders.csv"</span>,
+    <span class="code-string">"Products"</span>: <span class="code-string">"https://raw.githubusercontent.com/Patrick-Wampe/datasets/refs/heads/main/Products.csv"</span>,
+    <span class="code-string">"Shippers"</span>: <span class="code-string">"https://raw.githubusercontent.com/Patrick-Wampe/datasets/refs/heads/main/Shippers.csv"</span>,
+    <span class="code-string">"Suppliers"</span>: <span class="code-string">"https://raw.githubusercontent.com/Patrick-Wampe/datasets/refs/heads/main/Suppliers.csv"</span>
+}
+
+<span class="code-comment"># Chargement de chaque fichier CSV dans un DataFrame pandas</span>
+<span class="code-variable">df_Categories</span> <span class="code-operator">=</span> <span class="code-variable">pd</span>.<span class="code-function">read_csv</span>(<span class="code-variable">urls</span>[<span class="code-string">"Categories"</span>])
+<span class="code-variable">df_Clients</span> <span class="code-operator">=</span> <span class="code-variable">pd</span>.<span class="code-function">read_csv</span>(<span class="code-variable">urls</span>[<span class="code-string">"Clients"</span>])
+<span class="code-variable">df_Employees</span> <span class="code-operator">=</span> <span class="code-variable">pd</span>.<span class="code-function">read_csv</span>(<span class="code-variable">urls</span>[<span class="code-string">"Employees"</span>])
+<span class="code-variable">df_OrderDetails</span> <span class="code-operator">=</span> <span class="code-variable">pd</span>.<span class="code-function">read_csv</span>(<span class="code-variable">urls</span>[<span class="code-string">"OrderDetails"</span>])
+<span class="code-variable">df_Orders</span> <span class="code-operator">=</span> <span class="code-variable">pd</span>.<span class="code-function">read_csv</span>(<span class="code-variable">urls</span>[<span class="code-string">"Orders"</span>])
+<span class="code-variable">df_Products</span> <span class="code-operator">=</span> <span class="code-variable">pd</span>.<span class="code-function">read_csv</span>(<span class="code-variable">urls</span>[<span class="code-string">"Products"</span>])
+<span class="code-variable">df_Shippers</span> <span class="code-operator">=</span> <span class="code-variable">pd</span>.<span class="code-function">read_csv</span>(<span class="code-variable">urls</span>[<span class="code-string">"Shippers"</span>])
+<span class="code-variable">df_Suppliers</span> <span class="code-operator">=</span> <span class="code-variable">pd</span>.<span class="code-function">read_csv</span>(<span class="code-variable">urls</span>[<span class="code-string">"Suppliers"</span>])
+
+<span class="code-comment"># DuckDB peut directement utiliser ces DataFrames pour exécuter des requêtes SQL.</span>
+<span class="code-comment"># Voici un exemple pour afficher les 5 premières lignes de la table des clients.</span>
+<span class="code-variable">requete</span> <span class="code-operator">=</span> <span class="code-variable">duckdb</span>.<span class="code-function">sql</span>(<span class="code-string">"""
+    <span class="code-sql-keyword">SELECT</span> * <span class="code-sql-keyword">FROM</span> df_Clients <span class="code-sql-keyword">LIMIT</span> 5
+"""</span>).<span class="code-function">df</span>()
+
+<span class="code-comment"># Affiche le résultat de la requête (dans un notebook, cela affiche le DataFrame)</span>
+<span class="code-variable">requete</span></code></pre>
+        </div>
+        
+        <div class="card">
+            <h2>📈 Analyse des Ventes et Commandes</h2>
+            <ul class="request-list">
+                <li>Quel est le nombre total d'articles commandés par le client 'Alfreds Futterkiste' ?</li>
+                <li>Affichez la quantité totale d'articles pour chaque commande.</li>
+                <li>Listez le nombre de commandes passées chaque jour en 1996.</li>
+                <li>Quelle est la commande avec la plus petite quantité d'articles ?</li>
+                <li>Quelle est la quantité moyenne d'articles par commande ?</li>
+                <li>Quelles sont les commandes contenant plus de 10 articles au total ?</li>
+                <li>Affichez le nombre d'articles différents pour chaque commande.</li>
+                <li>Donnez-moi la liste des commandes passées en juillet 1996.</li>
+            </ul>
+        </div>
+        
+        <div class="card">
+            <h2>👤 Analyse de la Clientèle</h2>
+            <ul class="request-list">
+                <li>Combien de clients avons-nous dans chaque pays ?</li>
+                <li>Quelle est la ville qui compte le plus de clients ?</li>
+                <li>Quels clients ont un nom de contact contenant une apostrophe ?</li>
+                <li>Affichez la liste des clients qui se trouvent dans la même ville qu'un de nos fournisseurs.</li>
+                <li>Quel est le nom du client qui a passé la toute dernière commande ?</li>
+                <li>Combien de clients n'habitent ni aux États-Unis (USA) ni au Royaume-Uni (UK) ?</li>
+                <li>Quels sont nos clients basés à Berlin ?</li>
+            </ul>
+        </div>
+        
+        <div class="card">
+            <h2>🚚 Logistique et Partenaires (Fournisseurs, Expéditeurs)</h2>
+            <ul class="request-list">
+                <li>Quel expéditeur a livré la commande 10250 ?</li>
+                <li>Affichez le nombre de commandes gérées par chaque expéditeur, classé du plus performant au moins performant.</li>
+                <li>Listez les fournisseurs dont le nom contient 's.r.l.' ou 'LTDA'.</li>
+                <li>Dans quelles villes avons-nous plus d'un fournisseur ?</li>
+                <li>Identifiez tous les clients qui ont reçu des commandes de plus de 12 articles et l'expéditeur associé.</li>
+                <li>Listez les fournisseurs qui nous approvisionnent en boissons ('Beverages') ou en condiments ('Condiments').</li>
+                <li>Affichez pour chaque client la quantité totale d'articles livrés par chaque expéditeur.</li>
+            </ul>
+        </div>
+
+    </main>
+    
+    <footer>
+        &copy; 2025 Commerce Analytics - Mission Data
+    </footer>
+    
+</body>
+</html>
