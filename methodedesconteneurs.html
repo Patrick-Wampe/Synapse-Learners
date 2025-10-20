@@ -144,6 +144,19 @@
     margin-bottom: 2rem;
     margin-top: -2rem; /* Pour réduire l'espace avec la légende */
 }
+
+        @media (max-width: 768px) {
+             #site-logo { top: 10px; left: 10px; } /* Ajuste position logo sur petit écran */
+             #site-logo img { height: 40px; }
+            .page-title { margin-top: 50px; /* Plus d'espace pour le logo */}
+            .page-title h1 { font-size: 2.5rem; } .page-title p { font-size: 1rem; }
+            .section-header { font-size: 2rem; }
+            .code-title-container { gap: 0.5rem; }
+            .code-subtitle { width: 100%; text-align: left; margin-top: -0.5rem; }
+            .comparison-table th, .comparison-table td { padding: 0.5rem; font-size: 0.9rem; }
+            .comparison-table td:first-child { width: 30%; }
+            .comparison-table td:nth-child(2) { width: auto; }
+        }
     </style>
 </head>
 <body>
