@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cheat Sheet Terminal & Python - Synapse Learners</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Source+Code+Pro:wght@400;600&display=swap">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --couleur-principale: #3a7bd5; /* Bleu pour le terminal */
+            --couleur-secondaire: #00d2ff; /* Cyan complémentaire */
+            --couleur-python: #ffcc33; /* Jaune pour Python */
+            --couleur-fond: #f4f7f9;
+            --couleur-texte: #333;
+            --couleur-texte-clair: #555;
+            --couleur-blanc: #ffffff;
+            --couleur-gris-clair: #e9ecef;
+            --code-bg: #2b2b2b;
+            --ombre: 0 4px 15px rgba(0, 0, 0, 0.05);
+            --gradient-principal: linear-gradient(45deg, var(--couleur-principale), var(--couleur-secondaire));
+        }
+
+        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--couleur-fond);
+            color: var(--couleur-texte);
+            margin: 0; padding: 0; overflow-x: hidden;
+        }
+        .container { width: 100%; max-width: 1100px; margin: 0 auto; padding: 2rem; box-sizing: border-box; }
+        .page-title { text-align: center; margin-bottom: 3rem; }
+        .page-title h1 {
+            font-size: 3.5rem; font-weight: 700;
+            background: var(--gradient-principal);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem; animation: fadeInDown 0.8s ease-out;
+        }
+        .page-title p { font-size: 1.2rem; color: var(--couleur-texte-clair); max-width: 700px; margin: 0 auto; animation: fadeInUp 0.8s ease-out 0.2s backwards; }
+
+        .search-container {
+            margin-bottom: 2.5rem;
+            animation: fadeInUp 0.8s ease-out 0.4s backwards;
+        }
+        #search-input {
+            width: 100%; padding: 1rem 1.5rem; font-size: 1.1rem;
+            font-family: 'Poppins', sans-serif; border-radius: 50px;
+            border: 2px solid var(--couleur-gris-clair);
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            box-sizing: border-box;
+        }
+        #search-input:focus, #search-input:focus-visible {
+            outline: none; border-color: var(--couleur-secondaire);
+            box-shadow: 0 0 0 4px rgba(0, 210, 255, 0.2);
+        }
+
+        /* Styles globaux (boutons, sections, etc.) - réutilisés */
+        .global-controls { display: flex; justify-content: center; margin-bottom: 2rem; }
+        .control-btn {
+            background: none; border: 1px solid var(--couleur-principale); color: var(--couleur-principale);
+            padding: 0.4rem 1rem; border-radius: 20px; cursor: pointer; font-size: 0.8rem;
+            font-weight: 600; font-family: 'Poppins', sans-serif; transition: all 0.2s ease;
+        }
+        .control-btn:hover { background-color: var(--couleur-principale); color: white; }
+        .control-btn:focus-visible { outline: 2px solid var(--couleur-secondaire); outline-offset: 2px; }
+
+        .cheatsheet-section { margin-bottom: 1.5rem; }
+        .section-header {
+            font-size: 2.5rem; color: var(--couleur-principale); margin-bottom: 1rem;
+            border-bottom: 3px solid; border-image: var(--gradient-principal) 1;
+            padding-bottom: 0.75rem; display: flex; align-items: center; justify-content: space-between;
+            cursor: pointer; -webkit-tap-highlight-color: transparent; transition: margin-bottom 0.5s ease-in-out;
+        }
+        .section-header > span { display: flex; align-items: center; gap: 1rem; }
+        .section-header.collapsed { margin-bottom: 0; }
+        .section-toggle-icon { transition: transform 0.5s ease-in-out; }
+        .section-toggle-icon.collapsed { transform: rotate(-180deg); }
+        .section-content { display: grid; grid-template-rows: 1fr; transition: grid-template-rows 0.5s ease-in-out; overflow: hidden; }
+        .section-content.collapsed { grid-template-rows: 0fr; }
+        .section-content > .inner-content { overflow: hidden; padding-top: 1rem; }
+        .section-controls { display: flex; gap: 0.75rem; margin-bottom: 1.5rem; }
+
+        /* Styles spécifiques aux blocs de commande */
+        .code-block {
+             background-color: var(--code-bg); border-radius: 12px; margin-bottom: 1.5rem;
+             border: 1px solid #444; box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+             opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .code-block.is-visible { opacity: 1; transform: translateY(0); }
+
+        .code-header {
+             background-color: #3a3a3a; padding: 0.75rem 1.5rem; display: flex;
+             justify-content: space-between; align-items: center; cursor: pointer;
+        }
+        .code-title-container { display: flex; align-items: center; gap: 1rem; flex-grow: 1; flex-wrap: wrap; }
+        .code-title { color: #e0e0e0; font-family: 'Poppins', sans-serif; font-weight: 600; font-size: 1.2rem; }
+        .code-subtitle { color: #b0b0b0; font-family: 'Poppins', sans-serif; font-size: 0.9rem; font-style: italic; white-space: nowrap; }
+
+        .toggle-explanation { color: #f5a623; transition: transform 0.4s ease; margin-left: auto; }
+        .toggle-explanation.open { transform: rotate(180deg); }
+
+        .code-content-wrapper { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.5s ease-in-out; }
+        .code-content-wrapper.open { grid-template-rows: 1fr; }
+        .code-content { overflow: hidden; }
+
+        .explanation-content { padding: 1.5rem; border-top: 1px solid #555; background-color: #3a3a3a; color: #e0e0e0; font-size: 0.95rem; line-height: 1.6; }
+        .explanation-content h4 { color: var(--couleur-secondaire); margin-top: 0; margin-bottom: 0.8rem; font-weight: 600; border-bottom: 1px solid #555; padding-bottom: 0.4rem;}
+        .explanation-content p { margin-top: 0.8rem; margin-bottom: 1rem; }
+        .explanation-content code { background-color: #555; padding: 0.2em 0.4em; border-radius: 3px; font-size: 0.9em; font-family: 'Source Code Pro', monospace; }
+
+        /* Style pour le tableau de comparaison */
+        .comparison-table { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; }
+        .comparison-table th, .comparison-table td {
+             border: 1px solid #555; padding: 0.8rem; text-align: left; vertical-align: top;
+        }
+        .comparison-table th { background-color: #4a4a4a; font-weight: 600; color: #f0f0f0; }
+        .comparison-table td:first-child { width: 25%; font-weight: 500;} /* Colonne OS */
+        .comparison-table td:nth-child(2) { width: 35%; } /* Colonne Commande */
+        .comparison-table td code { display: block; white-space: pre-wrap; word-break: break-all; }
+        .comparison-table .python-code code { color: var(--couleur-python); } /* Couleur Python */
+
+        footer { text-align: center; margin-top: 4rem; padding: 2rem 0; border-top: 1px solid var(--couleur-gris-clair); color: var(--couleur-texte-clair); font-size: 0.9rem; }
+
+        @media (max-width: 768px) {
+            .page-title h1 { font-size: 2.5rem; } .page-title p { font-size: 1rem; }
+            .section-header { font-size: 2rem; }
+            .code-title-container { gap: 0.5rem; }
+            .code-subtitle { width: 100%; text-align: left; margin-top: -0.5rem; }
+            .comparison-table th, .comparison-table td { padding: 0.5rem; font-size: 0.9rem; }
+            .comparison-table td:first-child { width: 30%; }
+            .comparison-table td:nth-child(2) { width: auto; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header><section class="page-title"><h1>Cheat Sheet Terminal</h1><p>Commandes essentielles pour Windows, Mac/Linux et leurs équivalents Python.</p></section></header>
+        <main>
+            <div class="search-container">
+                <input type="search" id="search-input" placeholder="🔎 Rechercher une commande (ex: cd, ls, mkdir...)" aria-label="Rechercher une commande">
+            </div>
+
+            <div class="global-controls">
+                <button class="control-btn" id="toggle-all-sections-btn" data-state="collapsed">
+                    <i data-lucide="chevrons-down-up" style="width:16px; height:16px; vertical-align: middle; margin-right: 8px;"></i>
+                    <span>Tout Déplier</span>
+                </button>
+            </div>
+
+            <section id="navigation" class="cheatsheet-section">
+                <h2 class="section-header collapsed"><span>🧭 Navigation</span><i data-lucide="chevron-up" class="section-toggle-icon collapsed"></i></h2>
+                <div class="section-content collapsed"><div class="inner-content" id="navigation-content-container"></div></div>
+            </section>
+
+            <section id="manipulation" class="cheatsheet-section">
+                <h2 class="section-header collapsed"><span>📁 Manipulation Fichiers/Dossiers</span><i data-lucide="chevron-up" class="section-toggle-icon collapsed"></i></h2>
+                <div class="section-content collapsed"><div class="inner-content" id="manipulation-content-container"></div></div>
+            </section>
+
+            <section id="affichage" class="cheatsheet-section">
+                <h2 class="section-header collapsed"><span>🔍 Affichage & Recherche</span><i data-lucide="chevron-up" class="section-toggle-icon collapsed"></i></h2>
+                <div class="section-content collapsed"><div class="inner-content" id="affichage-content-container"></div></div>
+            </section>
+            
+             <section id="permissions" class="cheatsheet-section">
+                <h2 class="section-header collapsed"><span>🔒 Permissions</span><i data-lucide="chevron-up" class="section-toggle-icon collapsed"></i></h2>
+                <div class="section-content collapsed"><div class="inner-content" id="permissions-content-container"></div></div>
+            </section>
+            
+             <section id="processus" class="cheatsheet-section">
+                <h2 class="section-header collapsed"><span>⚙️ Processus</span><i data-lucide="chevron-up" class="section-toggle-icon collapsed"></i></h2>
+                <div class="section-content collapsed"><div class="inner-content" id="processus-content-container"></div></div>
+            </section>
+
+             <section id="reseau" class="cheatsheet-section">
+                <h2 class="section-header collapsed"><span>🌐 Réseau</span><i data-lucide="chevron-up" class="section-toggle-icon collapsed"></i></h2>
+                <div class="section-content collapsed"><div class="inner-content" id="reseau-content-container"></div></div>
+            </section>
+            
+            <section id="archivage" class="cheatsheet-section">
+                <h2 class="section-header collapsed"><span>📦 Archivage & Compression</span><i data-lucide="chevron-up" class="section-toggle-icon collapsed"></i></h2>
+                <div class="section-content collapsed"><div class="inner-content" id="archivage-content-container"></div></div>
+            </section>
+
+            <section id="systeme" class="cheatsheet-section">
+                <h2 class="section-header collapsed"><span>ℹ️ Infos Système & Divers</span><i data-lucide="chevron-up" class="section-toggle-icon collapsed"></i></h2>
+                <div class="section-content collapsed"><div class="inner-content" id="systeme-content-container"></div></div>
+            </section>
+
+        </main>
+        <footer><p>Créé par Synapse Learners.</p></footer>
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        // --- BASE DE DONNÉES DES COMMANDES (PLUS COMPLÈTE) ---
+        const terminalCommands = {
+            navigation: [
+                {
+                    title: "Changer de dossier",
+                    subtitle: "Se déplacer vers un autre répertoire.",
+                    explanation: "Permet de naviguer dans l'arborescence des fichiers. Utilisez des chemins absolus (ex: `/Users/moi/Documents`) ou relatifs (ex: `../Images`).",
+                    commands: [
+                        { os: "Windows (CMD/PS)", command: "cd [chemin]" },
+                        { os: "Mac/Linux (Bash/Zsh)", command: "cd [chemin]" },
+                        { os: "Python", command: "import os\nos.chdir('chemin/vers/dossier')", isPython: true }
+                    ],
+                    example: "Ex: `cd Documents/Projets` (Mac/Linux) ou `cd Documents\\Projets` (Windows)"
+                },
+                {
+                    title: "Remonter d'un niveau",
+                    subtitle: "Aller au dossier parent.",
+                    explanation: "Le `..` représente le dossier parent du dossier actuel.",
+                    commands: [
+                        { os: "Windows (CMD/PS)", command: "cd .." },
+                        { os: "Mac/Linux (Bash/Zsh)", command: "cd .." },
+                        { os: "Python", command: "import os\nos.chdir('..')", isPython: true }
+                    ],
+                    example: ""
+                },
+                {
+                    title: "Afficher le chemin actuel",
+                    subtitle: "Savoir où l'on se trouve.",
+                    explanation: "Affiche le chemin complet (depuis la racine) du répertoire courant (PWD = Print Working Directory).",
+                    commands: [
+                        { os: "Windows (CMD)", command: "cd\n# ou\necho %CD%" },
+                        { os: "Windows (PS)", command: "pwd" },
+                        { os: "Mac/Linux (Bash/Zsh)", command: "pwd" },
+                        { os: "Python", command: "import os\nprint(os.getcwd())", isPython: true }
+                    ],
+                    example: ""
+                },
+                {
+                    title: "Lister le contenu",
+                    subtitle: "Voir les fichiers et dossiers.",
+                    explanation: "Affiche le contenu du répertoire courant. De nombreuses options existent pour trier, filtrer ou formater l'affichage.",
+                    commands: [
+                        { os: "Windows (CMD/PS)", command: "dir" },
+                        { os: "Mac/Linux (Bash/Zsh)", command: "ls" },
+                        { os: "Python", command: "import os\nprint(os.listdir('.'))", isPython: true }
+                    ],
+                    example: "Options courantes:\n`ls -l` (détails)\n`ls -a` (fichiers cachés)\n`ls -t` (tri par date)\n`ls -lh` (taille lisible)\n`dir /a` (fichiers cachés Win)\n`dir /od` (tri par date Win)"
+                },
+                 {
+                    title: "Aller au dossier personnel",
+                    subtitle: "Retourner au répertoire de l'utilisateur.",
+                    explanation: "Le tilde `~` (Unix/PS) ou la variable `%USERPROFILE%` (CMD) représentent le chemin vers votre dossier utilisateur.",
+                    commands: [
+                        { os: "Windows (CMD)", command: "cd %USERPROFILE%" },
+                        { os: "Windows (PS)", command: "cd ~" },
+                        { os: "Mac/Linux (Bash/Zsh)", command: "cd ~ \n# ou simplement\ncd" },
+                        { os: "Python", command: "import os\nos.chdir(os.path.expanduser('~'))", isPython: true }
+                    ],
+                    example: ""
+                },
+            ],
+            manipulation: [
+                 {
+                    title: "Créer un dossier",
+                    subtitle: "Créer un nouveau répertoire.",
+                    explanation: "Crée un ou plusieurs nouveaux dossiers.",
+                    commands: [
+                        { os: "Windows (CMD/PS)", command: "mkdir [nom_dossier]\n# alias: md" },
+                        { os: "Mac/Linux (Bash/Zsh)", command: "mkdir [nom_dossier]" },
+                        { os: "Python", command: "import os\nos.makedirs('nom_dossier', exist_ok=True)", isPython: true }
+                    ],
+                    example: "Ex: `mkdir projet_A projet_B` (crée deux dossiers)"
+                },
+                {
+                    title: "Créer dossier (parents)",
+                    subtitle: "Créer une arborescence.",
+                    explanation: "Crée un dossier ainsi que tous les dossiers parents nécessaires s'ils n'existent pas.",
+                    commands: [
+                        { os: "Windows (CMD/PS)", command: "mkdir chemin\\complet" },
+                        { os: "Mac/Linux (Bash/Zsh)", command: "mkdir -p chemin/complet" },
+                        { os: "Python", command: "import os\nos.makedirs('chemin/complet', exist_ok=True)", isPython: true }
+                    ],
+                    example: "`mkdir -p Rapport/Annuel/2025`"
+                },
+                {
+                    title: "Créer un fichier vide",
+                    subtitle: "Créer un nouveau fichier sans contenu.",
+                    explanation: "Crée un fichier vide. Sous Mac/Linux, `touch` met aussi à jour la date de modification si le fichier existe déjà.",
+                    commands: [
+                        { os: "Windows (CMD)", command: "type NUL > mon_fichier.txt\n# ou\necho. > mon_fichier.txt" },
+                        { os: "Windows (PS)", command: "New-Item mon_fichier.txt -ItemType File" },
+                        { os: "Mac/Linux (Bash/Zsh)", command: "touch mon_fichier.txt" },
+                        { os: "Python", command: "# Crée ou écrase le fichier\nopen('mon_fichier.txt', 'a').close()", isPython: true }
+                    ],
+                    example: "`touch fichier1.log fichier2.log` (crée deux fichiers)"
+                },
+                {
+                    title: "Copier un fichier",
+                    subtitle: "Dupliquer un fichier.",
+                    explanation: "Crée une copie d'un fichier existant. La destination peut être un nouveau nom de fichier ou un dossier.",
+                    commands: [
+                        { os: "Windows (CMD/PS)", command: "copy [source] [destination]" },
+                        { os: "Mac/Linux (Bash/Zsh)", command: "cp [source] [destination]" },
+                        { os: "Python", command: "import shutil\nshutil.copy('source.txt', 'destination/copie.txt')", isPython: true }
+                    ],
+                    example: "Ex: `cp rapport.pdf sauvegardes/` (copie dans le dossier)\nEx: `cp config.ini config.bak` (copie avec nouveau nom)"
+                },
+                {
+                    title: "Copier un dossier",
+                    subtitle: "Dupliquer un dossier et son contenu.",
+                    explanation: "Copie récursivement un répertoire entier. Attention à la syntaxe de la destination.",
+                    commands: [
+                        { os: "Windows (CMD)", command: "xcopy [source] [destination] /E /I /H /Y" },
+                        { os: "Windows (PS)", command: "Copy-Item -Recurse -Force [source] [destination]" },
+                        { os: "Mac/Linux (Bash/Zsh)", command: "cp -r [source] [destination]" },
+                        { os: "Python", command: "import shutil\n# Dest doit être un nouveau nom/chemin\nshutil.copytree('source_dossier', 'destination/copie_dossier')", isPython: true }
+                    ],
+                    example: "`cp -r projet_A/ archives/` (copie dossier projet_A DANS archives)\n`cp -r projet_A archives/backup_A` (copie et renomme)"
+                },
+                 {
+                    title: "Déplacer / Renommer",
+                    subtitle: "Changer l'emplacement ou le nom.",
+                    explanation: "Utilisé à la fois pour renommer un fichier/dossier et pour le déplacer vers un autre répertoire.",
+                    commands: [
+                        { os: "Windows (CMD/PS)", command: "move [source] [destination]\n# alias: ren (pour renommer uniquement)" },
+                        { os: "Mac/Linux (Bash/Zsh)", command: "mv [source] [destination]" },
+                        { os: "Python", command: "import shutil\nshutil.move('ancien.txt', 'nouveau.txt')\nshutil.move('fichier.txt', 'cible/')", isPython: true }
+                    ],
+                    example: "Renommer: `mv photo.jpg image_vacances.jpg`\nDéplacer: `mv rapport.docx Archives/`"
+                },
+                 {
+                    title: "Supprimer un fichier",
+                    subtitle: "Effacer un fichier.",
+                    explanation: "Supprime définitivement un ou plusieurs fichiers. Utilisez les jokers (`*`, `?`) avec prudence.",
+                    commands: [
+                        { os: "Windows (CMD/PS)", command: "del [nom_fichier]" },
+                        { os: "Mac/Linux (Bash/Zsh)", command: "rm [nom_fichier]" },
+                        { os: "Python", command: "import os\nos.remove('fichier.tmp')", isPython: true }
+                    ],
+                    example: "`rm *.log` (supprime tous les .log)\n`del /Q *.tmp` (supprime sans demander confirmation Win)"
+                },
+                {
+                    title: "Supprimer un dossier vide",
+                    subtitle: "Effacer un répertoire vide.",
+                    explanation: "Supprime un dossier uniquement s'il ne contient aucun fichier ni sous-dossier.",
+                    commands: [
+                        { os: "Windows (CMD/PS)", command: "rmdir [nom_dossier]\n# alias: rd" },
+                        { os: "Mac/Linux (Bash/Zsh)", command: "rmdir [nom_dossier]" },
+                        { os: "Python", command: "import os\ntry:\n    os.rmdir('dossier_vide')\nexcept OSError as e:\n    print(f\"Erreur: {e}\")", isPython: true }
+                    ],
+                    example: ""
+                },
+                {
+                    title: "Supprimer un dossier (et contenu)",
+                    subtitle: "Effacer un répertoire et tout ce qu'il contient.",
+                    explanation: "Supprime récursivement un dossier et TOUT son contenu. **Action irréversible et potentiellement dangereuse ! Double-vérifiez toujours le chemin.**",
+                    commands: [
+                        { os: "Windows (CMD)", command: "rmdir /S /Q [nom_dossier]" },
+                        { os: "Windows (PS)", command: "Remove-Item -Recurse -Force [nom_dossier]" },
+                        { os: "Mac/Linux (Bash/Zsh)", command: "rm -r [nom_dossier]\n# -f pour forcer sans demander:\n# rm -rf [nom_dossier] (TRÈS DANGEREUX)" },
+                        { os: "Python", command: "import shutil\n# Attention, supprime tout !\ntry:\n    shutil.rmtree('dossier_a_supprimer')\nexcept OSError as e:\n    print(f\"Erreur: {e}\")", isPython: true }
+                    ],
+                    example: "`rm -r projet_obsolete/`"
+                },
+            ],
+            affichage: [
+                {
+                    title: "Afficher contenu fichier (cat/type)",
+                    subtitle: "Lire le contenu d'un fichier texte.",
+                    explanation: "Affiche le contenu complet d'un fichier texte directement dans le terminal. Pour les gros fichiers, préférez `less` ou `more`.",
+                    commands: [
+                        { os: "Windows (CMD/PS)", command: "type [nom_fichier]" },
+                        { os: "Mac/Linux (Bash/Zsh)", command: "cat [nom_fichier]" },
+                        { os: "Python", command: "with open('mon_fichier.txt', 'r', encoding='utf-8') as f:\n    print(f.read())", isPython: true }
+                    ],
+                    example: "`cat README.md`"
+                },
+                 {
+                    title: "Afficher contenu page par page",
+                    subtitle: "Lire un fichier long de manière contrôlée.",
+                    explanation: "`less` (plus moderne) et `more` permettent de naviguer dans un fichier (haut/bas, recherche). Quittez avec `q`.",
+                    commands: [
+                        { os: "Windows (CMD/PS)", command: "more < [nom_fichier]\n# PS a aussi:\nGet-Content [fichier] | Out-Host -Paging" },
+                        { os: "Mac/Linux (Bash/Zsh)", command: "less [nom_fichier]\n# ou\nmore [nom_fichier]" },
+                        { os: "Python", command: "# Moins direct, simule avec input()\nimport sys\ndef page(file_path):\n    try:\n        with open(file_path, 'r') as f:\n            for i, line in enumerate(f):\n                print(line.strip())\n                if (i + 1) % 20 == 0: # Pause toutes les 20 lignes\n                    input(\"--Appuyez sur Entrée--\")\n    except FileNotFoundError:\n        print(f\"Fichier non trouvé: {file_path}\")\n\n# page('grand_fichier.log')" , isPython: true }
+                    ],
+                    example: "`less system.log`"
+                },
+                {
+                    title: "Afficher début/fin fichier",
+                    subtitle: "Lire les premières ou dernières lignes.",
+                    explanation: "Utile pour inspecter rapidement l'en-tête (CSV) ou la fin (logs) de gros fichiers.",
+                    commands: [
+                        { os: "Windows (PS)", command: "# 5 premières\nGet-Content [f] -Head 5\n# 5 dernières\nGet-Content [f] -Tail 5" },
+                        { os: "Mac/Linux (Bash/Zsh)", command: "# 5 premières\nhead -n 5 [fichier]\n# 5 dernières\ntail -n 5 [fichier]" },
+                        { os: "Python", command: "with open('log.txt', 'r') as f:\n    lines = f.readlines()\n    print(''.join(lines[:5]))\n    print(''.join(lines[-5:]))", isPython: true }
+                    ],
+                    example: "`tail -n 20 error.log` (voir les 20 dernières erreurs)"
+                },
+                {
+                    title: "Chercher du texte (grep/findstr)",
+                    subtitle: "Trouver des lignes contenant un motif.",
+                    explanation: "Recherche un mot ou une expression régulière dans un ou plusieurs fichiers. `grep` (Linux/Mac) est extrêmement puissant.",
+                    commands: [
+                        { os: "Windows (CMD)", command: "findstr /C:\"texte exact\" [fichier(s)]\n# /I pour ignorer casse" },
+                        { os: "Windows (PS)", command: "Select-String -Pattern \"texte|regex\" [fichier(s)]\n# -CaseSensitive" },
+                        { os: "Mac/Linux (Bash/Zsh)", command: "grep \"texte|regex\" [fichier(s)]\n# -i ignorer casse\n# -r récursif\n# -n numéros lignes" },
+                        { os: "Python", command: "import re\npattern = re.compile(r'erreur|warning', re.IGNORECASE)\nwith open('app.log', 'r') as f:\n    for line in f:\n        if pattern.search(line):\n            print(line.strip())", isPython: true }
+                    ],
+                    example: "`grep -rni 'connexion échouée' /var/log/` (cherche récursivement)"
+                },
+                 {
+                    title: "Chercher des fichiers (find/dir)",
+                    subtitle: "Trouver des fichiers par nom, taille, date...",
+                    explanation: "`find` (Linux/Mac) est très flexible pour rechercher des fichiers selon divers critères.",
+                    commands: [
+                        { os: "Windows (CMD)", command: "dir [motif] /s /b /a" },
+                        { os: "Windows (PS)", command: "Get-ChildItem -Recurse -Filter [motif]\n# -File / -Directory" },
+                        { os: "Mac/Linux (Bash/Zsh)", command: "find [chemin] -name \"[motif]\"\n# -type f (fichiers)\n# -type d (dossiers)\n# -mtime -7 (modifié < 7 jours)" },
+                        { os: "Python", command: "import os, datetime\ncutoff = datetime.datetime.now() - datetime.timedelta(days=7)\nfor root, dirs, files in os.walk('.'):\n    for file in files:\n        if file.endswith('.log'):\n            path = os.path.join(root, file)\n            mtime = datetime.datetime.fromtimestamp(os.path.getmtime(path))\n            if mtime > cutoff:\n                 print(path)", isPython: true }
+                    ],
+                    example: "`find . -name \"*.py\" -mtime -1` (fichiers Python modifiés dernier jour)"
+                },
+            ],
+            permissions: [
+                 {
+                    title: "Changer Permissions (Mac/Linux)",
+                    subtitle: "Modifier les droits d'accès.",
+                    explanation: "`chmod` change les permissions (lecture `r`, écriture `w`, exécution `x`) pour l'utilisateur (`u`), le groupe (`g`), les autres (`o`). Se note en octal (ex: 755) ou symbolique (ex: u+x).",
+                    commands: [
+                        { os: "Mac/Linux (Bash/Zsh)", command: "chmod [permissions] [fichier/dossier]" },
+                        { os: "Python", command: "import os, stat\n# Donne lecture/écriture à l'utilisateur\nst = os.stat('script.py')\nos.chmod('script.py', st.st_mode | stat.S_IRUSR | stat.S_IWUSR)\n# Rend exécutable par l'utilisateur\nos.chmod('script.py', st.st_mode | stat.S_IEXEC)", isPython: true }
+                    ],
+                    example: "`chmod 755 script.sh` (rwx pour user, r-x pour groupe/autres)\n`chmod u+x script.sh` (ajoute exécution pour user)"
+                },
+                {
+                    title: "Changer Propriétaire (Mac/Linux)",
+                    subtitle: "Modifier le propriétaire et/ou groupe.",
+                    explanation: "`chown` change l'utilisateur et/ou le groupe propriétaire d'un fichier/dossier. Nécessite souvent `sudo`.",
+                    commands: [
+                        { os: "Mac/Linux (Bash/Zsh)", command: "sudo chown [utilisateur]:[groupe] [fichier/dossier]" },
+                        { os: "Python", command: "import os, pwd, grp\nuid = pwd.getpwnam('nouvel_user').pw_uid\ngid = grp.getgrnam('nouveau_groupe').gr_gid\n# Nécessite les droits appropriés\nos.chown('fichier.txt', uid, gid)", isPython: true }
+                    ],
+                    example: "`sudo chown www-data:www-data /var/www/html`"
+                },
+                {
+                    title: "Gérer Permissions (Windows)",
+                    subtitle: "Modifier les ACLs.",
+                    explanation: "Windows utilise des listes de contrôle d'accès (ACLs). `icacls` est l'outil en ligne de commande.",
+                    commands: [
+                        { os: "Windows (CMD/PS)", command: "icacls [fichier/dossier] /grant [Utilisateur]:(Autorisations)\n# /deny pour refuser\n# /inheritance:e pour activer héritage" },
+                        { os: "Python", command: "# Très complexe, nécessite pywin32 ou ctypes\n# Pas d'équivalent simple direct dans os/shutil", isPython: true }
+                    ],
+                    example: "`icacls data.txt /grant \"Utilisateurs\":(F)` (contrôle total)"
+                },
+            ],
+             processus: [
+                 {
+                    title: "Lister Processus",
+                    subtitle: "Voir les programmes en cours.",
+                    explanation: "Affiche la liste des processus actifs sur le système.",
+                    commands: [
+                        { os: "Windows (CMD)", command: "tasklist" },
+                        { os: "Windows (PS)", command: "Get-Process" },
+                        { os: "Mac/Linux (Bash/Zsh)", command: "ps aux\n# ou interactif:\ntop" },
+                        { os: "Python", command: "# Nécessite module externe comme psutil\n# import psutil\n# for proc in psutil.process_iter(['pid', 'name']):\n#     print(proc.info)", isPython: true }
+                    ],
+                    example: "`ps aux | grep python` (filtre processus python)"
+                },
+                 {
+                    title: "Arrêter un Processus",
+                    subtitle: "Terminer un programme.",
+                    explanation: "Force l'arrêt d'un processus en utilisant son identifiant (PID) ou son nom.",
+                    commands: [
+                        { os: "Windows (CMD)", command: "taskkill /PID [pid] /F\n# ou\ntaskkill /IM [nom_executable] /F" },
+                        { os: "Windows (PS)", command: "Stop-Process -Id [pid] -Force\n# ou\nStop-Process -Name [nom_processus] -Force" },
+                        { os: "Mac/Linux (Bash/Zsh)", command: "kill [pid]\n# Signal plus fort:\nkill -9 [pid]\n# Par nom:\npkill [nom_processus]" },
+                        { os: "Python", command: "import os, signal\n# Envoie un signal (Unix)\n# os.kill(pid, signal.SIGTERM)\n# Pour Windows, plus complexe (via psutil ou ctypes)", isPython: true }
+                    ],
+                    example: "`kill -9 12345` (force l'arrêt du processus 12345)"
+                },
+            ],
+            reseau: [
+                 {
+                    title: "Tester Connectivité (Ping)",
+                    subtitle: "Envoyer une requête ICMP.",
+                    explanation: "Vérifie si une autre machine est joignable sur le réseau.",
+                    commands: [
+                        { os: "Windows (CMD/PS)", command: "ping [adresse_ip_ou_domaine]" },
+                        { os: "Mac/Linux (Bash/Zsh)", command: "ping [adresse_ip_ou_domaine]" },
+                        { os: "Python", command: "# Via os.system ou module externe comme pythonping\nimport os\nresponse = os.system(f\"ping -c 1 {'google.com'}\") # -c 1 pour 1 paquet sous Linux\nif response == 0:\n    print('Hôte joignable')\nelse:\n    print('Hôte injoignable')", isPython: true }
+                    ],
+                    example: "`ping 8.8.8.8`"
+                },
+                 {
+                    title: "Afficher Configuration IP",
+                    subtitle: "Voir les adresses réseau.",
+                    explanation: "Affiche les informations des interfaces réseau (adresse IP, masque, passerelle...).",
+                    commands: [
+                        { os: "Windows (CMD/PS)", command: "ipconfig /all" },
+                        { os: "Mac/Linux (Bash/Zsh)", command: "ifconfig\n# ou plus moderne:\nip addr" },
+                        { os: "Python", command: "# Nécessite des modules comme netifaces ou psutil\n# import socket\n# print(socket.gethostbyname(socket.gethostname())) # IP locale simple", isPython: true }
+                    ],
+                    example: ""
+                },
+            ],
+            archivage: [
+                {
+                    title: "Créer/Extraire Archive TAR",
+                    subtitle: "Regrouper/extraire des fichiers.",
+                    explanation: "`tar` (Tape Archive) est un standard Unix pour regrouper des fichiers. Souvent combiné avec `gzip` ou `bzip2` pour compresser.",
+                    commands: [
+                        { os: "Windows (CMD/PS)", command: "# Intégré dans Win10/11\n# Créer:\ntar -cvf archive.tar dossier/\n# Extraire:\ntar -xvf archive.tar" },
+                        { os: "Mac/Linux (Bash/Zsh)", command: "# Créer:\ntar -cvf archive.tar dossier/\n# Extraire:\ntar -xvf archive.tar\n# Créer + Gzip (.tar.gz):\ntar -czvf archive.tar.gz dossier/\n# Extraire Gzip:\ntar -xzvf archive.tar.gz" },
+                        { os: "Python", command: "import tarfile\n# Créer\nwith tarfile.open('archive.tar', 'w') as tar:\n    tar.add('dossier/', arcname=os.path.basename('dossier/'))\n# Extraire\nwith tarfile.open('archive.tar.gz', 'r:gz') as tar:\n    tar.extractall(path='destination')", isPython: true }
+                    ],
+                    example: "`tar -czvf backup.tar.gz /home/user/Documents`"
+                },
+                 {
+                    title: "Compresser/Décompresser Gzip",
+                    subtitle: "Compression/décompression simple.",
+                    explanation: "`gzip` compresse un seul fichier (ajoutant `.gz`). `gunzip` le décompresse.",
+                    commands: [
+                        { os: "Windows (PS)", command: "# Compresser\nCompress-Archive -Path fichier.txt -DestinationPath fichier.zip\n# Décompresser\nExpand-Archive -Path fichier.zip -DestinationPath ." },
+                        { os: "Mac/Linux (Bash/Zsh)", command: "# Compresser\ngzip fichier.log # crée fichier.log.gz\n# Décompresser\ngunzip fichier.log.gz" },
+                        { os: "Python", command: "import gzip, shutil\n# Compresser\nwith open('fichier.txt', 'rb') as f_in:\n    with gzip.open('fichier.txt.gz', 'wb') as f_out:\n        shutil.copyfileobj(f_in, f_out)\n# Décompresser\nwith gzip.open('fichier.txt.gz', 'rb') as f_in:\n    with open('fichier_decomp.txt', 'wb') as f_out:\n        shutil.copyfileobj(f_in, f_out)", isPython: true }
+                    ],
+                    example: "`gzip rapport.csv`"
+                },
+            ],
+            systeme: [
+                 {
+                    title: "Nom d'utilisateur",
+                    subtitle: "Qui suis-je ?",
+                    explanation: "Affiche le nom de l'utilisateur actuellement connecté.",
+                    commands: [
+                        { os: "Windows (CMD)", command: "echo %USERNAME%" },
+                         { os: "Windows (PS)", command: "$env:USERNAME\n# ou\nwhoami" },
+                        { os: "Mac/Linux (Bash/Zsh)", command: "whoami" },
+                        { os: "Python", command: "import os\nprint(os.getlogin())", isPython: true }
+                    ],
+                    example: ""
+                },
+                 {
+                    title: "Nom de la machine",
+                    subtitle: "Quel est cet ordinateur ?",
+                    explanation: "Affiche le nom réseau (hostname) de la machine.",
+                    commands: [
+                        { os: "Windows (CMD/PS)", command: "hostname" },
+                        { os: "Mac/Linux (Bash/Zsh)", command: "hostname" },
+                        { os: "Python", command: "import socket\nprint(socket.gethostname())", isPython: true }
+                    ],
+                    example: ""
+                },
+                {
+                    title: "Variables d'environnement",
+                    subtitle: "Voir les variables système.",
+                    explanation: "Affiche toutes les variables d'environnement (PATH, TEMP, etc.) ou une spécifique.",
+                    commands: [
+                        { os: "Windows (CMD)", command: "set\n# Une variable:\nset PATH" },
+                        { os: "Windows (PS)", command: "Get-ChildItem Env:\n# Une variable:\n$env:Path" },
+                        { os: "Mac/Linux (Bash/Zsh)", command: "env\n# ou\nprintenv\n# Une variable:\necho $PATH" },
+                        { os: "Python", command: "import os\n# Toutes\nprint(os.environ)\n# Une variable\nprint(os.environ.get('PATH'))", isPython: true }
+                    ],
+                    example: "`echo $HOME`"
+                },
+                 {
+                    title: "Obtenir de l'aide",
+                    subtitle: "Comment utiliser une commande ?",
+                    explanation: "Affiche la documentation ('man pages' sous Unix) ou les options d'une commande.",
+                    commands: [
+                        { os: "Windows (CMD)", command: "[commande] /?\n# ou\nhelp [commande]" },
+                        { os: "Windows (PS)", command: "Get-Help [commande] -Full" },
+                        { os: "Mac/Linux (Bash/Zsh)", command: "man [commande]\n# ou\n[commande] --help\n# info [commande]" },
+                        { os: "Python", command: "# Pour un module\nhelp(os)\n# Pour une fonction\nhelp(shutil.copy)", isPython: true }
+                    ],
+                    example: "`man ls` ou `copy /?`"
+                },
+                 {
+                    title: "Effacer l'écran",
+                    subtitle: "Nettoyer le terminal.",
+                    explanation: "Efface l'historique visible dans la fenêtre du terminal pour une meilleure lisibilité.",
+                    commands: [
+                        { os: "Windows (CMD/PS)", command: "cls" },
+                        { os: "Mac/Linux (Bash/Zsh)", command: "clear\n# Raccourci: Ctrl+L" },
+                        { os: "Python", command: "import os\nos.system('cls' if os.name == 'nt' else 'clear')", isPython: true }
+                    ],
+                    example: ""
+                },
+            ]
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // --- FONCTION DE GÉNÉRATION HTML SPÉCIFIQUE ---
+            function generateCommandHTML(commandData, index) {
+                const headerId = `header-${index}`;
+                const contentId = `content-${index}`;
+
+                const tableRows = commandData.commands.map(cmd => `
+                    <tr>
+                        <td>${cmd.os}</td>
+                        <td class="${cmd.isPython ? 'python-code' : ''}"><code>${cmd.command.replace(/\n/g, '<br>')}</code></td>
+                    </tr>
+                `).join('');
+
+                return `
+                    <div class="code-block">
+                        <div class="code-header" id="${headerId}" aria-expanded="false" aria-controls="${contentId}">
+                            <div class="code-title-container">
+                                <span class="code-title">${commandData.title}</span>
+                                <span class="code-subtitle">${commandData.subtitle}</span>
+                            </div>
+                            <i data-lucide="chevron-down" class="toggle-explanation"></i>
+                        </div>
+                        <div class="code-content-wrapper" id="${contentId}" role="region" aria-labelledby="${headerId}">
+                            <div class="code-content">
+                                <div class="explanation-content">
+                                    <h4>Comparaison</h4>
+                                    <table class="comparison-table">
+                                        <thead>
+                                            <tr><th>Système</th><th>Commande / Code</th></tr>
+                                        </thead>
+                                        <tbody>
+                                            ${tableRows}
+                                        </tbody>
+                                    </table>
+                                    <h4>Explication</h4>
+                                    <p>${commandData.explanation}</p>
+                                    ${commandData.example ? `<h4>Exemple(s)</h4><p><code>${commandData.example.replace(/\n/g, '<br>')}</code></p>` : ''}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // --- FONCTION D'AFFICHAGE ADAPTÉE ---
+            function renderCommands(commandsToRender, containerId) {
+                const container = document.getElementById(containerId);
+                 if (!container) { /* console.error("Conteneur introuvable:", containerId); */ return; } // Silencieux si section non trouvée
+
+                if (!commandsToRender || commandsToRender.length === 0) {
+                    container.innerHTML = '<p style="text-align:center; color: var(--couleur-texte-clair);">Aucune commande trouvée.</p>';
+                } else {
+                    container.innerHTML = commandsToRender.map((cmd, index) =>
+                        generateCommandHTML(cmd, `${containerId}-${index}`)
+                    ).join('');
+                }
+
+                lucide.createIcons();
+                container.querySelectorAll('.code-block:not(.is-visible)').forEach(block => observer.observe(block));
+            }
+
+            // --- GESTION DES ÉVÉNEMENTS ---
+
+            document.querySelectorAll('.section-header').forEach(header => {
+                header.addEventListener('click', () => {
+                    header.classList.toggle('collapsed');
+                    header.nextElementSibling.classList.toggle('collapsed');
+                    header.querySelector('.section-toggle-icon').classList.toggle('collapsed');
+                    const isCollapsed = header.classList.contains('collapsed');
+                    header.setAttribute('aria-expanded', !isCollapsed);
+                });
+            });
+
+             document.querySelector('main').addEventListener('click', (event) => {
+                const header = event.target.closest('.code-header');
+                if (header) {
+                    if (event.target.closest('button')) return; // Ne pas déplier si on clique sur un bouton (futur copier?)
+
+                    const wrapper = header.nextElementSibling;
+                    const icon = header.querySelector('.toggle-explanation');
+                    const isExpanded = header.getAttribute('aria-expanded') === 'true';
+
+                    if (wrapper && icon) {
+                        wrapper.classList.toggle('open');
+                        icon.classList.toggle('open');
+                        header.setAttribute('aria-expanded', !isExpanded);
+                    }
+                }
+            });
+
+            // --- LOGIQUE DE RECHERCHE ADAPTÉE ---
+            const searchInput = document.getElementById('search-input');
+            const allCommands = terminalCommands; // Renommé pour clarté
+
+            searchInput.addEventListener('input', (e) => {
+                const searchTerm = e.target.value.toLowerCase().trim();
+
+                Object.keys(allCommands).forEach(categoryKey => {
+                    const filteredCommands = allCommands[categoryKey].filter(cmd =>
+                        cmd.title.toLowerCase().includes(searchTerm) ||
+                        cmd.subtitle.toLowerCase().includes(searchTerm) ||
+                        cmd.explanation.toLowerCase().includes(searchTerm) ||
+                        cmd.commands.some(c => c.command.toLowerCase().includes(searchTerm))
+                    );
+                    renderCommands(filteredCommands, `${categoryKey}-content-container`);
+                });
+            });
+
+            // --- ANIMATION D'APPARITION ---
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.05 });
+
+             // --- INITIALISATION DE LA PAGE ---
+            Object.keys(allCommands).forEach(categoryKey => {
+                renderCommands(allCommands[categoryKey], `${categoryKey}-content-container`);
+            });
+
+            // --- GESTION DU BOUTON GLOBAL ---
+            const toggleAllBtn = document.getElementById('toggle-all-sections-btn');
+            if (toggleAllBtn) {
+                toggleAllBtn.addEventListener('click', () => {
+                    const currentState = toggleAllBtn.dataset.state;
+                    const headers = document.querySelectorAll('.section-header');
+                    const btnText = toggleAllBtn.querySelector('span');
+
+                    if (currentState === 'collapsed') {
+                        headers.forEach(header => {
+                            header.classList.remove('collapsed');
+                            header.nextElementSibling.classList.remove('collapsed');
+                            header.querySelector('.section-toggle-icon').classList.remove('collapsed');
+                            header.setAttribute('aria-expanded', 'true');
+                        });
+                        btnText.textContent = 'Tout Replier';
+                        toggleAllBtn.dataset.state = 'expanded';
+                    } else {
+                        headers.forEach(header => {
+                            header.classList.add('collapsed');
+                            header.nextElementSibling.classList.add('collapsed');
+                            header.querySelector('.section-toggle-icon').classList.add('collapsed');
+                            header.setAttribute('aria-expanded', 'false');
+                        });
+                        btnText.textContent = 'Tout Déplier';
+                        toggleAllBtn.dataset.state = 'collapsed';
+                    }
+                    lucide.createIcons();
+                });
+            }
+        });
+    </script>
+</body>
+</html>
