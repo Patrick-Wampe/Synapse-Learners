@@ -32,9 +32,32 @@
             background-color: var(--couleur-fond);
             color: var(--couleur-texte);
             margin: 0; padding: 0; overflow-x: hidden;
+            position: relative; /* Nécessaire pour position:absolute du logo */
         }
+
+        /* ✅ STYLES POUR LE LOGO AJOUTÉS */
+        #site-logo {
+            position: absolute; /* Ou 'fixed' pour qu'il reste visible au scroll */
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+            display: block;
+        }
+        #site-logo img {
+            display: block;
+            height: 100px; /* Taille du logo */
+            width: auto;
+            border-radius: 8px; /* Coins arrondis */
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+            transition: transform 0.2s ease-out;
+        }
+        #site-logo:hover img {
+            transform: scale(1.05);
+        }
+        /* FIN DES STYLES POUR LE LOGO */
+
         .container { width: 100%; max-width: 1100px; margin: 0 auto; padding: 2rem; box-sizing: border-box; }
-        .page-title { text-align: center; margin-bottom: 3rem; }
+        .page-title { text-align: center; margin-bottom: 3rem; margin-top: 60px; /* Un peu d'espace pour le logo */ }
         .page-title h1 {
             font-size: 3.5rem; font-weight: 700;
             background: var(--gradient-principal);
@@ -59,7 +82,6 @@
             box-shadow: 0 0 0 4px rgba(0, 210, 255, 0.2);
         }
 
-        /* Styles globaux (boutons, sections, etc.) - réutilisés */
         .global-controls { display: flex; justify-content: center; margin-bottom: 2rem; }
         .control-btn {
             background: none; border: 1px solid var(--couleur-principale); color: var(--couleur-principale);
@@ -85,7 +107,6 @@
         .section-content > .inner-content { overflow: hidden; padding-top: 1rem; }
         .section-controls { display: flex; gap: 0.75rem; margin-bottom: 1.5rem; }
 
-        /* Styles spécifiques aux blocs de commande */
         .code-block {
              background-color: var(--code-bg); border-radius: 12px; margin-bottom: 1.5rem;
              border: 1px solid #444; box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
@@ -113,20 +134,22 @@
         .explanation-content p { margin-top: 0.8rem; margin-bottom: 1rem; }
         .explanation-content code { background-color: #555; padding: 0.2em 0.4em; border-radius: 3px; font-size: 0.9em; font-family: 'Source Code Pro', monospace; }
 
-        /* Style pour le tableau de comparaison */
         .comparison-table { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; }
         .comparison-table th, .comparison-table td {
              border: 1px solid #555; padding: 0.8rem; text-align: left; vertical-align: top;
         }
         .comparison-table th { background-color: #4a4a4a; font-weight: 600; color: #f0f0f0; }
-        .comparison-table td:first-child { width: 25%; font-weight: 500;} /* Colonne OS */
-        .comparison-table td:nth-child(2) { width: 35%; } /* Colonne Commande */
+        .comparison-table td:first-child { width: 25%; font-weight: 500;}
+        .comparison-table td:nth-child(2) { width: 35%; }
         .comparison-table td code { display: block; white-space: pre-wrap; word-break: break-all; }
-        .comparison-table .python-code code { color: var(--couleur-python); } /* Couleur Python */
+        .comparison-table .python-code code { color: var(--couleur-python); }
 
         footer { text-align: center; margin-top: 4rem; padding: 2rem 0; border-top: 1px solid var(--couleur-gris-clair); color: var(--couleur-texte-clair); font-size: 0.9rem; }
 
         @media (max-width: 768px) {
+             #site-logo { top: 10px; left: 10px; } /* Ajuste position logo sur petit écran */
+             #site-logo img { height: 40px; }
+            .page-title { margin-top: 50px; /* Plus d'espace pour le logo */}
             .page-title h1 { font-size: 2.5rem; } .page-title p { font-size: 1rem; }
             .section-header { font-size: 2rem; }
             .code-title-container { gap: 0.5rem; }
@@ -138,6 +161,10 @@
     </style>
 </head>
 <body>
+    <a href="https://www.synapselearners.com/" target="_blank" id="site-logo" title="Retour au site Synapse Learners">
+        <img src="https://d1yei2z3i6k35z.cloudfront.net/3391351/67771c6b52bbc_LogoSynapseLearners.png" alt="Logo Synapse Learners">
+    </a>
+
     <div class="container">
         <header><section class="page-title"><h1>Cheat Sheet Terminal</h1><p>Commandes essentielles pour Windows, Mac/Linux et leurs équivalents Python.</p></section></header>
         <main>
@@ -166,12 +193,12 @@
                 <h2 class="section-header collapsed"><span>🔍 Affichage & Recherche</span><i data-lucide="chevron-up" class="section-toggle-icon collapsed"></i></h2>
                 <div class="section-content collapsed"><div class="inner-content" id="affichage-content-container"></div></div>
             </section>
-            
+
              <section id="permissions" class="cheatsheet-section">
                 <h2 class="section-header collapsed"><span>🔒 Permissions</span><i data-lucide="chevron-up" class="section-toggle-icon collapsed"></i></h2>
                 <div class="section-content collapsed"><div class="inner-content" id="permissions-content-container"></div></div>
             </section>
-            
+
              <section id="processus" class="cheatsheet-section">
                 <h2 class="section-header collapsed"><span>⚙️ Processus</span><i data-lucide="chevron-up" class="section-toggle-icon collapsed"></i></h2>
                 <div class="section-content collapsed"><div class="inner-content" id="processus-content-container"></div></div>
@@ -181,7 +208,7 @@
                 <h2 class="section-header collapsed"><span>🌐 Réseau</span><i data-lucide="chevron-up" class="section-toggle-icon collapsed"></i></h2>
                 <div class="section-content collapsed"><div class="inner-content" id="reseau-content-container"></div></div>
             </section>
-            
+
             <section id="archivage" class="cheatsheet-section">
                 <h2 class="section-header collapsed"><span>📦 Archivage & Compression</span><i data-lucide="chevron-up" class="section-toggle-icon collapsed"></i></h2>
                 <div class="section-content collapsed"><div class="inner-content" id="archivage-content-container"></div></div>
@@ -199,7 +226,8 @@
     <script>
         lucide.createIcons();
 
-        // --- BASE DE DONNÉES DES COMMANDES (PLUS COMPLÈTE) ---
+        // --- BASE DE DONNÉES DES COMMANDES ---
+        // (Le contenu JavaScript reste le même qu'avant)
         const terminalCommands = {
             navigation: [
                 {
@@ -459,24 +487,24 @@
                  {
                     title: "Lister Processus",
                     subtitle: "Voir les programmes en cours.",
-                    explanation: "Affiche la liste des processus actifs sur le système.",
+                    explanation: "Affiche la liste des processus actifs sur le système, avec leur ID (PID) et utilisation des ressources.",
                     commands: [
                         { os: "Windows (CMD)", command: "tasklist" },
                         { os: "Windows (PS)", command: "Get-Process" },
-                        { os: "Mac/Linux (Bash/Zsh)", command: "ps aux\n# ou interactif:\ntop" },
-                        { os: "Python", command: "# Nécessite module externe comme psutil\n# import psutil\n# for proc in psutil.process_iter(['pid', 'name']):\n#     print(proc.info)", isPython: true }
+                        { os: "Mac/Linux (Bash/Zsh)", command: "ps aux\n# Affichage dynamique:\ntop\n# Ou plus moderne:\nhtop" },
+                        { os: "Python", command: "# Nécessite module externe comme psutil\n# import psutil\n# for proc in psutil.process_iter(['pid', 'name', 'username']):\n#     print(proc.info)", isPython: true }
                     ],
                     example: "`ps aux | grep python` (filtre processus python)"
                 },
                  {
                     title: "Arrêter un Processus",
                     subtitle: "Terminer un programme.",
-                    explanation: "Force l'arrêt d'un processus en utilisant son identifiant (PID) ou son nom.",
+                    explanation: "Force l'arrêt d'un processus en utilisant son identifiant (PID) ou son nom exécutable. `kill -9` (Unix) est plus brutal que `kill` (SIGTERM).",
                     commands: [
-                        { os: "Windows (CMD)", command: "taskkill /PID [pid] /F\n# ou\ntaskkill /IM [nom_executable] /F" },
-                        { os: "Windows (PS)", command: "Stop-Process -Id [pid] -Force\n# ou\nStop-Process -Name [nom_processus] -Force" },
-                        { os: "Mac/Linux (Bash/Zsh)", command: "kill [pid]\n# Signal plus fort:\nkill -9 [pid]\n# Par nom:\npkill [nom_processus]" },
-                        { os: "Python", command: "import os, signal\n# Envoie un signal (Unix)\n# os.kill(pid, signal.SIGTERM)\n# Pour Windows, plus complexe (via psutil ou ctypes)", isPython: true }
+                        { os: "Windows (CMD)", command: "taskkill /PID [pid] /F\n# /IM [nom_executable] /F" },
+                        { os: "Windows (PS)", command: "Stop-Process -Id [pid] -Force\n# -Name [nom_processus] -Force" },
+                        { os: "Mac/Linux (Bash/Zsh)", command: "kill [pid]\n# Signal 'KILL':\nkill -9 [pid]\n# Par nom:\npkill [nom_processus]" },
+                        { os: "Python", command: "import os, signal, psutil # psutil est multiplateforme\n# Tuer par PID (plus sûr avec psutil)\ntry:\n    p = psutil.Process(pid)\n    p.terminate() # Envoie SIGTERM (Unix) ou TerminateProcess (Win)\n    # p.kill() # Envoie SIGKILL (Unix) ou TerminateProcess (Win)\nexcept psutil.NoSuchProcess:\n    print(f\"Processus {pid} non trouvé\")\n# os.kill(pid, signal.SIGTERM) # Unix seulement", isPython: true }
                     ],
                     example: "`kill -9 12345` (force l'arrêt du processus 12345)"
                 },
@@ -485,60 +513,93 @@
                  {
                     title: "Tester Connectivité (Ping)",
                     subtitle: "Envoyer une requête ICMP.",
-                    explanation: "Vérifie si une autre machine est joignable sur le réseau.",
+                    explanation: "Vérifie si une autre machine (par IP ou nom de domaine) est joignable sur le réseau.",
                     commands: [
                         { os: "Windows (CMD/PS)", command: "ping [adresse_ip_ou_domaine]" },
                         { os: "Mac/Linux (Bash/Zsh)", command: "ping [adresse_ip_ou_domaine]" },
-                        { os: "Python", command: "# Via os.system ou module externe comme pythonping\nimport os\nresponse = os.system(f\"ping -c 1 {'google.com'}\") # -c 1 pour 1 paquet sous Linux\nif response == 0:\n    print('Hôte joignable')\nelse:\n    print('Hôte injoignable')", isPython: true }
+                        { os: "Python", command: "# Via os.system ou module externe comme pythonping\nimport os, platform\nparam = '-n' if platform.system().lower()=='windows' else '-c'\nhost = 'google.com'\nresponse = os.system(f\"ping {param} 1 {host}\")\nprint('Joignable' if response == 0 else 'Injoignable')", isPython: true }
                     ],
                     example: "`ping 8.8.8.8`"
                 },
                  {
                     title: "Afficher Configuration IP",
                     subtitle: "Voir les adresses réseau.",
-                    explanation: "Affiche les informations des interfaces réseau (adresse IP, masque, passerelle...).",
+                    explanation: "Affiche les informations des interfaces réseau (adresse IP, masque de sous-réseau, passerelle par défaut, serveurs DNS...).",
                     commands: [
                         { os: "Windows (CMD/PS)", command: "ipconfig /all" },
-                        { os: "Mac/Linux (Bash/Zsh)", command: "ifconfig\n# ou plus moderne:\nip addr" },
-                        { os: "Python", command: "# Nécessite des modules comme netifaces ou psutil\n# import socket\n# print(socket.gethostbyname(socket.gethostname())) # IP locale simple", isPython: true }
+                        { os: "Mac/Linux (Bash/Zsh)", command: "ifconfig -a\n# ou plus moderne:\nip addr show" },
+                        { os: "Python", command: "# Nécessite des modules comme netifaces ou psutil\n# import psutil\n# print(psutil.net_if_addrs())", isPython: true }
                     ],
                     example: ""
+                },
+                 {
+                    title: "Afficher Connexions Réseau",
+                    subtitle: "Voir les ports ouverts et connexions.",
+                    explanation: "Liste les connexions TCP/UDP actives, les ports en écoute, etc.",
+                    commands: [
+                        { os: "Windows (CMD/PS)", command: "netstat -ano" },
+                        { os: "Mac/Linux (Bash/Zsh)", command: "netstat -tulnp\n# ou plus moderne:\nss -tulnp" },
+                        { os: "Python", command: "# Nécessite psutil\n# import psutil\n# print(psutil.net_connections(kind='inet'))", isPython: true }
+                    ],
+                    example: "`netstat -ano | findstr LISTEN` (Win CMD: ports en écoute)"
+                },
+                 {
+                    title: "Résolution DNS (Lookup)",
+                    subtitle: "Trouver l'IP d'un nom de domaine.",
+                    explanation: "Interroge les serveurs DNS pour obtenir l'adresse IP associée à un nom d'hôte.",
+                    commands: [
+                        { os: "Windows (CMD/PS)", command: "nslookup [nom_domaine]" },
+                        { os: "Mac/Linux (Bash/Zsh)", command: "dig [nom_domaine]\n# ou\nhost [nom_domaine]\n# ou\nnslookup [nom_domaine]" },
+                        { os: "Python", command: "import socket\ntry:\n    ip = socket.gethostbyname('www.google.com')\n    print(f'IP: {ip}')\nexcept socket.gaierror as e:\n    print(f'Erreur DNS: {e}')", isPython: true }
+                    ],
+                    example: "`dig synapselearners.com`"
                 },
             ],
             archivage: [
                 {
                     title: "Créer/Extraire Archive TAR",
                     subtitle: "Regrouper/extraire des fichiers.",
-                    explanation: "`tar` (Tape Archive) est un standard Unix pour regrouper des fichiers. Souvent combiné avec `gzip` ou `bzip2` pour compresser.",
+                    explanation: "`tar` (Tape Archive) est un standard Unix pour regrouper des fichiers. Options courantes: `c` (créer), `x` (extraire), `v` (verbeux), `f` (fichier), `z` (gzip), `j` (bzip2).",
                     commands: [
-                        { os: "Windows (CMD/PS)", command: "# Intégré dans Win10/11\n# Créer:\ntar -cvf archive.tar dossier/\n# Extraire:\ntar -xvf archive.tar" },
-                        { os: "Mac/Linux (Bash/Zsh)", command: "# Créer:\ntar -cvf archive.tar dossier/\n# Extraire:\ntar -xvf archive.tar\n# Créer + Gzip (.tar.gz):\ntar -czvf archive.tar.gz dossier/\n# Extraire Gzip:\ntar -xzvf archive.tar.gz" },
-                        { os: "Python", command: "import tarfile\n# Créer\nwith tarfile.open('archive.tar', 'w') as tar:\n    tar.add('dossier/', arcname=os.path.basename('dossier/'))\n# Extraire\nwith tarfile.open('archive.tar.gz', 'r:gz') as tar:\n    tar.extractall(path='destination')", isPython: true }
+                        { os: "Windows (CMD/PS)", command: "# Intégré dans Win10/11\ntar -cvf a.tar dossier/\ntar -xvf a.tar\ntar -czvf a.tar.gz dossier/\ntar -xzvf a.tar.gz" },
+                        { os: "Mac/Linux (Bash/Zsh)", command: "tar -cvf a.tar dossier/\ntar -xvf a.tar\ntar -czvf a.tar.gz dossier/\ntar -xzvf a.tar.gz" },
+                        { os: "Python", command: "import tarfile, os\n# Créer Gzip\nwith tarfile.open('a.tar.gz', 'w:gz') as tar:\n    tar.add('dossier/', arcname=os.path.basename('dossier/'))\n# Extraire Gzip\nwith tarfile.open('a.tar.gz', 'r:gz') as tar:\n    tar.extractall(path='dest')", isPython: true }
                     ],
-                    example: "`tar -czvf backup.tar.gz /home/user/Documents`"
+                    example: "`tar -czvf backup_$(date +%Y%m%d).tar.gz /home/user/Documents`"
                 },
                  {
                     title: "Compresser/Décompresser Gzip",
                     subtitle: "Compression/décompression simple.",
-                    explanation: "`gzip` compresse un seul fichier (ajoutant `.gz`). `gunzip` le décompresse.",
+                    explanation: "`gzip` compresse un seul fichier (remplace l'original par `fichier.gz`). `gunzip` le décompresse (remplace `fichier.gz` par l'original). Utilisez `-k` pour garder l'original.",
                     commands: [
-                        { os: "Windows (PS)", command: "# Compresser\nCompress-Archive -Path fichier.txt -DestinationPath fichier.zip\n# Décompresser\nExpand-Archive -Path fichier.zip -DestinationPath ." },
-                        { os: "Mac/Linux (Bash/Zsh)", command: "# Compresser\ngzip fichier.log # crée fichier.log.gz\n# Décompresser\ngunzip fichier.log.gz" },
-                        { os: "Python", command: "import gzip, shutil\n# Compresser\nwith open('fichier.txt', 'rb') as f_in:\n    with gzip.open('fichier.txt.gz', 'wb') as f_out:\n        shutil.copyfileobj(f_in, f_out)\n# Décompresser\nwith gzip.open('fichier.txt.gz', 'rb') as f_in:\n    with open('fichier_decomp.txt', 'wb') as f_out:\n        shutil.copyfileobj(f_in, f_out)", isPython: true }
+                        { os: "Windows (PS)", command: "# Equivalent ZIP\nCompress-Archive file.txt arch.zip\nExpand-Archive arch.zip ." },
+                        { os: "Mac/Linux (Bash/Zsh)", command: "gzip fichier.log # crée fichier.log.gz\ngunzip fichier.log.gz\ngzip -k data.csv # garde data.csv" },
+                        { os: "Python", command: "import gzip, shutil\n# Compresser\nwith open('f.txt', 'rb') as f_in, gzip.open('f.txt.gz', 'wb') as f_out:\n    shutil.copyfileobj(f_in, f_out)\n# Décompresser\nwith gzip.open('f.txt.gz', 'rb') as f_in, open('f_out.txt', 'wb') as f_out:\n    shutil.copyfileobj(f_in, f_out)", isPython: true }
                     ],
                     example: "`gzip rapport.csv`"
+                },
+                 {
+                    title: "Créer/Extraire Archive ZIP",
+                    subtitle: "Format d'archive courant.",
+                    explanation: "Format d'archivage et de compression très répandu, notamment sous Windows.",
+                    commands: [
+                        { os: "Windows (CMD/PS)", command: "# Via PowerShell\nCompress-Archive -Path dossier/* -DestinationPath archive.zip\nExpand-Archive archive.zip -DestinationPath ." },
+                        { os: "Mac/Linux (Bash/Zsh)", command: "zip -r archive.zip dossier/\nunzip archive.zip -d destination/" },
+                        { os: "Python", command: "import zipfile, os\n# Créer\nwith zipfile.ZipFile('archive.zip', 'w', zipfile.ZIP_DEFLATED) as zf:\n    for root, dirs, files in os.walk('dossier/'):\n        for file in files:\n            zf.write(os.path.join(root, file),\n                     os.path.relpath(os.path.join(root, file), 'dossier/'))\n# Extraire\nwith zipfile.ZipFile('archive.zip', 'r') as zf:\n    zf.extractall('destination')", isPython: true }
+                    ],
+                    example: "`unzip photos.zip -d Images/Vacances`"
                 },
             ],
             systeme: [
                  {
                     title: "Nom d'utilisateur",
                     subtitle: "Qui suis-je ?",
-                    explanation: "Affiche le nom de l'utilisateur actuellement connecté.",
+                    explanation: "Affiche le nom de l'utilisateur actuellement connecté au système.",
                     commands: [
                         { os: "Windows (CMD)", command: "echo %USERNAME%" },
                          { os: "Windows (PS)", command: "$env:USERNAME\n# ou\nwhoami" },
                         { os: "Mac/Linux (Bash/Zsh)", command: "whoami" },
-                        { os: "Python", command: "import os\nprint(os.getlogin())", isPython: true }
+                        { os: "Python", command: "import os, pwd # pwd pour Unix\nprint(os.getlogin())\n# print(pwd.getpwuid(os.getuid()).pw_name) # Unix", isPython: true }
                     ],
                     example: ""
                 },
@@ -549,31 +610,31 @@
                     commands: [
                         { os: "Windows (CMD/PS)", command: "hostname" },
                         { os: "Mac/Linux (Bash/Zsh)", command: "hostname" },
-                        { os: "Python", command: "import socket\nprint(socket.gethostname())", isPython: true }
+                        { os: "Python", command: "import socket, platform\nprint(socket.gethostname())\n# print(platform.node())", isPython: true }
                     ],
                     example: ""
                 },
                 {
                     title: "Variables d'environnement",
                     subtitle: "Voir les variables système.",
-                    explanation: "Affiche toutes les variables d'environnement (PATH, TEMP, etc.) ou une spécifique.",
+                    explanation: "Affiche toutes les variables d'environnement (PATH, TEMP, HOME, etc.) ou la valeur d'une variable spécifique.",
                     commands: [
                         { os: "Windows (CMD)", command: "set\n# Une variable:\nset PATH" },
                         { os: "Windows (PS)", command: "Get-ChildItem Env:\n# Une variable:\n$env:Path" },
                         { os: "Mac/Linux (Bash/Zsh)", command: "env\n# ou\nprintenv\n# Une variable:\necho $PATH" },
-                        { os: "Python", command: "import os\n# Toutes\nprint(os.environ)\n# Une variable\nprint(os.environ.get('PATH'))", isPython: true }
+                        { os: "Python", command: "import os\n# Toutes\n# for k, v in os.environ.items(): print(f'{k}={v}')\n# Une variable\nprint(os.environ.get('PATH', 'Non définie'))", isPython: true }
                     ],
-                    example: "`echo $HOME`"
+                    example: "`echo $HOME` (affiche le chemin du dossier personnel Unix)"
                 },
                  {
                     title: "Obtenir de l'aide",
                     subtitle: "Comment utiliser une commande ?",
-                    explanation: "Affiche la documentation ('man pages' sous Unix) ou les options d'une commande.",
+                    explanation: "Affiche la documentation ('man pages' sous Unix) ou les options disponibles pour une commande spécifique.",
                     commands: [
                         { os: "Windows (CMD)", command: "[commande] /?\n# ou\nhelp [commande]" },
                         { os: "Windows (PS)", command: "Get-Help [commande] -Full" },
                         { os: "Mac/Linux (Bash/Zsh)", command: "man [commande]\n# ou\n[commande] --help\n# info [commande]" },
-                        { os: "Python", command: "# Pour un module\nhelp(os)\n# Pour une fonction\nhelp(shutil.copy)", isPython: true }
+                        { os: "Python", command: "# Pour un module\nhelp(os)\n# Pour une fonction\nhelp(shutil.copy)\n# print(shutil.copy.__doc__)", isPython: true }
                     ],
                     example: "`man ls` ou `copy /?`"
                 },
@@ -639,7 +700,7 @@
             // --- FONCTION D'AFFICHAGE ADAPTÉE ---
             function renderCommands(commandsToRender, containerId) {
                 const container = document.getElementById(containerId);
-                 if (!container) { /* console.error("Conteneur introuvable:", containerId); */ return; } // Silencieux si section non trouvée
+                 if (!container) { return; } // Silencieux si section non trouvée
 
                 if (!commandsToRender || commandsToRender.length === 0) {
                     container.innerHTML = '<p style="text-align:center; color: var(--couleur-texte-clair);">Aucune commande trouvée.</p>';
@@ -668,7 +729,7 @@
              document.querySelector('main').addEventListener('click', (event) => {
                 const header = event.target.closest('.code-header');
                 if (header) {
-                    if (event.target.closest('button')) return; // Ne pas déplier si on clique sur un bouton (futur copier?)
+                    if (event.target.closest('button')) return;
 
                     const wrapper = header.nextElementSibling;
                     const icon = header.querySelector('.toggle-explanation');
@@ -684,7 +745,7 @@
 
             // --- LOGIQUE DE RECHERCHE ADAPTÉE ---
             const searchInput = document.getElementById('search-input');
-            const allCommands = terminalCommands; // Renommé pour clarté
+            const allCommands = terminalCommands;
 
             searchInput.addEventListener('input', (e) => {
                 const searchTerm = e.target.value.toLowerCase().trim();
@@ -694,7 +755,8 @@
                         cmd.title.toLowerCase().includes(searchTerm) ||
                         cmd.subtitle.toLowerCase().includes(searchTerm) ||
                         cmd.explanation.toLowerCase().includes(searchTerm) ||
-                        cmd.commands.some(c => c.command.toLowerCase().includes(searchTerm))
+                        cmd.commands.some(c => c.command.toLowerCase().includes(searchTerm)) ||
+                        (cmd.example && cmd.example.toLowerCase().includes(searchTerm)) // Ajout recherche dans l'exemple
                     );
                     renderCommands(filteredCommands, `${categoryKey}-content-container`);
                 });
@@ -712,8 +774,12 @@
 
              // --- INITIALISATION DE LA PAGE ---
             Object.keys(allCommands).forEach(categoryKey => {
-                renderCommands(allCommands[categoryKey], `${categoryKey}-content-container`);
+                // Vérifie que le conteneur existe avant de tenter de rendre les commandes
+                if (document.getElementById(`${categoryKey}-content-container`)) {
+                   renderCommands(allCommands[categoryKey], `${categoryKey}-content-container`);
+                }
             });
+
 
             // --- GESTION DU BOUTON GLOBAL ---
             const toggleAllBtn = document.getElementById('toggle-all-sections-btn');
