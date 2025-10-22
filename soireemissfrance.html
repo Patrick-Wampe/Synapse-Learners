@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soirée Miss France 💋</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Raleway:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- 🎨 PALETTE DE COULEURS ET STYLES GLOBAUX 🎨 --- */
+        :root {
+            --rose-poudre: #FFF0F5; /* Fond très clair */
+            --rose-moyen: #E68FAC;  /* Titres, accents */
+            --rose-fonce: #DDA0DD;  /* Sous-titres, bordures */
+            --dore: #FFD700;      /* Or, paillettes */
+            --champagne: #F7E7CE; /* Fond de cartes */
+            --texte-fonce: #333;
+            --texte-clair: #555;
+            
+            --font-titre: 'Great Vibes', cursive;
+            --font-corps: 'Raleway', sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-corps);
+            background-color: var(--rose-poudre);
+            color: var(--texte-fonce);
+            line-height: 1.6;
+            /* Subtil effet pailleté en fond */
+            background-image: radial-gradient(circle, rgba(211, 211, 211, 0.2) 1px, transparent 1px);
+            background-size: 15px 15px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 20px auto;
+            background: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden; /* Pour les coins arrondis */
+        }
+
+        /* --- ✨ HEADER ET TITRES ✨ --- */
+        header {
+            text-align: center;
+            padding: 50px 20px;
+            background: linear-gradient(135deg, var(--rose-poudre), #fff);
+            border-bottom: 4px double var(--dore);
+        }
+
+        header h1 {
+            font-family: var(--font-titre);
+            font-size: 4.5rem;
+            color: var(--rose-moyen);
+            font-weight: normal;
+            margin-bottom: 0;
+        }
+
+        header h2 {
+            font-family: var(--font-corps);
+            font-size: 1.5rem;
+            color: var(--texte-clair);
+            font-weight: 300;
+            margin-top: -10px;
+        }
+
+        header .sparkle {
+            display: inline-block;
+            animation: sparkle 1.5s infinite;
+        }
+
+        section {
+            padding: 40px 30px;
+            border-bottom: 1px solid var(--champagne);
+            
+            /* Pour l'animation JS */
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+
+        section.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        section:last-child {
+            border-bottom: none;
+        }
+
+        section > h2 {
+            font-family: var(--font-titre);
+            font-size: 3.5rem;
+            color: var(--rose-moyen);
+            text-align: center;
+            margin-bottom: 30px;
+            font-weight: normal;
+        }
+
+        h3 {
+            font-family: var(--font-corps);
+            font-weight: 600;
+            color: var(--rose-fonce);
+            border-bottom: 2px solid var(--dore);
+            display: inline-block;
+            padding-bottom: 5px;
+            margin-top: 20px;
+            margin-bottom: 15px;
+        }
+
+        ul, ol {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+        
+        li {
+            margin-bottom: 8px;
+        }
+
+        /* --- 💖 ÉLÉMENTS DE STYLE (CARTES, BOUTONS, INPUTS) 💖 --- */
+        .card {
+            background-color: #FFF8FB; /* Rose très pâle */
+            border: 1px dashed var(--rose-fonce);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+
+        .card h4 {
+            color: var(--rose-moyen);
+            font-weight: 600;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        blockquote {
+            font-style: italic;
+            color: var(--texte-clair);
+            padding-left: 15px;
+            border-left: 3px solid var(--dore);
+            margin: 15px 0;
+        }
+
+        /* Zones à remplir */
+        input[type="text"],
+        input[type="number"],
+        textarea {
+            font-family: var(--font-corps);
+            font-style: italic;
+            border: none;
+            border-bottom: 2px dotted var(--rose-fonce);
+            background: var(--rose-poudre);
+            padding: 10px;
+            width: 100%;
+            margin-bottom: 10px;
+            border-radius: 4px 4px 0 0;
+        }
+        
+        input[type="text"]:focus,
+        input[type="number"]:focus,
+        textarea:focus {
+            outline: none;
+            border-bottom: 2px solid var(--rose-moyen);
+        }
+        
+        textarea {
+            height: 100px;
+            resize: vertical;
+        }
+        
+        label {
+            font-weight: 600;
+            color: var(--texte-fonce);
+            margin-top: 10px;
+            display: block;
+        }
+
+        /* Fiche de notation */
+        .notation-grid {
+            display: grid;
+            grid-template-columns: 1fr 80px;
+            gap: 10px;
+            align-items: center;
+        }
+        .notation-grid label {
+            margin: 0;
+        }
+        .notation-grid input {
+            width: 80px;
+            margin-bottom: 0;
+            text-align: center;
+        }
+
+        /* --- 📺 BINGO SPÉCIAL 📺 --- */
+        .bingo-grid {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        .bingo-grid td {
+            border: 2px solid var(--dore);
+            padding: 15px;
+            text-align: center;
+            height: 100px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            background-color: #fff;
+        }
+        
+        .bingo-grid td:hover {
+            transform: scale(1.05);
+            background-color: var(--champagne);
+        }
+
+        .bingo-grid td.checked {
+            background-color: var(--rose-moyen);
+            color: white;
+            text-decoration: line-through;
+            font-weight: 600;
+            transform: scale(1);
+        }
+
+        .bingo-grid td.free-space {
+            background-color: var(--champagne);
+            font-weight: bold;
+            color: var(--rose-moyen);
+            cursor: not-allowed;
+        }
+        
+        .bingo-button {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, var(--dore), #ffec80);
+            border: none;
+            border-radius: 8px;
+            font-family: var(--font-corps);
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #333;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
+        }
+        
+        .bingo-button:hover {
+            transform: scale(1.02);
+        }
+
+        /* --- 💫 ANIMATIONS 💫 --- */
+        
+        /* Paillettes */
+        @keyframes sparkle {
+            0%, 100% { opacity: 0.7; transform: scale(0.9); }
+            50% { opacity: 1; transform: scale(1.1); }
+        }
+
+        /* Danse du Bingo */
+        .bingo-dance {
+            animation: bingo-dance 0.8s ease;
+        }
+        
+        @keyframes bingo-dance {
+            0% { transform: scale(1) rotate(0deg); }
+            25% { transform: scale(1.1) rotate(3deg); }
+            50% { transform: scale(1.1) rotate(-3deg); }
+            75% { transform: scale(1.1) rotate(3deg); }
+            100% { transform: scale(1) rotate(0deg); }
+        }
+
+        /* --- 📱 RESPONSIVE DESIGN 📱 --- */
+        @media (max-width: 768px) {
+            body {
+                background-size: 10px 10px; /* Paillettes plus petites */
+            }
+        
+            .container {
+                margin: 0;
+                border-radius: 0;
+            }
+        
+            header {
+                padding: 30px 15px;
+            }
+        
+            header h1 {
+                font-size: 3rem;
+            }
+            header h2 {
+                font-size: 1rem;
+            }
+            
+            section {
+                padding: 30px 15px;
+            }
+            
+            section > h2 {
+                font-size: 2.8rem;
+            }
+            
+            .bingo-grid td {
+                padding: 8px;
+                font-size: 0.7rem;
+                height: 80px;
+            }
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            font-size: 0.9rem;
+            color: var(--texte-clair);
+            font-style: italic;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        
+        <header>
+            <h1>Soirée Miss France :</h1>
+            <h2>Strass, Scandales & Second Degré <span class="sparkle">💋</span></h2>
+            <p style="margin-top: 10px; font-style: italic; color: var(--texte-clair);">
+                Le guide 100% paillettes et fous rires entre copines !
+            </p>
+        </header>
+
+        <section id="avant-show">
+            <h2>1. Avant le show <span class="sparkle">💄</span></h2>
+
+            <h3>Le Dress Code : Tenue de rêve ou de cauchemar</h3>
+            <p>Ce soir, tout est permis. On veut du glamour ou du drame !</p>
+            <ul>
+                <li><b>Option "Rêve" :</b> Sortez la robe de bal qui n'a pas vu la lumière depuis le mariage de Tatie Monique.</li>
+                <li><b>Option "Cauchemar" :</b> Votre plus beau pyjama pilou-pilou, un peignoir et des bigoudis.</li>
+                <li><b>L'accessoire fatal :</b> La couronne. Qu'elle soit en strass ou en aluminium, elle est obligatoire. <span class="sparkle">👑</span></li>
+            </ul>
+
+            <h3>La Décoration : Ambiance Boudoir & Paillettes</h3>
+            <p>Préparez vos pancartes "Miss Mojito", "Miss Prosecco", "Miss Drama Queen" et transformez le salon en coulisses de l'élection.</p>
+            
+            <div class="card">
+                <h4>📸 Idée Selfie Corner</h4>
+                <p>Installez un coin photo avec un drap doré, des boas à plumes, des fausses écharpes et des lunettes de soleil. Prêtes pour le photocall !</p>
+            </div>
+
+            <h3>La Playlist d'Attente : Girl Power & Tubes 2000s</h3>
+            <p>On se chauffe la voix (et les hanches) avant le direct.</p>
+            
+            <div class="card">
+                <h4>🎶 Suggestion Playlist</h4>
+                <p>Beyoncé, Angèle, Dua Lipa, L5, Britney... Tout ce qui fait chanter (faux) est le bienvenu.</p>
+            </div>
+
+            <h3>Les Cocktails à Thème : Le Bar des Reines <span class="sparkle">🥂</span></h3>
+            <ul>
+                <li><b>Le Miss Piña Colada :</b> L'exotisme, même en hiver.</li>
+                <li><b>Le Miss Spritz & Strass :</b> Un Spritz classique avec des paillettes alimentaires dorées.</li>
+                <li><b>Le Miss Sans Alcool mais Avec du Panache :</b> Eau pétillante, sirop de framboise et une tonne de fruits.</li>
+            </ul>
+        </section>
+
+        <section id="pendant-lemission">
+            <h2>2. Pendant l’émission <span class="sparkle">📺</span></h2>
+            <p style="text-align: center; font-style: italic; margin-bottom: 20px;">Stylos en main, langues (gentiment) pendues… Que le spectacle commence !</p>
+
+            <h3>A. Les Fiches de Notation Individuelles</h3>
+            <p>Chaque fois qu'une Miss vous marque, dégainez votre carnet de notes (ou ce site web !).</p>
+            <div class="card">
+                <h4>👑 FICHE DE NOTATION DU JURY 👑</h4>
+                <label for="miss-region">Miss [Région à remplir] :</label>
+                <input type="text" id="miss-region" placeholder="Ex: Miss Bretagne...">
+                
+                <div class="notation-grid">
+                    <label>Prestance & Démarche</label>
+                    <input type="number" min="0" max="10" placeholder="/10">
+                    
+                    <label>Réponse à la question (ou l'esquive)</label>
+                    <input type="number" min="0" max="10" placeholder="/10">
+                    
+                    <label>La Robe (objectivement)</label>
+                    <input type="number" min="0" max="10" placeholder="/10">
+                    
+                    <label>Authenticité (ou jeu d'actrice)</label>
+                    <input type="number" min="0" max="10" placeholder="/10">
+                    
+                    <label>Dignité face au brushing</label>
+                    <input type="number" min="0" max="10" placeholder="/10">
+                </div>
+                
+                <label for="commentaire-jury" style="margin-top: 15px;">💬 Commentaire du Jury :</label>
+                <textarea id="commentaire-jury" placeholder="Ex: 'Joli sourire mais la passion pour l'aquaponie manque de conviction'"></textarea>
+            </div>
+
+            <h3>B. Les Paris Miss France : L'Oracle du Salon</h3>
+            <p>Remplissez vos pronostics. 1 point par bonne réponse. La gagnante est "Miss Oracle 2025" !</p>
+            <div class="card">
+                <label for="pari-gagnante">1. Qui remportera la couronne ? 👑</label>
+                <input type="text" id="pari-gagnante" placeholder="Votre pronostic...">
+
+                <label for="pari-eliminee">2. Quelle région sera éliminée en premier ?</label>
+                <input type="text" id="pari-eliminee" placeholder="Votre pronostic...">
+                
+                <label for="pari-trebuche">3. Qui va trébucher ?</label>
+                <input type="text" id="pari-trebuche" placeholder="Votre pronostic...">
+
+                <label for="pari-paix">4. Qui dira "la paix dans le monde" ?</label>
+                <input type="text" id="pari-paix" placeholder="Votre pronostic...">
+            </div>
+            
+            <h3>C. Le Jeu du Commentateur TV</h3>
+            <p>À tour de rôle, coupez le son et commentez un passage façon TF1 :</p>
+            <blockquote>
+                "Et voici Miss Limousin, militante pour le recyclage du tulle. Une cause qui lui est chère, on le voit dans son regard déterminé."
+            </blockquote>
+            
+            <h3 id="bingo-title">D. Le Bingo Miss France 🎁</h3>
+            <p>Cochez les cases ! La première qui a une ligne crie "MISS BINGO !" et gagne un mini prix.</p>
+            
+            <table class="bingo-grid">
+                <tr>
+                    <td>Une Miss dit "Paix dans le monde"</td>
+                    <td>Zoom sur une larme (Miss ou Maman)</td>
+                    <td>Jean-Pierre se trompe de prénom</td>
+                    <td>"Un rêve de petite fille"</td>
+                </tr>
+                <tr>
+                    <td>Une robe dorée ou argentée</td>
+                    <td>Miss Corse parle de la mer</td>
+                    <td class="free-space">CASE GRATUITE<br>(Artiste en playback)</td>
+                    <td>"Une aventure humaine"</td>
+                </tr>
+                <tr>
+                    <td>Une Miss trébuche (dans les escaliers)</td>
+                    <td>Tableau régional "folklorique"</td>
+                    <td>"Je suis très émue"</td>
+                    <td>Une Miss parle de sa grand-mère</td>
+                </tr>
+            </table>
+            <button class="bingo-button" id="bingo-button">J'AI UN BINGO ! <span class="sparkle">🎉</span></button>
+
+            <h3>E. Le Toast Officiel <span class="sparkle">💃</span></h3>
+            <p>Levez vos verres ! On trinque poliment (ou pas) à chaque fois que :</p>
+            <ul>
+                <li>👑 L'ancienne Miss fait son discours d'adieu (Shot symbolique).</li>
+                <li>👗 Les Miss changent de robe (On trinque à l'audace).</li>
+                <li>😭 Un moment "Émotion" (On boit "à la dignité").</li>
+                <li>💖 Votre FAVORITE passe à l'écran (Cri collectif + gorgée !).</li>
+            </ul>
+        </section>
+
+        <section id="apres-le-couronnement">
+            <h2>3. Après le couronnement <span class="sparkle">👠</span></h2>
+            <p style="text-align: center; font-style: italic; margin-bottom: 20px;">C'est fini ! Une reine est couronnée, et nous... on a faim. Place à NOTRE élection !</p>
+
+            <h3>Vote Final : L'Élection de nos Propres Miss</h3>
+            <p>Oublions TF1, place aux vrais titres. Votez !</p>
+            <div class="card">
+                <h4>Et les gagnantes du Salon sont...</h4>
+                
+                <label for="miss-rires">👑 Miss Fous Rires 2025 :</label>
+                <input type="text" id="miss-rires" placeholder="Celle qui vous a fait pleurer de rire">
+
+                <label for="miss-philo">👑 Miss Philosophie de Comptoir :</label>
+                <input type="text" id="miss-philo" placeholder="Pour l'analyse la plus pertinente">
+
+                <label for="miss-catastrophe">👑 Miss Cocktail Renversé :</label>
+                <input type="text" id="miss-catastrophe" placeholder="Parce qu'il en faut une (et on l'aime)">
+                
+                <label for="miss-oracle">👑 Miss Oracle 2025 :</label>
+                <input type="text" id="miss-oracle" placeholder="La gagnante des paris !">
+                
+                <h4 style="color: var(--rose-moyen); text-align: center; margin-top: 20px; font-size: 1.3rem;">
+                    Et la reine de la soirée...<br>
+                    LA MISS DU SALON 2025 EST :
+                </h4>
+                <input type="text" id="miss-salon" placeholder="Le nom de la grande gagnante !" style="text-align: center; font-weight: bold; font-size: 1.2rem;">
+            </div>
+            
+            <h3>Le Discours de Clôture (humoristique)</h3>
+            <p>La "Miss du Salon" fraîchement élue doit prononcer un discours :</p>
+            <blockquote>
+                "Merci. Je dédie cette victoire à toutes celles qui ont survécu à la robe à volants. Je promets de porter cette écharpe... jusqu'à la cuisine pour chercher des chips. Je vous aime. Et paix dans le salon."
+            </blockquote>
+        </section>
+
+        <section id="souvenirs">
+            <h2>Souvenirs de la Soirée <span class="sparkle">✨</span></h2>
+            <p style="text-align: center; font-style: italic; margin-bottom: 20px;">Parce que les vraies Miss, ce soir, c'était nous.</p>
+
+            <div class="card">
+                <h4>📸 Instantané</h4>
+                <p>Collez un Polaroïd ou postez votre meilleure photo de groupe sur Insta ! C'est le moment "dossier".</p>
+            </div>
+            
+            <div class="card">
+                <label for="souvenir-drole">Le moment le plus drôle :</label>
+                <textarea id="souvenir-drole" placeholder="Quand..."></textarea>
+                
+                <label for="souvenir-vanne">La meilleure vanne de la soirée :</label>
+                <textarea id="souvenir-vanne" placeholder="'...' - Signé Miss ..."></textarea>
+                
+                <label for="souvenir-anecdote">Anecdote à ne jamais oublier :</label>
+                <textarea id="souvenir-anecdote" placeholder="Le cocktail de... / La réaction de..."></textarea>
+            </div>
+        </section>
+        
+        <footer>
+            <p>Fait avec <span style="color: var(--rose-moyen);">♥</span> et beaucoup de second degré. <br>À l'année prochaine, les beautés ! 💋</p>
+        </footer>
+
+    </div> <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            /* --- 1. Animation de fondu au défilement --- */
+            // On crée un "observateur" qui regarde quand les éléments entrent dans l'écran
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    // Si l'élément est visible (même un peu)
+                    if (entry.isIntersecting) {
+                        // On lui ajoute la classe 'is-visible' qui déclenche l'animation CSS
+                        entry.target.classList.add('is-visible');
+                    }
+                });
+            }, {
+                threshold: 0.1 // Déclenche quand 10% de l'élément est visible
+            });
+
+            // On dit à l'observateur de surveiller toutes nos sections
+            const sections = document.querySelectorAll('section');
+            sections.forEach(section => {
+                observer.observe(section);
+            });
+
+
+            /* --- 2. Interactivité du BINGO --- */
+            const bingoCells = document.querySelectorAll('.bingo-grid td');
+            
+            bingoCells.forEach(cell => {
+                cell.addEventListener('click', () => {
+                    // On ne peut pas cliquer sur la case gratuite
+                    if (!cell.classList.contains('free-space')) {
+                        // On ajoute ou enlève la classe 'checked'
+                        cell.classList.toggle('checked');
+                    }
+                });
+            });
+
+            /* --- 3. Animation du bouton BINGO --- */
+            const bingoButton = document.getElementById('bingo-button');
+            const bingoTitle = document.getElementById('bingo-title');
+            
+            bingoButton.addEventListener('click', () => {
+                // Ajoute la classe d'animation au titre "D. Le Bingo..."
+                bingoTitle.classList.add('bingo-dance');
+                
+                // Optionnel : Alerte festive
+                alert('MISS BINGO ! 🎉 Vite, va chercher ton prix ! 🎁');
+                
+                // Retire la classe après l'animation pour pouvoir la re-déclencher
+                setTimeout(() => {
+                    bingoTitle.classList.remove('bingo-dance');
+                }, 800); // 800ms = durée de l'animation CSS
+            });
+
+        });
+    </script>
+
+</body>
+</html>
