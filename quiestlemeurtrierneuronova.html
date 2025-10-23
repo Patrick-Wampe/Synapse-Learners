@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SQL Cyber Mystery : Le Sabotage de NeuroNova !</title>
+    <style>
+        :root {
+            --main-color: #00ff00;
+            --border-color: #009900;
+            --bg-color: #1a1a1a;
+            --container-bg: #222;
+            --header-bg: #333;
+            --code-color: #ffff00;
+            --indice-color: #ff9900;
+            --final-button-color: #ff4136; /* Rouge pour le bouton final */
+            --final-button-hover-color: #e03a2f;
+        }
+        body {
+            font-family: 'Courier New', monospace;
+            background-color: var(--bg-color);
+            color: var(--main-color);
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: var(--container-bg);
+            padding: 30px;
+            border: 1px solid var(--main-color);
+            box-shadow: 0 0 10px var(--main-color);
+        }
+        h1, h2, h3 {
+            color: #00cc00;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 5px;
+        }
+        .image-header {
+            width: 100%;
+            height: auto;
+            margin-bottom: 20px;
+            border: 1px solid var(--main-color);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid var(--border-color);
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: var(--header-bg);
+            color: var(--main-color);
+        }
+        pre {
+            background-color: #000;
+            color: var(--code-color);
+            padding: 15px;
+            overflow-x: auto;
+            border: 1px dashed var(--border-color);
+            border-radius: 4px;
+        }
+        .indice {
+            color: var(--indice-color);
+            font-weight: bold;
+        }
+        .schema-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .schema-table {
+            background-color: #111;
+            border: 1px solid var(--border-color);
+            padding: 15px;
+        }
+        .schema-table h4 {
+            margin: 0 0 10px 0;
+            padding-bottom: 5px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .schema-table ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            font-size: 0.9em;
+        }
+        .key-info {
+            color: #aaa;
+        }
+        .solution-title {
+            cursor: pointer;
+            font-weight: bold;
+            color: var(--indice-color);
+            border: 1px solid var(--indice-color);
+            padding: 10px;
+            margin-top: 15px;
+            transition: background-color 0.3s;
+            display: block; /* Pour occuper toute la largeur */
+            text-align: center;
+        }
+        .solution-title:hover {
+            background-color: #333;
+        }
+        .solution-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-in-out, padding 0.5s ease-in-out;
+            padding: 0 15px;
+            background-color: #111;
+            border-left: 2px solid var(--indice-color);
+        }
+        .solution-content.active {
+            padding: 15px;
+        }
+        /* Styles spécifiques pour le bouton final */
+        #final-clue-button {
+            background-color: var(--final-button-color);
+            color: white;
+            border-color: var(--final-button-color);
+            font-size: 1.1em;
+            padding: 12px;
+            margin-top: 30px; /* Plus d'espace au-dessus */
+            box-shadow: 0 0 8px var(--final-button-color); /* Ombre pour l'accentuer */
+        }
+        #final-clue-button:hover {
+            background-color: var(--final-button-hover-color);
+            box-shadow: 0 0 12px var(--final-button-color);
+        }
+        #final-clue-button.clicked-1 {
+            background-color: #ff8c00; /* Orange après le 1er clic */
+            border-color: #ff8c00;
+        }
+        #final-clue-button.clicked-2 {
+            background-color: #ffd700; /* Jaune après le 2ème clic */
+            border-color: #ffd700;
+            color: #333; /* Texte sombre pour le contraste */
+        }
+        .warning-message {
+            margin-top: 10px;
+            padding: 10px;
+            border: 1px dashed #ff4136;
+            background-color: #330000; /* Fond légèrement plus sombre */
+            color: #ff4136;
+            font-style: italic;
+            text-align: center;
+            /* Nouveau : par défaut caché et affiché via JS pour empiler */
+            display: none; 
+        }
+        .fun-fact {
+            color: #7FDBFF; /* Bleu clair pour le fun fact */
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+        .final-answer {
+            background-color: var(--header-bg);
+            border: 2px solid var(--indice-color);
+            padding: 15px;
+            margin-top: 15px;
+            font-size: 1.2em;
+            text-align: center;
+        }
+        a {
+            font-weight: bold;
+            color: yellow;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <img src="https://mystery.knightlab.com/174092-clue-illustration.png" alt="Illustration de détective et d'indices" class="image-header">
+
+        <h1>🔍 SQL Cyber Mystery : Le Sabotage de NeuroNova !</h1>
+
+        <p>Bienvenue, détective virtuel ! Dans ce jeu, vos compétences en <b>SQL</b> (Structured Query Language) sont votre seule arme pour percer un mystère de haute technologie. Des enregistrements contienne les indices qui vous permettront de remonter la piste du coupable. Oubliez la loupe 🔍, sortez votre clavier 💻 !</p>
+
+        <h2>🕵️‍♂️ Le Mystère</h2>
+        <table>
+            <tbody>
+                <tr><td><b>QUOI ?</b></td><td>Sabotage interne et vol de propriété intellectuelle, avec un décès suspect.</td></tr>
+                <tr><td><b>QUAND ?</b></td><td>La nuit du <b>15 au 16 Octobre 2025</b>.</td></tr>
+                <tr><td><b>OÙ ?</b></td><td>Au siège de <b>NeuroNova Analytics</b>, une start-up IA à Paris.</td></tr>
+                <tr><td><b>VICTIME :</b></td><td>Dr. Aris Thorne, architecte en chef de "Project Chimera", retrouvé sans vie.</td></tr>
+                <tr><td><b>VOL :</b></td><td>Le code source de "Project Chimera", une IA de prédiction émotionnelle, a disparu.</td></tr>
+            </tbody>
+        </table>
+        <p>Le Dr. Aris Thorne a été retrouvé mort dans la salle serveur. Les logs de sécurité ont été partiellement effacés et le code source de "Project Chimera" a été volé. Votre mission : fouiller dans les enregistrements numériques de l'entreprise et démasquer le coupable.</p>
+        <hr>
+
+        <h2>🚀 Préparation de l'environnement d'enquête</h2>
+        <p>Pour réaliser la mission, utilisez l'Interpréteur SQL de Synapse Learners à cette adresse : <a href="https://www.synapselearners.com/interpreteursql" target="_blank">https://www.synapselearners.com/interpreteursql</a>.</p>
+        <p>Vous pourrez importer les tables via l'URL de leurs fichiers CSV. Voici les URL des tables :</p>
+        <pre><code>URL_EMPLOYES.csv : https://raw.githubusercontent.com/Patrick-Wampe/datasets/refs/heads/main/NEURONOVA_EMPLOYES.csv
+URL_ACCES_SERVEURS.csv : https://raw.githubusercontent.com/Patrick-Wampe/datasets/refs/heads/main/NEURONOVA_ACCES_SERVEUR.csv
+URL_LOGS_CODE.csv : https://raw.githubusercontent.com/Patrick-Wampe/datasets/refs/heads/main/NEURONOVA_LOGS_CODE.csv
+URL_LOGS_RESEAU.csv : https://raw.githubusercontent.com/Patrick-Wampe/datasets/refs/heads/main/NEURONOVA_LOGS_RESEAU.csv
+URL_MESSAGERIE_INTERNE.csv : https://raw.githubusercontent.com/Patrick-Wampe/datasets/refs/heads/main/NEURONOVA_MESSAGERIE_INTERNE.csv
+URL_ZONES_SECURISEES.csv : https://raw.githubusercontent.com/Patrick-Wampe/datasets/refs/heads/main/NEURONOVA_ZONES_SECURISEES.csv
+URL_AGENDA_REUNIONS.csv : https://raw.githubusercontent.com/Patrick-Wampe/datasets/refs/heads/main/NEURONOVA_AGENDA_REUNIONS.csv
+</code></pre>
+
+        <hr>
+
+        <h2>🔗 Schéma de la base de données</h2>
+        <p>Votre carte du réseau de NeuroNova. Utilisez ces informations pour construire vos requêtes et naviguer entre les tables.</p>
+        <div class="schema-container">
+            <div class="schema-table"><h4>EMPLOYES</h4><ul><li><b>employe_id (PK)</b></li><li>nom</li><li>role</li></ul></div>
+            <div class="schema-table"><h4>ACCES_SERVEURS</h4><ul><li>log_id (PK)</li><li><b>employe_id (FK)</b></li><li>date_acces</li><li>heure_acces</li></ul></div>
+            <div class="schema-table"><h4>LOGS_CODE</h4><ul><li>commit_id (PK)</li><li><b>employe_id (FK)</b></li><li>action</li><li>description</li><li>heure</li></ul></div>
+            <div class="schema-table"><h4>LOGS_RESEAU</h4><ul><li>log_id (PK)</li><li><b>employe_id (FK)</b></li><li>donnees_upload_mb</li><li>date_log</li></ul></div>
+            <div class="schema-table"><h4>MESSAGERIE_INTERNE</h4><ul><li>message_id (PK)</li><li><b>id_expediteur (FK)</b></li><li>message</li><li>heure</li></ul></div>
+            <div class="schema-table"><h4>ZONES_SECURISEES</h4><ul><li><b>zone_id (PK)</b></li><li>nom_zone</li><li>niveau_acces</li></ul></div>
+            <div class="schema-table"><h4>AGENDA_REUNIONS</h4><ul><li>reunion_id (PK)</li><li><b>employe_id (FK)</b></li><li><b>zone_id (FK)</b></li><li>sujet</li><li>heure_planifiee</li></ul></div>
+        </div>
+
+        <hr>
+
+        <h2>📝 Plan d'enquête</h2>
+        <p>Voici ce que les enquêteurs vous ont donné comme information : <b>Le coupable est parmi les employés présents dans la salle serveur après 18:00 le soir du crime (15/10/2025) 🕵️‍♂️.</b></p>
+        
+        <hr>
+
+        <h2>✅ Dossier classifié : Vérifier votre solution</h2>
+        <p>Une fois votre enquête terminée, ou si vous êtes bloqué, consultez les solutions ci-dessous pour valider vos découvertes.</p>
+
+        <div class="solution-title"><b>[CLIC]</b> Révéler la Requête de l'Indice #1</div>
+        <div class="solution-content">
+            <p><b>Objectif :</b> Identifier les employés présents dans la salle serveur après 18:00.</p>
+            <pre><code>SELECT
+  ACCES_SERVEURS.employe_id,
+  ACCES_SERVEURS.date_acces,
+  ACCES_SERVEURS.heure_acces,
+  EMPLOYES.nom,
+  EMPLOYES.role
+FROM ACCES_SERVEURS
+JOIN EMPLOYES
+  ON ACCES_SERVEURS.employe_id = EMPLOYES.employe_id
+WHERE
+  ACCES_SERVEURS.date_acces = '2025-10-15' AND ACCES_SERVEURS.heure_acces > '18:00:00';</code></pre>
+            <p><b>Explication :</b> Cette requête combine les informations de la table ACCES_SERVEURS avec celles de la table EMPLOYES (JOIN) en utilisant l'ID de l'employé. Elle filtre ensuite les enregistrements pour la date du crime ('2025-10-15') et pour les accès après 18h00 ('18:00:00'). Cela nous donnera une liste de suspects potentiels. Résultat attendu : Vous devriez trouver un groupe d'employés qui étaient encore dans la salle serveur après 18h. Remarquez que l'employé E01 (Dr. Aris Thorne) est sur cette liste avec une activité suspecte.</p>
+        </div>
+
+        <div class="solution-title"><b>[CLIC]</b> Révéler la Requête de l'Indice #2</div>
+        <div class="solution-content">
+            <p><b>Objectif :</b> Trouver qui, parmi les suspects, a effacé des fichiers.</p>
+            <pre><code>SELECT
+  LOGS_CODE.employe_id,
+  LOGS_CODE.action,
+  LOGS_CODE.description,
+  LOGS_CODE.heure,
+  EMPLOYES.nom,
+  EMPLOYES.role
+FROM LOGS_CODE
+JOIN EMPLOYES
+  ON LOGS_CODE.employe_id = EMPLOYES.employe_id
+WHERE
+  LOGS_CODE.action = 'delete' AND LOGS_CODE.description LIKE '%Effaceur de Traces%';</code></pre>
+            <p><b>Explication :</b> Nous recherchons dans la table LOGS_CODE les actions de type 'delete' qui contiennent la description spécifique 'Effaceur de Traces'. Le JOIN avec la table EMPLOYES permet d'obtenir le nom et le rôle de l'employé concerné. Résultat attendu : Cette requête devrait pointer directement vers un employé en particulier qui a tenté de masquer quelque chose. Vous devriez trouver E01 (Dr. Aris Thorne).</p>
+        </div>
+
+        <div class="solution-title"><b>[CLIC]</b> Révéler la Requête de l'Indice #3</div>
+        <div class="solution-content">
+            <p><b>Objectif :</b> Identifier l'upload suspect de plus de 800 MB.</p>
+            <pre><code>SELECT
+  LOGS_RESEAU.employe_id,
+  EMPLOYES.nom,
+  LOGS_RESEAU.donnees_upload_mb,
+  LOGS_RESEAU.date_log
+FROM LOGS_RESEAU
+JOIN EMPLOYES
+  ON LOGS_RESEAU.employe_id = EMPLOYES.employe_id
+WHERE
+  LOGS_RESEAU.employe_id = 'E02' AND LOGS_RESEAU.donnees_upload_mb > 800 AND LOGS_RESEAU.date_log = '2025-10-15';</code></pre>
+            <p><b>Explication :</b> On filtre la table LOGS_RESEAU pour l'employe_id "E02" (Lena Moreau, l'autre suspecte clé) et pour les donnees_upload_mb supérieures à 800, le jour du crime. Un JOIN avec EMPLOYES fournit les détails sur l'employé. Résultat attendu : Cette requête devrait révéler un upload massif effectué par l'employé E02 (Lena Moreau) le jour du crime, un acte très suspect étant donné le vol du code source. Cela transfère les soupçons de E01 à E02.</p>
+        </div>
+
+        <div class="solution-title"><b>[CLIC]</b> Révéler la Requête de l'Indice #4</div>
+        <div class="solution-content">
+            <p><b>Objectif :</b> Trouver le message contenant le mot "Chimera".</p>
+            <pre><code>SELECT
+  MESSAGERIE_INTERNE.message_id,
+  MESSAGERIE_INTERNE.id_expediteur,
+  EMPLOYES.nom AS expediteur_nom,
+  MESSAGERIE_INTERNE.id_destinataire,
+  (SELECT nom FROM EMPLOYES WHERE employe_id = MESSAGERIE_INTERNE.id_destinataire) AS destinataire_nom,
+  MESSAGERIE_INTERNE.message,
+  MESSAGERIE_INTERNE.heure
+FROM MESSAGERIE_INTERNE
+JOIN EMPLOYES
+  ON MESSAGERIE_INTERNE.id_expediteur = EMPLOYES.employe_id
+WHERE
+  MESSAGERIE_INTERNE.id_expediteur = 'E02' AND MESSAGERIE_INTERNE.message LIKE '%Chimera%'
+ORDER BY
+  MESSAGERIE_INTERNE.heure DESC;</code></pre>
+            <p><b>Explication :</b> Nous filtrons la table MESSAGERIE_INTERNE pour les messages envoyés par l'id_expediteur "E02" (Lena Moreau) qui contiennent le mot "Chimera" (en utilisant LIKE '%Chimera%'). Un JOIN est effectué avec EMPLOYES pour obtenir le nom de l'expéditeur, et une sous-requête est utilisée pour obtenir le nom du destinataire. L'ordre est inversé pour voir les messages les plus récents en premier. Résultat attendu : Vous devriez trouver des messages où Lena Moreau (E02) discute du "Project Chimera" avec la victime (Aris Thorne, E01) juste avant l'heure du crime, montrant une certaine urgence ou une tentative de validation tardive.</p>
+        </div>
+
+        <div id="final-clue-button" class="solution-title"><b>[CLIC N°1]</b> RÉVÉLER LE COUPABLE</div>
+        
+        <div id="warning-messages-container">
+            <div id="warning-1" class="warning-message">
+                <p>Es-tu <b>VRAIMENT</b> sûr d'avoir trouvé le coupable ? C'est une décision lourde de conséquences...</p>
+                <p class="fun-fact"><b>Le saviez-vous ?</b> Un zèbre est noir avec des rayures blanches, pas l'inverse. Les rayures sont une forme de camouflage appelée "dazzle camouflage".</p>
+            </div>
+            <div id="warning-2" class="warning-message">
+                <p>Dernière chance avant de révéler la vérité. Une fois le coupable désigné, il n'y aura plus de retour en arrière. Confirmez-vous ?</p>
+                <p class="fun-fact"><b>Le saviez-vous ?</b> La Grande Muraille de Chine n'est pas visible depuis l'espace sans aide optique, contrairement à la légende populaire.</p>
+            </div>
+        </div>
+
+        <div id="final-clue-content" class="solution-content">
+            <p><b>Objectif :</b> Identifier l'employé qui avait une réunion dans la zone la plus sécurisée avec son meurtrier.</p>
+            <pre><code>SELECT
+  EMPLOYES.nom,
+  EMPLOYES.role,
+  AGENDA_REUNIONS.sujet,
+  AGENDA_REUNIONS.heure_planifiee,
+  ZONES_SECURISEES.nom_zone
+FROM EMPLOYES
+JOIN AGENDA_REUNIONS
+  ON EMPLOYES.employe_id = AGENDA_REUNIONS.employe_id
+JOIN ZONES_SECURISEES
+  ON AGENDA_REUNIONS.zone_id = ZONES_SECURISEES.zone_id
+WHERE
+  AGENDA_REUNIONS.employe_id = 'E01' AND ZONES_SECURISEES.niveau_acces = (
+    SELECT
+      MAX(niveau_acces)
+    FROM ZONES_SECURISEES
+  ) AND DATE(AGENDA_REUNIONS.heure_planifiee) = '2025-10-15';</code></pre>
+            <div class="final-answer">
+                <p>Le coupable est : Dr. Aris Thorne par suicide</p>
+            </div>
+        </div>
+        
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Logique pour les accordéons simples
+            const solutionTitles = document.querySelectorAll('.solution-title:not(#final-clue-button)');
+            solutionTitles.forEach(title => {
+                title.addEventListener('click', () => {
+                    const content = title.nextElementSibling;
+                    const isActive = content.classList.contains('active');
+
+                    // Ferme tous les autres accordéons
+                    document.querySelectorAll('.solution-content.active').forEach(openContent => {
+                        if (openContent !== content) {
+                            openContent.classList.remove('active');
+                            openContent.style.maxHeight = null;
+                        }
+                    });
+
+                    // Cache tous les messages d'avertissement quand un indice est cliqué
+                    document.querySelectorAll('.warning-message').forEach(msg => {
+                        msg.style.display = 'none';
+                    });
+
+                    if (isActive) {
+                        content.classList.remove('active');
+                        content.style.maxHeight = null;
+                    } else {
+                        content.classList.add('active');
+                        content.style.maxHeight = content.scrollHeight + 'px';
+                    }
+                });
+            });
+
+            // Logique pour le bouton final à 3 clics
+            const finalButton = document.getElementById('final-clue-button');
+            const finalContent = document.getElementById('final-clue-content');
+            const warningContainer = document.getElementById('warning-messages-container'); // Nouveau conteneur
+            const warning1 = document.getElementById('warning-1');
+            const warning2 = document.getElementById('warning-2');
+            let clickCount = 0;
+
+            finalButton.addEventListener('click', () => {
+                // S'assurer que les autres accordéons sont fermés
+                document.querySelectorAll('.solution-content.active').forEach(openContent => {
+                    if (openContent !== finalContent) { // Ne pas fermer le contenu final si déjà ouvert (après 3 clics)
+                        openContent.classList.remove('active');
+                        openContent.style.maxHeight = null;
+                    }
+                });
+                
+                clickCount++;
+
+                if (clickCount === 1) {
+                    warning1.style.display = 'block'; // Affiche le premier avertissement
+                    warning2.style.display = 'none'; // Cache le deuxième s'il était visible
+                    finalButton.innerHTML = "<b>[CLIC N°2]</b> JE SUIS VRAIMENT SÛR !";
+                    finalButton.classList.add('clicked-1');
+                    finalButton.classList.remove('clicked-2');
+                } else if (clickCount === 2) {
+                    warning1.style.display = 'block'; // Garde le premier visible
+                    warning2.style.display = 'block'; // Affiche le deuxième
+                    finalButton.innerHTML = "<b>[CLIC FINAL]</b> RÉVÉLER LE COUPABLE";
+                    finalButton.classList.add('clicked-2');
+                    finalButton.classList.remove('clicked-1');
+                } else if (clickCount === 3) {
+                    // Tous les avertissements restent visibles, mais le bouton est désactivé et le contenu révélé
+                    finalContent.classList.add('active');
+                    finalContent.style.maxHeight = finalContent.scrollHeight + 'px';
+                    finalButton.style.pointerEvents = 'none'; // Désactive le bouton
+                    finalButton.style.backgroundColor = '#333';
+                    finalButton.style.borderColor = '#333';
+                    finalButton.style.color = '#aaa';
+                    finalButton.style.boxShadow = 'none';
+                    finalButton.innerHTML = "<b>COUPABLE RÉVÉLÉ !</b>"; // Texte final
+                }
+            });
+        });
+    </script>
+</body>
+</html>
