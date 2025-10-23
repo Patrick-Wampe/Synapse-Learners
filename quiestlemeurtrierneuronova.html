@@ -198,8 +198,7 @@
         <h2>🚀 Préparation de l'environnement d'enquête</h2>
         <p>Pour réaliser la mission, vous pouvez utiliser l'Interpréteur SQL de Synapse Learners à cette adresse : <a href="https://www.synapselearners.com/interpreteursql" target="_blank">https://www.synapselearners.com/interpreteursql</a>.</p>
         <p>Vous pouvez également utiliser <b>DuckDB</b> avec Pandas de cette façon :</p>
-        <pre><code>
-# Importation des bibliothèques nécessaires
+        <pre><code># Importation des bibliothèques nécessaires
 import duckdb
 import pandas as pd
 
@@ -209,8 +208,7 @@ table_fournisseur = pd.read_csv("https://table_fournisseur.com")
 
 duckdb.sql("""
 select * from table_client;
-""").df()
-        </code></pre>
+""").df()</code></pre>
         <p>Voici les URL des tables au format CSV :</p>
         <pre><code>URL_EMPLOYES.csv : https://raw.githubusercontent.com/Patrick-Wampe/datasets/refs/heads/main/NEURONOVA_EMPLOYES.csv
 URL_ACCES_SERVEURS.csv : https://raw.githubusercontent.com/Patrick-Wampe/datasets/refs/heads/main/NEURONOVA_ACCES_SERVEUR.csv
