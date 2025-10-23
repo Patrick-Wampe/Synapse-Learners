@@ -199,17 +199,17 @@
         <p>Pour réaliser la mission, vous pouvez utiliser l'Interpréteur SQL de Synapse Learners à cette adresse : <a href="https://www.synapselearners.com/interpreteursql" target="_blank">https://www.synapselearners.com/interpreteursql</a>.</p>
         <p>Vous pouvez également utiliser <b>DuckDB</b> avec Pandas de cette façon :</p>
         <pre><code>
-            # Importation des bibliothèques nécessaires
-            import duckdb
-            import pandas as pd
+# Importation des bibliothèques nécessaires
+import duckdb
+import pandas as pd
 
-            # Chargement de chaque fichier CSV dans un DataFrame pandas
-            table_client = pd.read_csv("https://www.table_client.com")
-            table_fournisseur = pd.read_csv("https://table_fournisseur.com")
+# Chargement de chaque fichier CSV dans un DataFrame pandas
+table_client = pd.read_csv("https://www.table_client.com")
+table_fournisseur = pd.read_csv("https://table_fournisseur.com")
 
-            duckdb.sql("""
-                select * from table_client;
-            """).df()
+duckdb.sql("""
+select * from table_client;
+""").df()
         </code></pre>
         <p>Voici les URL des tables au format CSV :</p>
         <pre><code>URL_EMPLOYES.csv : https://raw.githubusercontent.com/Patrick-Wampe/datasets/refs/heads/main/NEURONOVA_EMPLOYES.csv
