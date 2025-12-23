@@ -8,32 +8,54 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <!-- Chart.js (Lightweight via CDN for simple charts if needed, but doing CSS charts for speed/single-file reliability) -->
+    
     <style>
         body { font-family: 'Inter', sans-serif; }
         .slide { display: none; opacity: 0; transition: opacity 0.5s ease-in-out; }
         .slide.active { display: flex; opacity: 1; }
         
-        /* Custom Scrollbar for slides */
+        /* Custom Scrollbar */
         .custom-scroll::-webkit-scrollbar { width: 6px; }
         .custom-scroll::-webkit-scrollbar-track { background: #f1f5f9; }
         .custom-scroll::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 20px; }
         
         /* Animations */
         .fade-in-up { animation: fadeInUp 0.8s ease-out forwards; opacity: 0; transform: translateY(20px); }
+        .scale-in { animation: scaleIn 0.5s ease-out forwards; opacity: 0; transform: scale(0.9); }
+        .grow-width { animation: growWidth 1.5s ease-out forwards; width: 0; }
+        .slide-in-right { animation: slideInRight 0.6s ease-out forwards; opacity: 0; transform: translateX(-20px); }
+        
         .delay-100 { animation-delay: 0.1s; }
         .delay-200 { animation-delay: 0.2s; }
         .delay-300 { animation-delay: 0.3s; }
+        .delay-500 { animation-delay: 0.5s; }
+        .delay-700 { animation-delay: 0.7s; }
         
         @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
+        @keyframes scaleIn { to { opacity: 1; transform: scale(1); } }
+        @keyframes growWidth { to { width: var(--target-width); } }
+        @keyframes slideInRight { to { opacity: 1; transform: translateX(0); } }
+        
+        /* Checkbox Animation */
+        .check-anim { stroke-dasharray: 24; stroke-dashoffset: 24; animation: drawCheck 0.5s ease-in-out forwards; }
+        @keyframes drawCheck { to { stroke-dashoffset: 0; } }
 
         /* Ribbon Styles */
         .step-active { background-color: #2563EB; color: white; transform: scale(1.05); z-index: 10; box-shadow: 0 4px 6px rgba(0,0,0,0.1); border: none;}
         .step-inactive { background-color: #334155; color: #94A3B8; }
         .step-past { background-color: #E2E8F0; color: #94A3B8; }
         
-        /* Diamond Shape for Decision */
-        .diamond-shape { transform: rotate(45deg); }
-        .diamond-content { transform: rotate(-45deg); }
+        /* Role Badge */
+        .role-badge { 
+            display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.7rem; font-weight: 700; 
+            text-transform: uppercase; padding: 0.125rem 0.5rem; border-radius: 9999px; 
+            background-color: #F1F5F9; color: #475569; border: 1px solid #CBD5E1; margin-bottom: 0.5rem;
+        }
+
+        /* Risk Matrix Cell */
+        .matrix-cell { transition: all 0.3s; }
+        .matrix-cell:hover { transform: scale(1.05); z-index: 10; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
     </style>
 </head>
 <body class="bg-slate-900 h-screen flex items-center justify-center p-4 md:p-8 overflow-hidden">
@@ -41,7 +63,7 @@
     <!-- Main Container -->
     <div class="bg-slate-50 w-full max-w-6xl aspect-video rounded-2xl shadow-2xl overflow-hidden flex flex-col relative">
 
-        <!-- HEADER: Process Ribbon (Hidden on Slide 0) -->
+        <!-- HEADER: Process Ribbon -->
         <div id="header-ribbon" class="bg-white px-8 pt-6 pb-2 border-b border-slate-100 transition-opacity duration-300 opacity-0" style="visibility: hidden;">
             <div class="flex w-full mb-4 rounded-lg overflow-hidden shadow-sm">
                 <div id="step-1" class="process-step flex-1 h-10 flex items-center justify-center text-xs font-bold uppercase tracking-wider transition-all duration-300 border-r border-white step-inactive">1. Initiation</div>
@@ -62,6 +84,9 @@
                 </div>
                 <h1 class="text-5xl font-extrabold mb-4 tracking-tight fade-in-up">Management of Change (MoC)</h1>
                 <p class="text-xl text-slate-300 max-w-2xl fade-in-up delay-100">Standard Operating Procedure for technical and organizational modifications.</p>
+                <div class="mt-8 fade-in-up delay-300">
+                    <span class="px-4 py-2 bg-slate-700 rounded-full text-xs font-bold tracking-widest text-slate-300 uppercase">Interactive Presentation</span>
+                </div>
             </div>
 
             <!-- SLIDE 1: INITIATION -->
@@ -73,248 +98,296 @@
                 
                 <div class="flex-1 grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
                     <div class="space-y-6 fade-in-up delay-100">
-                        <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-teal-500">
+                        <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-teal-500 hover:shadow-md transition-shadow">
+                            <span class="role-badge"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg> Originator</span>
                             <h3 class="font-bold text-lg mb-2 text-slate-800 flex items-center gap-2">
                                 <span class="bg-teal-100 text-teal-800 text-xs px-2 py-1 rounded-full">1.1</span> Submit Notification
                             </h3>
                             <p class="text-slate-600 text-sm leading-relaxed">
-                                The change initiator formally raises a <strong>Notification of Change</strong> describing the nature, purpose, and expected outcomes of the proposed modification.
+                                The change initiator formally raises a <strong>Notification of Change</strong> describing the nature, purpose, and expected outcomes.
                             </p>
                         </div>
-                        <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-teal-500">
+                        <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-teal-500 hover:shadow-md transition-shadow">
+                            <span class="role-badge"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg> Originator</span>
                             <h3 class="font-bold text-lg mb-2 text-slate-800 flex items-center gap-2">
                                 <span class="bg-teal-100 text-teal-800 text-xs px-2 py-1 rounded-full">1.2</span> Description of Change
                             </h3>
                             <p class="text-slate-600 text-sm leading-relaxed">
-                                A clear and complete description of the change is prepared, including the technical rationale, operational impact, and any relevant background information.
+                                Clear description including technical rationale, operational impact, and background info.
                             </p>
                         </div>
                     </div>
                     
-                    <div class="bg-teal-50 p-6 rounded-2xl border border-teal-100 flex flex-col fade-in-up delay-200 h-full">
-                        <div class="flex items-center gap-3 mb-4">
-                            <div class="bg-teal-200 p-2 rounded-full"><svg class="text-teal-700" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg></div>
-                            <h3 class="text-xl font-bold text-teal-800">1.3 Pre-Approval to Proceed</h3>
+                    <div class="bg-teal-50 p-6 rounded-2xl border border-teal-100 flex flex-col fade-in-up delay-200 h-full relative overflow-hidden group">
+                        <div class="absolute -right-10 -bottom-10 opacity-5 group-hover:opacity-10 transition-opacity">
+                            <svg width="200" height="200" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L1 21h22L12 2zm0 3.99L19.53 19H4.47L12 5.99z"/></svg>
                         </div>
-                        <p class="text-teal-900 text-sm mb-4 leading-relaxed">
-                            The initiating department obtains preliminary authorization to continue with the assessment.
+                        <div class="flex items-center justify-between mb-4 z-10">
+                            <div class="flex items-center gap-3">
+                                <div class="bg-teal-200 p-2 rounded-full"><svg class="text-teal-700" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg></div>
+                                <h3 class="text-xl font-bold text-teal-800">1.3 Pre-Approval</h3>
+                            </div>
+                            <span class="role-badge bg-white"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg> Line Mgr</span>
+                        </div>
+                        
+                        <!-- Animated "Stamp" Effect -->
+                        <div class="flex-1 flex items-center justify-center">
+                            <div class="border-4 border-teal-600 text-teal-700 p-4 rounded-lg font-black text-2xl uppercase transform -rotate-12 opacity-0 scale-in delay-500 border-double">
+                                Approved
+                            </div>
+                        </div>
+
+                        <p class="text-teal-900 text-sm mb-4 leading-relaxed text-center z-10">
+                            Preliminary authorization granted to proceed to assessment.
                         </p>
-                        <div class="bg-white/60 p-4 rounded-lg border border-teal-200">
-                            <p class="text-teal-800 text-sm italic">
-                                "This preapproval confirms that the change is valid, aligned with operational needs, and suitable to enter the evaluation stage."
-                            </p>
-                        </div>
-                        <div class="mt-auto pt-6 flex justify-center">
-                             <div class="px-6 py-2 bg-teal-600 text-white rounded-lg font-bold shadow-md text-sm uppercase tracking-wide">Authorization Granted</div>
-                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- SLIDE 2: ASSESSMENT -->
+            <!-- SLIDE 2: ASSESSMENT (WITH RISK MATRIX) -->
             <div class="slide h-full flex-col p-8 md:p-12 overflow-y-auto custom-scroll" id="slide-2">
                 <h2 class="text-3xl font-bold text-amber-600 mb-6 flex items-center gap-3 fade-in-up sticky top-0 bg-slate-50 py-2 z-10">
                     <span class="bg-amber-100 p-2 rounded-lg"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg></span> 
                     2. Assessment Phase
                 </h2>
                 
-                <div class="flex-1 grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <!-- Card 2.1 -->
-                    <div class="col-span-1 bg-white p-6 rounded-xl shadow-md border-t-4 border-amber-400 flex flex-col fade-in-up delay-100">
-                        <div class="mb-4 text-amber-500"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg></div>
-                        <h3 class="font-bold text-lg mb-2 text-slate-800">2.1 Technical & Safety Impact</h3>
-                        <p class="text-sm text-slate-600 leading-relaxed">
-                            A multidisciplinary team assesses the technical implications, operational constraints, and <strong>Health, Safety, and Environmental (HSE)</strong> impacts of the proposed change.
-                        </p>
+                <div class="flex-1 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    
+                    <!-- Card 2.1: Risk Matrix Visualization -->
+                    <div class="col-span-1 bg-white p-5 rounded-xl shadow-md border-t-4 border-amber-400 flex flex-col fade-in-up delay-100">
+                        <span class="role-badge self-start"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg> Eng. Mgr</span>
+                        <h3 class="font-bold text-sm mb-2 text-slate-800 mt-2">2.1 HSE Impact Assessment</h3>
+                        
+                        <!-- Mini Risk Matrix -->
+                        <div class="grid grid-cols-3 gap-1 mb-2 bg-slate-100 p-2 rounded">
+                            <div class="matrix-cell h-8 bg-green-200 rounded text-[10px] flex items-center justify-center text-green-800 font-bold">L</div>
+                            <div class="matrix-cell h-8 bg-yellow-200 rounded text-[10px] flex items-center justify-center text-yellow-800 font-bold">M</div>
+                            <div class="matrix-cell h-8 bg-orange-200 rounded text-[10px] flex items-center justify-center text-orange-800 font-bold">H</div>
+                            <div class="matrix-cell h-8 bg-green-200 rounded text-[10px] flex items-center justify-center text-green-800 font-bold">L</div>
+                            <div class="matrix-cell h-8 bg-yellow-200 rounded text-[10px] flex items-center justify-center text-yellow-800 font-bold">M</div>
+                            <div class="matrix-cell h-8 bg-red-400 rounded text-[10px] flex items-center justify-center text-white font-bold animate-pulse">VH</div>
+                            <div class="matrix-cell h-8 bg-green-200 rounded text-[10px] flex items-center justify-center text-green-800 font-bold">L</div>
+                            <div class="matrix-cell h-8 bg-orange-200 rounded text-[10px] flex items-center justify-center text-orange-800 font-bold">H</div>
+                            <div class="matrix-cell h-8 bg-red-400 rounded text-[10px] flex items-center justify-center text-white font-bold">VH</div>
+                        </div>
+                        <p class="text-xs text-slate-500">Risk Matrix: <span class="text-red-500 font-bold">HAZOP Required</span> if Risk > Medium.</p>
                     </div>
                     
-                    <!-- Card 2.2 -->
-                    <div class="col-span-1 bg-white p-6 rounded-xl shadow-md border-t-4 border-amber-400 flex flex-col fade-in-up delay-200">
-                        <div class="mb-4 text-amber-500"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg></div>
-                        <h3 class="font-bold text-lg mb-2 text-slate-800">2.2 Budget & Schedule</h3>
-                        <p class="text-sm text-slate-600 leading-relaxed mb-4">
-                            The initial cost and timeline required to implement the change are defined. This estimate provides management with the necessary inputs for the review.
-                        </p>
-                        <div class="mt-auto">
-                            <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
-                                <div class="bg-amber-400 h-full w-2/3"></div>
+                    <!-- Card 2.2: Budget Chart -->
+                    <div class="col-span-1 bg-white p-5 rounded-xl shadow-md border-t-4 border-amber-400 flex flex-col fade-in-up delay-200">
+                        <span class="role-badge self-start"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg> Originator</span>
+                        <h3 class="font-bold text-sm mb-2 text-slate-800 mt-2">2.2 Budget & Timeline</h3>
+                        
+                        <!-- CSS Bar Chart -->
+                        <div class="space-y-3 mt-2">
+                            <div>
+                                <div class="flex justify-between text-xs text-slate-500 mb-1"><span>Cost (Est.)</span> <span class="font-bold text-amber-600">$15k</span></div>
+                                <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                                    <div class="bg-amber-500 h-full rounded-full grow-width" style="--target-width: 45%"></div>
+                                </div>
                             </div>
-                            <div class="text-xs text-right mt-1 text-slate-400">Timeline & Cost Defined</div>
+                            <div>
+                                <div class="flex justify-between text-xs text-slate-500 mb-1"><span>Time (Wks)</span> <span class="font-bold text-blue-600">4 Weeks</span></div>
+                                <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                                    <div class="bg-blue-500 h-full rounded-full grow-width" style="--target-width: 60%"></div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     
                     <!-- Card 2.3 -->
                     <div class="col-span-1 bg-amber-50 p-6 rounded-xl border border-amber-200 flex flex-col fade-in-up delay-300">
-                        <h3 class="font-bold text-lg text-amber-900 mb-3">2.3 Internal Review Meeting</h3>
-                        <p class="text-xs font-bold text-amber-700 uppercase tracking-wide mb-2">Review Committee Evaluates:</p>
-                        <ul class="text-sm text-amber-800 space-y-2 mb-6">
-                            <li class="flex items-center gap-2"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg> Technical assessments</li>
-                            <li class="flex items-center gap-2"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg> Safety considerations</li>
-                            <li class="flex items-center gap-2"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg> Budget & Planning</li>
-                        </ul>
-                        <div class="mt-auto text-center">
-                            <div class="px-4 py-2 bg-amber-600 text-white rounded shadow-sm text-sm font-bold">Instruction to Proceed</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- SLIDE 3: DECISION -->
-            <div class="slide h-full flex-col p-8 md:p-12 overflow-y-auto custom-scroll" id="slide-3">
-                <h2 class="text-3xl font-bold text-slate-700 mb-6 flex items-center gap-3 fade-in-up sticky top-0 bg-slate-50 py-2 z-10">
-                    <span class="bg-slate-200 p-2 rounded-lg"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg></span> 
-                    3. Execution Path Decision
-                </h2>
-                
-                <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-slate-600 mb-8 fade-in-up delay-100">
-                    <h3 class="font-bold text-lg mb-2 text-slate-800">3.1 Determine Execution Method</h3>
-                    <p class="text-slate-600 text-sm">
-                        A decision is taken on whether the change will be <strong>Executed Internally</strong> or <strong>Outsourced to a Contractor</strong> based on:
-                        <span class="italic text-slate-500">Internal competencies, resource availability, cost, schedule, safety requirements, and technical complexity.</span>
-                    </p>
-                </div>
-
-                <div class="flex-1 flex flex-col md:flex-row gap-8 items-center justify-center">
-                    <!-- Diamond Graphic -->
-                    <div class="w-full md:w-1/3 flex flex-col items-center fade-in-up delay-100">
-                        <div class="w-40 h-40 bg-slate-800 text-white diamond-shape flex items-center justify-center shadow-xl border-4 border-white mb-4">
-                            <div class="diamond-content text-center">
-                                <p class="font-bold text-lg">MAKE</p>
-                                <p class="text-xs text-slate-400">vs</p>
-                                <p class="font-bold text-lg">BUY</p>
+                        <h3 class="font-bold text-lg text-amber-900 mb-3 text-center">2.3 Instruction to Proceed</h3>
+                        <div class="flex-1 flex flex-col justify-center space-y-2">
+                            <div class="flex items-center gap-2 text-xs bg-white p-2 rounded border border-amber-100 slide-in-right delay-300">
+                                <div class="w-4 h-4 bg-green-500 rounded-full flex items-center justify-center text-white text-[10px]">✓</div> Technical OK
+                            </div>
+                            <div class="flex items-center gap-2 text-xs bg-white p-2 rounded border border-amber-100 slide-in-right delay-500">
+                                <div class="w-4 h-4 bg-green-500 rounded-full flex items-center justify-center text-white text-[10px]">✓</div> Safety OK
+                            </div>
+                            <div class="flex items-center gap-2 text-xs bg-white p-2 rounded border border-amber-100 slide-in-right delay-700">
+                                <div class="w-4 h-4 bg-green-500 rounded-full flex items-center justify-center text-white text-[10px]">✓</div> Budget OK
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>
+
+            <!-- SLIDE 3: DECISION (WITH COMPARISON CHART) -->
+            <div class="slide h-full flex-col p-8 md:p-12 overflow-y-auto custom-scroll" id="slide-3">
+                <h2 class="text-3xl font-bold text-slate-700 mb-6 flex items-center gap-3 fade-in-up sticky top-0 bg-slate-50 py-2 z-10">
+                    <span class="bg-slate-200 p-2 rounded-lg"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg></span> 
+                    3. Execution Decision
+                </h2>
+                
+                <div class="flex-1 flex flex-col md:flex-row gap-8">
+                    <!-- Graphic Column -->
+                    <div class="w-full md:w-1/3 flex flex-col items-center justify-center fade-in-up delay-100">
+                         <div class="relative w-48 h-48">
+                             <!-- Animated Donut/Pie Chart Concept using CSS Conic Gradient -->
+                             <div class="w-full h-full rounded-full bg-slate-100 flex items-center justify-center border-8 border-slate-200 relative">
+                                 <div class="absolute inset-0 rounded-full border-8 border-blue-500" style="clip-path: polygon(0 0, 50% 0, 50% 100%, 0 100%); transform: rotate(-45deg);"></div>
+                                 <div class="absolute inset-0 rounded-full border-8 border-red-500" style="clip-path: polygon(50% 0, 100% 0, 100% 100%, 50% 100%); transform: rotate(45deg);"></div>
+                                 <div class="z-10 text-center">
+                                     <div class="font-bold text-2xl text-slate-800">VS</div>
+                                 </div>
+                             </div>
+                             <div class="absolute top-0 left-0 text-blue-600 font-bold -translate-x-4">MAKE</div>
+                             <div class="absolute bottom-0 right-0 text-red-600 font-bold translate-x-4">BUY</div>
+                         </div>
+                    </div>
                     
-                    <!-- Matrix -->
+                    <!-- Interactive Matrix -->
                     <div class="w-full md:w-2/3 bg-white p-6 rounded-xl shadow-lg border border-slate-100 fade-in-up delay-200">
-                        <div class="grid grid-cols-3 gap-4 text-sm">
-                            <div class="font-bold text-slate-400 text-right pr-4 py-2 border-b border-transparent">Criteria</div>
-                            <div class="bg-blue-50 text-blue-800 font-bold text-center py-2 rounded-t">Internal</div>
-                            <div class="bg-red-50 text-red-800 font-bold text-center py-2 rounded-t">Contractor</div>
-            
-                            <div class="text-right pr-4 py-2 font-medium text-slate-600 border-b border-slate-100">Competencies</div>
-                            <div class="text-center py-2 border-b border-slate-100">Available</div>
-                            <div class="text-center py-2 border-b border-slate-100">Specific Required</div>
-            
-                            <div class="text-right pr-4 py-2 font-medium text-slate-600 border-b border-slate-100">Cost</div>
-                            <div class="text-center py-2 border-b border-slate-100 text-green-600 font-bold">Low (OpEx)</div>
-                            <div class="text-center py-2 border-b border-slate-100 text-orange-600 font-bold">High (CapEx)</div>
-                            
-                            <div class="text-right pr-4 py-2 font-medium text-slate-600 border-b border-slate-100">Complexity</div>
-                            <div class="text-center py-2 border-b border-slate-100">Standard</div>
-                            <div class="text-center py-2 border-b border-slate-100">High / Special</div>
+                        <h3 class="font-bold text-slate-700 mb-4 border-b pb-2">Decision Matrix</h3>
+                        
+                        <!-- Dynamic Bars for Criteria -->
+                        <div class="space-y-4">
+                            <!-- Skill -->
+                            <div class="grid grid-cols-12 gap-2 items-center text-sm">
+                                <div class="col-span-3 text-right text-slate-500">Skills</div>
+                                <div class="col-span-4 bg-blue-50 rounded-r h-6 relative overflow-hidden group">
+                                    <div class="absolute top-0 left-0 h-full bg-blue-500 opacity-20 w-3/4"></div>
+                                    <span class="absolute inset-0 flex items-center px-2 text-xs text-blue-800 font-bold">Available</span>
+                                </div>
+                                <div class="col-span-1 text-center font-bold text-slate-300">vs</div>
+                                <div class="col-span-4 bg-red-50 rounded-l h-6 relative overflow-hidden">
+                                     <div class="absolute top-0 left-0 h-full bg-red-500 opacity-10 w-full"></div>
+                                     <span class="absolute inset-0 flex items-center justify-end px-2 text-xs text-red-800">Specific</span>
+                                </div>
+                            </div>
+
+                            <!-- Cost -->
+                            <div class="grid grid-cols-12 gap-2 items-center text-sm">
+                                <div class="col-span-3 text-right text-slate-500">Cost</div>
+                                <div class="col-span-4 bg-blue-50 rounded-r h-6 relative overflow-hidden">
+                                    <div class="absolute top-0 left-0 h-full bg-green-500 opacity-30 w-1/2"></div>
+                                    <span class="absolute inset-0 flex items-center px-2 text-xs text-green-800 font-bold">$ Low (OpEx)</span>
+                                </div>
+                                <div class="col-span-1 text-center font-bold text-slate-300">vs</div>
+                                <div class="col-span-4 bg-red-50 rounded-l h-6 relative overflow-hidden">
+                                     <div class="absolute top-0 left-0 h-full bg-orange-500 opacity-30 w-full"></div>
+                                     <span class="absolute inset-0 flex items-center justify-end px-2 text-xs text-orange-800 font-bold">$$ High (CapEx)</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- SLIDE 4: EXECUTION -->
+            <!-- SLIDE 4: EXECUTION (WITH TIMELINE) -->
             <div class="slide h-full flex-col p-8 md:p-12 overflow-y-auto custom-scroll" id="slide-4">
                 <h2 class="text-3xl font-bold text-blue-700 mb-6 flex items-center gap-3 fade-in-up sticky top-0 bg-slate-50 py-2 z-10">
                     <span class="bg-blue-100 p-2 rounded-lg"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg></span> 
                     4. Execution Phase
                 </h2>
                 
-                <div class="flex-1 grid grid-cols-1 md:grid-cols-2 gap-8 items-start pb-8">
+                <div class="flex-1 grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
                     
-                    <!-- Internal Path Column -->
-                    <div class="bg-blue-50 rounded-2xl p-6 border border-blue-100 fade-in-up delay-100 h-full">
-                        <h3 class="text-xl font-bold text-blue-800 mb-6 flex items-center gap-2 border-b border-blue-200 pb-2">
-                            4.1 Internal Execution <span class="text-sm font-normal text-blue-600 ml-auto">(If "Yes")</span>
-                        </h3>
-                        
-                        <div class="space-y-6">
+                    <!-- Internal Path (Simple) -->
+                    <div class="bg-blue-50 rounded-2xl p-6 border border-blue-100 fade-in-up delay-100 h-full relative">
+                        <div class="absolute top-4 right-4 text-blue-200"><svg width="80" height="80" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/></svg></div>
+                        <h3 class="text-xl font-bold text-blue-800 mb-6 border-b border-blue-200 pb-2">4.1 Internal Execution</h3>
+                        <div class="space-y-4 relative z-10">
                             <div class="bg-white p-4 rounded-lg shadow-sm border-l-4 border-blue-400">
-                                <h4 class="font-bold text-blue-900 text-sm mb-1">4.1.1 Change Execution by Internal Team</h4>
-                                <p class="text-slate-600 text-sm">
-                                    The internal team carries out the approved work in accordance with safety, engineering, and operational standards.
-                                </p>
-                            </div>
-                            
-                            <div class="bg-white p-4 rounded-lg shadow-sm border-l-4 border-blue-400">
-                                <h4 class="font-bold text-blue-900 text-sm mb-1">4.1.2 Execution Follow-Up</h4>
-                                <p class="text-slate-600 text-sm">
-                                    Progress is monitored to ensure compliance with technical specifications and planned timelines. Any deviations, risks, or issues are reported and resolved promptly.
-                                </p>
+                                <h4 class="font-bold text-blue-900 text-sm">4.1.1 Execution</h4>
+                                <p class="text-slate-500 text-xs">By Maintenance/Ops Team</p>
                             </div>
                         </div>
                     </div>
         
-                    <!-- Contractor Path Column -->
+                    <!-- Contractor Path (Complex Timeline) -->
                     <div class="bg-red-50 rounded-2xl p-6 border border-red-100 fade-in-up delay-200 h-full">
-                        <h3 class="text-xl font-bold text-red-800 mb-6 flex items-center gap-2 border-b border-red-200 pb-2">
-                            4.2 Contractor Execution <span class="text-sm font-normal text-red-600 ml-auto">(If "No")</span>
-                        </h3>
+                        <h3 class="text-xl font-bold text-red-800 mb-4 border-b border-red-200 pb-2">4.2 Contractor Execution</h3>
                         
-                        <div class="space-y-4">
-                            <div class="bg-white p-3 rounded shadow-sm border-l-4 border-red-400">
-                                <h4 class="font-bold text-red-900 text-xs mb-1">4.2.1 Preparation of Scope</h4>
-                                <p class="text-slate-600 text-xs">Responsible function prepares technical scope, RFQ documents & specs.</p>
+                        <!-- CSS Vertical Timeline -->
+                        <div class="relative pl-4 border-l-2 border-red-200 space-y-4">
+                            <!-- Step 1 -->
+                            <div class="relative pl-4 slide-in-right delay-200">
+                                <div class="absolute -left-[21px] top-1 w-3 h-3 bg-red-400 rounded-full border-2 border-white"></div>
+                                <span class="role-badge"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg> Eng.</span>
+                                <div class="bg-white p-2 rounded shadow-sm text-xs border border-red-100">
+                                    <strong>4.2.1 Scope & RFQ</strong>
+                                </div>
                             </div>
-                            
-                            <div class="bg-white p-3 rounded shadow-sm border-l-4 border-red-400">
-                                <h4 class="font-bold text-red-900 text-xs mb-1">4.2.2 Tendering Process</h4>
-                                <p class="text-slate-600 text-xs">Formal process ensuring fairness. Bidders invited, clarifications issued.</p>
+                            <!-- Step 2 -->
+                            <div class="relative pl-4 slide-in-right delay-300">
+                                <div class="absolute -left-[21px] top-1 w-3 h-3 bg-red-400 rounded-full border-2 border-white"></div>
+                                <span class="role-badge"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="7" r="4"></circle><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path></svg> O&M</span>
+                                <div class="bg-white p-2 rounded shadow-sm text-xs border border-red-100">
+                                    <strong>4.2.2 Tendering</strong>
+                                </div>
                             </div>
-
-                            <div class="bg-white p-3 rounded shadow-sm border-l-4 border-red-400">
-                                <h4 class="font-bold text-red-900 text-xs mb-1">4.2.3 Proposal Review & TBE</h4>
-                                <p class="text-slate-600 text-xs">Evaluation of technical compliance, safety & cost. <strong>TBE Report</strong> prepared.</p>
+                            <!-- Step 3 -->
+                            <div class="relative pl-4 slide-in-right delay-500">
+                                <div class="absolute -left-[21px] top-1 w-3 h-3 bg-red-400 rounded-full border-2 border-white"></div>
+                                <span class="role-badge"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg> Eng.</span>
+                                <div class="bg-white p-2 rounded shadow-sm text-xs border border-red-100">
+                                    <strong>4.2.3 TBE (Evaluation)</strong>
+                                </div>
                             </div>
-
-                            <div class="bg-white p-3 rounded shadow-sm border-l-4 border-red-400">
-                                <h4 class="font-bold text-red-900 text-xs mb-1">4.2.4 Contractor Award & PO</h4>
-                                <p class="text-slate-600 text-xs">Management approves bidder. <strong>Purchase Order (PO)</strong> issued.</p>
-                            </div>
-
-                            <div class="bg-white p-3 rounded shadow-sm border-l-4 border-red-400">
-                                <h4 class="font-bold text-red-900 text-xs mb-1">4.2.5 Execution & Follow-Up</h4>
-                                <p class="text-slate-600 text-xs">Contractor executes under supervision. Adherence to specs/safety checked.</p>
+                            <!-- Step 4 -->
+                            <div class="relative pl-4 slide-in-right delay-700">
+                                <div class="absolute -left-[21px] top-1 w-3 h-3 bg-red-600 rounded-full border-2 border-white animate-pulse"></div>
+                                <div class="bg-red-100 p-2 rounded shadow-sm text-xs border border-red-200 font-bold text-red-800">
+                                    4.2.4 AWARD & PO
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- SLIDE 5: CLOSEOUT -->
+            <!-- SLIDE 5: CLOSEOUT (WITH ANIMATED CHECKLIST) -->
             <div class="slide h-full flex-col p-8 md:p-12 overflow-y-auto custom-scroll" id="slide-5">
                 <h2 class="text-3xl font-bold text-purple-700 mb-6 flex items-center gap-3 fade-in-up sticky top-0 bg-slate-50 py-2 z-10">
                     <span class="bg-purple-100 p-2 rounded-lg"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path></svg></span> 
                     5. Close-Out Phase
                 </h2>
                 
-                <div class="flex-1 flex flex-col items-center justify-center gap-12 pt-4">
+                <div class="flex-1 flex flex-col items-center justify-center gap-6">
                     
-                    <div class="w-full md:w-3/4 space-y-6 fade-in-up delay-100">
-                        <div class="bg-white p-6 rounded-lg shadow-md border-l-4 border-purple-500 hover:shadow-lg transition-shadow">
-                            <h3 class="font-bold text-purple-900 text-lg flex items-center gap-2">
-                                5.1 As-Built Documentation
-                            </h3>
-                            <p class="text-slate-600 text-sm mt-2 leading-relaxed">
-                                Upon completion of the work, the responsible team compiles and reviews all as-built documents, including updated drawings, procedures, certifications, and inspection records.
-                            </p>
-                        </div>
+                    <div class="w-full md:w-3/4 space-y-4 fade-in-up delay-100">
                         
-                        <div class="flex justify-center">
-                            <div class="h-8 w-0.5 bg-slate-300"></div>
+                        <!-- PSSR CHECKLIST ANIMATION -->
+                        <div class="bg-purple-50 p-4 rounded-lg shadow-sm border border-purple-200">
+                             <div class="flex justify-between items-center mb-3">
+                                <h3 class="font-bold text-purple-900 text-md">5.0 Pre-Startup Safety Review (PSSR)</h3>
+                                <span class="text-[10px] font-bold text-white bg-purple-600 px-2 py-0.5 rounded animate-pulse">LIVE CHECK</span>
+                             </div>
+                             
+                             <div class="space-y-2">
+                                 <div class="flex items-center justify-between bg-white p-2 rounded border border-purple-100">
+                                     <span class="text-xs text-slate-600">Field Inspection</span>
+                                     <svg class="w-5 h-5 text-green-500 check-anim" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                 </div>
+                                 <div class="flex items-center justify-between bg-white p-2 rounded border border-purple-100">
+                                     <span class="text-xs text-slate-600">Procedures Updated</span>
+                                     <svg class="w-5 h-5 text-green-500 check-anim delay-200" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" style="animation-fill-mode: backwards;"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                 </div>
+                                 <div class="flex items-center justify-between bg-white p-2 rounded border border-purple-100">
+                                     <span class="text-xs text-slate-600">Personnel Trained</span>
+                                     <svg class="w-5 h-5 text-green-500 check-anim delay-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" style="animation-fill-mode: backwards;"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                 </div>
+                             </div>
                         </div>
 
-                        <div class="bg-white p-6 rounded-lg shadow-md border-l-4 border-purple-500 hover:shadow-lg transition-shadow">
-                            <h3 class="font-bold text-purple-900 text-lg flex items-center gap-2">
-                                5.2 Close-Out of Notification of Change
-                            </h3>
-                            <p class="text-slate-600 text-sm mt-2 leading-relaxed">
-                                Once documentation is verified and requirements are met, the <strong>Notification of Change</strong> is formally closed. The modification is recorded in the appropriate databases and repositories for future reference, audits, and regulatory compliance.
-                            </p>
+                        <!-- Connector -->
+                        <div class="flex justify-center"><div class="h-4 w-0.5 bg-slate-300"></div></div>
+
+                        <div class="bg-white p-4 rounded-lg shadow-md border-l-4 border-purple-500 flex items-center justify-between">
+                            <div>
+                                <span class="role-badge"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg> O&M Coordinator</span>
+                                <h3 class="font-bold text-purple-900 text-sm mt-1">5.1 As-Built Documentation</h3>
+                            </div>
+                            <div class="text-xs bg-slate-100 p-2 rounded">P&ID, Drawings, Certs</div>
                         </div>
                     </div>
         
-                    <!-- Visual Validation -->
-                    <div class="fade-in-up delay-200">
-                        <div class="flex items-center gap-2 bg-green-100 text-green-800 px-6 py-3 rounded-full font-bold shadow-sm">
-                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                             PROCESS COMPLETE
+                    <!-- Final Stamp -->
+                    <div class="fade-in-up delay-700">
+                        <div class="border-4 border-green-500 text-green-600 px-8 py-4 rounded-xl font-black text-3xl uppercase tracking-widest transform -rotate-6 border-double shadow-xl bg-white/50 backdrop-blur-sm scale-in">
+                             MOC CLOSED
                         </div>
                     </div>
                 </div>
@@ -367,6 +440,9 @@
                     slide.classList.add('active');
                     // Reset scroll to top
                     slide.scrollTop = 0;
+                    
+                    // Reset Animations logic could be here if we want re-playability
+                    // For CSS animations, removing and re-adding class works, or just toggling display triggers it often.
                 } else {
                     slide.classList.remove('active');
                 }
