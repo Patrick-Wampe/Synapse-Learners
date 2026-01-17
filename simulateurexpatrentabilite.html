@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulateur Expatriation - Comparateur de Niveau de Vie</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --primary: #2563eb;
+            --secondary: #475569;
+            --accent: #10b981;
+            --bg-soft: #f8fafc;
+        }
+
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: var(--bg-soft); 
+            color: #1e293b;
+        }
+
+        h1, h2, h3, .brand-font {
+            font-family: 'Outfit', sans-serif;
+        }
+
+        /* Custom Inputs */
+        .input-field {
+            transition: all 0.2s;
+            border: 1px solid #e2e8f0;
+        }
+        .input-field:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+            outline: none;
+        }
+
+        /* Cost Grid Inputs */
+        .cost-input {
+            width: 100%;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid #cbd5e1;
+            padding: 4px 0;
+            font-size: 0.9rem;
+            text-align: right;
+            color: #334155;
+            transition: border-color 0.2s;
+        }
+        .cost-input:focus {
+            outline: none;
+            border-bottom-color: var(--primary);
+            font-weight: 600;
+        }
+        .cost-input::placeholder { color: #cbd5e1; }
+
+        /* Chart Containers */
+        .chart-wrapper {
+            position: relative;
+            height: 300px;
+            width: 100%;
+        }
+
+        /* Animations */
+        .fade-in-up { animation: fadeInUp 0.6s ease-out forwards; opacity: 0; transform: translateY(20px); }
+        @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
+        .delay-100 { animation-delay: 0.1s; }
+        .delay-200 { animation-delay: 0.2s; }
+        .delay-300 { animation-delay: 0.3s; }
+    </style>
+
+    <!-- Application Structure Plan:
+        1. Context: User defines Country A (France) and Country B (Default Dubai).
+        2. Business Data: Fully flexible inputs for both countries (Fixed Cost + Variable Rate).
+        3. Living Costs: Grid with "Clear All" feature. Defaults updated (FR 2000, Expat 2500).
+        4. Analysis: Net Savings, Purchasing Power, and Long-term Wealth projection.
+        5. Visuals: Comparative Bar Chart & Cumulative Wealth Line Chart.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+</head>
+<body class="p-4 md:p-8 max-w-7xl mx-auto">
+
+    <!-- HEADER -->
+    <header class="text-center mb-12 fade-in-up">
+        <h1 class="text-3xl md:text-5xl font-extrabold text-slate-900 mb-4">
+            Dois-je partir ? <span class="text-blue-600">Simulateur de Vie</span>
+        </h1>
+        <p class="text-slate-500 text-lg max-w-2xl mx-auto">
+            Comparez votre pouvoir d'achat et votre capacité d'épargne entre la France et votre destination de rêve.
+            Entrez vos chiffres, le simulateur fait le reste.
+        </p>
+    </header>
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+
+        <!-- LEFT PANEL: DATA INPUTS -->
+        <aside class="lg:col-span-4 space-y-6 fade-in-up delay-100">
+
+            <!-- 1. Configuration Pays -->
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                <h2 class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4">🌍 Destination</h2>
+                <div class="flex gap-4 items-center mb-2">
+                    <div class="flex-1">
+                        <label class="text-xs font-bold text-slate-600 block mb-1">Départ</label>
+                        <input type="text" value="France" disabled class="w-full bg-slate-100 text-slate-500 font-bold p-3 rounded-lg text-center cursor-not-allowed border border-transparent">
+                    </div>
+                    <div class="text-slate-300"><i class="fa-solid fa-arrow-right"></i></div>
+                    <div class="flex-1">
+                        <label class="text-xs font-bold text-blue-600 block mb-1">Arrivée (Nom du Pays)</label>
+                        <input type="text" id="targetCountryName" value="Dubaï" class="w-full bg-blue-50 text-blue-900 font-bold p-3 rounded-lg text-center border border-blue-100 focus:ring-2 ring-blue-200 outline-none" oninput="updateCountryLabel()">
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. Revenus & Fiscalité -->
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                <h2 class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4">💼 Business & Impôts</h2>
+                
+                <!-- CA -->
+                <div class="mb-5">
+                    <label class="text-sm font-semibold text-slate-700 mb-1 block">Chiffre d'Affaires Annuel (€)</label>
+                    <input type="number" id="inputRevenue" value="50000" class="input-field w-full p-3 rounded-lg font-mono font-bold text-lg text-slate-800" oninput="calculate()">
+                </div>
+
+                <!-- Impôts Comparés -->
+                <div class="space-y-4">
+                    <!-- France -->
+                    <div class="p-3 bg-slate-50 rounded-lg border border-slate-100">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-xs font-bold text-slate-700">🇫🇷 France</span>
+                        </div>
+                        <div class="flex gap-2">
+                            <div class="flex-1">
+                                <label class="text-[10px] text-slate-500 block">Charges (%)</label>
+                                <input type="number" id="inputRateFR" value="37" class="input-field w-full p-2 rounded text-center text-sm" oninput="calculate()">
+                            </div>
+                            <div class="flex-1">
+                                <label class="text-[10px] text-slate-500 block">Frais Fixes (€)</label>
+                                <input type="number" id="inputFixedFR" value="0" class="input-field w-full p-2 rounded text-center text-sm" oninput="calculate()">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Expat -->
+                    <div class="p-3 bg-blue-50 rounded-lg border border-blue-100">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-xs font-bold text-blue-700 lblTargetCountry">🇦🇪 Dubaï</span>
+                        </div>
+                        <div class="flex gap-2">
+                            <div class="flex-1">
+                                <label class="text-[10px] text-blue-500 block">Charges (%)</label>
+                                <input type="number" id="inputRateExpat" value="0" class="input-field w-full p-2 rounded text-center text-sm border-blue-200 focus:border-blue-500" oninput="calculate()">
+                            </div>
+                            <div class="flex-1">
+                                <label class="text-[10px] text-blue-500 block">Frais Fixes (€)</label>
+                                <input type="number" id="inputFixedExpat" value="2500" class="input-field w-full p-2 rounded text-center text-sm font-bold border-blue-200 focus:border-blue-500 text-blue-900" oninput="calculate()">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. Coût de la Vie Détaillé -->
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-sm font-bold text-slate-400 uppercase tracking-wider">🏠 Coût de la Vie (Mensuel)</h2>
+                    <div class="flex gap-2">
+                        <button onclick="clearCosts()" class="text-xs text-red-400 hover:text-red-600 underline">Tout effacer</button>
+                        <span class="text-slate-300">|</span>
+                        <button onclick="resetCosts()" class="text-xs text-blue-500 hover:text-blue-700 underline">Défaut</button>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-3 gap-x-4 gap-y-3 text-sm items-center mb-2 pb-2 border-b border-slate-100">
+                    <span class="font-bold text-slate-300 text-xs">Poste</span>
+                    <span class="font-bold text-slate-600 text-xs text-right">FRANCE €</span>
+                    <span class="font-bold text-blue-600 text-xs text-right" id="headerTarget">EXPAT €</span>
+                </div>
+
+                <!-- Rows -->
+                <div id="costGrid" class="space-y-3">
+                    <!-- JS will populate rows -->
+                </div>
+
+                <!-- Total Read-Only -->
+                <div class="grid grid-cols-3 gap-4 mt-4 pt-3 border-t-2 border-slate-100">
+                    <span class="font-bold text-slate-800 text-sm">TOTAL /mois</span>
+                    <span class="font-bold text-slate-800 text-sm text-right" id="dispTotalLivingFR">0 €</span>
+                    <span class="font-bold text-blue-600 text-sm text-right" id="dispTotalLivingExpat">0 €</span>
+                </div>
+            </div>
+
+            <!-- 4. Paramètres Projection -->
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                <h2 class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-2">📅 Projection (Années)</h2>
+                <input type="range" id="projYears" min="1" max="20" value="5" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-blue-600" oninput="document.getElementById('lblYears').innerText = this.value + ' ans'; calculate()">
+                <div class="flex justify-between text-xs text-slate-400 mt-1">
+                    <span>1 an</span>
+                    <span id="lblYears" class="font-bold text-blue-600">5 ans</span>
+                    <span>20 ans</span>
+                </div>
+            </div>
+
+        </aside>
+
+        <!-- RIGHT PANEL: ANALYSIS & VISUALS -->
+        <main class="lg:col-span-8 space-y-6 fade-in-up delay-200">
+
+            <!-- KPI Summary Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- France Result -->
+                <div class="bg-white p-6 rounded-2xl border-l-4 border-slate-300 shadow-sm relative overflow-hidden">
+                    <h3 class="text-slate-500 font-bold text-sm uppercase mb-1">Reste à Vivre (France)</h3>
+                    <div class="flex items-baseline gap-2">
+                        <span class="text-3xl font-extrabold text-slate-700" id="kpiPocketFR">0 €</span>
+                        <span class="text-sm text-slate-400">/ an</span>
+                    </div>
+                    <p class="text-xs text-slate-400 mt-2">Soit <span id="kpiPocketFRMonth" class="font-bold">0 €</span> / mois dans votre poche après tout.</p>
+                </div>
+
+                <!-- Expat Result -->
+                <div class="bg-blue-600 p-6 rounded-2xl border-l-4 border-blue-300 shadow-lg text-white relative overflow-hidden">
+                    <div class="absolute -right-6 -top-6 text-blue-500 opacity-20 text-9xl"><i class="fa-solid fa-plane-departure"></i></div>
+                    <h3 class="text-blue-100 font-bold text-sm uppercase mb-1">Reste à Vivre (<span class="lblTargetCountry">Expat</span>)</h3>
+                    <div class="flex items-baseline gap-2 relative z-10">
+                        <span class="text-4xl font-extrabold text-white" id="kpiPocketExpat">0 €</span>
+                        <span class="text-sm text-blue-200">/ an</span>
+                    </div>
+                    <div class="mt-2 relative z-10 flex justify-between items-end">
+                        <p class="text-xs text-blue-100">Soit <span id="kpiPocketExpatMonth" class="font-bold">0 €</span> / mois.</p>
+                        <span class="bg-white text-blue-700 text-xs font-bold px-2 py-1 rounded shadow" id="kpiGain">Gain: +0 €</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Section -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Wealth Chart -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                    <h3 class="font-bold text-slate-800 mb-2 flex items-center gap-2">
+                        <i class="fa-solid fa-chart-line text-blue-500"></i> Évolution de votre Patrimoine
+                    </h3>
+                    <p class="text-xs text-slate-400 mb-4">Cumul de l'épargne nette (après dépenses de vie) sur la durée choisie.</p>
+                    <div class="chart-wrapper">
+                        <canvas id="wealthChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Breakdown Chart -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                    <h3 class="font-bold text-slate-800 mb-2 flex items-center gap-2">
+                        <i class="fa-solid fa-wallet text-emerald-500"></i> Où va votre argent ? (Annuel)
+                    </h3>
+                    <p class="text-xs text-slate-400 mb-4">Répartition : Impôts vs Dépenses vs Épargne.</p>
+                    <div class="chart-wrapper">
+                        <canvas id="structureChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Detailed Table -->
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden fade-in-up delay-300">
+                <div class="bg-slate-50 p-4 border-b border-slate-200 flex justify-between items-center">
+                    <h3 class="font-bold text-slate-700">📋 Analyse Détaillée</h3>
+                    <span class="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded font-bold" id="lblTableYears">Sur 5 ans</span>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm text-left">
+                        <thead>
+                            <tr class="bg-slate-50 text-slate-500 uppercase text-xs">
+                                <th class="p-4 font-bold">Indicateur</th>
+                                <th class="p-4 font-bold">France 🇫🇷</th>
+                                <th class="p-4 font-bold text-blue-600 lblTargetCountry">Expat</th>
+                                <th class="p-4 font-bold">Différence</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100 text-slate-700">
+                            <!-- Rows generated by JS -->
+                            <tr>
+                                <td class="p-4 font-medium">1. Revenu Net Fiscal <span class="text-xs text-slate-400 block font-normal">Après impôts/charges pro</span></td>
+                                <td class="p-4" id="tblNetFiscalFR">...</td>
+                                <td class="p-4 font-semibold" id="tblNetFiscalExpat">...</td>
+                                <td class="p-4 text-green-600 font-bold" id="tblDiffFiscal">...</td>
+                            </tr>
+                            <tr>
+                                <td class="p-4 font-medium">2. Coût de la Vie (Annuel) <span class="text-xs text-slate-400 block font-normal">Logement, vie, loisirs...</span></td>
+                                <td class="p-4 text-red-400" id="tblLivingFR">...</td>
+                                <td class="p-4 text-red-400" id="tblLivingExpat">...</td>
+                                <td class="p-4 text-green-600 font-bold" id="tblDiffLiving">...</td>
+                            </tr>
+                            <tr class="bg-blue-50/50">
+                                <td class="p-4 font-bold text-slate-900">3. Capacité d'Épargne Annuelle <span class="text-xs text-slate-400 block font-normal">Ce qu'il vous reste vraiment</span></td>
+                                <td class="p-4 font-bold" id="tblSavingsFR">...</td>
+                                <td class="p-4 font-bold text-blue-700" id="tblSavingsExpat">...</td>
+                                <td class="p-4 text-emerald-600 font-bold text-lg" id="tblDiffSavings">...</td>
+                            </tr>
+                            <tr class="bg-slate-900 text-white">
+                                <td class="p-4 font-bold">💎 PATRIMOINE CUMULÉ (Fin de période)</td>
+                                <td class="p-4 font-medium text-slate-300" id="tblTotalWealthFR">...</td>
+                                <td class="p-4 font-bold text-blue-200" id="tblTotalWealthExpat">...</td>
+                                <td class="p-4 font-bold text-emerald-400" id="tblTotalGain">...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="bg-yellow-50 border border-yellow-200 rounded-xl p-4 text-sm text-yellow-800 flex items-start gap-3">
+                <i class="fa-solid fa-lightbulb mt-1 text-yellow-600"></i>
+                <div>
+                    <strong>Le saviez-vous ?</strong>
+                    <p class="mt-1 text-yellow-700">
+                        En France, l'impôt est souvent progressif. À l'étranger, les frais fixes (licence) sont désavantageux si vous gagnez peu, mais deviennent un levier d'enrichissement massif dès que vous dépassez un certain chiffre d'affaires.
+                    </p>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // Data Structure for Cost of Living - Updated Defaults FR=2000, Expat=2500
+        const categories = [
+            { id: 'housing', label: 'Logement (Loyer/Charge)', defFR: 800, defExpat: 1200 },
+            { id: 'food', label: 'Alimentation', defFR: 400, defExpat: 400 },
+            { id: 'transport', label: 'Transport / Voiture', defFR: 200, defExpat: 300 },
+            { id: 'health', label: 'Santé (Assurance)', defFR: 50, defExpat: 150 },
+            { id: 'leisure', label: 'Loisirs / Sorties', defFR: 200, defExpat: 300 },
+            { id: 'other1', label: 'Autre (Voyages...)', defFR: 350, defExpat: 150 },
+            { id: 'other2', label: 'Autre', defFR: 0, defExpat: 0 },
+        ];
+
+        let wealthChartInstance = null;
+        let structureChartInstance = null;
+
+        // Init
+        document.addEventListener('DOMContentLoaded', () => {
+            generateCostGrid();
+            updateCountryLabel();
+            calculate();
+        });
+
+        function updateCountryLabel() {
+            const name = document.getElementById('targetCountryName').value || 'Expat';
+            document.querySelectorAll('.lblTargetCountry').forEach(el => el.innerText = name);
+            document.getElementById('headerTarget').innerText = (name + ' €').toUpperCase();
+        }
+
+        function generateCostGrid() {
+            const grid = document.getElementById('costGrid');
+            grid.innerHTML = '';
+            
+            categories.forEach(cat => {
+                const row = document.createElement('div');
+                row.className = 'grid grid-cols-3 gap-x-4 gap-y-2 items-center';
+                row.innerHTML = `
+                    <label class="text-xs font-medium text-slate-500 truncate" title="${cat.label}">${cat.label}</label>
+                    <input type="number" id="cost_${cat.id}_fr" value="${cat.defFR}" class="cost-input" oninput="calculate()">
+                    <input type="number" id="cost_${cat.id}_expat" value="${cat.defExpat}" class="cost-input !text-blue-600" oninput="calculate()">
+                `;
+                grid.appendChild(row);
+            });
+        }
+
+        function resetCosts() {
+            categories.forEach(cat => {
+                document.getElementById(`cost_${cat.id}_fr`).value = cat.defFR;
+                document.getElementById(`cost_${cat.id}_expat`).value = cat.defExpat;
+            });
+            calculate();
+        }
+
+        function clearCosts() {
+            categories.forEach(cat => {
+                document.getElementById(`cost_${cat.id}_fr`).value = 0;
+                document.getElementById(`cost_${cat.id}_expat`).value = 0;
+            });
+            calculate();
+        }
+
+        function getTotalCosts() {
+            let totalFR = 0;
+            let totalExpat = 0;
+            
+            categories.forEach(cat => {
+                const valFR = parseFloat(document.getElementById(`cost_${cat.id}_fr`).value) || 0;
+                const valExpat = parseFloat(document.getElementById(`cost_${cat.id}_expat`).value) || 0;
+                totalFR += valFR;
+                totalExpat += valExpat;
+            });
+
+            return { fr: totalFR, expat: totalExpat };
+        }
+
+        const fmt = (num) => new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(num);
+
+        function calculate() {
+            // Inputs
+            const revenue = parseFloat(document.getElementById('inputRevenue').value) || 0;
+            
+            // France Inputs (Fixed + Variable)
+            const rateFR = parseFloat(document.getElementById('inputRateFR').value) / 100;
+            const fixedFR = parseFloat(document.getElementById('inputFixedFR').value) || 0;
+            
+            // Expat Inputs (Fixed + Variable)
+            const fixedExpat = parseFloat(document.getElementById('inputFixedExpat').value) || 0;
+            const rateExpat = parseFloat(document.getElementById('inputRateExpat').value) / 100;
+
+            const years = parseInt(document.getElementById('projYears').value);
+
+            // Costs
+            const costs = getTotalCosts();
+            
+            // Display Monthly Costs
+            document.getElementById('dispTotalLivingFR').innerText = fmt(costs.fr);
+            document.getElementById('dispTotalLivingExpat').innerText = fmt(costs.expat);
+
+            // Annual Calculations
+            // France (Logic: Fixed Costs + Percentage of Revenue)
+            const taxFR = fixedFR + (revenue * rateFR);
+            const netFiscalFR = revenue - taxFR;
+            const livingFR_Yr = costs.fr * 12;
+            const pocketFR = netFiscalFR - livingFR_Yr;
+
+            // Expat (Logic: Fixed Costs + Percentage of Revenue)
+            const taxExpat = fixedExpat + (revenue * rateExpat);
+            const netFiscalExpat = revenue - taxExpat;
+            const livingExpat_Yr = costs.expat * 12;
+            const pocketExpat = netFiscalExpat - livingExpat_Yr;
+
+            // Diffs
+            const gainPocket = pocketExpat - pocketFR;
+
+            // Update KPI Cards
+            document.getElementById('kpiPocketFR').innerText = fmt(pocketFR);
+            document.getElementById('kpiPocketFRMonth').innerText = fmt(pocketFR / 12);
+            
+            document.getElementById('kpiPocketExpat').innerText = fmt(pocketExpat);
+            document.getElementById('kpiPocketExpatMonth').innerText = fmt(pocketExpat / 12);
+            
+            const gainEl = document.getElementById('kpiGain');
+            gainEl.innerText = (gainPocket > 0 ? 'Gain: +' : 'Perte: ') + fmt(gainPocket);
+            gainEl.className = gainPocket > 0 
+                ? "bg-white text-emerald-700 text-xs font-bold px-2 py-1 rounded shadow" 
+                : "bg-white text-red-700 text-xs font-bold px-2 py-1 rounded shadow";
+
+            // Update Table
+            document.getElementById('lblTableYears').innerText = `Sur ${years} ans`;
+            document.getElementById('tblNetFiscalFR').innerText = fmt(netFiscalFR);
+            document.getElementById('tblNetFiscalExpat').innerText = fmt(netFiscalExpat);
+            document.getElementById('tblDiffFiscal').innerText = fmt(netFiscalExpat - netFiscalFR);
+
+            document.getElementById('tblLivingFR').innerText = "- " + fmt(livingFR_Yr);
+            document.getElementById('tblLivingExpat').innerText = "- " + fmt(livingExpat_Yr);
+            document.getElementById('tblDiffLiving').innerText = "+ " + fmt(livingFR_Yr - livingExpat_Yr);
+
+            document.getElementById('tblSavingsFR').innerText = fmt(pocketFR);
+            document.getElementById('tblSavingsExpat').innerText = fmt(pocketExpat);
+            document.getElementById('tblDiffSavings').innerText = (gainPocket > 0 ? '+' : '') + fmt(gainPocket);
+
+            // Cumulative Wealth
+            const wealthFR = pocketFR * years;
+            const wealthExpat = pocketExpat * years;
+            document.getElementById('tblTotalWealthFR').innerText = fmt(wealthFR);
+            document.getElementById('tblTotalWealthExpat').innerText = fmt(wealthExpat);
+            document.getElementById('tblTotalGain').innerText = (wealthExpat - wealthFR > 0 ? '+' : '') + fmt(wealthExpat - wealthFR);
+
+            updateCharts(years, pocketFR, pocketExpat, taxFR, livingFR_Yr, taxExpat, livingExpat_Yr);
+        }
+
+        function updateCharts(years, pocketFR, pocketExpat, taxFR, livingFR, taxExpat, livingExpat) {
+            
+            // 1. Wealth Chart (Line)
+            const labels = Array.from({length: years + 1}, (_, i) => "Année " + i);
+            const dataFR = labels.map((_, i) => i * pocketFR);
+            const dataExpat = labels.map((_, i) => i * pocketExpat);
+
+            const ctxWealth = document.getElementById('wealthChart').getContext('2d');
+            if (wealthChartInstance) wealthChartInstance.destroy();
+
+            wealthChartInstance = new Chart(ctxWealth, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Patrimoine Expat',
+                            data: dataExpat,
+                            borderColor: '#2563eb', // Brand Blue
+                            backgroundColor: 'rgba(37, 99, 235, 0.1)',
+                            fill: true,
+                            tension: 0.4,
+                            pointRadius: 0,
+                            borderWidth: 3
+                        },
+                        {
+                            label: 'Patrimoine France',
+                            data: dataFR,
+                            borderColor: '#94a3b8', // Slate
+                            borderDash: [5, 5],
+                            tension: 0.4,
+                            pointRadius: 0,
+                            borderWidth: 2
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { 
+                        legend: { position: 'bottom' },
+                        tooltip: { mode: 'index', intersect: false, callbacks: { label: c => c.dataset.label + ': ' + fmt(c.raw) } }
+                    },
+                    scales: {
+                        y: { beginAtZero: true, grid: { color: '#f1f5f9' }, ticks: { callback: v => fmt(v) } },
+                        x: { grid: { display: false } }
+                    }
+                }
+            });
+
+            // 2. Breakdown Chart (Stacked Bar)
+            const ctxStruct = document.getElementById('structureChart').getContext('2d');
+            if (structureChartInstance) structureChartInstance.destroy();
+
+            const countryName = document.getElementById('targetCountryName').value || 'Expat';
+
+            structureChartInstance = new Chart(ctxStruct, {
+                type: 'bar',
+                data: {
+                    labels: ['France', countryName],
+                    datasets: [
+                        { label: 'Impôts/Charges', data: [taxFR, taxExpat], backgroundColor: '#ef4444', borderRadius: 4 },
+                        { label: 'Vie Quotidienne', data: [livingFR, livingExpat], backgroundColor: '#fbbf24', borderRadius: 4 },
+                        { label: 'Épargne Nette', data: [pocketFR, pocketExpat], backgroundColor: '#10b981', borderRadius: 4 }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: { stacked: true, grid: { display: false } },
+                        y: { stacked: true, grid: { color: '#f1f5f9' }, ticks: { callback: v => fmt(v) } }
+                    },
+                    plugins: {
+                        legend: { position: 'bottom' },
+                        tooltip: { callbacks: { label: c => c.dataset.label + ': ' + fmt(c.raw) } }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>
