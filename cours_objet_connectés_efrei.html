@@ -1,0 +1,2327 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cours objets connectés - Séance 1</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366f1; /* Indigo Synapse */
+            --primary-dark: #4338ca;
+            --secondary: #ec4899; /* Pink accent */
+            --bg: #f8fafc;
+            --text: #1e293b;
+            --code-bg: #1e1e1e;
+            --card-bg: #ffffff;
+            --border: #e2e8f0;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            display: flex;
+        }
+
+        /* --- SIDEBAR NAVIGATION --- */
+        aside {
+            width: 300px;
+            background: #fff;
+            height: 100vh;
+            position: fixed;
+            padding: 2rem;
+            border-right: 1px solid var(--border);
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .brand-area { margin-bottom: 2rem; }
+        .brand-area img { max-width: 150px; display: block; margin-bottom: 1rem; }
+        
+        aside h2 { font-size: 0.9rem; text-transform: uppercase; color: #94a3b8; margin: 1.5rem 0 0.5rem; letter-spacing: 0.05em; }
+        aside ul { list-style: none; }
+        aside li { margin-bottom: 0.5rem; }
+        aside a { 
+            text-decoration: none; 
+            color: #64748b; 
+            font-size: 0.9rem; 
+            font-weight: 500; 
+            transition: 0.2s; 
+            display: block; 
+            padding: 5px 0;
+        }
+        aside a:hover, aside a.active { color: var(--primary); transform: translateX(5px); }
+        
+        .partners { margin-top: 2rem; border-top: 1px solid var(--border); padding-top: 1rem; }
+        .partners img { height: 40px; opacity: 0.8; }
+
+        /* --- MAIN CONTENT --- */
+        main {
+            margin-left: 300px;
+            padding: 4rem 6rem;
+            max-width: 1400px;
+            width: 100%;
+        }
+
+        /* Header */
+        header { 
+            margin-bottom: 5rem; 
+            border-bottom: 1px solid var(--border); 
+            padding-bottom: 2rem; 
+            display: flex;
+            justify-content: space-between;
+            align-items: end;
+        }
+        header h1 { font-size: 2.5rem; letter-spacing: -1px; color: var(--text); }
+        header .meta { font-size: 1rem; color: #64748b; margin-bottom: 0.5rem; }
+
+        /* Sections Structure */
+        section { margin-bottom: 6rem; scroll-margin-top: 2rem; }
+        
+        /* Typography Rules - Strict Sentence Case */
+        h2 { 
+            font-size: 1.8rem; 
+            margin-bottom: 1.5rem; 
+            color: var(--text);
+            border-left: 4px solid var(--primary);
+            padding-left: 1rem;
+        }
+        h3 { 
+            font-size: 1.3rem; 
+            margin: 2rem 0 1rem; 
+            color: var(--primary-dark); 
+            font-weight: 600;
+        }
+        h4 {
+            font-size: 1.1rem;
+            margin: 1.5rem 0 0.8rem;
+            color: #475569;
+            font-weight: 600;
+        }
+
+        /* Placeholders */
+        .content-placeholder {
+            background: repeating-linear-gradient(
+                45deg,
+                #f1f5f9,
+                #f1f5f9 10px,
+                #f8fafc 10px,
+                #f8fafc 20px
+            );
+            border: 1px dashed #cbd5e1;
+            border-radius: 8px;
+            padding: 2rem;
+            color: #94a3b8;
+            text-align: center;
+            font-style: italic;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Footer */
+        footer { 
+            border-top: 1px solid var(--border); 
+            padding-top: 2rem; 
+            color: #94a3b8; 
+            font-size: 0.9rem; 
+            display: flex;
+            justify-content: space-between;
+        }
+
+.session-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    transition: transform 0.2s;
+}
+
+.session-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.session-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.session-num {
+    background: var(--primary);
+    color: white;
+    padding: 2px 10px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 800;
+}
+
+.session-card ul {
+    margin-left: 1.5rem;
+    color: #475569;
+    font-size: 0.95rem;
+}
+
+.session-card li {
+    margin-bottom: 0.5rem;
+}
+
+/* --- Styles Capteurs & Actionneurs --- */
+.io-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin: 2rem 0;
+}
+
+.io-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+}
+
+.io-card.input { border-top: 5px solid var(--primary); }
+.io-card.output { border-top: 5px solid var(--secondary); }
+
+.io-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.io-icon { font-size: 2rem; }
+
+.io-card h3 {
+    margin: 0 !important;
+    font-size: 1.2rem;
+}
+
+.io-card ul {
+    margin: 1rem 0;
+    padding-left: 1.2rem;
+    font-size: 0.9rem;
+    color: #475569;
+}
+
+.example-list {
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid #f1f5f9;
+    font-size: 0.85rem;
+    font-style: italic;
+    color: #64748b;
+}
+
+@media (max-width: 900px) {
+    .io-grid { grid-template-columns: 1fr; }
+}
+
+/* --- Styles Architecture --- */
+.arch-step {
+    border-left: 2px dashed var(--border);
+    padding-left: 2rem;
+    margin-left: 1rem;
+    margin-bottom: 3rem;
+    position: relative;
+}
+
+.arch-step::before {
+    content: '';
+    position: absolute;
+    left: -9px;
+    top: 0;
+    width: 16px;
+    height: 16px;
+    background: white;
+    border: 3px solid var(--primary);
+    border-radius: 50%;
+}
+
+.arch-step h3 {
+    margin-top: 0 !important;
+}
+
+.code-example {
+    background: #1e1e1e;
+    color: #d4d4d4;
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin: 1rem 0;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.85rem;
+}
+
+.code-title {
+    display: block;
+    color: #94a3b8;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+    border-bottom: 1px solid #334155;
+    padding-bottom: 5px;
+}
+
+.pro-tip {
+    background: #fff7ed;
+    border: 1px solid #fdba74;
+    padding: 1.5rem;
+    border-radius: 12px;
+    margin-top: 2rem;
+}
+
+.pro-tip h4 {
+    color: #c2410c !important;
+    margin-top: 0 !important;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+}
+
+/* --- Styles Définition & Table --- */
+.iot-definition-content p {
+    font-size: 1.05rem;
+    margin-bottom: 1.5rem;
+}
+
+.info-box {
+    background: #f1f5f9;
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin: 2rem 0;
+}
+
+.info-box h4 {
+    color: var(--primary-dark);
+    margin-top: 0 !important;
+}
+
+.table-container {
+    overflow-x: auto;
+    margin: 2rem 0;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    font-size: 0.9rem;
+}
+
+th, td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+}
+
+th {
+    background: #f8fafc;
+    color: var(--text);
+    font-weight: 700;
+}
+
+tr:last-child td {
+    border-bottom: none;
+}
+
+.synapse-note {
+    background: linear-gradient(135deg, #6366f1 0%, #4338ca 100%);
+    color: white;
+    padding: 2rem;
+    border-radius: 12px;
+    margin-top: 3rem;
+}
+
+.synapse-note h4 {
+    color: #a5b4fc !important;
+    margin-top: 0 !important;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+}
+
+.synapse-note p {
+    margin-bottom: 0;
+    font-style: italic;
+    color: #e0e7ff;
+}
+
+/* --- Styles de la Timeline --- */
+.timeline-container {
+    position: relative;
+    padding: 1rem 0;
+    margin-top: 2rem;
+}
+
+.timeline-container::before {
+    content: '';
+    position: absolute;
+    left: 120px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: var(--border);
+}
+
+.timeline-item {
+    display: flex;
+    margin-bottom: 2.5rem;
+    position: relative;
+}
+
+.timeline-time {
+    width: 100px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #64748b;
+    padding-top: 1rem;
+    text-align: right;
+    margin-right: 40px;
+}
+
+.timeline-content {
+    flex: 1;
+    background: white;
+    padding: 1.5rem;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    position: relative;
+    transition: 0.3s;
+}
+
+.timeline-item::after {
+    content: '';
+    position: absolute;
+    left: 115px;
+    top: 1.5rem;
+    width: 12px;
+    height: 12px;
+    background: white;
+    border: 3px solid var(--primary);
+    border-radius: 50%;
+    z-index: 2;
+}
+
+.timeline-content h4 {
+    margin-top: 0 !important;
+    font-size: 1.1rem;
+    color: var(--text);
+}
+
+.timeline-content p {
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+}
+
+.timeline-badge {
+    font-size: 0.7rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 4px;
+}
+
+/* Couleurs spécifiques par type */
+.theory { border-left: 4px solid var(--primary); }
+.theory .timeline-badge { background: #e0e7ff; color: var(--primary); }
+
+.practice { border-left: 4px solid var(--secondary); }
+.practice .timeline-badge { background: #fce7f3; color: var(--secondary); }
+
+.timeline-content:hover {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+    transform: translateX(10px);
+}
+
+
+.session-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    transition: transform 0.2s;
+}
+
+.session-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.session-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.session-num {
+    background: var(--primary);
+    color: white;
+    padding: 2px 10px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 800;
+}
+
+.session-card ul {
+    margin-left: 1.5rem;
+    color: #475569;
+    font-size: 0.95rem;
+}
+
+.session-card li {
+    margin-bottom: 0.5rem;
+}
+
+/* --- Styles Cerveau Local vs Cloud --- */
+.brain-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin: 3rem 0;
+}
+
+.brain-card {
+    padding: 2rem;
+    border-radius: 16px;
+    background: white;
+    border: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.brain-card.local {
+    border-top: 6px solid var(--primary);
+}
+
+.brain-card.cloud {
+    border-top: 6px solid var(--secondary);
+}
+
+.brain-card h3 {
+    margin-top: 0 !important;
+    font-size: 1.15rem;
+}
+
+.brain-card ul {
+    margin: 1.5rem 0;
+    font-size: 0.9rem;
+    color: #475569;
+}
+
+.capability-tag {
+    display: inline-block;
+    padding: 5px 12px;
+    background: #f1f5f9;
+    color: #64748b;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    align-self: flex-start;
+}
+
+.capability-tag.highlight {
+    background: #e0e7ff;
+    color: var(--primary);
+}
+
+.comparison-summary {
+    margin-top: 3rem;
+}
+
+@media (max-width: 900px) {
+    .brain-grid { grid-template-columns: 1fr; }
+}
+
+/* --- Styles Pourquoi simuler --- */
+.pros-cons-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin: 2rem 0;
+}
+
+.pc-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+}
+
+.pc-card.pros { border-top: 5px solid var(--success); }
+.pc-card.cons { border-top: 5px solid #f59e0b; }
+
+.pc-header {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    margin-bottom: 1rem;
+}
+
+.pc-icon { font-size: 1.5rem; }
+
+.pc-card h3 {
+    margin: 0 !important;
+    font-size: 1.1rem;
+    color: var(--text);
+}
+
+.pc-card ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.pc-card li {
+    margin-bottom: 0.8rem;
+    font-size: 0.9rem;
+    padding-left: 1.5rem;
+    position: relative;
+    color: #475569;
+}
+
+.pc-card li::before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    color: var(--primary);
+    font-weight: bold;
+}
+
+@media (max-width: 850px) {
+    .pros-cons-grid { grid-template-columns: 1fr; }
+}
+
+/* --- Styles Montage Circuit --- */
+.step-container {
+    margin: 2rem 0;
+}
+
+.step-card {
+    display: flex;
+    gap: 1.5rem;
+    background: white;
+    padding: 1.5rem;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    margin-bottom: 1.5rem;
+}
+
+.step-number {
+    background: var(--primary);
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    flex-shrink: 0;
+}
+
+.wiring-table {
+    margin-top: 1rem;
+    background: #f8fafc;
+    border-radius: 8px;
+    padding: 10px;
+}
+
+.wiring-table table {
+    background: transparent;
+}
+
+.pin-power { color: #e11d48; font-weight: 700; }
+.pin-data { color: #2563eb; font-weight: 700; }
+.pin-gnd { color: #475569; font-weight: 700; }
+
+.pro-tip-box {
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    padding: 1.5rem;
+    border-radius: 12px;
+    margin: 2rem 0;
+}
+
+.pro-tip-box h4 {
+    color: #15803d !important;
+    margin-top: 0 !important;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+}
+
+.caution-alert {
+    background: #fffbeb;
+    border-left: 4px solid #f59e0b;
+    padding: 1rem;
+    font-size: 0.9rem;
+    color: #92400e;
+}
+
+/* --- Styles Spécificités MicroPython --- */
+.micropython-specs-content p {
+    margin-bottom: 1.5rem;
+}
+
+.spec-card {
+    background: #f8fafc;
+    border-radius: 12px;
+    padding: 1.5rem;
+    border-left: 4px solid var(--primary);
+    margin: 2rem 0;
+}
+
+.spec-card h4 {
+    margin-top: 0 !important;
+    color: var(--primary-dark);
+}
+
+.module-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin: 2rem 0;
+}
+
+.module-item {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    background: white;
+    padding: 1rem;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+}
+
+.module-item code {
+    background: var(--primary);
+    color: white;
+    padding: 5px 12px;
+    border-radius: 4px;
+    font-weight: 600;
+    min-width: 100px;
+    text-align: center;
+}
+
+.module-item p {
+    margin-bottom: 0;
+    font-size: 0.9rem;
+    color: #475569;
+}
+
+@media (max-width: 600px) {
+    .module-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+}
+
+/* --- Styles Code Pratique --- */
+.code-section {
+    margin: 2rem 0;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.code-header {
+    background: #334155;
+    color: white;
+    padding: 0.7rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.file-name {
+    font-family: 'Fira Code', monospace;
+    font-size: 0.85rem;
+    color: #cbd5e1;
+}
+
+.explanation-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin: 2rem 0;
+}
+
+.explanation-item {
+    background: #ffffff;
+    padding: 1rem;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+}
+
+.explanation-item strong {
+    display: block;
+    color: var(--primary);
+    font-family: 'Fira Code', monospace;
+    margin-bottom: 0.5rem;
+}
+
+.exercise-task {
+    background: #fef2f2;
+    border: 2px dashed #f87171;
+    padding: 1.5rem;
+    border-radius: 12px;
+    margin-top: 2rem;
+}
+
+.exercise-task h4 {
+    color: #b91c1c !important;
+    margin-top: 0 !important;
+}
+
+/* --- Styles Efficacité Protocole --- */
+.problem-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin: 2rem 0;
+}
+
+.problem-card {
+    background: #fff;
+    padding: 1.5rem;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.problem-card h4 {
+    color: #e11d48; /* Red for problems */
+    margin-top: 0 !important;
+}
+
+.analogy-box {
+    background: #f0f9ff;
+    border-left: 5px solid #0ea5e9;
+    padding: 1.5rem;
+    border-radius: 0 12px 12px 0;
+    margin: 2rem 0;
+    font-style: italic;
+    color: #0369a1;
+}
+
+@media (max-width: 800px) {
+    .problem-grid { grid-template-columns: 1fr; }
+}
+
+/* --- Styles Pub/Sub --- */
+.actors-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin: 3rem 0;
+}
+
+.actor-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    text-align: center;
+    transition: 0.3s;
+}
+
+.actor-card.broker {
+    background: #f1f5f9;
+    border: 2px solid var(--primary);
+}
+
+.actor-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.actor-card h4 {
+    margin-top: 0 !important;
+    font-size: 1rem;
+    color: var(--text);
+}
+
+.actor-card p {
+    font-size: 0.85rem;
+    color: #64748b;
+    margin-bottom: 0;
+}
+
+.actor-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 12px 20px -5px rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 900px) {
+    .actors-grid { grid-template-columns: 1fr; }
+}
+
+/* --- Styles Vocabulaire Technique --- */
+.vocab-section {
+    margin-bottom: 4rem;
+}
+
+.vocab-section h3 {
+    color: var(--primary);
+    border-bottom: 2px solid #e2e8f0;
+    padding-bottom: 0.5rem;
+}
+
+.synapse-tip {
+    background: #eef2ff;
+    border-left: 4px solid var(--primary);
+    padding: 1.5rem;
+    border-radius: 0 8px 8px 0;
+    margin: 1.5rem 0;
+    font-size: 0.95rem;
+}
+
+.synapse-tip strong {
+    color: var(--primary-dark);
+    display: block;
+    margin-bottom: 5px;
+}
+
+code {
+    background: #f1f5f9;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: 'Fira Code', monospace;
+    color: var(--secondary);
+    font-size: 0.9em;
+}
+
+.vocab-section ul li {
+    margin-bottom: 1rem;
+    color: #475569;
+}
+
+/* Optimisation tableau QoS */
+.table-container td strong {
+    color: var(--primary-dark);
+}
+
+/* --- Styles Connexion Réseau --- */
+.network-connection-content ul {
+    margin: 1rem 0;
+    padding-left: 1.5rem;
+}
+
+.network-connection-content li {
+    margin-bottom: 0.5rem;
+}
+
+.code-section {
+    margin: 2.5rem 0;
+}
+
+.step-card h3 {
+    color: var(--primary-dark);
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+}
+
+.explanation-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin: 2rem 0;
+}
+
+.explanation-item {
+    background: #ffffff;
+    padding: 1.2rem;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    transition: 0.3s;
+}
+
+.explanation-item:hover {
+    border-color: var(--primary);
+    background: #f8fafc;
+}
+
+.explanation-item strong {
+    font-family: 'Fira Code', monospace;
+    color: var(--secondary);
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+/* --- Styles Télémétrie JSON --- */
+.json-telemetry-content .explanation-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin: 2rem 0;
+}
+
+.json-telemetry-content .explanation-item {
+    background: #ffffff;
+    padding: 1.5rem;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    border-top: 4px solid var(--secondary);
+}
+
+.json-telemetry-content .explanation-item strong {
+    font-family: 'Fira Code', monospace;
+    font-size: 1rem;
+    color: var(--primary-dark);
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.json-telemetry-content .explanation-item p {
+    font-size: 0.9rem;
+    color: #475569;
+    margin-bottom: 0;
+}
+
+/* Animation discrète pour le code */
+.json-telemetry-content .code-section:hover {
+    transform: scale(1.01);
+    transition: transform 0.2s ease-in-out;
+}
+
+/* --- Styles Atelier MQTT Explorer --- */
+.tool-setup-card {
+    background: #f8fafc;
+    padding: 2rem;
+    border-radius: 12px;
+    border: 1px solid var(--primary);
+    margin: 2rem 0;
+}
+
+.config-table {
+    width: 100%;
+    margin-top: 1rem;
+    border-collapse: separate;
+    border-spacing: 0 10px;
+}
+
+.config-table td {
+    padding: 10px;
+    background: white;
+    border: 1px solid var(--border);
+}
+
+.config-table td:first-child {
+    border-radius: 8px 0 0 8px;
+    width: 150px;
+}
+
+.config-table td:last-child {
+    border-radius: 0 8px 8px 0;
+    font-family: 'Fira Code', monospace;
+}
+
+.ui-guide {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin: 2rem 0;
+}
+
+.ui-item {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.lab-exercise {
+    background: #ecfdf5;
+    border: 2px solid #10b981;
+    padding: 2rem;
+    border-radius: 12px;
+    margin-top: 3rem;
+}
+
+.lab-exercise h4 {
+    color: #065f46 !important;
+    margin-top: 0 !important;
+}
+
+.lab-exercise ol {
+    margin-left: 1.5rem;
+    margin-top: 1rem;
+}
+
+.lab-exercise li {
+    margin-bottom: 0.8rem;
+    color: #064e3b;
+}
+
+/* --- Styles Défi Final --- */
+.mission-card {
+    background: #fff;
+    border: 2px solid var(--secondary);
+    padding: 2rem;
+    border-radius: 12px;
+    margin: 2rem 0;
+    box-shadow: 0 4px 15px rgba(236, 72, 153, 0.1);
+}
+
+.mission-card h3 {
+    color: var(--secondary) !important;
+    margin-top: 0 !important;
+}
+
+.mission-card ul {
+    margin-top: 1rem;
+    padding-left: 1.5rem;
+}
+
+.testing-steps {
+    display: flex;
+    gap: 1.5rem;
+    margin: 2rem 0;
+}
+
+.testing-steps .step {
+    flex: 1;
+    background: #f8fafc;
+    padding: 1.2rem;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    font-size: 0.9rem;
+}
+
+.testing-steps strong {
+    display: block;
+    margin-bottom: 5px;
+    color: var(--primary);
+}
+
+@media (max-width: 768px) {
+    .testing-steps { flex-direction: column; }
+}
+
+
+    </style>
+</head>
+<body>
+
+    <aside>
+        <div>
+            <div class="brand-area">
+                <img src="https://d1yei2z3i6k35z.cloudfront.net/3391351/67771c6b52bbc_LogoSynapseLearners.png" alt="Logo Synapse Learners" width=50%>
+                
+                <img src="https://yt3.googleusercontent.com/O0pdFITfnXVDYzagqnj656MM5qX92605dSlXdUDrzwmMta6fsFt8FT47daG9QHxPSIUlXYgQAQ=s900-c-k-c0x00ffffff-no-rj" alt="Logo Efrei" width=50%>
+            </div>
+
+            <ul>
+                <li><a href="#intro" class="active">Introduction</a></li>
+            </ul>
+
+            <h2>Partie 1 : Théorie</h2>
+            <ul>
+                <li><a href="#eco">L'écosystème IoT</a></li>
+                <li><a href="#arch">Architecture globale</a></li>
+            </ul>
+
+            <h2>Partie 2 : Pratique</h2>
+            <ul>
+                <li><a href="#simu">Simulation Wokwi</a></li>
+                <li><a href="#code">Premier code</a></li>
+            </ul>
+
+            <h2>Partie 3 : Communication</h2>
+            <ul>
+                <li><a href="#proto">Protocoles réseau</a></li>
+                <li><a href="#mqtt">Le standard MQTT</a></li>
+            </ul>
+
+            <h2>Partie 4 : Connexion</h2>
+            <ul>
+                <li><a href="#connect">Mise en réseau</a></li>
+                <li><a href="#viz">Visualisation</a></li>
+            </ul>
+        </div>
+
+        
+    </aside>
+
+    <main>
+        <header id="intro">
+            <div>
+                <h1>Objets connectés et prototypage</h1>
+            </div>
+        </header>
+
+        <section>
+            <h2>Introduction au cours</h2>
+            <div class="learning-objectives">
+    <p>
+        Bienvenue dans ce module intensif de 15 heures. En tant qu'expert en Intelligence Artificielle et ingénieur Machine Learning[cite: 5], j'ai conçu ce parcours pour vous transformer en "Architectes de solutions connectées". 
+        L'objectif n'est pas seulement de manipuler du matériel, mais de comprendre comment l'Internet des Objets (IoT) s'intègre dans une stratégie technologique globale, de la captation de donnée brute à la décision automatisée par l'IA.
+    </p>
+
+    <div class="session-card">
+        <div class="session-header">
+            <span class="session-num">Session 1</span>
+            <h3>Maîtriser les fondations et le prototypage virtuel</h3>
+        </div>
+        <p>Cette première étape pose les bases techniques indispensables pour tout projet IoT[cite: 14].</p>
+        <ul>
+            <li>Comprendre l'architecture "End-to-End" (du capteur au cloud).</li>
+            <li>Maîtriser l'environnement de simulation <strong>Wokwi</strong> pour tester des circuits sans contrainte matérielle.</li>
+            <li>Apprendre les bases du <strong>MicroPython</strong> pour piloter des microcontrôleurs ESP32.</li>
+            <li>Implémenter le protocole <strong>MQTT</strong>, le standard de communication ultra-léger de l'industrie.</li>
+        </ul>
+    </div>
+
+    
+
+    <div class="session-card">
+        <div class="session-header">
+            <span class="session-num">Session 2</span>
+            <h3>Transformer la donnée en intelligence</h3>
+        </div>
+        <p>Ici, nous passons du rôle de "développeur d'objets" à celui de "Data Scientist" appliqué à l'IoT[cite: 5, 14].</p>
+        <ul>
+            <li>Créer un pipeline de données robuste pour collecter la télémétrie en temps réel.</li>
+            <li>Utiliser l'écosystème <strong>Scikit-learn</strong> (Pandas, NumPy) pour traiter les séries temporelles.</li>
+            <li>Entraîner et déployer un modèle d'IA capable de détecter des anomalies de fonctionnement (Maintenance prédictive).</li>
+            <li>Optimiser la consommation de bande passante par du filtrage intelligent.</li>
+        </ul>
+    </div>
+
+    <div class="session-card">
+        <div class="session-header">
+            <span class="session-num">Session 3</span>
+            <h3>Bâtir une solution complète et interactive</h3>
+        </div>
+        <p>La dernière phase est celle de la synthèse et de l'expérience utilisateur[cite: 14].</p>
+        <ul>
+            <li>Développer un tableau de bord (Dashboard) interactif et professionnel avec <strong>Streamlit</strong>.</li>
+            <li>Mettre en place une boucle de rétroaction : l'IA commande l'objet en fonction de l'analyse des données.</li>
+            <li>Participer à un mini-hackathon "Smart Building" pour valider vos compétences en conditions réelles.</li>
+            <li>Adopter une méthodologie "design" pour concevoir des outils prêts à l'emploi pour le marché du travail.</li>
+        </ul>
+    </div>
+</div>
+            
+            <h3>Le planning de la journée</h3>
+            <div class="timeline-container">
+    <div class="timeline-item">
+        <div class="timeline-time">00:00 - 01:00</div>
+        <div class="timeline-content theory">
+            <h4>L'écosystème et les enjeux de l'IoT</h4>
+            <p>Introduction aux fondamentaux, analyse du marché actuel et présentation de la chaîne de valeur (capteurs, réseaux, cloud).</p>
+            <span class="timeline-badge">Théorie</span>
+        </div>
+    </div>
+
+    <div class="timeline-item">
+        <div class="timeline-time">01:00 - 02:30</div>
+        <div class="timeline-content practice">
+            <h4>Prototypage virtuel avec Wokwi</h4>
+            <p>Mise en place de l'environnement, premier circuit avec ESP32 et lecture de capteurs de température/humidité en MicroPython.</p>
+            <span class="timeline-badge">Pratique</span>
+        </div>
+    </div>
+
+    <div class="timeline-item">
+        <div class="timeline-time">02:30 - 03:30</div>
+        <div class="timeline-content theory">
+            <h4>Connectivité et protocole MQTT</h4>
+            <p>Pourquoi l'IoT ne parle pas en HTTP ? Étude approfondie du protocole MQTT et de l'architecture Publish/Subscribe.</p>
+            <span class="timeline-badge">Théorie</span>
+        </div>
+    </div>
+
+    <div class="timeline-item">
+        <div class="timeline-time">03:30 - 05:00</div>
+        <div class="timeline-content practice">
+            <h4>Mise en réseau et flux de données</h4>
+            <p>Connexion de l'objet au web, publication de données sur un broker public et monitoring en temps réel via MQTT Explorer.</p>
+            <span class="timeline-badge">Pratique</span>
+        </div>
+    </div>
+</div>
+        </section>
+
+        <section id="eco">
+            <h2>L'écosystème IoT</h2>
+            
+            <h3>Définition et périmètre</h3>
+            <div class="iot-definition-content">
+    <p>
+        Un objet connecté, ou <b>IoT</b> (<b>Internet of Things</b>), est un objet physique capable de percevoir son environnement, de traiter cette information localement et de la transmettre via un réseau. Contrairement à un ordinateur classique, son but n'est pas d'être polyvalent, mais de remplir une mission spécifique au cœur du monde réel.
+    </p>
+
+    <div class="info-grid">
+        <div class="info-box">
+            <h4>Les trois piliers d'un objet connecté</h4>
+            <ul>
+                <li><strong>La perception</strong> : Grâce aux capteurs (température, mouvement, lumière), l'objet "sent" le monde.</li>
+                <li><strong>Le traitement</strong> : Un microcontrôleur (le cerveau) analyse les données brutes.</li>
+                <li><strong>La communication</strong> : L'objet partage ses découvertes avec le reste du monde (Wi-Fi, Bluetooth, LoRa).</li>
+            </ul>
+        </div>
+    </div>
+
+    
+
+    <h3>Différence avec l'informatique classique</h3>
+    <p>
+        Pourquoi ne pas simplement utiliser un PC portable pour tout ? L'informatique classique (IT) et l'informatique des objets (IoT/OT) répondent à des contraintes radicalement différentes.
+    </p>
+
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Caractéristique</th>
+                    <th>Informatique classique (PC/Serveur)</th>
+                    <th>Objets connectés (IoT)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Consommation</strong></td>
+                    <td>Branché sur secteur ou grosse batterie.</td>
+                    <td>Souvent sur pile ou batterie pour plusieurs années.</td>
+                </tr>
+                <tr>
+                    <td><strong>Puissance</strong></td>
+                    <td>Giga-octets de RAM, processeurs Multi-coeurs.</td>
+                    <td>Quelques kilo-octets de RAM (contrainte forte).</td>
+                </tr>
+                <tr>
+                    <td><strong>Interaction</strong></td>
+                    <td>Clavier, souris, écran (interface humaine).</td>
+                    <td>Capteurs et actionneurs (interface physique).</td>
+                </tr>
+                <tr>
+                    <td><strong>Connectivité</strong></td>
+                    <td>Stable et haut débit (Fibre, 4G/5G).</td>
+                    <td>Intermittente, bas débit et longue portée.</td>
+                </tr>
+                <tr>
+                    <td><strong>Cycle de vie</strong></td>
+                    <td>3 à 5 ans (obsolescence rapide).</td>
+                    <td>10 à 20 ans (ex: capteurs dans un pont ou une usine).</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="synapse-note">
+        <h4>La note de Patrick</h4>
+        <p>
+            En tant que Data Scientist, ce qui m'intéresse dans l'IoT, ce n'est pas l'objet lui-même, mais la <b>donnée</b> qu'il génère. Un PC traite des données saisies par l'homme ; un objet connecté capture des données directement à la source de la réalité. C'est cette "vérité terrain" qui rend l'IA sur l'IoT si puissante.
+        </p>
+    </div>
+</div>
+
+            <h3 id="arch">Architecture technique</h3>
+            <div class="architecture-content">
+    <p>
+        L'architecture IoT n'est pas une ligne droite, mais une chaîne de composants interdépendants. Chaque étape a une responsabilité précise pour garantir que l'information arrive entière, sécurisée et exploitable.
+    </p>
+
+    
+
+    <div class="arch-step">
+        <h3>1. Le Device (L'objet physique)</h3>
+        <p>C'est ici que tout commence. L'objet (comme l'ESP32 que nous utiliserons) interagit avec le monde réel via des capteurs.</p>
+        <ul>
+            <li><strong>Rôle :</strong> Captation (Sensing) et Action (Actuating).</li>
+            <li><strong>Contrainte :</strong> Ressources limitées (CPU/RAM) et souvent autonomie sur batterie.</li>
+        </ul>
+        <div class="code-example">
+            <span class="code-title">Exemple de Payload JSON envoyé par l'objet :</span>
+            <pre><code>{
+  "device_id": "ESP32-S1-EFREI",
+  "timestamp": 1706400000,
+  "temp": 24.5,
+  "hum": 45.2,
+  "status": "OK"
+}</code></pre>
+        </div>
+    </div>
+
+    <div class="arch-step">
+        <h3>2. La Gateway (La passerelle)</h3>
+        <p>C'est le pont entre le réseau local (Bluetooth, Zigbee, LoRa) et l'Internet (Wi-Fi, Ethernet, 4G/5G).</p>
+        <ul>
+            <li><strong>Rôle :</strong> Traduction de protocoles, agrégation de données et parfois "Edge Computing" (filtrage avant envoi).</li>
+            <li><strong>Analogie :</strong> C'est le traducteur qui permet à un touriste (l'objet) de se faire comprendre dans un pays étranger (le Web).</li>
+        </ul>
+    </div>
+
+    <div class="arch-step">
+        <h3>3. Le Cloud (Le cerveau et le stockage)</h3>
+        <p>Une fois sur Internet, la donnée est réceptionnée par un <b>Broker MQTT</b> ou un Hub IoT, puis traitée.</p>
+        <ul>
+            <li><strong>Stockage :</strong> Bases de données Time Series (InfluxDB, MongoDB).</li>
+            <li><strong>Traitement :</strong> C'est ici que nous injecterons nos modèles de Machine Learning lors de la séance 2.</li>
+        </ul>
+        <div class="code-example">
+            <span class="code-title">Exemple de logique Cloud (Python) :</span>
+            <pre><code>def process_data(payload):
+    # Si la température dépasse un seuil, on génère une alerte
+    if payload['temp'] > 25:
+        trigger_alert(payload['device_id'])
+    save_to_db(payload)</code></pre>
+        </div>
+    </div>
+
+    <div class="arch-step">
+        <h3>4. L'Application (La prise de décision)</h3>
+        <p>C'est l'interface finale, celle que l'utilisateur ou le décideur utilise pour piloter son parc d'objets.</p>
+        <ul>
+            <li><strong>Visualisation :</strong> Dashboards temps réel (Streamlit, Grafana).</li>
+            <li><strong>Contrôle :</strong> Envoi de commandes en retour vers l'objet (ex: "Ferme la vanne").</li>
+        </ul>
+    </div>
+
+    <div class="pro-tip">
+        <h4>Le conseil de Patrick</h4>
+        <p>
+            En B2, retenez bien ceci : la sécurité doit être présente à <b>chaque</b> étape. Un device mal protégé peut devenir une porte d'entrée dans votre réseau local, et un Cloud mal configuré peut exposer les données de milliers d'utilisateurs. On ne rigole pas avec la Cybersécurité dans l'IoT !
+        </p>
+    </div>
+</div>
+
+            <h4>Les capteurs et actionneurs</h4>
+            <div class="io-content">
+    <p>
+        Un système IoT n'est pas une entité isolée. Il fonctionne selon une boucle continue : <b>Percevoir, Réfléchir, Agir</b>. Cette boucle est rendue possible par deux types de composants matériels : les capteurs et les actionneurs.
+    </p>
+
+    <div class="io-grid">
+        <div class="io-card input">
+            <div class="io-header">
+                <span class="io-icon">👁️</span>
+                <h3>Les capteurs (Input)</h3>
+            </div>
+            <p>Ils traduisent un phénomène physique (chaleur, lumière, pression) en un signal électrique compréhensible par le microcontrôleur.</p>
+            <ul>
+                <li><strong>Analogiques :</strong> Envoient une tension variable (ex: potentiomètre).</li>
+                <li><strong>Numériques :</strong> Envoient des données structurées via des protocoles comme I2C ou OneWire (ex: DHT22).</li>
+            </ul>
+            <div class="example-list">
+                <span>Exemples : Thermomètre, Accéléromètre, Micro, Capteur de CO2.</span>
+            </div>
+        </div>
+
+        <div class="io-card output">
+            <div class="io-header">
+                <span class="io-icon">💪</span>
+                <h3>Les actionneurs (Output)</h3>
+            </div>
+            <p>Ils font l'inverse : ils traduisent un signal électrique en une action physique dans le monde réel.</p>
+            <ul>
+                <li><strong>Binaires :</strong> Allumé ou éteint (ex: LED, Relais).</li>
+                <li><strong>Proportionnels :</strong> Mouvement précis ou intensité variable (ex: Servomoteur, Variateur de lumière).</li>
+            </ul>
+            <div class="example-list">
+                <span>Exemples : Moteur, Haut-parleur, Écran LCD, Pompe à eau.</span>
+            </div>
+        </div>
+    </div>
+
+    
+
+    <h3>La boucle de rétroaction (Feedback loop)</h3>
+    <p>
+        En tant que futur développeur, votre travail consiste à coder la logique qui lie ces deux mondes. C'est ce qu'on appelle la "Intelligence locale".
+    </p>
+
+    <div class="code-example">
+        <span class="code-title">Logique de contrôle simplifiée (MicroPython) :</span>
+        <pre><code># Lecture (Input)
+temperature = sensor.read() 
+
+# Réflexion (Think)
+if temperature > 28:
+    # Action (Output)
+    fan.on() 
+    print("Alerte : Activation du ventilateur")
+else:
+    fan.off()</code></pre>
+    </div>
+
+    <div class="synapse-note">
+        <h4>Le regard de Patrick</h4>
+        <p>
+            Gardez en tête que les capteurs ne sont jamais parfaits. Ils ont du "bruit" (des imprécisions). C'est là que mon expertise en Data Science intervient : nous apprendrons plus tard à nettoyer ces données pour que vos actionneurs ne s'activent pas n'importe quand[cite: 4, 5, 16].
+        </p>
+    </div>
+</div>
+
+            <h4>Le rôle du microcontrôleur</h4>
+            <div class="distributed-brain-content">
+    <p>
+        Dans un système IoT moderne, l'intelligence est distribuée. On ne traite pas tout au même endroit. On oppose souvent le <b>Edge Computing</b> (le cerveau local) au <b>Cloud Computing</b> (le cerveau centralisé).
+    </p>
+
+    
+
+    <div class="brain-grid">
+        <div class="brain-card local">
+            <h3>Le microcontrôleur : le cerveau de proximité</h3>
+            <p>C'est l'intelligence embarquée directement dans l'objet (ex: ESP32).</p>
+            <ul>
+                <li><strong>Réactivité (Temps réel) :</strong> Décision en quelques millisecondes (indispensable pour un freinage d'urgence).</li>
+                <li><strong>Fiabilité :</strong> L'objet fonctionne même sans connexion Internet.</li>
+                <li><strong>Confidentialité :</strong> Les données brutes ne quittent jamais l'appareil.</li>
+            </ul>
+            <div class="capability-tag">Faible puissance de calcul</div>
+        </div>
+
+        <div class="brain-card cloud">
+            <h3>Le cloud : le cerveau de puissance</h3>
+            <p>C'est l'intelligence déportée sur des serveurs distants (AWS, Azure, Google Cloud).</p>
+            <ul>
+                <li><strong>Puissance de calcul :</strong> Capable de faire tourner des algorithmes de Deep Learning complexes.</li>
+                <li><strong>Vision globale :</strong> Analyse les données de milliers d'objets simultanément pour voir des tendances.</li>
+                <li><strong>Stockage illimité :</strong> Garde l'historique complet pour l'entraînement de futurs modèles.</li>
+            </ul>
+            <div class="capability-tag highlight">Haute puissance de calcul</div>
+        </div>
+    </div>
+
+    <h3>Vers l'intelligence hybride (Edge AI)</h3>
+    <p>
+        Aujourd'hui, la tendance est au <b>Edge AI</b>. On entraîne le modèle d'IA dans le cloud (cerveau de puissance), mais on déploie une version optimisée du modèle directement sur le microcontrôleur (cerveau local). C'est ce que nous explorerons lors de la session 2 de ce cours à l'Efrei.
+    </p>
+
+    <div class="comparison-summary">
+        <h4>Tableau de décision</h4>
+        <table>
+            <thead>
+                <tr>
+                    <th>Critère</th>
+                    <th>Cerveau local (Edge)</th>
+                    <th>Cerveau cloud</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Latence</td>
+                    <td>Ultra-faible (ms)</td>
+                    <td>Variable (sec)</td>
+                </tr>
+                <tr>
+                    <td>Volume de données</td>
+                    <td>Limitée</td>
+                    <td>Massive (Big Data)</td>
+                </tr>
+                <tr>
+                    <td>Complexité IA</td>
+                    <td>Inférence simple</td>
+                    <td>Entraînement & Deep Learning</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="synapse-note">
+        <h4>L'avis de Patrick</h4>
+        <p>
+            En tant que Machine Learning Engineer, je conseille souvent de filtrer les données localement. Inutile d'envoyer "température = 20°C" toutes les secondes au Cloud si la valeur ne change pas. C'est plus écologique et moins coûteux.
+        </p>
+    </div>
+</div>
+        </section>
+
+        <section id="simu">
+            <h2>Prototypage virtuel</h2>
+            
+            <h3>Présentation de Wokwi</h3>
+            <div class="simulation-rationale">
+    <p>
+        Avant de commander des composants ou de sortir le fer à souder, tout projet IoT sérieux passe par une phase de simulation. C'est d'autant plus vrai pour nous à l'Efrei : cela nous permet d'avancer sans contrainte de stock ou de panne matérielle.
+    </p>
+
+    <div class="pros-cons-grid">
+        <div class="pc-card pros">
+            <div class="pc-header">
+                <span class="pc-icon">✅</span>
+                <h3>Les avantages : pourquoi on adore simuler</h3>
+            </div>
+            <ul>
+                <li><strong>Zéro coût (0€) :</strong> Testez des capteurs coûteux sans débourser un centime.</li>
+                <li><strong>Sécurité totale :</strong> Aucun risque de court-circuit ou de composant qui brûle ("Magic Smoke").</li>
+                <li><strong>Itération rapide :</strong> Changez un câblage en un clic au lieu de recommencer une soudure.</li>
+                <li><strong>Accessibilité :</strong> Vous pouvez coder et tester votre projet dans le bus, le train ou depuis votre canapé.</li>
+            </ul>
+        </div>
+
+        <div class="pc-card cons">
+            <div class="pc-header">
+                <span class="pc-icon">⚠️</span>
+                <h3>Les limites : gardez les pieds sur terre</h3>
+            </div>
+            <ul>
+                <li><strong>Le monde parfait :</strong> En simulation, les capteurs sont 100% précis. Dans la réalité, ils sont "bruyants".</li>
+                <li><strong>Timing et latence :</strong> Les délais réseau réels (Wi-Fi instable) sont parfois mal imités.</li>
+                <li><strong>Consommation réelle :</strong> Il est difficile de mesurer l'usure exacte d'une pile en simulateur.</li>
+                <li><strong>Problèmes mécaniques :</strong> Un simulateur ne vous dira pas si votre boîtier est trop petit pour vos fils.</li>
+            </ul>
+        </div>
+    </div>
+
+    
+
+    <div class="synapse-note">
+        <h4>Le mot de Patrick</h4>
+        <p>
+            Pour un Data Scientist, la simulation est un outil de génération de données. Elle nous permet de créer des jeux de données "propres" pour tester nos premiers algorithmes d'IA avant de les confronter au chaos du monde réel. C'est une étape de productivité majeure.
+        </p>
+    </div>
+</div>
+
+            <h3>Premier circuit électronique</h3>
+            <div class="circuit-setup-content">
+    <p>
+        Pour notre premier projet, nous allons coupler la puissance de l'<b>ESP32</b> (microcontrôleur avec Wi-Fi natif) avec la précision du <b>DHT22</b>, un capteur numérique de température et d'humidité très populaire dans l'industrie.
+    </p>
+
+    <div class="step-container">
+        <div class="step-card">
+            <div class="step-number">1</div>
+            <div class="step-text">
+                <h4>Sélection des composants</h4>
+                <p>Sur votre interface Wokwi, cliquez sur le bouton <strong>"+"</strong> et ajoutez :</p>
+                <ul>
+                    <li>Une carte <strong>ESP32 DevKit V1</strong>.</li>
+                    <li>Un capteur <strong>DHT22</strong>.</li>
+                </ul>
+            </div>
+        </div>
+
+        
+
+        <div class="step-card">
+            <div class="step-number">2</div>
+            <div class="step-text">
+                <h4>Câblage du circuit</h4>
+                <p>Reliez les pins du capteur à l'ESP32 en respectant strictement ce schéma :</p>
+                <div class="wiring-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Pin DHT22</th>
+                                <th>Pin ESP32</th>
+                                <th>Rôle</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>VCC</strong></td>
+                                <td class="pin-power">3V3</td>
+                                <td>Alimentation (3.3 Volts)</td>
+                            </tr>
+                        <li>
+                            <tr>
+                                <td><strong>SDA (Data)</strong></td>
+                                <td class="pin-data">GPIO 15</td>
+                                <td>Signal de données numérique</td>
+                            </tr>
+                            <tr>
+                                <td><strong>GND</strong></td>
+                                <td class="pin-gnd">GND</td>
+                                <td>Masse (Terre)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="pro-tip-box">
+        <h4>Le conseil de Patrick</h4>
+        <p>
+            En simulation comme en réel, utilisez des couleurs de fils conventionnelles : <b>Rouge</b> pour le VCC, <b>Noir</b> pour le GND, et une autre couleur (ex: Jaune) pour les données. Cela vous sauvera des heures de debug quand vos projets deviendront complexes.
+        </p>
+    </div>
+
+    <div class="caution-alert">
+        <strong>Attention :</strong> Ne confondez pas le DHT11 (bleu) et le DHT22 (blanc). Le DHT22 est plus précis et gère les températures négatives, ce qui est crucial pour nos futures analyses de données IA.
+    </div>
+</div>
+
+            <h3 id="code">Introduction au MicroPython</h3>
+            <div class="micropython-specs-content">
+    <p>
+        MicroPython est une implémentation logicielle de Python 3, optimisée pour tourner sur des microcontrôleurs. En tant que développeurs Python, vous ne serez pas dépaysés, mais il y a des règles d'or à respecter quand on code "proche du métal".
+    </p>
+
+    <div class="comparison-grid">
+        <div class="spec-card">
+            <h4>Ce qui change par rapport au Python classique</h4>
+            <ul>
+                <li><strong>La gestion de la mémoire :</strong> Votre PC a 16 Go de RAM, l'ESP32 en a environ 520 Ko. Chaque variable compte.</li>
+                <li><strong>La bibliothèque standard :</strong> Exit les modules lourds. On utilise des versions "micro" (ex: <code>ujson</code> au lieu de <code>json</code>, <code>utime</code> au lieu de <code>time</code>).</li>
+                <li><strong>L'accès au Hardware :</strong> MicroPython ajoute des modules spécifiques pour manipuler les broches physiques (GPIO).</li>
+            </ul>
+        </div>
+    </div>
+
+    
+
+    <h3>Les modules indispensables de l'IoT</h3>
+    <p>
+        Pour interagir avec le monde physique, vous utiliserez quasi systématiquement ces trois piliers :
+    </p>
+
+    <div class="module-list">
+        <div class="module-item">
+            <code>machine</code>
+            <p>Le module le plus important. Il permet de contrôler les pins, l'I2C, l'ADC (analogique) et le PWM.</p>
+        </div>
+        <div class="module-item">
+            <code>network</code>
+            <p>Indispensable pour connecter votre ESP32 au Wi-Fi et configurer l'interface réseau.</p>
+        </div>
+        <div class="module-item">
+            <code>time</code> (ou <code>utime</code>)
+            <p>Utilisé pour gérer les pauses (sleep) et mesurer le temps écoulé entre deux captures de données.</p>
+        </div>
+    </div>
+
+    <div class="code-example">
+        <span class="code-title">Structure typique d'un script d'embarqué :</span>
+        <pre><code>import machine
+import time
+
+# 1. Configuration (Setup) - S'exécute une seule fois
+led = machine.Pin(2, machine.Pin.OUT)
+
+# 2. Boucle infinie (Loop) - Le cœur de l'objet
+while True:
+    led.value(1)  # Allumer
+    time.sleep(1)
+    led.value(0)  # Éteindre
+    time.sleep(1)</code></pre>
+    </div>
+
+    <div class="synapse-note">
+        <h4>La vision de Patrick</h4>
+        <p>
+            Pourquoi je vous fais apprendre MicroPython plutôt que le C++ (Arduino) ? Pour la <b>productivité</b>. En tant qu'expert en IA, je sais que pouvoir tester une idée en 5 lignes de Python au lieu de 50 lignes de C++ est un avantage compétitif majeur dans le monde de la Tech aujourd'hui.
+        </p>
+    </div>
+</div>
+
+            <h4>Exercice pratique 1</h4>
+            <div class="practical-code-content">
+    <p>
+        Il est temps de donner vie à votre montage. Nous allons écrire un script qui interroge le capteur DHT22 toutes les deux secondes et affiche les résultats dans la console série de l'ESP32. 
+    </p>
+
+    <div class="code-section">
+        <div class="code-header">
+            <span class="file-name">main.py</span>
+            <button class="copy-btn" onclick="copyCode('micro-code-1')">Copier le code</button>
+        </div>
+        <pre><code id="micro-code-1">import machine
+import dht
+import time
+
+# 1. Initialisation du capteur sur la broche GPIO 15
+# On utilise la classe dht.DHT22 fournie nativement par MicroPython
+capteur = dht.DHT22(machine.Pin(15))
+
+print("--- Système Synapse IoT : Démarrage de la lecture locale ---")
+
+while True:
+    try:
+        # 2. Déclenchement de la mesure
+        capteur.measure()
+        
+        # 3. Récupération des valeurs
+        temp = capteur.temperature()
+        hum = capteur.humidity()
+        
+        # 4. Affichage formaté dans la console
+        print(f"Température : {temp}°C | Humidité : {hum}%")
+        
+    except OSError as e:
+        # En embarqué, les erreurs de lecture sont fréquentes (mauvais contact, etc.)
+        # On gère l'exception pour éviter que le programme ne s'arrête
+        print("Erreur de lecture du capteur. Vérifiez le câblage.")
+        
+    # 5. Pause obligatoire (le DHT22 a besoin de temps entre deux mesures)
+    time.sleep(2)</code></pre>
+    </div>
+
+    
+
+    <h3>Décryptage du code</h3>
+    <div class="explanation-grid">
+        <div class="explanation-item">
+            <strong><code>capteur.measure()</code></strong>
+            <p>Cette méthode réveille le capteur et lui demande de remplir ses registres internes avec les dernières données physiques détectées.</p>
+        </div>
+        <div class="explanation-item">
+            <strong><code>try...except OSError</code></strong>
+            <p>Essentiel en IoT. Si un fil virtuel se déconnecte dans Wokwi, votre script ne doit pas "crash". Il doit ignorer l'erreur et réessayer au tour suivant.</p>
+        </div>
+        <div class="explanation-item">
+            <strong><code>time.sleep(2)</code></strong>
+            <p>Le DHT22 est un capteur lent. Si vous l'interrogez trop vite (moins de 1 seconde d'intervalle), il renverra des erreurs ou des données figées.</p>
+        </div>
+    </div>
+
+    <div class="synapse-note">
+        <h4>Le conseil de Patrick</h4>
+        <p>
+            Remarquez l'utilisation des <strong>f-strings</strong> (<code>f"..."</code>). C'est la manière la plus moderne et la plus lisible de formater vos logs en Python. Même sur un microcontrôleur, on garde de bonnes habitudes de codeur propre !
+        </p>
+    </div>
+
+    <div class="exercise-task">
+        <h4>🏋️ Défi rapide</h4>
+        <p>Modifiez le code pour qu'une alerte s'affiche uniquement si l'humidité dépasse 60%. Testez cela en cliquant sur le DHT22 dans Wokwi pendant la simulation pour faire varier le curseur d'humidité.</p>
+    </div>
+</div>
+        </section>
+
+        <section id="proto">
+            <h2>Protocoles de communication</h2>
+            
+            <h3>La contrainte énergétique</h3>
+            <div class="protocol-efficiency-content">
+    <p>
+        Dans le web classique, nous utilisons le protocole <b>HTTP</b> (celui que vous utilisez pour naviguer sur Facebook ou Netflix). Mais pour un objet connecté sur batterie, le HTTP est un véritable "poids lourd" qui épuise les ressources inutilement.
+    </p>
+
+    
+
+    <div class="problem-grid">
+        <div class="problem-card">
+            <h4>Le problème du "Overhead" (Surcharge)</h4>
+            <p>Pour envoyer une simple température comme "24", une requête HTTP va ajouter des centaines d'octets de <b>headers</b> (en-têtes) inutiles :</p>
+            <ul>
+                <li>Informations sur le navigateur (User-Agent).</li>
+                <li>Types de fichiers acceptés.</li>
+                <li>Cookies et gestion de session.</li>
+            </ul>
+            <p><strong>Bilan :</strong> On utilise 500 octets d'énergie pour transporter seulement 2 octets d'information utile.</p>
+        </div>
+
+        <div class="problem-card">
+            <h4>La contrainte du "Keep-Alive"</h4>
+            <p>Le Wi-Fi et le HTTP sont conçus pour être "toujours prêts". Un objet Wi-Fi doit maintenir une communication constante avec la box, ce qui empêche le microcontrôleur de passer en mode <b>Deep Sleep</b> (sommeil profond).</p>
+            <p><strong>Conséquence :</strong> Une pile qui pourrait tenir 2 ans en IoT durera seulement 2 jours en Wi-Fi classique.</p>
+        </div>
+    </div>
+
+    <h3>L'analogie de la carte postale</h3>
+    <div class="analogy-box">
+        <p>
+            Utiliser le <strong>HTTP</strong> pour l'IoT, c'est comme envoyer une lettre dans un colis blindé de 5kg : c'est sûr, mais c'est extrêmement coûteux et lent pour un petit message.
+            <br><br>
+            Le <strong>MQTT</strong>, c'est comme une simple carte postale : on écrit le message au dos, on le jette dans la boîte, et c'est terminé. C'est léger, efficace et direct.
+        </p>
+    </div>
+
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Critère</th>
+                    <th>HTTP (Web)</th>
+                    <th>MQTT (IoT)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Taille minimale en-tête</strong></td>
+                    <td>~200 à 800 octets</td>
+                    <td><b>2 octets</b></td>
+                </tr>
+                <tr>
+                    <td><strong>Modèle de communication</strong></td>
+                    <td>Request / Response</td>
+                    <td>Publish / Subscribe</td>
+                </tr>
+                <tr>
+                    <td><strong>Consommation batterie</strong></td>
+                    <td>Élevée</td>
+                    <td><b>Très faible</b></td>
+                </tr>
+                <tr>
+                    <td><strong>Complexité code</strong></td>
+                    <td>Lourde (Stack TCP complète)</td>
+                    <td>Légère (Optimisée embarqué)</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="synapse-note">
+        <h4>La vision de Patrick</h4>
+        <p>
+            En tant que développeur Python et JS avec plus de 10 ans d'expérience, j'ai vu trop de projets IoT échouer parce qu'ils utilisaient des protocoles web standards sur des petits devices. Pour être un bon ingénieur, il faut savoir choisir le bon outil pour le bon support. C'est ce que nous faisons chez Synapse Learners : simplifier la complexité.
+        </p>
+    </div>
+</div>
+
+            <h3 id="mqtt">Le protocole MQTT</h3>
+            <div class="pub-sub-explanation">
+    <p>
+        Dans le modèle classique (HTTP), le client doit connaître l'adresse du serveur pour lui poser une question. Dans le monde de l'IoT, où les objets se connectent et se déconnectent sans cesse, ce modèle est trop rigide. Le <b>Publish/Subscribe</b> résout ce problème en supprimant le lien direct entre l'émetteur et le récepteur.
+    </p>
+
+    <div class="actors-grid">
+        <div class="actor-card">
+            <div class="actor-icon">📤</div>
+            <h4>Le Publisher (L'émetteur)</h4>
+            <p>C'est votre objet (ESP32). Il ne sait pas qui lit ses données et il s'en moque. Il se contente de "publier" une information sur un thème précis (le Topic).</p>
+        </div>
+
+        <div class="actor-card broker">
+            <div class="actor-icon">📦</div>
+            <h4>Le Broker (Le pivot)</h4>
+            <p>C'est le serveur central (le chef d'orchestre). Il reçoit tous les messages, les trie et les renvoie uniquement à ceux qui les ont demandés.</p>
+        </div>
+
+        <div class="actor-card">
+            <div class="actor-icon">📥</div>
+            <h4>Le Subscriber (Le récepteur)</h4>
+            <p>C'est votre application ou base de données. Elle s'abonne à un "Topic" et attend que le Broker lui envoie les nouveautés automatiquement.</p>
+        </div>
+    </div>
+
+    
+
+    <h3>Le découplage : la magie du système</h3>
+    <p>
+        Ce modèle offre trois types de liberté (découplage) essentiels pour passer à l'échelle (scalability) :
+    </p>
+    <ul>
+        <li><strong>Espace :</strong> Le Publisher et le Subscriber n'ont pas besoin de connaître leurs adresses IP respectives.</li>
+        <li><strong>Temps :</strong> Ils n'ont pas besoin de fonctionner exactement au même moment (grâce aux options de rétention du Broker).</li>
+        <li><strong>Synchronisation :</strong> Les opérations sur l'objet ne sont pas bloquées en attendant une réponse du serveur.</li>
+    </ul>
+
+    <div class="analogy-box">
+        <h4>L'analogie des réseaux sociaux</h4>
+        <p>
+            Pensez à <strong>Instagram</strong>. Quand Patrick publie une photo (Publish) sur son compte (Topic), il ne l'envoie pas individuellement à chaque abonné. C'est le serveur d'Instagram (Broker) qui diffuse l'image à tous ceux qui le suivent (Subscribers).
+        </p>
+    </div>
+
+    <div class="synapse-note">
+        <h4>Le point de vue de Patrick</h4>
+        <p>
+            Pourquoi est-ce vital pour l'IA ? Imaginez que vous ayez 10 000 capteurs. Avec le Pub/Sub, votre modèle d'IA peut s'abonner à un flux global et recevoir les données en temps réel sans jamais saturer les objets individuels. C'est ainsi que l'on construit des systèmes robustes et intelligents.
+        </p>
+    </div>
+</div>
+
+            <h4>Broker, topics et payload</h4>
+            <div class="technical-vocabulary-content">
+    <p>
+        Le protocole MQTT repose sur une structure rigoureuse. Si vous ne respectez pas ces définitions, votre architecture de données deviendra rapidement ingérable à mesure que vous ajouterez des objets.
+    </p>
+
+    <div class="vocab-section">
+        <h3>Le topic (Le sujet)</h3>
+        <p>C'est l'adresse de votre message. Contrairement à une URL web, elle est hiérarchique et utilise le slash (<code>/</code>) comme séparateur.</p>
+        
+        
+
+        <div class="card">
+            <h4>Structure recommandée</h4>
+            <code>lieu / type_objet / identifiant / donnée</code>
+            <p style="margin-top:10px"><em>Exemple :</em> <code>efrei/batiment-a/esp32-01/temperature</code></p>
+        </div>
+
+        <h4>Les caractères "Jokers" (Wildcards)</h4>
+        <ul>
+            <li><strong>Le signe plus (<code>+</code>)</strong> : Remplace <b>un seul</b> niveau. <br> 
+                <code>efrei/+/esp32-01/temp</code> permet d'écouter la température de l'objet 01 dans TOUS les bâtiments.</li>
+            <li><strong>Le hashtag (<code>#</code>)</strong> : Remplace <b>tous</b> les niveaux restants. <br> 
+                <code>efrei/#</code> permet de recevoir absolument toutes les données de l'école.</li>
+        </ul>
+    </div>
+
+    <div class="vocab-section">
+        <h3>Le payload (Le contenu)</h3>
+        <p>C'est la donnée réelle transportée. MQTT est "data-agnostic", ce qui signifie qu'il peut transporter du texte brut, des images, ou du binaire.</p>
+        <div class="synapse-tip">
+            <strong>Conseil d'expert :</strong> En tant que Data Scientist, je vous recommande d'utiliser systématiquement le format <b>JSON</b>. C'est le standard pour l'IA car il permet de transporter plusieurs variables (température, humidité, batterie) dans un seul message structuré.
+        </div>
+    </div>
+
+    <div class="vocab-section">
+        <h3>La qualité de service (QoS)</h3>
+        <p>Elle définit la fiabilité de la livraison du message entre l'objet et le broker.</p>
+        
+        
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Niveau</th>
+                        <th>Nom</th>
+                        <th>Garantie</th>
+                        <th>Usage type</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>QoS 0</strong></td>
+                        <td>At most once</td>
+                        <td>Le message est envoyé sans confirmation (Fire and forget).</td>
+                        <td>Données non critiques (ex: température ambiante).</td>
+                    </tr>
+                    <tr>
+                        <td><strong>QoS 1</strong></td>
+                        <td>At least once</td>
+                        <td>Le message est reçu au moins une fois (Confirmation requise).</td>
+                        <td>Alertes critiques (ex: détection de fumée).</td>
+                    </tr>
+                    <tr>
+                        <td><strong>QoS 2</strong></td>
+                        <td>Exactly once</td>
+                        <td>Le message est reçu une seule fois (Processus en 4 étapes).</td>
+                        <td>Facturation ou systèmes de commande précis.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="synapse-note">
+        <h4>Le mot de Patrick</h4>
+        <p>
+            Plus le niveau de QoS est élevé, plus cela consomme de la bande passante et de la batterie. Dans 90% des projets IoT que j'ai supervisés en 10 ans de carrière, la QoS 0 ou 1 suffit largement si votre réseau est stable.
+        </p>
+    </div>
+</div>
+        </section>
+
+        <section id="connect">
+            <h2>Mise en pratique connectée</h2>
+            
+            <h3>Configuration du client</h3>
+            <div class="network-connection-content">
+    <p>
+        Pour que notre ESP32 puisse communiquer avec le reste du monde, il doit franchir deux étapes : obtenir une adresse IP sur le réseau local (Wi-Fi) et s'identifier auprès du serveur de messages (Broker MQTT).
+    </p>
+
+    <div class="step-card">
+        <h3>Configuration du Wi-Fi sur Wokwi</h3>
+        <p>Le simulateur Wokwi fournit un point d'accès virtuel spécifique. Contrairement à une box réelle, il n'y a pas de mot de passe à saisir pour ce réseau pédagogique.</p>
+        <ul>
+            <li><strong>SSID :</strong> <code>Wokwi-GUEST</code></li>
+            <li><strong>Password :</strong> <code>(vide)</code></li>
+        </ul>
+    </div>
+
+    
+
+    <div class="code-section">
+        <div class="code-header">
+            <span class="file-name">boot.py / main.py</span>
+            <button class="copy-btn" onclick="copyCode('network-code')">Copier le code</button>
+        </div>
+        <pre><code id="network-code">import network
+import time
+from umqtt.simple import MQTTClient
+
+# 1. Configuration des paramètres de connexion
+WIFI_SSID = "Wokwi-GUEST"
+WIFI_PASSWORD = ""
+MQTT_BROKER = "broker.hivemq.com"
+CLIENT_ID = "Efrei_Student_JS_01" # Remplacez par un ID unique !
+
+# 2. Fonction de connexion au Wi-Fi
+def connect_wifi():
+    print("Connexion au Wi-Fi...", end="")
+    sta_if = network.WLAN(network.STA_IF)
+    sta_if.active(True)
+    sta_if.connect(WIFI_SSID, WIFI_PASSWORD)
+    while not sta_if.isconnected():
+        print(".", end="")
+        time.sleep(0.5)
+    print(" Connecté !")
+    print("Adresse IP :", sta_if.ifconfig()[0])
+
+# 3. Fonction de connexion au Broker MQTT
+def connect_mqtt():
+    try:
+        client = MQTTClient(CLIENT_ID, MQTT_BROKER)
+        client.connect()
+        print(f"Connecté au Broker MQTT : {MQTT_BROKER}")
+        return client
+    except Exception as e:
+        print("Erreur de connexion au Broker :", e)
+        return None
+
+# Exécution
+connect_wifi()
+mqtt_client = connect_mqtt()</code></pre>
+    </div>
+
+    <h3>Pourquoi ces étapes sont-elles cruciales ?</h3>
+    <div class="explanation-grid">
+        <div class="explanation-item">
+            <strong><code>network.WLAN(network.STA_IF)</code></strong>
+            <p>Active le mode "Station" de l'ESP32. Cela signifie qu'il se comporte comme votre smartphone qui cherche à se connecter à une borne Wi-Fi.</p>
+        </div>
+        <div class="explanation-item">
+            <strong><code>CLIENT_ID</code></strong>
+            <p>Le broker utilise cet identifiant pour différencier les milliers d'objets connectés. S'il est identique à celui d'un camarade, vous vous déconnecterez mutuellement ! </p>
+        </div>
+        <div class="explanation-item">
+            <strong><code>umqtt.simple</code></strong>
+            <p>C'est une version allégée de la bibliothèque MQTT, optimisée pour ne pas saturer la mémoire vive limitée de l'ESP32.</p>
+        </div>
+    </div>
+
+    <div class="synapse-note">
+        <h4>Le conseil de Patrick</h4>
+        <p>
+            En production réelle, ne mettez jamais vos identifiants Wi-Fi en dur dans le code principal. Chez Synapse Learners, nous enseignons l'utilisation de fichiers de configuration séparés ou de variables d'environnement pour protéger vos accès. Pour aujourd'hui, restons simples, mais gardez cette règle de sécurité en tête !
+        </p>
+    </div>
+</div>
+
+            <h3>Publication de données</h3>
+            <div class="json-telemetry-content">
+    <p>
+        Pourquoi le JSON ? Parce qu'il permet de regrouper plusieurs informations (température, humidité, identifiant, état de la batterie) dans un seul message structuré. C'est ce "dictionnaire" que nos algorithmes d'IA viendront décortiquer lors de la prochaine séance.
+    </p>
+
+    <div class="code-section">
+        <div class="code-header">
+            <span class="file-name">main.py (Boucle de publication)</span>
+            <button class="copy-btn" onclick="copyCode('json-code')">Copier le code</button>
+        </div>
+        <pre><code id="json-code">import json
+import time
+
+# --- Supposons que mqtt_client et capteur sont déjà initialisés ---
+
+print("Démarrage de la télémétrie JSON...")
+
+while True:
+    try:
+        capteur.measure()
+        t = capteur.temperature()
+        h = capteur.humidity()
+
+        # 1. Création du dictionnaire Python (Données brutes)
+        data = {
+            "device": CLIENT_ID,
+            "temp": t,
+            "hum": h,
+            "timestamp": time.time() # Temps écoulé depuis le boot
+        }
+
+        # 2. Sérialisation : Conversion du dictionnaire en chaîne JSON
+        payload = json.dumps(data)
+
+        # 3. Publication sur le topic
+        mqtt_client.publish(TOPIC_PUB, payload)
+        
+        print(f"Envoyé : {payload}")
+
+    except Exception as e:
+        print("Erreur lors de l'envoi :", e)
+
+    time.sleep(5) # On publie toutes le 5 secondes</code></pre>
+    </div>
+
+    
+
+    <h3>Les étapes clés de la sérialisation</h3>
+    <div class="explanation-grid">
+        <div class="explanation-item">
+            <strong><code>json.dumps(data)</code></strong>
+            <p>Cette fonction transforme votre objet Python en une chaîne de caractères (String) formatée. MQTT ne peut transporter que des octets, pas des objets complexes.</p>
+        </div>
+        <div class="explanation-item">
+            <strong>Structure "Clé / Valeur"</strong>
+            <p>Grâce au JSON, chaque donnée est nommée (ex: "temp"). Cela permet au récepteur de savoir exactement à quoi correspond chaque chiffre, sans ambiguïté.</p>
+        </div>
+        <div class="explanation-item">
+            <strong>Évolutivité</strong>
+            <p>Si demain vous ajoutez un capteur de luminosité, il vous suffit d'ajouter une clé dans votre dictionnaire sans changer la structure de votre base de données.</p>
+        </div>
+    </div>
+
+    <div class="synapse-note">
+        <h4>La vision de Patrick</h4>
+        <p>
+            En tant que Machine Learning Engineer, je passe 80% de mon temps à nettoyer des données. Si vous structurez vos messages en JSON dès le départ, vous facilitez le travail de l'IA et vous gagnez un temps précieux en production. C'est ce qu'on appelle la <strong>Data Quality</strong> by design.
+        </p>
+    </div>
+</div>
+
+            <h3 id="viz">Réception et visualisation</h3>
+            <div class="mqtt-explorer-content">
+    <p>
+        Maintenant que votre ESP32 virtuel publie des données sur le broker HiveMQ, nous allons utiliser un "client lourd" pour intercepter ces messages. <strong>MQTT Explorer</strong> est au protocole MQTT ce que Postman est au HTTP : un outil de diagnostic surpuissant pour visualiser la hiérarchie de vos topics.
+    </p>
+
+    <div class="tool-setup-card">
+        <h3>Configuration de l'outil</h3>
+        <p>Si vous n'avez pas encore installé l'application, vous pouvez utiliser la version web ou le logiciel desktop. Voici les paramètres pour rejoindre notre flux de données :</p>
+        <table class="config-table">
+            <tr>
+                <td><strong>Host</strong></td>
+                <td><code>broker.hivemq.com</code></td>
+            </tr>
+            <tr>
+                <td><strong>Protocol</strong></td>
+                <td>mqtt:// (port 1883)</td>
+            </tr>
+            <tr>
+                <td><strong>Topic (Advanced)</strong></td>
+                <td><code>efrei/b2/#</code> (pour voir tout le monde)</td>
+            </tr>
+        </table>
+    </div>
+
+    
+
+    <h3>L'interface en un coup d'œil</h3>
+    <div class="ui-guide">
+        <div class="ui-item">
+            <h4>La vue en arbre (Tree view)</h4>
+            <p>À gauche, MQTT Explorer organise automatiquement vos topics par niveaux. Vous pouvez voir en temps réel quels objets publient et à quelle fréquence.</p>
+        </div>
+        <div class="ui-item">
+            <h4>Le panneau de visualisation</h4>
+            <p>À droite, vous voyez le <strong>Payload JSON</strong>. L'outil formate automatiquement votre texte brut pour le rendre lisible, ce qui est crucial pour vérifier la validité de vos données avant de les envoyer à une IA.</p>
+        </div>
+        <div class="ui-item">
+            <h4>L'historique (Graphiques)</h4>
+            <p>MQTT Explorer peut tracer des graphiques en temps réel pour les valeurs numériques. C'est idéal pour voir si votre capteur DHT22 dérive ou s'il y a du bruit dans le signal.</p>
+        </div>
+    </div>
+
+    <div class="synapse-note">
+        <h4>L'astuce de Patrick</h4>
+        <p>
+            En tant que Machine Learning Engineer, j'utilise souvent la fonction "Copy path" de MQTT Explorer. Cela me permet de récupérer instantanément le topic exact à intégrer dans mes scripts Python de collecte de données. Ne perdez pas de temps à taper les chemins à la main, l'automatisation est votre amie.
+        </p>
+    </div>
+
+    <div class="lab-exercise">
+        <h4>🏋️ Atelier pratique : le détective IoT</h4>
+        <ol>
+            <li>Lancez votre simulation Wokwi.</li>
+            <li>Connectez MQTT Explorer au broker HiveMQ.</li>
+            <li>Cherchez le topic correspondant à votre <code>CLIENT_ID</code>.</li>
+            <li>Vérifiez que le JSON reçu est bien valide (pas de virgule manquante).</li>
+            <li><strong>Challenge :</strong> Trouvez le message d'un de vos camarades et observez sa température. C'est ça, la puissance du réseau!</li>
+        </ol>
+    </div>
+</div>
+
+            <h4>Défi final de la séance</h4>
+            <div class="final-challenge-content">
+    <p>
+        Pour valider vos acquis de cette séance, vous allez transformer votre objet passif en un système d'alerte intelligent. L'objectif est de surveiller la température et de notifier immédiatement le système central si un seuil de sécurité est franchi.
+    </p>
+
+    <div class="mission-card">
+        <h3>🚩 Votre mission : la surveillance thermique</h3>
+        <p>Modifiez votre script MicroPython pour répondre aux exigences suivantes :</p>
+        <ul>
+            <li>Continuer de publier la télémétrie complète (JSON) toutes les 5 secondes.</li>
+            <li><strong>Si la température dépasse 25.0°C :</strong> Publier un message d'alerte immédiat sur un nouveau topic dédié : <code>efrei/b2/alertes</code>.</li>
+            <li>Le message d'alerte doit être au format JSON et contenir le type d'alerte et la valeur relevée.</li>
+        </ul>
+    </div>
+
+    
+
+    <div class="code-section">
+        <div class="code-header">
+            <span class="file-name">main.py (Logique d'alerte)</span>
+            <button class="copy-btn" onclick="copyCode('challenge-code')">Copier la base</button>
+        </div>
+        <pre><code id="challenge-code"># --- Extrait de la boucle principale ---
+while True:
+    capteur.measure()
+    t = capteur.temperature()
+    
+    # 1. Publication standard
+    payload = json.dumps({"dev": CLIENT_ID, "temp": t})
+    mqtt_client.publish(TOPIC_PUB, payload)
+
+    # 2. Logique d'alerte (Le défi)
+    if t > 25.0:
+        alert_payload = json.dumps({
+            "status": "CRITICAL",
+            "device": CLIENT_ID,
+            "value": t,
+            "msg": "Surchauffe détectée !"
+        })
+        mqtt_client.publish("efrei/b2/alertes", alert_payload)
+        print("⚠️ ALERTE ENVOYÉE !")
+
+    time.sleep(5)</code></pre>
+    </div>
+
+    <h3>Comment tester votre réussite ?</h3>
+    <div class="testing-steps">
+        <div class="step">
+            <strong>Côté Wokwi :</strong> Lancez la simulation, cliquez sur le capteur DHT22 et faites glisser le curseur au-dessus de 25°C.
+        </div>
+        <div class="step">
+            <strong>Côté MQTT Explorer :</strong> Abonnez-vous au topic <code>efrei/b2/alertes</code>. Si votre code est correct, vous devriez voir apparaître les messages critiques instantanément.
+        </div>
+    </div>
+
+    <div class="synapse-note">
+        <h4>Le mot de la fin de Patrick</h4>
+        <p>
+            Bravo pour cette première séance ! Vous avez réussi à créer une chaîne complète : du capteur physique (simulé) à la décision logicielle déportée. 
+            <br><br>
+            Actuellement, votre système utilise un seuil "fixe" (25°C). Lors de la <strong>prochaine séance</strong>, nous verrons pourquoi c'est parfois insuffisant et comment mon expertise en IA permet de créer des seuils dynamiques capables de prédire une panne avant même qu'elle n'arrive. C'est là que la vraie magie de Synapse Learners opère.
+        </p>
+    </div>
+</div>
+        </section>
+
+        <footer>
+            <p>Synapse Learners pour Efrei Paris</p>
+            <p>Intervenant : Patrick Wampé</p>
+        </footer>
+    </main>
+
+    <script>
+        // Script simple pour gérer l'état actif du menu au scroll
+        const links = document.querySelectorAll('aside a');
+        
+        links.forEach(link => {
+            link.addEventListener('click', (e) => {
+                // Gestion simple du clic
+                links.forEach(l => l.classList.remove('active'));
+                e.target.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>
