@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="https://d1yei2z3i6k35z.cloudfront.net/3391351/67a8d590ebeea_logosynapselearners.png">
+    <title>Cheat Sheet Data Analyst - Bloc 3 (Mode Opératoire)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --primary: #5E28CB;
+            --primary-light: #e0d4fc;
+            --secondary: #2C3E50;
+            --accent: #E67E22;
+            --text: #333;
+            --bg: #F8F9FA;
+            --code-bg: #1E1E1E;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Header */
+        header {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            margin-bottom: 3rem;
+            text-align: center;
+            border-bottom: 5px solid var(--primary);
+        }
+
+        h1 { color: var(--primary); margin: 0; font-size: 2.2rem; }
+        .subtitle { color: #666; font-size: 1.1rem; margin-top: 10px; }
+
+        /* Sections */
+        section {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            margin-bottom: 3rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        h2 {
+            color: var(--secondary);
+            border-left: 6px solid var(--primary);
+            padding-left: 15px;
+            margin-top: 0;
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+        }
+
+        h3 {
+            color: var(--primary);
+            margin-top: 2rem;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Tableaux de fonctions */
+        .func-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1.5rem;
+            background: #fff;
+        }
+        .func-table th {
+            background: var(--primary-light);
+            color: var(--primary);
+            padding: 12px;
+            text-align: left;
+            border-bottom: 2px solid var(--primary);
+        }
+        .func-table td {
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+            vertical-align: top;
+        }
+        .func-name {
+            font-family: 'Source Code Pro', monospace;
+            color: #d63384;
+            font-weight: 600;
+        }
+
+        /* Code Blocks */
+        .code-block {
+            background: var(--code-bg);
+            border-radius: 8px;
+            position: relative;
+            margin: 1.5rem 0;
+            overflow: hidden;
+        }
+        pre {
+            margin: 0;
+            padding: 20px;
+            color: #e0e0e0;
+            font-family: 'Source Code Pro', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+        }
+
+        /* Syntax Highlighting */
+        .kwd { color: #569cd6; } 
+        .str { color: #ce9178; } 
+        .com { color: #6a9955; } 
+        .num { color: #b5cea8; } 
+
+        /* Analysis Grid for Correlations */
+        .analysis-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 1rem;
+        }
+        .analysis-card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 1.5rem;
+            background: #fafafa;
+        }
+        .card-header {
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+            border-bottom: 2px solid #ddd;
+            padding-bottom: 0.5rem;
+        }
+
+        .alert-box {
+            background: #fff3cd;
+            border-left: 5px solid #ffc107;
+            padding: 1rem;
+            margin-top: 1rem;
+            color: #856404;
+        }
+        
+        .copy-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+        .copy-btn:hover { background: rgba(255,255,255,0.2); }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Cheat Sheet Data Analyst • Bloc 3</h1>
+        <div class="subtitle">Guide des fonctions Scikit-Learn & Pandas • Dataset fil rouge : <strong>Titanic</strong> 🚢</div>
+    </header>
+
+    <section>
+        <h2>1. Exploration (EDA)</h2>
+        <p>L'objectif est de comprendre la structure technique avant d'analyser le métier.</p>
+        
+        <table class="func-table">
+            <thead>
+                <tr>
+                    <th width="30%">Fonction</th>
+                    <th>Utilité & Interprétation</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="func-name">df.head() / df.tail()</td>
+                    <td><strong>Voir à quoi ressemblent les données.</strong> Vérifier si le chargement s'est bien passé (séparateurs, noms de colonnes).</td>
+                </tr>
+                <tr>
+                    <td class="func-name">df.info()</td>
+                    <td><strong>LA fonction la plus importante.</strong> Permet de voir : 
+                        <br>1. Le type des données (Est-ce que l'âge est bien un chiffre ou un texte ?)
+                        <br>2. Les valeurs manquantes (Combien de lignes non-nulles ?)</td>
+                </tr>
+                <tr>
+                    <td class="func-name">df.describe()</td>
+                    <td><strong>Statistiques rapides.</strong> Moyenne, médiane, écart-type. Vérifier les incohérences (ex: Âge max = 200 ans ou Prix min < 0).</td>
+                </tr>
+                <tr>
+                    <td class="func-name">df['col'].value_counts()</td>
+                    <td><strong>Compter les catégories.</strong> Indispensable pour la colonne cible (Y). Si 90% des passagers sont morts, le dataset est "déséquilibré".</td>
+                </tr>
+                <tr>
+                    <td class="func-name">df.duplicated().sum()</td>
+                    <td><strong>Compter les doublons.</strong> Vérifier si des lignes sont identiques.</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="code-block">
+            <button class="copy-btn">Copier</button>
+            <pre><code><span class="com"># Exemple Titanic</span>
+<span class="kwd">print</span>(df.shape)      <span class="com"># (891, 15) -> 891 passagers</span>
+<span class="kwd">print</span>(df.info())     <span class="com"># On voit que 'age' a des valeurs manquantes</span>
+<span class="kwd">print</span>(df[<span class="str">'survived'</span>].value_counts(normalize=<span class="kwd">True</span>)) 
+<span class="com"># Résultat : 0 (Mort) : 61% | 1 (Vivant) : 38%</span></code></pre>
+        </div>
+    </section>
+
+    <section>
+        <h2>2. Recherche de Corrélations</h2>
+        <p>Comment prouver qu'une variable influence la cible ? Choisissez la bonne méthode selon le type de données.</p>
+
+        <div class="analysis-grid">
+            
+            <div class="analysis-card">
+                <div class="card-header">🅰️ Quanti vs Quanti</div>
+                <p><em>Ex: Âge vs Prix du billet (Fare)</em></p>
+                
+                <strong>1. Visuel (Scatterplot)</strong>
+                <p>Nuage de points. Si les points forment une ligne/diagonale, il y a corrélation.</p>
+                
+                <strong>2. Statistique (Pearson)</strong>
+                <p>Le coefficient <code>r</code> va de -1 à 1.</p>
+                <ul>
+                    <li>Proche de 1 : Corrélation positive forte.</li>
+                    <li>Proche de -1 : Corrélation négative forte.</li>
+                    <li>Proche de 0 : Pas de lien linéaire.</li>
+                </ul>
+
+                <div class="code-block" style="margin: 10px 0;">
+<pre><code><span class="com"># Visuel : Heatmap</span>
+sns.heatmap(df[[<span class="str">'age'</span>, <span class="str">'fare'</span>]].corr(), annot=<span class="kwd">True</span>)
+
+<span class="com"># Stat : Coefficient</span>
+<span class="kwd">print</span>(df[<span class="str">'age'</span>].corr(df[<span class="str">'fare'</span>]))</code></pre>
+                </div>
+            </div>
+
+            <div class="analysis-card">
+                <div class="card-header">🅱️ Quanti vs Quali</div>
+                <p><em>Ex: Prix du billet (Quanti) vs Classe (Quali)</em></p>
+
+                <strong>1. Visuel (Boxplot)</strong>
+                <p>Regarder la médiane (barre du milieu) et la taille des boîtes. Si les boîtes sont décalées, la catégorie influe sur la valeur.</p>
+
+                <strong>2. Statistique (ANOVA / GroupBy)</strong>
+                <p>On compare les moyennes. L'ANOVA (f_oneway) permet de valider scientifiquement si les moyennes sont différentes.</p>
+
+                <div class="code-block" style="margin: 10px 0;">
+<pre><code><span class="com"># Visuel</span>
+sns.boxplot(x=<span class="str">'class'</span>, y=<span class="str">'fare'</span>, data=df)
+
+<span class="com"># Stat : Moyenne par groupe</span>
+<span class="kwd">print</span>(df.groupby(<span class="str">'class'</span>)[<span class="str">'fare'</span>].mean())</code></pre>
+                </div>
+            </div>
+
+            <div class="analysis-card">
+                <div class="card-header">©️ Quali vs Quali</div>
+                <p><em>Ex: Sexe vs Survie (Target)</em></p>
+
+                <strong>1. Visuel (Barplot Empilé)</strong>
+                <p>Comparer les hauteurs ou proportions.</p>
+
+                <strong>2. Statistique (Chi-2)</strong>
+                <p>Tableau de contingence (Crosstab). Le test du Chi-2 vérifie l'indépendance. Si p-value < 0.05, il y a un lien significatif.</p>
+
+                <div class="code-block" style="margin: 10px 0;">
+<pre><code><span class="com"># Tableau croisé</span>
+tab = pd.crosstab(df[<span class="str">'sex'</span>], df[<span class="str">'survived'</span>])
+sns.heatmap(tab, annot=<span class="kwd">True</span>, fmt=<span class="str">'d'</span>)
+
+<span class="com"># Test Chi-2</span>
+<span class="kwd">from</span> scipy.stats <span class="kwd">import</span> chi2_contingency
+chi2, p, dof, ex = chi2_contingency(tab)
+<span class="kwd">print</span>(<span class="str">f"P-value: {p}"</span>)</code></pre>
+                </div>
+            </div>
+        </div>
+
+        <div class="alert-box">
+            <strong>⚠️ Attention à la COLINÉARITÉ !</strong>
+            <br>Si deux variables explicatives sont trop corrélées entre elles (ex: "Année de naissance" et "Âge"), elles apportent la même information.
+            <br><strong>Risque :</strong> Cela perturbe les modèles (surtout la régression linéaire).
+            <br><strong>Solution :</strong> Si corrélation > 0.8 entre deux variables X, supprimez-en une des deux.
+        </div>
+    </section>
+
+    <section>
+        <h2>3. Nettoyage (Cleaning)</h2>
+        <table class="func-table">
+            <thead>
+                <tr>
+                    <th width="30%">Fonction</th>
+                    <th>Quand l'utiliser ?</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="func-name">df.drop_duplicates()</td>
+                    <td>Dès le début. Avoir deux fois le même passager fausse les statistiques.</td>
+                </tr>
+                <tr>
+                    <td class="func-name">df.dropna()</td>
+                    <td>Pour supprimer les lignes avec des vides. <strong>À utiliser seulement si</strong> le nombre de lignes perdues est faible (<5%).</td>
+                </tr>
+                <tr>
+                    <td class="func-name">df.fillna(valeur)</td>
+                    <td>Pour "boucher les trous" (Imputation).
+                        <br>- Variables Numériques (Âge) : Remplacer par la <strong>médiane</strong> (robuste aux outliers).
+                        <br>- Variables Catégorielles : Remplacer par le <strong>mode</strong> (valeur la plus fréquente) ou une catégorie "Inconnu".</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <div class="code-block">
+            <button class="copy-btn">Copier</button>
+            <pre><code><span class="com"># Imputation intelligente</span>
+mediane_age = df[<span class="str">'age'</span>].median()
+df[<span class="str">'age'</span>] = df[<span class="str">'age'</span>].fillna(mediane_age)
+
+<span class="com"># Suppression des colonnes inutiles</span>
+<span class="com"># 'deck' a trop de vides, on supprime la colonne entière</span>
+df.drop(<span class="str">'deck'</span>, axis=1, inplace=<span class="kwd">True</span>)</code></pre>
+        </div>
+    </section>
+
+    <section>
+        <h2>4. Preprocessing (Scikit-Learn)</h2>
+        <p>Transformer les données pour qu'elles soient digérables par l'algorithme.</p>
+
+        <table class="func-table">
+            <thead>
+                <tr>
+                    <th width="35%">Fonction</th>
+                    <th>Explication</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="func-name">train_test_split(X, y)</td>
+                    <td>Divise les données en 2 paquets :
+                        <br><strong>Train (80%) :</strong> Pour que le modèle apprenne.
+                        <br><strong>Test (20%) :</strong> Pour vérifier s'il a bien appris (examen final).</td>
+                </tr>
+                <tr>
+                    <td class="func-name">StandardScaler()</td>
+                    <td><strong>Mise à l'échelle.</strong> Transforme les valeurs pour qu'elles soient comparables (Moyenne=0, Écart-type=1). Indispensable si on mélange des Âges (0-80) et des Salaire (0-10000).</td>
+                </tr>
+                <tr>
+                    <td class="func-name">OneHotEncoder() / get_dummies</td>
+                    <td><strong>Encodage.</strong> Transforme le texte en colonnes binaires (0 ou 1). 
+                        <br>Ex: Colonne "Ville" (Paris, Lyon) -> Colonne "Ville_Paris" (1/0), "Ville_Lyon" (1/0).</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="code-block">
+            <button class="copy-btn">Copier</button>
+            <pre><code><span class="kwd">from</span> sklearn.model_selection <span class="kwd">import</span> train_test_split
+<span class="kwd">from</span> sklearn.preprocessing <span class="kwd">import</span> StandardScaler
+
+<span class="com"># 1. Définir X (Features) et y (Cible)</span>
+X = df[[<span class="str">'pclass'</span>, <span class="str">'age'</span>, <span class="str">'fare'</span>]] <span class="com"># On suppose qu'elles sont toutes numériques ici</span>
+y = df[<span class="str">'survived'</span>]
+
+<span class="com"># 2. Split (Toujours AVANT le scaling pour éviter les fuites de données)</span>
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+<span class="com"># 3. Scaling</span>
+scaler = StandardScaler()
+<span class="com"># On calcule (fit) la moyenne sur le TRAIN et on transforme</span>
+X_train_scaled = scaler.fit_transform(X_train)
+<span class="com"># On applique (transform) la MEME transformation sur le TEST (sans recalculer)</span>
+X_test_scaled = scaler.transform(X_test)</code></pre>
+        </div>
+    </section>
+
+    <section>
+        <h2>5. Modélisation (Machine Learning)</h2>
+        <p>Le choix du modèle dépend de la nature de la variable cible <code>y</code>.</p>
+
+        <div class="analysis-grid">
+            <div class="analysis-card">
+                <div class="card-header">Type Régression</div>
+                <p><strong>Objectif :</strong> Prédire un chiffre continu (Prix, Température).</p>
+                <p><strong>Fonction :</strong> <code>LinearRegression()</code></p>
+                <p><strong>Logique :</strong> Tracer une droite qui passe au plus près de tous les points.</p>
+            </div>
+
+            <div class="analysis-card">
+                <div class="card-header">Type Classification</div>
+                <p><strong>Objectif :</strong> Prédire une catégorie (Oui/Non, Chien/Chat).</p>
+                <p><strong>Fonction 1 :</strong> <code>LogisticRegression()</code> (Pour commencer, binaire).</p>
+                <p><strong>Fonction 2 :</strong> <code>RandomForestClassifier()</code> (Plus puissant, gère le non-linéaire).</p>
+            </div>
+        </div>
+
+        <div class="code-block" style="margin-top: 20px;">
+            <button class="copy-btn">Copier</button>
+            <pre><code><span class="kwd">from</span> sklearn.linear_model <span class="kwd">import</span> LogisticRegression
+
+<span class="com"># 1. Initialiser</span>
+model = LogisticRegression()
+
+<span class="com"># 2. Entraîner (Fit) sur les données d'entraînement</span>
+model.fit(X_train_scaled, y_train)
+
+<span class="com"># 3. Prédire (Predict) sur les données de test</span>
+y_pred = model.predict(X_test_scaled)</code></pre>
+        </div>
+    </section>
+
+    <section>
+        <h2>6. Évaluation des résultats</h2>
+        <p>Comment savoir si le modèle est bon ?</p>
+
+        <table class="func-table">
+            <thead>
+                <tr>
+                    <th width="30%">Fonction / Métrique</th>
+                    <th>Utilité</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="func-name">confusion_matrix()</td>
+                    <td>Pour la <strong>Classification</strong>. Montre où le modèle se trompe.
+                        <br>- Faux Positifs : Il a prédit "Vivant" mais il est "Mort".
+                        <br>- Faux Négatifs : Il a prédit "Mort" mais il est "Vivant" (Grave pour le Titanic !).</td>
+                </tr>
+                <tr>
+                    <td class="func-name">accuracy_score()</td>
+                    <td>% de réussite global. Attention, trompeur si les classes sont déséquilibrées.</td>
+                </tr>
+                <tr>
+                    <td class="func-name">classification_report()</td>
+                    <td>Donne la Précision, le Rappel et le F1-Score. C'est le bilan de santé complet.</td>
+                </tr>
+                <tr>
+                    <td class="func-name">mean_squared_error (RMSE)</td>
+                    <td>Pour la <strong>Régression</strong>. C'est l'erreur moyenne. Si RMSE = 500€, le modèle se trompe en moyenne de 500€.</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="code-block">
+            <button class="copy-btn">Copier</button>
+            <pre><code><span class="kwd">from</span> sklearn.metrics <span class="kwd">import</span> confusion_matrix, classification_report
+
+<span class="kwd">print</span>(confusion_matrix(y_test, y_pred))
+<span class="kwd">print</span>(classification_report(y_test, y_pred))</code></pre>
+        </div>
+    </section>
+
+</div>
+
+<script>
+    lucide.createIcons();
+    document.querySelectorAll('.copy-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const code = btn.nextElementSibling.innerText;
+            navigator.clipboard.writeText(code);
+            btn.textContent = 'Copié !';
+            setTimeout(() => btn.textContent = 'Copier', 2000);
+        });
+    });
+</script>
+
+</body>
+</html>
