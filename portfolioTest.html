@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio Data Analyst | Prénom Nom</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        :root {
+            --bg: #ffffff;
+            --bg-alt: #f1f5f9;
+            --text: #0f172a;
+            --text-light: #64748b;
+            --accent: #2563eb;
+            --accent-soft: #dbeafe;
+            --border: #e2e8f0;
+            --radius: 12px;
+            --font-mono: 'JetBrains Mono', monospace;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            line-height: 1.5;
+            overflow-x: hidden;
+        }
+
+        /* --- EFFET DE FOND SUBTIL --- */
+        .grid-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: radial-gradient(var(--border) 1px, transparent 1px);
+            background-size: 40px 40px;
+            z-index: -1;
+            opacity: 0.5;
+        }
+
+        /* --- NAVIGATION --- */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 1.2rem 8%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            z-index: 1000;
+        }
+
+        .logo { font-family: var(--font-mono); font-weight: 800; font-size: 1.1rem; color: var(--accent); }
+
+        .nav-links { display: flex; gap: 2rem; }
+        .nav-links a { 
+            text-decoration: none; 
+            color: var(--text); 
+            font-size: 0.9rem; 
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        .nav-links a:hover { color: var(--accent); }
+
+        /* --- HERO --- */
+        .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 0 10%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .badge {
+            display: inline-block;
+            background: var(--accent-soft);
+            color: var(--accent);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero h1 span { color: var(--accent); }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--text-light);
+            max-width: 600px;
+            margin-bottom: 2.5rem;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: var(--text);
+            color: white;
+            text-decoration: none;
+            border-radius: var(--radius);
+            font-weight: 600;
+            transition: transform 0.3s, background 0.3s;
+        }
+
+        .btn:hover { background: var(--accent); transform: translateY(-3px); }
+
+        /* --- BENTO GRID SECTION --- */
+        section { padding: 100px 10%; }
+        .section-header { margin-bottom: 4rem; }
+        .section-header h2 { font-size: 2.5rem; font-weight: 800; }
+
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-auto-rows: 240px;
+            gap: 1.5rem;
+        }
+
+        .bento-card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 2rem;
+            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .bento-card:hover { border-color: var(--accent); box-shadow: 0 20px 40px rgba(0,0,0,0.05); transform: scale(1.02); }
+
+        .bento-card i { font-size: 2rem; color: var(--accent); }
+        .bento-card h3 { font-size: 1.25rem; margin: 1rem 0 0.5rem; }
+        .bento-card p { color: var(--text-light); font-size: 0.95rem; }
+
+        .large { grid-column: span 2; }
+        .tall { grid-row: span 2; }
+
+        /* --- PROJETS (CARDS) --- */
+        .project-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .project-item {
+            background: var(--bg-alt);
+            border-radius: 24px;
+            padding: 2.5rem;
+            border: 1px solid transparent;
+            transition: 0.3s;
+        }
+
+        .project-item:hover { background: white; border-color: var(--border); }
+
+        .project-tag { font-family: var(--font-mono); font-size: 0.8rem; color: var(--accent); font-weight: bold; }
+
+        /* --- ANIMATIONS DE RÉVÉLATION --- */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* --- CONTACT FORM --- */
+        .contact-box {
+            background: var(--bg-alt);
+            padding: 4rem;
+            border-radius: 32px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 1rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            font-family: inherit;
+        }
+
+        /* --- RESPONSIVE --- */
+        @media (max-width: 900px) {
+            .bento-grid { grid-template-columns: 1fr; grid-auto-rows: auto; }
+            .large { grid-column: span 1; }
+            .tall { grid-row: span 1; }
+            .contact-box { grid-template-columns: 1fr; padding: 2rem; }
+            .hero h1 { font-size: 3rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="grid-bg"></div>
+
+    <nav>
+        <div class="logo">NOM.DATA</div> <div class="nav-links">
+            <a href="#expertise">Expertise</a>
+            <a href="#projets">Analyses</a>
+            <a href="#contact">Contact</a>
+        </div>
+    </nav>
+
+    <header class="hero">
+        <div class="badge reveal">Disponible pour de nouveaux défis</div>
+        <h1 class="reveal">Je donne du sens à vos <span>chiffres.</span></h1>
+        <p class="reveal">
+            Data Analyst spécialisé dans la transformation de bases de données brutes en stratégies de croissance claires et actionnables.
+        </p>
+        <div class="reveal">
+            <a href="#projets" class="btn">Découvrir mes travaux</a>
+        </div>
+    </header>
+
+    <section id="expertise" class="reveal">
+        <div class="section-header">
+            <h2>Mes capacités</h2>
+        </div>
+        <div class="bento-grid">
+            <div class="bento-card large">
+                <i class="fa-solid fa-layer-group"></i>
+                <div>
+                    <h3>Ingénierie Data & Web Full-Stack</h3>
+                    <p>Conception et déploiement de solutions de bout en bout. Je maîtrise Python (Django/Flask) et JavaScript (Vue.js, Node.js) pour créer des outils métier puissants et scalables[cite: 9, 53, 89].</p>
+                </div>
+            </div>
+
+            <div class="bento-card tall">
+                <i class="fa-solid fa-brain"></i>
+                <div>
+                    <h3>IA & Deep Learning</h3>
+                    <p>Expert en algorithmes avancés avec TensorFlow, Keras et Scikit-learn[cite: 82, 83]. Auteur d'ouvrages de référence sur le Machine Learning et la vision par ordinateur (OpenCV)[cite: 11, 71, 84].</p>
+                </div>
+            </div>
+
+            <div class="bento-card">
+                <i class="fa-solid fa-chart-column"></i>
+                <div>
+                    <h3>Datavisualisation</h3>
+                    <p>Transformation de données brutes en récits interactifs avec D3.js, Tableau, Power BI et Plotly pour faciliter la prise de décision[cite: 61, 91, 93].</p>
+                </div>
+            </div>
+
+            <div class="bento-card">
+                <i class="fa-solid fa-chalkboard-user"></i>
+                <div>
+                    <h3>Expertise Pédagogique</h3>
+                    <p>Formateur pour des institutions d'élite (EFREI, École IA Microsoft) et créateur de contenus techniques pour Openclassrooms[cite: 10, 23, 30, 36].</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="projets" class="reveal">
+        <div class="section-header">
+            <span class="badge">Portfolio</span>
+            <h2>Études de cas & Réalisations</h2>
+            <p style="color: var(--text-light); max-width: 700px; margin-top: 1rem;">
+                De la conception d'algorithmes de Deep Learning à la création de plateformes data complexes, voici une sélection de mes travaux à fort impact[cite: 7, 9].
+            </p>
+        </div>
+
+        <div class="project-list">
+            <article class="project-item">
+                <div class="project-tag">CAPGEMINI • DATA VISUALIZATION</div>
+                <h3 style="margin: 1rem 0;">Application Web de Data Vis Dynamique</h3>
+                <p style="color: var(--text-light); margin-bottom: 1.5rem;">
+                    Conception et déploiement d'une application web complexe dédiée à la visualisation de données massives[cite: 60, 61]. Utilisation de D3.js et de la stack MEAN pour transformer des datasets bruts en interfaces décisionnelles fluides[cite: 61, 62].
+                </p>
+                <div class="tags" style="margin-bottom: 1.5rem;">
+                    <span class="tag">D3.js</span>
+                    <span class="tag">Node.js</span>
+                    <span class="tag">MongoDB</span>
+                </div>
+                <a href="#" style="text-decoration: none; color: var(--text); font-weight: 700; border-bottom: 2px solid var(--accent);">VOIR LE CASE STUDY →</a>
+            </article>
+
+            <article class="project-item">
+                <div class="project-tag">ÉDITIONS ENI • MACHINE LEARNING</div>
+                <h3 style="margin: 1rem 0;">Ouvrages de référence : ML & Deep Learning</h3>
+                <p style="color: var(--text-light); margin-bottom: 1.5rem;">
+                    Auteur du livre "Machine Learning et Deep Learning" détaillant la conception avancée d'algorithmes[cite: 69, 71]. Un projet qui démontre ma capacité à vulgariser des concepts mathématiques complexes pour des experts et étudiants[cite: 12, 71].
+                </p>
+                <div class="tags" style="margin-bottom: 1.5rem;">
+                    <span class="tag">Python</span>
+                    <span class="tag">TensorFlow</span>
+                    <span class="tag">Pédagogie</span>
+                </div>
+                <a href="#" style="text-decoration: none; color: var(--text); font-weight: 700; border-bottom: 2px solid var(--accent);">DÉCOUVRIR LE LIVRE →</a>
+            </article>
+
+            <article class="project-item">
+                <div class="project-tag">SYNAPSE LEARNERS • PRODUCT & AI</div>
+                <h3 style="margin: 1rem 0;">Plateforme d'accompagnement IA</h3>
+                <p style="color: var(--text-light); margin-bottom: 1.5rem;">
+                    Fondation et direction technique d'une plateforme dédiée à la productivité par l'IA et la formation des talents IT[cite: 14, 17]. Développement d'outils et de jeux de données pour booster l'apprentissage technique[cite: 18, 19].
+                </p>
+                <div class="tags" style="margin-bottom: 1.5rem;">
+                    <span class="tag">AI Strategy</span>
+                    <span class="tag">Full-Stack</span>
+                    <span class="tag">Product Lead</span>
+                </div>
+                <a href="#" style="text-decoration: none; color: var(--text); font-weight: 700; border-bottom: 2px solid var(--accent);">EXPLORER LA PLATEFORME →</a>
+            </article>
+
+            <article class="project-item">
+                <div class="project-tag">WIZARD INTERACT • DATA & WEB</div>
+                <h3 style="margin: 1rem 0;">Architecture Data Scientist & Full-Stack</h3>
+                <p style="color: var(--text-light); margin-bottom: 1.5rem;">
+                    Développement de solutions web sur-mesure intégrant des moteurs d'analyse de données[cite: 53, 54]. Maîtrise complète de la chaîne, du backend Python (Django) au frontend réactif en Vue.js[cite: 55].
+                </p>
+                <div class="tags" style="margin-bottom: 1.5rem;">
+                    <span class="tag">Django</span>
+                    <span class="tag">Vue.js</span>
+                    <span class="tag">Python</span>
+                </div>
+                <a href="#" style="text-decoration: none; color: var(--text); font-weight: 700; border-bottom: 2px solid var(--accent);">CONSULTER LE PROJET →</a>
+            </article>
+        </div>
+    </section>
+
+    <section id="contact" class="reveal">
+        <div class="contact-box">
+            <div>
+                <h2 style="font-size: 3rem; margin-bottom: 1rem;">Prêt à collaborer ?</h2>
+                <p style="color: var(--text-light);">Je suis toujours ouvert aux discussions sur des projets data ou des opportunités de recrutement.</p>
+            </div>
+            <form action="https://docs.google.com/forms/d/e/1FAIpQLSeNI4_il1L2UtiwhLTHUMm20dOMJueGCflEiLmaOB2kZSxHRw/formResponse" method="POST">
+                <input type="text" placeholder="Nom" name="entry.430610551" required>
+                <input type="email" name="entry.2037165102" placeholder="Email" required>
+                <textarea rows="4" name="entry.1270399646" placeholder="Votre message..." required></textarea>
+                <button type="submit" class="btn" style="width: 100%; border: none; cursor: pointer;">Envoyer</button>
+            </form>
+        </div>
+    </section>
+
+    <footer style="text-align: center; padding: 4rem; color: var(--text-light); font-size: 0.9rem; border-top: 1px solid var(--border);">
+        © 2024 • Designé avec précision par [TON NOM]
+    </footer>
+
+    <script>
+        // ANIMATION AU SCROLL (Intersection Observer)
+        const observerOptions = { threshold: 0.15 };
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        // EFFET PARALLAX LÉGER SUR LE FOND
+        window.addEventListener('mousemove', (e) => {
+            const moveX = (e.clientX - window.innerWidth / 2) * 0.01;
+            const moveY = (e.clientY - window.innerHeight / 2) * 0.01;
+            document.querySelector('.grid-bg').style.transform = `translate(${moveX}px, ${moveY}px)`;
+        });
+    </script>
+</body>
+</html>
