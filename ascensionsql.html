@@ -1,0 +1,1126 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>L'Ascension SQL 🗄️ — Synapse Learners</title>
+<meta name="description" content="L'Ascension SQL — révision de SQL en 7 niveaux sur la base e-commerce W3Schools (via DuckDB) : 70 exercices progressifs (SELECT, filtres, agrégats, jointures, sous-requêtes, vues), indices et solutions détaillées. Synapse Learners — Parcours Data Analyst.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Roboto+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* =====================================================================
+   CHARTE — L'Ascension SQL (Synapse Learners)
+   ===================================================================== */
+:root{
+  --python-blue:#3776ab;        /* bleu Python (primaire) */
+  --python-blue-deep:#21466b;   /* bleu profond (texte/dégradés) */
+  --python-night:#13263b;       /* nuit (fonds sombres) */
+  --python-yellow:#ffd43b;      /* jaune Python (accent) */
+  --python-gold:#e9a900;        /* or (accent lisible sur clair) */
+  --summit:#2f9e44;             /* vert sommet (réussite/solution) */
+
+  --bg:#eef2f8;
+  --bg-2:#e6ecf5;
+  --card:#ffffff;
+  --ink:#1b2733;
+  --muted:#5d6b7c;
+  --line:#dce4ee;
+  --line-soft:#e8eef5;
+
+  /* Code — Monokai (identique à la charte d'origine) */
+  --code-bg:#282c34;
+  --code-comment:#7f8c98;
+  --code-keyword:#f92672;
+  --code-function:#66d9ef;
+  --code-string:#e6db74;
+  --code-number:#ae81ff;
+  --code-variable:#a6e22e;
+  --code-operator:#f8f8f2;
+  --code-builtin:#fd971f;
+
+  --font:'Poppins',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  --mono:'Roboto Mono',ui-monospace,Menlo,Consolas,monospace;
+  --radius:14px;
+  --radius-sm:9px;
+  --shadow:0 10px 30px rgba(20,40,67,.10);
+  --shadow-soft:0 2px 10px rgba(20,40,67,.06);
+  --maxw:1080px;
+}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;font-family:var(--font);color:var(--ink);background:var(--bg);
+  line-height:1.7;-webkit-font-smoothing:antialiased;
+}
+@media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto} }
+h1,h2,h3,h4{margin:0;font-weight:700;letter-spacing:-.01em;line-height:1.2}
+p{margin:0}
+a{color:var(--python-blue);text-decoration:none}
+:focus-visible{outline:3px solid var(--python-yellow);outline-offset:3px;border-radius:6px}
+
+/* =====================================================================
+   MASTHEAD (barre fixe : marque + navigation des camps + progression)
+   ===================================================================== */
+.masthead{
+  position:sticky;top:0;z-index:50;
+  background:rgba(255,255,255,.86);backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--line);
+}
+.masthead__row{
+  max-width:var(--maxw);margin:0 auto;padding:9px 18px;
+  display:flex;align-items:center;gap:14px;
+}
+.brand{display:flex;align-items:center;gap:10px;flex:0 0 auto}
+.brand__logo{
+  width:34px;height:34px;border-radius:9px;display:grid;place-items:center;flex:0 0 auto;
+  background:linear-gradient(150deg,var(--python-blue),var(--python-blue-deep));
+  color:#fff;box-shadow:inset 0 0 0 1px rgba(255,255,255,.15);
+}
+.brand__logo svg{width:20px;height:20px}
+.brand__txt{display:flex;flex-direction:column;line-height:1.1}
+.brand__name{font-weight:700;font-size:.98rem;color:var(--python-blue-deep)}
+.brand__tag{font-size:.66rem;font-weight:600;letter-spacing:.04em;color:var(--muted);text-transform:uppercase}
+
+.camp-nav{
+  display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;margin-left:auto;padding:2px;
+}
+.camp-nav::-webkit-scrollbar{display:none}
+.pill{
+  flex:0 0 auto;border:1px solid var(--line);background:#fff;color:var(--python-blue-deep);
+  font-family:var(--mono);font-size:.78rem;font-weight:600;
+  padding:5px 11px;border-radius:999px;cursor:pointer;transition:.15s;white-space:nowrap;
+  position:relative;
+}
+.pill:hover{border-color:var(--python-blue);background:#f1f6fb}
+.pill.active{background:var(--python-blue);border-color:var(--python-blue);color:#fff}
+.pill.done::after{
+  content:"";position:absolute;top:-2px;right:-2px;width:9px;height:9px;border-radius:50%;
+  background:var(--summit);border:2px solid #fff;
+}
+.mh-progress{flex:0 0 auto;display:flex;align-items:center;gap:8px;font-size:.78rem;color:var(--muted);font-weight:600}
+.mh-progress b{font-family:var(--mono);color:var(--python-blue-deep)}
+@media(max-width:760px){
+  .mh-progress{display:none}
+  .brand__tag{display:none}
+}
+
+/* =====================================================================
+   HERO (le thèse de la page : l'ascension + profil d'altitude)
+   ===================================================================== */
+.hero{
+  position:relative;overflow:hidden;color:#eaf2fb;
+  background:
+    radial-gradient(110% 120% at 85% -20%, #3a6896 0%, transparent 55%),
+    linear-gradient(160deg,#2a5076 0%, #21466b 45%, #16304b 100%);
+}
+.hero__contours{position:absolute;inset:0;width:100%;height:100%;opacity:.16;pointer-events:none}
+.hero__inner{
+  max-width:var(--maxw);margin:0 auto;padding:46px 22px 30px;position:relative;z-index:1;
+}
+.kicker{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(255,212,59,.14);border:1px solid rgba(255,212,59,.4);color:var(--python-yellow);
+  font-size:.72rem;font-weight:600;letter-spacing:.05em;text-transform:uppercase;
+  padding:5px 12px;border-radius:999px;
+}
+.hero h1{
+  font-size:clamp(2.1rem,5.2vw,3.1rem);font-weight:800;color:#fff;margin:16px 0 10px;
+}
+.hero__sub{
+  max-width:58ch;color:#cfe0f0;font-size:1.04rem;font-weight:300;
+}
+.hero__sub code{font-family:var(--mono);font-size:.92em;background:rgba(255,255,255,.12);padding:1px 6px;border-radius:5px;color:#fff}
+
+/* Barre de progression de l'ascension */
+.ascent{display:flex;align-items:center;gap:14px;margin:22px 0 4px;max-width:560px}
+.ascent__track{flex:1;height:8px;border-radius:99px;background:rgba(255,255,255,.16);overflow:hidden}
+.ascent__fill{height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,var(--python-yellow),var(--python-gold));transition:width .5s ease}
+.ascent__label{font-size:.82rem;font-weight:600;color:#dfeaf5;white-space:nowrap}
+.ascent__label b{font-family:var(--mono);color:#fff}
+
+/* ---- Profil d'altitude interactif (élément signature) ---- */
+.profile{position:relative;z-index:1;margin:26px auto 0;max-width:var(--maxw);padding:0 14px 8px}
+.profile__svg{display:block;width:100%;height:auto;overflow:visible}
+.ridge-fill{fill:url(#ridgeGrad)}
+.ridge-line{fill:none;stroke:#9cc2e6;stroke-width:2.5;stroke-linejoin:round}
+.trail{fill:none;stroke:rgba(255,255,255,.35);stroke-width:1.5;stroke-dasharray:2 5;stroke-linecap:round}
+.endlabel{fill:#bcd2e8;font-family:var(--mono);font-size:11px;font-weight:500}
+
+.camp{cursor:pointer}
+.camp__halo{fill:rgba(255,255,255,.0);transition:fill .2s}
+.camp:hover .camp__halo,.camp.active .camp__halo{fill:rgba(255,212,59,.22)}
+.camp__dot{fill:#16304b;stroke:#9cc2e6;stroke-width:2.5;transition:fill .25s,stroke .25s,r .2s}
+.camp:hover .camp__dot{stroke:#fff}
+.camp.active .camp__dot{fill:var(--python-yellow);stroke:#fff}
+.camp.done .camp__dot{fill:var(--summit);stroke:#cdeccd}
+.camp__num{fill:#fff;font-family:var(--mono);font-size:11px;font-weight:600;text-anchor:middle;dominant-baseline:central;pointer-events:none}
+.camp__name{fill:#dcebff;}
+.camp:focus-visible{outline:none}
+.camp:focus-visible .camp__dot{stroke:var(--python-yellow);stroke-width:3.5}
+
+/* =====================================================================
+   CONTENU
+   ===================================================================== */
+main{max-width:var(--maxw);margin:0 auto;padding:34px 22px 40px}
+
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  box-shadow:var(--shadow-soft);padding:24px;margin-bottom:30px;
+}
+
+/* Carte préparation */
+.prep{border-left:5px solid var(--python-yellow)}
+.prep h2{font-size:1.25rem;color:var(--python-blue-deep);display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.prep p{color:var(--ink)}
+.prep p+p{margin-top:10px}
+
+/* ---- Section d'un niveau / camp ---- */
+.level{
+  scroll-margin-top:80px;
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  box-shadow:var(--shadow-soft);overflow:hidden;margin-bottom:26px;
+  transition:box-shadow .2s,border-color .2s;
+}
+.level:hover{box-shadow:var(--shadow)}
+.level.completed{border-color:#bfe3c6}
+.level__head{
+  display:flex;align-items:center;gap:18px;padding:22px 24px;
+  border-bottom:1px solid var(--line-soft);position:relative;
+  background:linear-gradient(180deg,#fbfdff,#f5f9fd);
+}
+.level__badge{
+  flex:0 0 auto;width:58px;height:58px;border-radius:16px;display:grid;place-items:center;position:relative;
+  background:linear-gradient(150deg,var(--python-blue),var(--python-blue-deep));
+  color:#fff;box-shadow:0 6px 16px rgba(33,70,107,.30);
+}
+.level__num{font-size:1.5rem;font-weight:800;line-height:1}
+.level__emoji{position:absolute;bottom:-8px;right:-8px;font-size:1.25rem;filter:drop-shadow(0 2px 3px rgba(0,0,0,.2))}
+.level__meta{flex:1;min-width:0}
+.level__alt{
+  display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:.72rem;font-weight:600;
+  color:var(--python-blue);background:#eaf2fb;border:1px solid #d4e6f6;padding:2px 9px;border-radius:999px;margin-bottom:7px;
+}
+.level__title{font-size:1.32rem;color:var(--python-blue-deep)}
+.level__topic{color:var(--muted);font-size:.92rem;font-weight:500;margin-top:3px}
+.level__topic code{font-family:var(--mono);font-size:.84em;background:#eef3f9;color:var(--python-blue-deep);padding:1px 6px;border-radius:5px}
+.level__check{
+  position:absolute;top:14px;right:18px;display:none;align-items:center;gap:6px;
+  font-size:.78rem;font-weight:600;color:var(--summit);
+}
+.level.completed .level__check{display:inline-flex}
+
+.level__body{padding:24px}
+.level__intro{color:var(--ink);margin-bottom:18px}
+
+/* Zone d'accueil des exercices (vide pour l'instant) */
+.exercises{display:block}
+.placeholder{
+  border:2px dashed #c9d6e6;border-radius:var(--radius);background:
+    repeating-linear-gradient(135deg,#f7faff,#f7faff 14px,#f2f7fc 14px,#f2f7fc 28px);
+  padding:30px 22px;text-align:center;color:var(--muted);
+}
+.placeholder__pin{font-size:1.6rem;display:block;margin-bottom:8px}
+.placeholder b{color:var(--python-blue-deep)}
+.placeholder small{display:block;margin-top:6px;font-size:.82rem}
+
+/* Bouton "camp franchi" */
+.level__foot{padding:0 24px 24px;display:flex;justify-content:flex-end}
+.camp-toggle{
+  display:inline-flex;align-items:center;gap:9px;cursor:pointer;
+  border:1.5px solid var(--summit);background:#fff;color:var(--summit);
+  font-family:var(--font);font-weight:600;font-size:.9rem;padding:9px 16px;border-radius:999px;transition:.15s;
+}
+.camp-toggle:hover{background:#eefaf0}
+.camp-toggle .tick{
+  width:18px;height:18px;border-radius:50%;border:2px solid currentColor;display:grid;place-items:center;flex:0 0 auto;
+}
+.camp-toggle .tick svg{width:11px;height:11px;opacity:0;transition:opacity .15s}
+.camp-toggle.is-done{background:var(--summit);border-color:var(--summit);color:#fff}
+.camp-toggle.is-done .tick{border-color:#fff}
+.camp-toggle.is-done .tick svg{opacity:1}
+
+/* Bandeau d'encouragement entre les camps */
+.cheer{
+  text-align:center;font-style:italic;color:var(--muted);font-size:1.02rem;
+  padding:8px 20px 26px;max-width:60ch;margin:0 auto;
+}
+.cheer::before{content:"⛰️";font-style:normal;display:block;font-size:1.2rem;margin-bottom:4px;opacity:.8}
+
+/* =====================================================================
+   COMPOSANTS RÉUTILISABLES (prêts pour le contenu à venir)
+   — exercices, accordéons, blocs de code, encarts Synapse, laboratoire, quiz
+   ===================================================================== */
+
+/* Exercice */
+.exercise{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:20px;margin-bottom:22px;box-shadow:var(--shadow-soft);
+  transition:transform .2s ease, box-shadow .2s ease;
+}
+.exercise:hover{transform:translateY(-3px);box-shadow:var(--shadow)}
+.exercise h4{
+  color:var(--python-blue);margin:0 0 14px;font-size:1.18rem;
+  border-bottom:2px solid var(--line-soft);padding-bottom:10px;
+}
+
+/* Accordéons (indices / solution) — mécanisme identique à la charte d'origine */
+.accordion-title{
+  cursor:pointer;font-weight:600;display:inline-block;padding:8px 15px;border-radius:7px;
+  transition:background-color .25s,border-color .25s,color .25s;
+  border:1px solid var(--python-blue);background:transparent;color:var(--python-blue);
+  margin-right:10px;margin-top:10px;user-select:none;
+}
+.accordion-title:hover{background:var(--python-blue);color:#fff}
+.accordion-title.solution{border-color:var(--summit);color:var(--summit)}
+.accordion-title.solution:hover{background:var(--summit);color:#fff}
+.accordion-content{
+  max-height:0;overflow:hidden;transition:max-height .5s ease-in-out;
+  padding:0 20px;margin-top:15px;background:#f0f5fa;
+  border-left:3px solid var(--python-blue);border-radius:0 var(--radius) var(--radius) 0;
+}
+.accordion-content.solution-content{border-left-color:var(--summit)}
+.accordion-content.active{padding-top:15px;padding-bottom:15px}
+.solution-explanation{
+  background:#eaf2fb;border-left:3px solid var(--python-blue);padding:15px;margin-top:15px;
+  border-radius:0 var(--radius) var(--radius) 0;
+}
+.solution-explanation p,.solution-explanation ul{margin-bottom:10px}
+
+/* Blocs de code + coloration Monokai */
+pre{
+  background:var(--code-bg);color:#abb2bf;padding:20px;overflow-x:auto;border-radius:10px;margin:15px 0;
+  box-shadow:inset 0 2px 6px rgba(0,0,0,.25);font-size:.9rem;line-height:1.55;
+}
+code{font-family:var(--mono)}
+.python-code .comment{color:var(--code-comment)}
+.python-code .keyword{color:var(--code-keyword);font-weight:600}
+.python-code .function{color:var(--code-function)}
+.python-code .string{color:var(--code-string)}
+.python-code .number{color:var(--code-number)}
+.python-code .variable{color:var(--code-variable)}
+.python-code .operator{color:var(--code-operator)}
+.python-code .built_in{color:var(--code-builtin)}
+
+/* Encarts Synapse (💡 / ⚠️ / 🚀 / ✅) — prêts pour le contenu */
+.encart{border-radius:var(--radius);padding:16px 18px 16px 50px;position:relative;margin:18px 0;font-size:.96rem}
+.encart::before{position:absolute;left:16px;top:15px;font-size:1.25rem}
+.encart h5{margin:0 0 6px;font-size:.95rem;font-weight:700}
+.encart.savais  {background:#eef4fc;border:1px solid #d4e3f6}
+.encart.savais::before{content:"💡"}
+.encart.savais h5{color:#2c5d87}
+.encart.attention{background:#fdf1ec;border:1px solid #f6d8cb}
+.encart.attention::before{content:"⚠️"}
+.encart.attention h5{color:#b5532a}
+.encart.astuce  {background:#eafaf0;border:1px solid #c8ecd4}
+.encart.astuce::before{content:"🚀"}
+.encart.astuce h5{color:#1f7a3d}
+.encart.savoir  {background:#fff8e6;border:1px solid #f3e2b0}
+.encart.savoir::before{content:"✅"}
+.encart.savoir h5{color:#9a7b14}
+.encart ul{margin:8px 0 0;padding-left:18px}
+.encart li{margin-bottom:5px}
+.encart li:last-child{margin-bottom:0}
+
+/* Laboratoire (zone interactive) + Quiz — conteneurs prêts */
+.labo{border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;margin:18px 0;background:#fff}
+.labo__head{display:flex;align-items:center;gap:9px;padding:11px 16px;background:linear-gradient(180deg,#fbfdff,#f4f9fd);border-bottom:1px solid var(--line-soft);font-weight:600;color:var(--python-blue-deep)}
+.labo__head .tag{font-family:var(--mono);font-size:.68rem;font-weight:600;color:#fff;background:var(--python-blue);padding:2px 8px;border-radius:6px;text-transform:uppercase;letter-spacing:.04em}
+.labo__body{padding:16px}
+.quiz{border:1px solid var(--line);border-radius:var(--radius);padding:18px;margin:18px 0;background:#fbfdff}
+.quiz__title{display:flex;align-items:center;gap:9px;font-weight:700;color:var(--python-blue-deep);margin-bottom:8px}
+
+footer{
+  text-align:center;padding:30px 20px 40px;color:var(--muted);font-size:.9rem;
+  border-top:1px solid var(--line);
+}
+footer b{color:var(--python-blue-deep)}
+
+/* Responsive */
+@media(max-width:560px){
+  .level__head{padding:18px;gap:14px}
+  .level__badge{width:50px;height:50px}
+  .level__num{font-size:1.3rem}
+  .level__body{padding:18px}
+  .level__foot{padding:0 18px 18px}
+  .level__check{position:static;margin-top:6px}
+  .hero__inner{padding:34px 18px 24px}
+}
+@media (prefers-reduced-motion: reduce){
+  .exercise,.camp__dot,.ascent__fill{transition:none}
+}
+
+/* Astuce intégrée à la solution */
+.astuce-line{margin:14px 0 0;padding:11px 14px;background:#fff7e6;border:1px solid #f0dcb4;border-radius:9px;color:#5a4a2a;font-size:14px;line-height:1.6}
+.astuce-line .astuce-ic{margin-right:3px}
+</style>
+</head>
+<body>
+
+<!-- ================= MASTHEAD ================= -->
+<header class="masthead">
+  <div class="masthead__row">
+    <a class="brand" href="#top" aria-label="Synapse Learners — L'Ascension SQL">
+      <span class="brand__logo" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M3 20 10 7l4 7 2-3 5 9z" fill="currentColor" opacity=".55"/><path d="M3 20 10 7l4 7 2-3 5 9z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+      </span>
+      <span class="brand__txt">
+        <span class="brand__name">SQL</span>
+        <span class="brand__tag">Synapse Learners · Data Analyst</span>
+      </span>
+    </a>
+
+    <nav class="camp-nav" aria-label="Navigation des camps">
+      <button class="pill" data-level="1" type="button">N1</button>
+      <button class="pill" data-level="2" type="button">N2</button>
+      <button class="pill" data-level="3" type="button">N3</button>
+      <button class="pill" data-level="4" type="button">N4</button>
+      <button class="pill" data-level="5" type="button">N5</button>
+      <button class="pill" data-level="6" type="button">N6</button>
+      <button class="pill" data-level="7" type="button">N7</button>
+    </nav>
+
+    <div class="mh-progress"><span>Ascension</span> <b id="mhCount">0</b><span>/7</span></div>
+  </div>
+</header>
+
+<!-- ================= HERO ================= -->
+<section class="hero" id="top">
+  <!-- Motif topographique discret -->
+  <svg class="hero__contours" viewBox="0 0 1000 400" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <g fill="none" stroke="#bcd6f0" stroke-width="1">
+      <path d="M-20 330 Q 250 290 500 320 T 1020 300"/>
+      <path d="M-20 360 Q 250 320 500 350 T 1020 330"/>
+      <path d="M-20 250 Q 280 210 520 245 T 1020 225"/>
+      <path d="M-20 180 Q 300 150 560 180 T 1020 165"/>
+      <path d="M-20 110 Q 320 85 580 115 T 1020 100"/>
+    </g>
+  </svg>
+
+  <div class="hero__inner">
+    <span class="kicker">🗄️ Révision SQL</span>
+    <h1>L'Ascension SQL</h1>
+    <p class="hero__sub">Sept camps pour passer de la première requête aux <b>analyses métier</b> — sur une vraie base e-commerce. <code>SELECT</code>, filtres, agrégats, jointures, sous-requêtes : une étape à la fois, indice après indice, sans syndrome de l'imposteur.</p>
+
+    <div class="ascent">
+      <span class="ascent__label">Progression : <b id="ascentCount">0</b> / 7 camps</span>
+      <div class="ascent__track"><div class="ascent__fill" id="ascentFill"></div></div>
+    </div>
+  </div>
+
+  <!-- ===== Profil d'altitude interactif (signature + navigation) ===== -->
+  <div class="profile">
+    <svg class="profile__svg" viewBox="0 0 1000 230" role="group" aria-label="Profil de l'ascension — 7 camps">
+      <defs>
+        <linearGradient id="ridgeGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#5b86b3" stop-opacity=".55"/>
+          <stop offset="100%" stop-color="#16304b" stop-opacity="0"/>
+        </linearGradient>
+      </defs>
+
+      <!-- Crête (zone + ligne) reliant les 7 camps -->
+      <path class="ridge-fill" d="M0 214 L60 196 L200 172 L345 146 L490 118 L635 92 L780 62 L940 30 L1000 24 L1000 230 L0 230 Z"/>
+      <path class="ridge-line" d="M60 196 L200 172 L345 146 L490 118 L635 92 L780 62 L940 30"/>
+      <path class="trail" d="M60 196 L200 172 L345 146 L490 118 L635 92 L780 62 L940 30"/>
+
+      <!-- Étiquettes des extrémités -->
+      <text class="endlabel" x="58" y="220">Camp de base</text>
+      <text class="endlabel" x="940" y="18" text-anchor="end">Sommet · 8 848 m</text>
+
+      <!-- Camps cliquables -->
+      <a class="camp" href="#niveau-1" data-level="1"><title>Camp 1 — SELECT &amp; WHERE · 1 200 m</title><circle class="camp__halo" cx="60" cy="196" r="17"/><circle class="camp__dot" cx="60" cy="196" r="11"/><text class="camp__num" x="60" y="196">1</text></a>
+      <a class="camp" href="#niveau-2" data-level="2"><title>Camp 2 — Filtrer · 2 400 m</title><circle class="camp__halo" cx="200" cy="172" r="17"/><circle class="camp__dot" cx="200" cy="172" r="11"/><text class="camp__num" x="200" y="172">2</text></a>
+      <a class="camp" href="#niveau-3" data-level="3"><title>Camp 3 — Agrégation · 3 600 m</title><circle class="camp__halo" cx="345" cy="146" r="17"/><circle class="camp__dot" cx="345" cy="146" r="11"/><text class="camp__num" x="345" y="146">3</text></a>
+      <a class="camp" href="#niveau-4" data-level="4"><title>Camp 4 — Jointures · 5 000 m</title><circle class="camp__halo" cx="490" cy="118" r="17"/><circle class="camp__dot" cx="490" cy="118" r="11"/><text class="camp__num" x="490" y="118">4</text></a>
+      <a class="camp" href="#niveau-5" data-level="5"><title>Camp 5 — Jointures multiples · 6 200 m</title><circle class="camp__halo" cx="635" cy="92" r="17"/><circle class="camp__dot" cx="635" cy="92" r="11"/><text class="camp__num" x="635" y="92">5</text></a>
+      <a class="camp" href="#niveau-6" data-level="6"><title>Camp 6 — Sous-requêtes · 7 500 m</title><circle class="camp__halo" cx="780" cy="62" r="17"/><circle class="camp__dot" cx="780" cy="62" r="11"/><text class="camp__num" x="780" y="62">6</text></a>
+      <a class="camp" href="#niveau-7" data-level="7"><title>Camp 7 — Synthèse · 8 848 m</title><circle class="camp__halo" cx="940" cy="30" r="17"/><circle class="camp__dot" cx="940" cy="30" r="11"/><text class="camp__num" x="940" y="30">7</text></a>
+    </svg>
+  </div>
+</section>
+
+<!-- ================= CONTENU ================= -->
+<main>
+
+  <!-- Préparation -->
+  <section class="card prep">
+    <h2>🎒 Préparation de l'équipement (Google Colab)</h2>
+    <p>L'expédition se déroule sur <strong>Google Colab</strong> : aucune installation, un compte Google suffit — <strong>DuckDB</strong> permet d'écrire du vrai SQL directement sur des DataFrames pandas. Chaque exercice est une requête à relever dans une cellule.</p>
+    <p>Exécute d'abord cette cellule : elle charge les 8 tables de la base e-commerce <strong>W3Schools</strong> depuis GitHub. Ensuite, pour chaque exercice, tu écris ta requête entre les triples guillemets de <code>duckdb.sql(""" ... """).df()</code>.</p>
+    <pre class="python-code"><code><span class="keyword">import</span> duckdb
+<span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+
+base <span class="operator">=</span> <span class="string">"https://raw.githubusercontent.com/Patrick-Wampe/datasets/refs/heads/main/"</span>
+df_Customers <span class="operator">=</span> pd.<span class="function">read_csv</span>(base <span class="operator">+</span> <span class="string">"Customers.csv"</span>)
+df_Products  <span class="operator">=</span> pd.<span class="function">read_csv</span>(base <span class="operator">+</span> <span class="string">"Products.csv"</span>)
+df_Orders    <span class="operator">=</span> pd.<span class="function">read_csv</span>(base <span class="operator">+</span> <span class="string">"Orders.csv"</span>)
+<span class="comment"># … idem pour OrderDetails, Categories, Shippers, Suppliers, Employees</span>
+
+<span class="comment"># Pour chaque exercice, écris ta requête entre les triples guillemets :</span>
+duckdb.<span class="function">sql</span>(<span class="string">"""
+    SELECT * FROM df_Customers WHERE City = 'Paris'
+"""</span>).<span class="function">df</span>()</code></pre>
+    <p>Les 8 tables et leurs colonnes — garde-les sous la main :</p>
+    <p class="schema-ref">
+      📋 <code>df_Customers</code> · CustomerID, CustomerName, ContactName, Address, City, PostalCode, Country<br>
+      📦 <code>df_Products</code> · ProductID, ProductName, SupplierID, CategoryID, Unit, Price<br>
+      🛒 <code>df_Orders</code> · OrderID, CustomerID, EmployeeID, OrderDate, ShipperID<br>
+      🧾 <code>df_OrderDetails</code> · OrderDetailID, OrderID, ProductID, Quantity<br>
+      🏷️ <code>df_Categories</code> · CategoryID, CategoryName, Description<br>
+      🚚 <code>df_Shippers</code> · ShipperID, ShipperName, Phone<br>
+      🏭 <code>df_Suppliers</code> · SupplierID, SupplierName, ContactName, Address, City, PostalCode, Country, Phone<br>
+      👥 <code>df_Employees</code> · EmployeeID, LastName, FirstName, BirthDate, Photo, Notes
+    </p>
+  </section>
+
+  <div id="levels"></div>
+
+</main>
+
+<footer>
+  © 2026 <b>L'Ascension SQL</b> — Synapse Learners · Parcours Data Analyst.
+</footer>
+
+<script>
+"use strict";
+
+/* =========================================================================
+   L'ASCENSION SQL — 7 niveaux (base e-commerce W3Schools via DuckDB)
+   Chaque exercice : t (titre), q (énoncé), h [indice1, indice2],
+   s (solution = requête SQL brute), e [explications...], a (astuce facultative).
+   Chaque requête s'exécute dans  duckdb.sql(""" ... """).df()  — on se concentre
+   ici sur la requête SQL elle-même.
+   ========================================================================= */
+
+var LEVELS = [
+/* ---------------------------------------------------------------- NIVEAU 1 */
+{ n:1, emoji:"🔎", alt:"▲ 1 200 m · Camp de base", title:"SELECT &amp; WHERE",
+  topic:`<code class="t">SELECT</code> · <code class="t">FROM</code> · <code class="t">WHERE</code> · <code class="t">AND</code>/<code class="t">OR</code>/<code class="t">NOT</code> · <code class="t">DISTINCT</code> · <code class="t">ORDER BY</code>`,
+  intro:`Toute requête commence par choisir des colonnes (<b>SELECT</b>) dans une table (<b>FROM</b>), puis filtrer les lignes (<b>WHERE</b>). Rappel : chaque requête se place dans <code>duckdb.sql("""  """).df()</code>, et les tables s'appellent <code>df_Customers</code>, <code>df_Products</code>, etc.`,
+  cheer:`Camp de base franchi : tu sais sélectionner et filtrer. Place aux filtres avancés.`,
+  exercises:[
+    { t:"Tout afficher", q:`Affiche <b>toutes les colonnes</b> et toutes les lignes de la table <code>df_Customers</code>.`,
+      h:[`L'étoile <code>*</code> sélectionne toutes les colonnes.`,`<code>SELECT * FROM table</code>.`],
+      s:`SELECT * FROM df_Customers`,
+      e:[`<code>*</code> récupère toutes les colonnes ; <code>FROM</code> indique la table interrogée.`] },
+    { t:"Choisir des colonnes", q:`Affiche uniquement les colonnes <code>CustomerName</code> et <code>City</code> de <code>df_Customers</code>.`,
+      h:[`Liste les colonnes après <code>SELECT</code>, séparées par une virgule.`,`<code>SELECT col1, col2 FROM ...</code>.`],
+      s:`SELECT CustomerName, City FROM df_Customers`,
+      e:[`On ne récupère que les colonnes utiles, plutôt que tout le tableau.`] },
+    { t:"Filtrer sur du texte", q:`Affiche tous les clients de la ville de <b>Paris</b> (colonne <code>City</code>).`,
+      h:[`La clause <code>WHERE</code> filtre les lignes.`,`Le texte se met entre apostrophes simples : <code>'Paris'</code>.`],
+      s:`SELECT * FROM df_Customers WHERE City = 'Paris'`,
+      e:[`<code>WHERE</code> ne garde que les lignes vérifiant la condition ; <code>=</code> teste l'égalité.`],
+      a:`En SQL, les chaînes de caractères s'écrivent avec des apostrophes simples <code>'...'</code>, pas des guillemets doubles.` },
+    { t:"Filtrer sur le pays", q:`Affiche tous les clients de <b>France</b> (colonne <code>Country</code>).`,
+      h:[`Même principe que pour la ville.`,`<code>WHERE Country = 'France'</code>.`],
+      s:`SELECT * FROM df_Customers WHERE Country = 'France'`,
+      e:[`La condition s'applique à n'importe quelle colonne textuelle.`] },
+    { t:"Comparer des nombres", q:`Affiche les produits (<code>df_Products</code>) dont le prix (<code>Price</code>) est supérieur à 50.`,
+      h:[`L'opérateur « supérieur à » est <code>&gt;</code>.`,`Les nombres ne prennent pas d'apostrophes.`],
+      s:`SELECT * FROM df_Products WHERE Price > 50`,
+      e:[`Les comparaisons numériques (<code>&gt;</code>, <code>&lt;</code>, <code>&gt;=</code>, <code>&lt;=</code>) s'écrivent sans apostrophes.`] },
+    { t:"Deux conditions : ET", q:`Affiche les produits dont le prix est <b>supérieur à 20 ET inférieur à 50</b>.`,
+      h:[`Relie deux conditions avec <code>AND</code>.`,`<code>WHERE Price &gt; 20 AND Price &lt; 50</code>.`],
+      s:`SELECT * FROM df_Products WHERE Price > 20 AND Price < 50`,
+      e:[`<code>AND</code> exige que les deux conditions soient vraies.`] },
+    { t:"Deux conditions : OU", q:`Affiche les clients de <b>Paris OU de Londres</b> (colonne <code>City</code>).`,
+      h:[`Relie deux conditions avec <code>OR</code>.`,`<code>City = 'Paris' OR City = 'London'</code>.`],
+      s:`SELECT * FROM df_Customers WHERE City = 'Paris' OR City = 'London'`,
+      e:[`<code>OR</code> garde les lignes où au moins une condition est vraie.`] },
+    { t:"La négation : NOT", q:`Affiche tous les clients qui ne sont <b>PAS</b> en Allemagne (<code>Country</code> = <code>'Germany'</code>).`,
+      h:[`<code>NOT</code> inverse une condition.`,`<code>WHERE NOT Country = 'Germany'</code>.`],
+      s:`SELECT * FROM df_Customers WHERE NOT Country = 'Germany'`,
+      e:[`<code>NOT</code> nie la condition. On peut aussi écrire <code>Country &lt;&gt; 'Germany'</code>.`],
+      a:`<code>&lt;&gt;</code> et <code>!=</code> signifient tous deux « différent de ».` },
+    { t:"Supprimer les doublons", q:`Affiche la liste des <b>pays</b> (<code>Country</code>) des clients, <b>sans doublon</b>.`,
+      h:[`<code>DISTINCT</code> élimine les répétitions.`,`<code>SELECT DISTINCT Country FROM ...</code>.`],
+      s:`SELECT DISTINCT Country FROM df_Customers`,
+      e:[`<code>DISTINCT</code> ne garde qu'une occurrence de chaque valeur.`] },
+    { t:"Trier les résultats", q:`Affiche les produits triés du <b>plus cher au moins cher</b> (<code>Price</code> décroissant).`,
+      h:[`<code>ORDER BY</code> trie les résultats.`,`<code>DESC</code> = décroissant (<code>ASC</code> = croissant, par défaut).`],
+      s:`SELECT * FROM df_Products ORDER BY Price DESC`,
+      e:[`<code>ORDER BY colonne DESC</code> classe du plus grand au plus petit.`] }
+  ]
+},
+/* ---------------------------------------------------------------- NIVEAU 2 */
+{ n:2, emoji:"🎣", alt:"▲ 2 400 m · Les premiers sentiers", title:"Filtres avancés",
+  topic:`<code class="t">LIMIT</code> · <code class="t">LIKE</code> · <code class="t">BETWEEN</code> · <code class="t">IN</code> — cibler précisément`,
+  intro:`On affine le tir : limiter le nombre de résultats, rechercher des motifs dans du texte, cibler une plage de valeurs ou une liste. Ces clauses rendent les filtres bien plus expressifs que le simple <code>=</code>.`,
+  cheer:`Beau dégagement. Tu sais filtrer avec finesse.`,
+  exercises:[
+    { t:"Limiter les résultats", q:`Affiche seulement les <b>10 premières lignes</b> de <code>df_Customers</code>.`,
+      h:[`La clause <code>LIMIT</code> se place à la fin.`,`<code>... LIMIT 10</code>.`],
+      s:`SELECT * FROM df_Customers LIMIT 10`,
+      e:[`<code>LIMIT n</code> restreint le résultat aux <code>n</code> premières lignes.`] },
+    { t:"Le top 5", q:`Affiche les <b>5 produits les plus chers</b>.`,
+      h:[`Trie par prix décroissant, puis limite.`,`<code>ORDER BY Price DESC LIMIT 5</code>.`],
+      s:`SELECT * FROM df_Products ORDER BY Price DESC LIMIT 5`,
+      e:[`<code>ORDER BY ... DESC</code> suivi de <code>LIMIT</code> donne un classement « top N ».`] },
+    { t:"Commence par…", q:`Affiche les clients dont le nom (<code>CustomerName</code>) <b>commence par 'B'</b>.`,
+      h:[`<code>LIKE</code> recherche un motif ; <code>%</code> remplace n'importe quelle suite de caractères.`,`<code>LIKE 'B%'</code>.`],
+      s:`SELECT * FROM df_Customers WHERE CustomerName LIKE 'B%'`,
+      e:[`<code>'B%'</code> = commence par B, suivi de n'importe quoi.`],
+      a:`Avec <code>LIKE</code>, <code>%</code> remplace 0 à n caractères et <code>_</code> exactement un caractère.` },
+    { t:"Contient…", q:`Affiche les produits dont le nom (<code>ProductName</code>) <b>contient 'Chef'</b>.`,
+      h:[`Encadre le motif de <code>%</code> des deux côtés.`,`<code>LIKE '%Chef%'</code>.`],
+      s:`SELECT * FROM df_Products WHERE ProductName LIKE '%Chef%'`,
+      e:[`<code>'%Chef%'</code> trouve « Chef » n'importe où dans le texte.`] },
+    { t:"Une plage de valeurs", q:`Affiche les produits dont le prix est <b>compris entre 10 et 20</b> (inclus).`,
+      h:[`<code>BETWEEN a AND b</code> teste un intervalle.`,`Les deux bornes sont incluses.`],
+      s:`SELECT * FROM df_Products WHERE Price BETWEEN 10 AND 20`,
+      e:[`<code>BETWEEN 10 AND 20</code> équivaut à <code>Price &gt;= 10 AND Price &lt;= 20</code>.`] },
+    { t:"Appartenir à une liste", q:`Affiche les clients dont le pays est <b>France, Spain ou Italy</b>.`,
+      h:[`<code>IN</code> teste l'appartenance à une liste.`,`<code>Country IN ('France', 'Spain', 'Italy')</code>.`],
+      s:`SELECT * FROM df_Customers WHERE Country IN ('France', 'Spain', 'Italy')`,
+      e:[`<code>IN (...)</code> est plus lisible qu'une longue suite de <code>OR</code>.`] },
+    { t:"Ne pas appartenir", q:`Affiche les clients dont le pays n'est <b>ni 'France' ni 'Germany'</b>.`,
+      h:[`<code>NOT IN</code> exclut les valeurs listées.`,`<code>Country NOT IN ('France', 'Germany')</code>.`],
+      s:`SELECT * FROM df_Customers WHERE Country NOT IN ('France', 'Germany')`,
+      e:[`<code>NOT IN</code> garde tout ce qui n'est pas dans la liste.`] },
+    { t:"Motif + tri", q:`Affiche les clients dont le nom commence par <b>'A'</b>, triés par <code>CustomerName</code> croissant.`,
+      h:[`Combine <code>WHERE ... LIKE</code> et <code>ORDER BY</code>.`,`<code>LIKE 'A%' ORDER BY CustomerName ASC</code>.`],
+      s:`SELECT * FROM df_Customers WHERE CustomerName LIKE 'A%' ORDER BY CustomerName ASC`,
+      e:[`On peut enchaîner un filtre par motif et un tri.`] },
+    { t:"Villes distinctes filtrées", q:`Affiche la liste des <b>villes distinctes</b> (<code>City</code>) des clients de <b>France</b>.`,
+      h:[`<code>DISTINCT</code> + <code>WHERE</code>.`,`<code>SELECT DISTINCT City FROM ... WHERE Country = 'France'</code>.`],
+      s:`SELECT DISTINCT City FROM df_Customers WHERE Country = 'France'`,
+      e:[`On combine la suppression des doublons et un filtre.`] },
+    { t:"Une plage de dates", q:`Affiche les commandes (<code>df_Orders</code>) passées <b>entre le 2 et le 31 juillet 1996</b> (colonne <code>OrderDate</code>).`,
+      h:[`<code>BETWEEN</code> fonctionne aussi sur les dates (au format texte).`,`<code>OrderDate BETWEEN '1996-07-02' AND '1996-07-31'</code>.`],
+      s:`SELECT * FROM df_Orders WHERE OrderDate BETWEEN '1996-07-02' AND '1996-07-31'`,
+      e:[`Les dates s'écrivent entre apostrophes ; <code>BETWEEN</code> inclut les deux bornes.`],
+      a:`Le format <code>AAAA-MM-JJ</code> se compare et se trie correctement comme du texte.` }
+  ]
+},
+/* ---------------------------------------------------------------- NIVEAU 3 */
+{ n:3, emoji:"🧮", alt:"▲ 3 600 m · La paroi se redresse", title:"Agréger & regrouper",
+  topic:`<code class="t">COUNT</code> · <code class="t">SUM</code> · <code class="t">AVG</code> · <code class="t">MIN</code>/<code class="t">MAX</code> · <code class="t">GROUP BY</code> · <code class="t">HAVING</code>`,
+  intro:`Condenser des milliers de lignes en quelques chiffres : compter, sommer, moyenner. Avec <b>GROUP BY</b>, on calcule ces statistiques par groupe, et <b>HAVING</b> filtre ces groupes — l'équivalent de <code>WHERE</code>, mais après l'agrégation.`,
+  cheer:`La paroi est passée. Tu fais parler les chiffres.`,
+  exercises:[
+    { t:"Compter les lignes", q:`Compte le <b>nombre total de clients</b>.`,
+      h:[`<code>COUNT(*)</code> compte les lignes.`,`<code>SELECT COUNT(*) FROM df_Customers</code>.`],
+      s:`SELECT COUNT(*) FROM df_Customers`,
+      e:[`<code>COUNT(*)</code> renvoie le nombre de lignes de la table.`] },
+    { t:"Compter les valeurs distinctes", q:`Compte le <b>nombre de pays différents</b> (<code>Country</code>) parmi les clients.`,
+      h:[`Combine <code>COUNT</code> et <code>DISTINCT</code>.`,`<code>COUNT(DISTINCT Country)</code>.`],
+      s:`SELECT COUNT(DISTINCT Country) FROM df_Customers`,
+      e:[`<code>COUNT(DISTINCT col)</code> compte les valeurs uniques.`] },
+    { t:"La moyenne", q:`Calcule le <b>prix moyen</b> des produits (<code>Price</code>).`,
+      h:[`La fonction est <code>AVG(colonne)</code>.`,`<code>SELECT AVG(Price) FROM df_Products</code>.`],
+      s:`SELECT AVG(Price) FROM df_Products`,
+      e:[`<code>AVG</code> calcule la moyenne d'une colonne numérique.`] },
+    { t:"Le maximum", q:`Affiche le <b>prix le plus élevé</b> (<code>Price</code>) des produits.`,
+      h:[`La fonction est <code>MAX(colonne)</code>.`,`<code>MIN</code> existe aussi pour le minimum.`],
+      s:`SELECT MAX(Price) FROM df_Products`,
+      e:[`<code>MAX</code> renvoie la plus grande valeur ; <code>MIN</code> la plus petite.`] },
+    { t:"La somme", q:`Calcule la <b>quantité totale commandée</b> (somme de <code>Quantity</code> dans <code>df_OrderDetails</code>).`,
+      h:[`La fonction est <code>SUM(colonne)</code>.`,`<code>SELECT SUM(Quantity) FROM df_OrderDetails</code>.`],
+      s:`SELECT SUM(Quantity) FROM df_OrderDetails`,
+      e:[`<code>SUM</code> additionne toutes les valeurs de la colonne.`] },
+    { t:"Compter par groupe", q:`Compte le <b>nombre de clients par pays</b> (<code>Country</code>).`,
+      h:[`<code>GROUP BY</code> regroupe les lignes par pays.`,`<code>SELECT Country, COUNT(*) FROM ... GROUP BY Country</code>.`],
+      s:`SELECT Country, COUNT(*) FROM df_Customers GROUP BY Country`,
+      e:[`<code>GROUP BY</code> crée un groupe par pays ; <code>COUNT(*)</code> compte les clients de chacun.`],
+      a:`Toute colonne du <code>SELECT</code> qui n'est pas agrégée doit figurer dans le <code>GROUP BY</code>.` },
+    { t:"Moyenne par groupe", q:`Calcule le <b>prix moyen des produits par catégorie</b> (<code>CategoryID</code>).`,
+      h:[`<code>GROUP BY CategoryID</code> + <code>AVG(Price)</code>.`,`<code>SELECT CategoryID, AVG(Price) FROM ... GROUP BY CategoryID</code>.`],
+      s:`SELECT CategoryID, AVG(Price) FROM df_Products GROUP BY CategoryID`,
+      e:[`On obtient un prix moyen pour chaque catégorie.`] },
+    { t:"Le pays le plus représenté", q:`Affiche le <b>pays comptant le plus de clients</b> (le pays et le nombre).`,
+      h:[`Nomme le compte avec <code>AS</code>, puis trie et limite.`,`<code>COUNT(*) AS nb ... ORDER BY nb DESC LIMIT 1</code>.`],
+      s:`SELECT Country, COUNT(*) AS nb FROM df_Customers GROUP BY Country ORDER BY nb DESC LIMIT 1`,
+      e:[`<code>AS</code> nomme la colonne calculée ; on trie dessus et on garde la première ligne.`],
+      a:`<code>AS</code> donne un alias lisible à une colonne calculée (ici <code>nb</code>).` },
+    { t:"Filtrer les groupes : HAVING", q:`Affiche les <b>pays ayant plus de 5 clients</b> (pays et nombre).`,
+      h:[`<code>HAVING</code> filtre APRÈS le regroupement.`,`<code>GROUP BY Country HAVING COUNT(*) &gt; 5</code>.`],
+      s:`SELECT Country, COUNT(*) AS nb FROM df_Customers GROUP BY Country HAVING COUNT(*) > 5`,
+      e:[`<code>WHERE</code> filtre les lignes brutes ; <code>HAVING</code> filtre les groupes selon un résultat agrégé.`] },
+    { t:"WHERE + GROUP BY + HAVING", q:`Parmi les produits coûtant <b>plus de 20</b>, affiche les <b>catégories (<code>CategoryID</code>) ayant au moins 5 produits</b>.`,
+      h:[`<code>WHERE</code> avant le regroupement, <code>HAVING</code> après.`,`<code>WHERE Price &gt; 20 GROUP BY CategoryID HAVING COUNT(*) &gt;= 5</code>.`],
+      s:`SELECT CategoryID, COUNT(*) AS nb FROM df_Products WHERE Price > 20 GROUP BY CategoryID HAVING COUNT(*) >= 5`,
+      e:[`L'ordre logique est toujours : <code>WHERE</code> → <code>GROUP BY</code> → <code>HAVING</code>.`],
+      a:`<code>WHERE</code> agit sur les lignes individuelles, <code>HAVING</code> sur les valeurs déjà agrégées.` }
+  ]
+},
+/* ---------------------------------------------------------------- NIVEAU 4 */
+{ n:4, emoji:"🔗", alt:"▲ 5 000 m · Zone technique", title:"Relier deux tables",
+  topic:`<code class="t">INNER JOIN</code> · <code class="t">LEFT JOIN</code> · <code class="t">ON</code> · alias — combiner les données`,
+  intro:`Les données sont réparties dans plusieurs tables, reliées par des <b>clés</b> : une commande référence un client via <code>CustomerID</code>, un produit une catégorie via <code>CategoryID</code>… Les <b>jointures</b> recollent ces tables. <b>INNER</b> ne garde que les correspondances, <b>LEFT</b> conserve toutes les lignes de gauche.`,
+  cheer:`Zone technique avalée. Tu relies les tables comme un pro.`,
+  exercises:[
+    { t:"Première jointure", q:`Affiche le <b>nom du client</b> (<code>CustomerName</code>) et l'<b>identifiant de commande</b> (<code>OrderID</code>), en reliant <code>df_Orders</code> et <code>df_Customers</code> par <code>CustomerID</code>.`,
+      h:[`<code>INNER JOIN ... ON t1.cle = t2.cle</code>.`,`La clé commune est <code>CustomerID</code>.`],
+      s:`SELECT df_Customers.CustomerName, df_Orders.OrderID
+FROM df_Orders
+INNER JOIN df_Customers ON df_Orders.CustomerID = df_Customers.CustomerID`,
+      e:[`La jointure relie les deux tables sur leur clé commune ; <code>INNER</code> ne renvoie que les lignes qui correspondent des deux côtés.`] },
+    { t:"Des alias de tables", q:`Même résultat (<code>CustomerName</code> + <code>OrderID</code>), mais en utilisant des <b>alias de tables</b> (<code>c</code> et <code>o</code>).`,
+      h:[`Déclare l'alias juste après le nom de table : <code>df_Orders o</code>.`,`Préfixe ensuite les colonnes : <code>o.OrderID</code>, <code>c.CustomerName</code>.`],
+      s:`SELECT c.CustomerName, o.OrderID
+FROM df_Orders o
+INNER JOIN df_Customers c ON o.CustomerID = c.CustomerID`,
+      e:[`Les alias raccourcissent l'écriture et clarifient les requêtes multi-tables.`],
+      a:`L'alias se déclare juste après le nom de la table, sans <code>AS</code> obligatoire.` },
+    { t:"Produit et catégorie", q:`Affiche le <b>nom du produit</b> (<code>ProductName</code>) et le <b>nom de sa catégorie</b> (<code>CategoryName</code>), en reliant <code>df_Products</code> et <code>df_Categories</code> par <code>CategoryID</code>.`,
+      h:[`Jointure sur <code>CategoryID</code>.`,`<code>... ON p.CategoryID = c.CategoryID</code>.`],
+      s:`SELECT p.ProductName, c.CategoryName
+FROM df_Products p
+INNER JOIN df_Categories c ON p.CategoryID = c.CategoryID`,
+      e:[`On remplace l'identifiant numérique de catégorie par son nom lisible.`] },
+    { t:"Produit et fournisseur", q:`Affiche le <b>nom du produit</b> et le <b>nom du fournisseur</b> (<code>SupplierName</code>), en reliant <code>df_Products</code> et <code>df_Suppliers</code> par <code>SupplierID</code>.`,
+      h:[`Jointure sur <code>SupplierID</code>.`,`<code>... ON p.SupplierID = s.SupplierID</code>.`],
+      s:`SELECT p.ProductName, s.SupplierName
+FROM df_Products p
+INNER JOIN df_Suppliers s ON p.SupplierID = s.SupplierID`,
+      e:[`Même schéma de jointure, sur une autre clé.`] },
+    { t:"Jointure + filtre", q:`Affiche le nom du client et l'<code>OrderID</code> de ses commandes, <b>uniquement pour les clients d'Allemagne</b> (<code>Country = 'Germany'</code>).`,
+      h:[`Ajoute un <code>WHERE</code> après le <code>ON</code>.`,`<code>WHERE c.Country = 'Germany'</code>.`],
+      s:`SELECT c.CustomerName, o.OrderID
+FROM df_Orders o
+INNER JOIN df_Customers c ON o.CustomerID = c.CustomerID
+WHERE c.Country = 'Germany'`,
+      e:[`On filtre le résultat de la jointure comme une table normale.`] },
+    { t:"Garder tous les clients", q:`Affiche <b>tous les clients</b> et leurs commandes éventuelles (<code>CustomerName</code>, <code>OrderID</code>), <b>même ceux sans commande</b>.`,
+      h:[`<code>LEFT JOIN</code> conserve toutes les lignes de la table de gauche.`,`Pars de <code>df_Customers</code> : <code>FROM df_Customers c LEFT JOIN df_Orders o ...</code>.`],
+      s:`SELECT c.CustomerName, o.OrderID
+FROM df_Customers c
+LEFT JOIN df_Orders o ON c.CustomerID = o.CustomerID`,
+      e:[`Les clients sans commande apparaissent quand même, avec <code>OrderID</code> à <code>NULL</code>.`],
+      a:`<code>LEFT JOIN</code> = toutes les lignes de gauche + les correspondances de droite (sinon <code>NULL</code>).` },
+    { t:"Les clients sans commande", q:`Affiche les <b>clients n'ayant passé aucune commande</b> (<code>CustomerName</code>).`,
+      h:[`Fais un <code>LEFT JOIN</code>, puis garde les lignes sans correspondance.`,`<code>WHERE o.OrderID IS NULL</code>.`],
+      s:`SELECT c.CustomerName
+FROM df_Customers c
+LEFT JOIN df_Orders o ON c.CustomerID = o.CustomerID
+WHERE o.OrderID IS NULL`,
+      e:[`Pas de commande → <code>OrderID</code> vaut <code>NULL</code> après la jointure → on les isole.`],
+      a:`Tester l'absence de correspondance se fait avec <code>IS NULL</code> sur une colonne de la table de droite.` },
+    { t:"Commande et transporteur", q:`Affiche l'<code>OrderID</code> et le <b>nom du transporteur</b> (<code>ShipperName</code>), en reliant <code>df_Orders</code> et <code>df_Shippers</code> par <code>ShipperID</code>.`,
+      h:[`Jointure sur <code>ShipperID</code>.`,`<code>... ON o.ShipperID = s.ShipperID</code>.`],
+      s:`SELECT o.OrderID, s.ShipperName
+FROM df_Orders o
+INNER JOIN df_Shippers s ON o.ShipperID = s.ShipperID`,
+      e:[`On relie chaque commande à son transporteur.`] },
+    { t:"Commande et employé", q:`Affiche l'<code>OrderID</code> et le <b>nom de l'employé</b> (<code>LastName</code>) qui a traité la commande, en reliant <code>df_Orders</code> et <code>df_Employees</code> par <code>EmployeeID</code>.`,
+      h:[`Jointure sur <code>EmployeeID</code>.`,`<code>... ON o.EmployeeID = e.EmployeeID</code>.`],
+      s:`SELECT o.OrderID, e.LastName
+FROM df_Orders o
+INNER JOIN df_Employees e ON o.EmployeeID = e.EmployeeID`,
+      e:[`Chaque commande est rattachée à l'employé qui l'a gérée.`] },
+    { t:"Jointure + tri", q:`Affiche le nom du produit, son prix et le nom de sa catégorie, <b>triés par prix décroissant</b> (relie <code>df_Products</code> et <code>df_Categories</code>).`,
+      h:[`Jointure sur <code>CategoryID</code>, puis <code>ORDER BY</code>.`,`<code>ORDER BY p.Price DESC</code>.`],
+      s:`SELECT p.ProductName, p.Price, c.CategoryName
+FROM df_Products p
+INNER JOIN df_Categories c ON p.CategoryID = c.CategoryID
+ORDER BY p.Price DESC`,
+      e:[`On combine jointure et tri sur le résultat.`] }
+  ]
+},
+/* ---------------------------------------------------------------- NIVEAU 5 */
+{ n:5, emoji:"🕸️", alt:"▲ 6 200 m · Glacier — prudence", title:"Jointures multiples",
+  topic:`3-4 tables · agrégation sur jointures · <code class="t">GROUP BY</code> + <code class="t">HAVING</code> — questions métier`,
+  intro:`On enchaîne plusieurs jointures pour traverser tout le modèle (client → commande → détails → produit) et on agrège dessus : chiffre d'affaires par produit, meilleur client, best-seller. C'est là que SQL répond à de vraies questions métier.`,
+  cheer:`Glacier traversé. Tu navigues dans tout le schéma sans te perdre.`,
+  exercises:[
+    { t:"Trois tables", q:`Affiche le <b>nom du client</b>, l'<code>OrderID</code> et le <b>nom de l'employé</b> (<code>LastName</code>), en reliant <code>df_Orders</code>, <code>df_Customers</code> et <code>df_Employees</code>.`,
+      h:[`Enchaîne deux <code>INNER JOIN</code> à partir de <code>df_Orders</code>.`,`Un JOIN sur <code>CustomerID</code>, un autre sur <code>EmployeeID</code>.`],
+      s:`SELECT c.CustomerName, o.OrderID, e.LastName
+FROM df_Orders o
+INNER JOIN df_Customers c ON o.CustomerID = c.CustomerID
+INNER JOIN df_Employees e ON o.EmployeeID = e.EmployeeID`,
+      e:[`On chaîne les jointures pour relier plus de deux tables, en suivant les clés.`] },
+    { t:"Commandes par client", q:`Compte le <b>nombre de commandes par client</b> (<code>CustomerName</code>), en reliant <code>df_Orders</code> et <code>df_Customers</code>.`,
+      h:[`Jointure + <code>GROUP BY c.CustomerName</code> + <code>COUNT(*)</code>.`,`<code>... GROUP BY c.CustomerName</code>.`],
+      s:`SELECT c.CustomerName, COUNT(*) AS nb
+FROM df_Orders o
+INNER JOIN df_Customers c ON o.CustomerID = c.CustomerID
+GROUP BY c.CustomerName`,
+      e:[`On agrège (compte) sur le résultat d'une jointure.`] },
+    { t:"Le client le plus actif", q:`Affiche le <b>client ayant passé le plus de commandes</b> (nom + nombre).`,
+      h:[`Comme l'exercice précédent, puis trie et limite.`,`<code>ORDER BY nb DESC LIMIT 1</code>.`],
+      s:`SELECT c.CustomerName, COUNT(*) AS nb
+FROM df_Orders o
+INNER JOIN df_Customers c ON o.CustomerID = c.CustomerID
+GROUP BY c.CustomerName
+ORDER BY nb DESC
+LIMIT 1`,
+      e:[`Le tri décroissant sur le compte + <code>LIMIT 1</code> donne le client le plus actif.`] },
+    { t:"Quantités par produit", q:`Affiche, pour chaque produit (<code>ProductName</code>), la <b>quantité totale commandée</b> (somme de <code>Quantity</code>), en reliant <code>df_OrderDetails</code> et <code>df_Products</code>.`,
+      h:[`Jointure sur <code>ProductID</code> + <code>SUM(Quantity)</code> + <code>GROUP BY</code>.`,`<code>GROUP BY p.ProductName</code>.`],
+      s:`SELECT p.ProductName, SUM(od.Quantity) AS total
+FROM df_OrderDetails od
+INNER JOIN df_Products p ON od.ProductID = p.ProductID
+GROUP BY p.ProductName`,
+      e:[`On somme les quantités commandées, regroupées par produit.`] },
+    { t:"Le best-seller", q:`Affiche le <b>produit le plus vendu en quantité</b> (nom + total).`,
+      h:[`Comme avant, puis <code>ORDER BY total DESC LIMIT 1</code>.`,`Le best-seller est le premier après tri décroissant.`],
+      s:`SELECT p.ProductName, SUM(od.Quantity) AS total
+FROM df_OrderDetails od
+INNER JOIN df_Products p ON od.ProductID = p.ProductID
+GROUP BY p.ProductName
+ORDER BY total DESC
+LIMIT 1`,
+      e:[`Le produit dont la somme des quantités est la plus élevée.`] },
+    { t:"Chiffre d'affaires par produit", q:`Calcule le <b>chiffre d'affaires par produit</b> (<code>ProductName</code>) = somme de <code>Price × Quantity</code>, en reliant <code>df_OrderDetails</code> et <code>df_Products</code>.`,
+      h:[`On peut multiplier deux colonnes dans <code>SUM</code>.`,`<code>SUM(p.Price * od.Quantity)</code>.`],
+      s:`SELECT p.ProductName, SUM(p.Price * od.Quantity) AS ca
+FROM df_OrderDetails od
+INNER JOIN df_Products p ON od.ProductID = p.ProductID
+GROUP BY p.ProductName`,
+      e:[`Le CA d'un produit = prix × quantité, sommé sur toutes ses lignes de commande.`],
+      a:`Un calcul (<code>prix * quantité</code>) peut se placer directement dans une fonction d'agrégation.` },
+    { t:"Produits par catégorie", q:`Compte le <b>nombre de produits par catégorie</b> (<code>CategoryName</code>), en reliant <code>df_Products</code> et <code>df_Categories</code>.`,
+      h:[`Jointure sur <code>CategoryID</code> + <code>GROUP BY CategoryName</code> + <code>COUNT(*)</code>.`,`<code>GROUP BY c.CategoryName</code>.`],
+      s:`SELECT c.CategoryName, COUNT(*) AS nb
+FROM df_Products p
+INNER JOIN df_Categories c ON p.CategoryID = c.CategoryID
+GROUP BY c.CategoryName`,
+      e:[`La répartition des produits par catégorie nommée.`] },
+    { t:"Clients fidèles", q:`Affiche les <b>clients ayant passé plus de 5 commandes</b> (nom + nombre).`,
+      h:[`Jointure + <code>GROUP BY</code> + <code>HAVING COUNT(*) &gt; 5</code>.`,`<code>HAVING COUNT(*) &gt; 5</code>.`],
+      s:`SELECT c.CustomerName, COUNT(*) AS nb
+FROM df_Orders o
+INNER JOIN df_Customers c ON o.CustomerID = c.CustomerID
+GROUP BY c.CustomerName
+HAVING COUNT(*) > 5`,
+      e:[`On ne conserve que les clients (groupes) dépassant 5 commandes.`] },
+    { t:"Quatre tables", q:`Affiche le <b>nom du client</b>, le <b>nom du produit</b> et la <b>quantité</b>, en reliant <code>df_Orders</code>, <code>df_Customers</code>, <code>df_OrderDetails</code> et <code>df_Products</code>.`,
+      h:[`Pars de <code>df_Orders</code> et enchaîne trois <code>INNER JOIN</code>.`,`Orders→Customers (CustomerID), Orders→OrderDetails (OrderID), OrderDetails→Products (ProductID).`],
+      s:`SELECT cu.CustomerName, p.ProductName, od.Quantity
+FROM df_Orders o
+INNER JOIN df_Customers cu ON o.CustomerID = cu.CustomerID
+INNER JOIN df_OrderDetails od ON o.OrderID = od.OrderID
+INNER JOIN df_Products p ON od.ProductID = p.ProductID`,
+      e:[`On suit le chemin des clés : commande → client, commande → détails → produit.`],
+      a:`Pour relier beaucoup de tables, pars de la table centrale (ici <code>Orders</code>) et rejoins les autres une à une.` },
+    { t:"Produits jamais commandés", q:`Affiche les <b>produits jamais commandés</b> (<code>ProductName</code>), via une <code>LEFT JOIN</code> entre <code>df_Products</code> et <code>df_OrderDetails</code>.`,
+      h:[`<code>LEFT JOIN</code> de Products vers OrderDetails, puis garde les non-correspondances.`,`<code>WHERE od.OrderDetailID IS NULL</code>.`],
+      s:`SELECT p.ProductName
+FROM df_Products p
+LEFT JOIN df_OrderDetails od ON p.ProductID = od.ProductID
+WHERE od.OrderDetailID IS NULL`,
+      e:[`Aucun détail de commande associé → le produit n'a jamais été vendu.`] }
+  ]
+},
+/* ---------------------------------------------------------------- NIVEAU 6 */
+{ n:6, emoji:"🪆", alt:"▲ 7 500 m · L'arête sommitale", title:"Sous-requêtes",
+  topic:`sous-requête scalaire · <code class="t">IN</code> · corrélée · dans le <code class="t">SELECT</code> — des requêtes imbriquées`,
+  intro:`Une sous-requête est une requête à l'intérieur d'une autre. Elle sert à comparer à une valeur calculée (la moyenne, un maximum), à filtrer sur le résultat d'une autre table, ou à corréler ligne par ligne. C'est l'outil des questions en deux temps.`,
+  cheer:`Arête sommitale en vue. Tu imbriques les requêtes sans trembler.`,
+  exercises:[
+    { t:"Plus cher que la moyenne", q:`Affiche les produits dont le prix est <b>supérieur au prix moyen</b> de tous les produits.`,
+      h:[`Place une sous-requête entre parenthèses après <code>&gt;</code>.`,`<code>WHERE Price &gt; (SELECT AVG(Price) FROM df_Products)</code>.`],
+      s:`SELECT * FROM df_Products WHERE Price > (SELECT AVG(Price) FROM df_Products)`,
+      e:[`La sous-requête calcule la moyenne ; chaque ligne est comparée à cette valeur.`],
+      a:`Une sous-requête entre parenthèses peut remplacer une valeur dans une condition.` },
+    { t:"Clients ayant commandé", q:`Affiche les <b>clients ayant passé au moins une commande</b> (<code>CustomerName</code>), via une sous-requête sur <code>df_Orders</code>.`,
+      h:[`<code>WHERE CustomerID IN (sous-requête)</code>.`,`<code>IN (SELECT CustomerID FROM df_Orders)</code>.`],
+      s:`SELECT CustomerName FROM df_Customers WHERE CustomerID IN (SELECT CustomerID FROM df_Orders)`,
+      e:[`La sous-requête renvoie la liste des clients présents dans les commandes.`] },
+    { t:"Clients sans commande", q:`Affiche les <b>clients n'ayant passé aucune commande</b>, via <code>NOT IN</code>.`,
+      h:[`<code>WHERE CustomerID NOT IN (sous-requête)</code>.`,`<code>NOT IN (SELECT CustomerID FROM df_Orders)</code>.`],
+      s:`SELECT CustomerName FROM df_Customers WHERE CustomerID NOT IN (SELECT CustomerID FROM df_Orders)`,
+      e:[`L'inverse du précédent : les clients absents de la liste des commandes.`] },
+    { t:"Plus cher qu'un produit donné", q:`Affiche les produits <b>plus chers que le produit nommé 'Chang'</b>, via une sous-requête scalaire.`,
+      h:[`La sous-requête renvoie le prix de 'Chang'.`,`<code>Price &gt; (SELECT Price FROM df_Products WHERE ProductName = 'Chang')</code>.`],
+      s:`SELECT * FROM df_Products WHERE Price > (SELECT Price FROM df_Products WHERE ProductName = 'Chang')`,
+      e:[`On compare le prix de chaque produit à celui d'un produit précis.`] },
+    { t:"Le plus cher, autrement", q:`Affiche le <b>produit le plus cher</b> en utilisant une sous-requête (<code>Price</code> égal au <code>MAX</code>).`,
+      h:[`<code>WHERE Price = (SELECT MAX(Price) ...)</code>.`,`La sous-requête renvoie le prix maximal.`],
+      s:`SELECT * FROM df_Products WHERE Price = (SELECT MAX(Price) FROM df_Products)`,
+      e:[`On récupère la (ou les) ligne(s) dont le prix égale le maximum.`] },
+    { t:"Produits déjà commandés", q:`Affiche les <b>noms des produits commandés au moins une fois</b> (<code>ProductName</code>), via une sous-requête sur <code>df_OrderDetails</code>.`,
+      h:[`<code>WHERE ProductID IN (sous-requête)</code>.`,`<code>IN (SELECT ProductID FROM df_OrderDetails)</code>.`],
+      s:`SELECT ProductName FROM df_Products WHERE ProductID IN (SELECT ProductID FROM df_OrderDetails)`,
+      e:[`Les produits présents dans les détails de commande.`] },
+    { t:"Sous-requête corrélée", q:`Affiche les produits dont le prix est <b>supérieur au prix moyen de LEUR catégorie</b>.`,
+      h:[`La sous-requête référence la catégorie de la ligne externe.`,`<code>(SELECT AVG(Price) FROM df_Products WHERE CategoryID = p.CategoryID)</code>.`],
+      s:`SELECT * FROM df_Products p WHERE Price > (SELECT AVG(Price) FROM df_Products WHERE CategoryID = p.CategoryID)`,
+      e:[`Une sous-requête <b>corrélée</b> dépend de la ligne courante (ici sa catégorie).`],
+      a:`Une sous-requête corrélée se réexécute pour chaque ligne de la requête principale.` },
+    { t:"Combiner condition et sous-requête", q:`Affiche les <b>clients de France ayant passé au moins une commande</b> (<code>CustomerName</code>).`,
+      h:[`Combine une condition simple et une sous-requête avec <code>AND</code>.`,`<code>WHERE Country = 'France' AND CustomerID IN (...)</code>.`],
+      s:`SELECT CustomerName FROM df_Customers WHERE Country = 'France' AND CustomerID IN (SELECT CustomerID FROM df_Orders)`,
+      e:[`On filtre à la fois sur le pays et sur la présence d'une commande.`] },
+    { t:"Filtrer via une autre table", q:`Affiche les <code>OrderID</code> des <b>commandes passées par des clients de Londres</b> (<code>City = 'London'</code>), via une sous-requête.`,
+      h:[`La sous-requête renvoie les <code>CustomerID</code> de Londres.`,`<code>WHERE CustomerID IN (SELECT CustomerID FROM df_Customers WHERE City = 'London')</code>.`],
+      s:`SELECT OrderID FROM df_Orders WHERE CustomerID IN (SELECT CustomerID FROM df_Customers WHERE City = 'London')`,
+      e:[`On filtre les commandes selon une propriété du client, obtenue par sous-requête.`] },
+    { t:"Sous-requête dans le SELECT", q:`Pour chaque produit, affiche son <code>ProductName</code>, son <code>Price</code>, et le <b>prix moyen global</b> (même valeur sur chaque ligne), via une sous-requête dans le <code>SELECT</code>.`,
+      h:[`Place la sous-requête scalaire dans la liste du <code>SELECT</code>, avec un alias.`,`<code>(SELECT AVG(Price) FROM df_Products) AS prix_moyen</code>.`],
+      s:`SELECT ProductName, Price, (SELECT AVG(Price) FROM df_Products) AS prix_moyen FROM df_Products`,
+      e:[`Une sous-requête scalaire peut produire une colonne : ici le prix moyen, rappelé sur chaque ligne pour comparaison.`] }
+  ]
+},
+/* ---------------------------------------------------------------- NIVEAU 7 */
+{ n:7, emoji:"🏆", alt:"▲ 8 848 m · Le sommet", title:"EXISTS, vues & synthèse",
+  topic:`<code class="t">EXISTS</code> · <code class="t">ANY</code>/<code class="t">ALL</code> · <code class="t">CREATE VIEW</code> · requêtes métier complètes`,
+  intro:`Le sommet : vérifier l'existence de lignes (<b>EXISTS</b>), comparer à un ensemble (<b>ANY</b>/<b>ALL</b>), enregistrer une requête en <b>vue</b>, et surtout assembler jointures, agrégations et tris pour répondre à de vraies questions d'analyste. Tu y es presque.`,
+  cheer:`🎉 Sommet atteint ! Tu sais interroger une base relationnelle de bout en bout : sélectionner, filtrer, joindre, agréger, imbriquer, synthétiser. Refais ces requêtes sur tes propres données — et publie-les.`,
+  exercises:[
+    { t:"EXISTS", q:`Affiche les <b>clients ayant au moins une commande</b> (<code>CustomerName</code>), via <code>EXISTS</code> et une sous-requête corrélée.`,
+      h:[`<code>WHERE EXISTS (SELECT 1 FROM df_Orders o WHERE o.CustomerID = c.CustomerID)</code>.`,`Donne un alias <code>c</code> à <code>df_Customers</code>.`],
+      s:`SELECT CustomerName FROM df_Customers c
+WHERE EXISTS (SELECT 1 FROM df_Orders o WHERE o.CustomerID = c.CustomerID)`,
+      e:[`<code>EXISTS</code> renvoie vrai dès qu'au moins une ligne correspond ; souvent plus efficace que <code>IN</code>.`],
+      a:`Dans <code>EXISTS</code>, <code>SELECT 1</code> suffit : seule compte l'existence d'une ligne, pas son contenu.` },
+    { t:"NOT EXISTS", q:`Affiche les <b>clients sans aucune commande</b>, via <code>NOT EXISTS</code>.`,
+      h:[`<code>WHERE NOT EXISTS (sous-requête corrélée)</code>.`,`Même sous-requête, niée.`],
+      s:`SELECT CustomerName FROM df_Customers c
+WHERE NOT EXISTS (SELECT 1 FROM df_Orders o WHERE o.CustomerID = c.CustomerID)`,
+      e:[`Aucun enregistrement correspondant → le client n'a jamais commandé.`] },
+    { t:"ANY", q:`Affiche les produits dont le prix est <b>supérieur à au moins un</b> des prix de la catégorie 1 (<code>CategoryID = 1</code>), via <code>ANY</code>.`,
+      h:[`<code>Price &gt; ANY (sous-requête)</code>.`,`<code>&gt; ANY</code> = supérieur à au moins une valeur.`],
+      s:`SELECT * FROM df_Products WHERE Price > ANY (SELECT Price FROM df_Products WHERE CategoryID = 1)`,
+      e:[`<code>&gt; ANY</code> est vrai si la valeur dépasse <b>au moins une</b> valeur de l'ensemble renvoyé.`] },
+    { t:"ALL", q:`Affiche les produits dont le prix est <b>supérieur ou égal à tous</b> les prix de la catégorie 1 (les plus chers), via <code>ALL</code>.`,
+      h:[`<code>Price &gt;= ALL (sous-requête)</code>.`,`<code>&gt;= ALL</code> = au moins aussi grand que chaque valeur.`],
+      s:`SELECT * FROM df_Products WHERE Price >= ALL (SELECT Price FROM df_Products WHERE CategoryID = 1)`,
+      e:[`<code>&gt;= ALL</code> est vrai seulement si la valeur dépasse (ou égale) <b>toutes</b> les valeurs de l'ensemble.`] },
+    { t:"Créer une vue", q:`Crée une <b>vue</b> nommée <code>produits_chers</code> contenant les produits dont le prix dépasse 50.`,
+      h:[`<code>CREATE VIEW nom AS SELECT ...</code>.`,`<code>CREATE VIEW produits_chers AS SELECT * FROM df_Products WHERE Price &gt; 50</code>.`],
+      s:`CREATE VIEW produits_chers AS SELECT * FROM df_Products WHERE Price > 50`,
+      e:[`Une vue est une requête enregistrée, réutilisable comme une table virtuelle.`],
+      a:`Une vue ne stocke pas de données : elle rejoue sa requête à chaque fois qu'on l'interroge.` },
+    { t:"Interroger la vue", q:`Affiche le contenu de la vue <code>produits_chers</code>, <b>trié par prix décroissant</b>.`,
+      h:[`On interroge une vue exactement comme une table.`,`<code>SELECT * FROM produits_chers ORDER BY Price DESC</code>.`],
+      s:`SELECT * FROM produits_chers ORDER BY Price DESC`,
+      e:[`On réutilise la logique de la vue sans la réécrire.`] },
+    { t:"Synthèse : CA par catégorie", q:`Calcule le <b>chiffre d'affaires (somme <code>Price × Quantity</code>) par catégorie</b> (<code>CategoryName</code>), en reliant <code>df_OrderDetails</code>, <code>df_Products</code> et <code>df_Categories</code>, trié décroissant.`,
+      h:[`Trois jointures, puis <code>SUM(p.Price * od.Quantity)</code>.`,`<code>GROUP BY c.CategoryName ORDER BY ca DESC</code>.`],
+      s:`SELECT c.CategoryName, SUM(p.Price * od.Quantity) AS ca
+FROM df_OrderDetails od
+INNER JOIN df_Products p ON od.ProductID = p.ProductID
+INNER JOIN df_Categories c ON p.CategoryID = c.CategoryID
+GROUP BY c.CategoryName
+ORDER BY ca DESC`,
+      e:[`Une vraie question métier : quelles catégories génèrent le plus de revenus.`] },
+    { t:"Synthèse : top 5 clients", q:`Affiche les <b>5 clients générant le plus de chiffre d'affaires</b> (<code>CustomerName</code> + CA), en reliant <code>df_Orders</code>, <code>df_Customers</code>, <code>df_OrderDetails</code> et <code>df_Products</code>.`,
+      h:[`Quatre jointures + <code>SUM(p.Price * od.Quantity)</code>.`,`<code>GROUP BY cu.CustomerName ORDER BY ca DESC LIMIT 5</code>.`],
+      s:`SELECT cu.CustomerName, SUM(p.Price * od.Quantity) AS ca
+FROM df_Orders o
+INNER JOIN df_Customers cu ON o.CustomerID = cu.CustomerID
+INNER JOIN df_OrderDetails od ON o.OrderID = od.OrderID
+INNER JOIN df_Products p ON od.ProductID = p.ProductID
+GROUP BY cu.CustomerName
+ORDER BY ca DESC
+LIMIT 5`,
+      e:[`Le classement des meilleurs clients par revenu — un livrable d'analyste typique.`] },
+    { t:"Commandes par transporteur", q:`Compte le <b>nombre de commandes par transporteur</b> (<code>ShipperName</code>), du plus utilisé au moins utilisé.`,
+      h:[`Jointure <code>df_Orders</code>–<code>df_Shippers</code> + <code>GROUP BY</code> + <code>COUNT(*)</code>.`,`<code>ORDER BY nb DESC</code>.`],
+      s:`SELECT s.ShipperName, COUNT(*) AS nb
+FROM df_Orders o
+INNER JOIN df_Shippers s ON o.ShipperID = s.ShipperID
+GROUP BY s.ShipperName
+ORDER BY nb DESC`,
+      e:[`La répartition de l'activité de livraison entre les transporteurs.`] },
+    { t:"Capstone : CA par pays", q:`Calcule le <b>chiffre d'affaires total par pays du client</b> (<code>Country</code>), en reliant <code>df_Orders</code>, <code>df_Customers</code>, <code>df_OrderDetails</code> et <code>df_Products</code>, trié décroissant.`,
+      h:[`Quatre jointures + <code>SUM(p.Price * od.Quantity)</code>.`,`<code>GROUP BY cu.Country ORDER BY ca DESC</code>.`],
+      s:`SELECT cu.Country, SUM(p.Price * od.Quantity) AS ca
+FROM df_Orders o
+INNER JOIN df_Customers cu ON o.CustomerID = cu.CustomerID
+INNER JOIN df_OrderDetails od ON o.OrderID = od.OrderID
+INNER JOIN df_Products p ON od.ProductID = p.ProductID
+GROUP BY cu.Country
+ORDER BY ca DESC`,
+      e:[`Le chiffre d'affaires par marché géographique — la synthèse finale d'une analyse commerciale.`],
+      a:`Bravo : sélectionner, filtrer, joindre, agréger, imbriquer, classer — tu sais répondre à une question métier complète en SQL. 🏔️` }
+  ]
+}
+];
+
+/* =========================================================================
+   Surlignage automatique d'une requête SQL (sans dépendance)
+   ========================================================================= */
+function hl(code){
+  code = String(code).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  var KW = "SELECT|DISTINCT|FROM|WHERE|GROUP|HAVING|ORDER|OFFSET|LIMIT|INNER|OUTER|LEFT|RIGHT|FULL|CROSS|JOIN|USING|UNION|EXISTS|BETWEEN|LIKE|INSERT|INTO|VALUES|UPDATE|DELETE|CREATE|VIEW|TABLE|DROP|ALTER|REFERENCES|PRIMARY|FOREIGN|KEY|DEFAULT|CASE|WHEN|THEN|ELSE|END|ASC|DESC|AND|ANY|ALL|NOT|NULL|ADD|SET|BY|ON|IS|IN|AS|OR";
+  var re = new RegExp(
+    "(--[^\\n]*|/\\*[\\s\\S]*?\\*/)" +     // 1 commentaires
+    "|('[^']*')" +                         // 2 chaînes
+    "|\\b(" + KW + ")\\b" +                // 3 mots-clés
+    "|\\b(\\d+\\.?\\d*)\\b" +              // 4 nombres
+    "|\\b([A-Za-z_]\\w*)(?=\\s*\\()",      // 5 fonctions (COUNT, SUM, AVG...)
+    "gi");
+  return code.replace(re, function(m, comment, str, kw, num, fn){
+    if (comment !== undefined) return '<span class="comment">' + comment + '</span>';
+    if (str !== undefined) return '<span class="string">' + str + '</span>';
+    if (kw !== undefined) return '<span class="keyword">' + kw + '</span>';
+    if (num !== undefined) return '<span class="number">' + num + '</span>';
+    if (fn !== undefined) return '<span class="function">' + fn + '</span>';
+    return m;
+  });
+}
+
+/* =========================================================================
+   Construction des sections de niveaux à partir des données
+   ========================================================================= */
+function renderLevels(){
+  var host = document.getElementById("levels");
+  if (!host) return;
+  LEVELS.forEach(function(lv){
+    var ex = "";
+    lv.exercises.forEach(function(e, i){
+      var astuce = e.a ? '<p class="astuce-line"><span class="astuce-ic">🚀</span> <b>Astuce —</b> ' + e.a + '</p>' : '';
+      ex +=
+        '<div class="exercise">' +
+          '<h4>Exercice ' + (i + 1) + ' — ' + e.t + '</h4>' +
+          '<p>' + e.q + '</p>' +
+          '<div class="accordion-title">💡 Indice 1</div>' +
+          '<div class="accordion-content"><p>' + e.h[0] + '</p></div>' +
+          '<div class="accordion-title">💡 Indice 2</div>' +
+          '<div class="accordion-content"><p>' + e.h[1] + '</p></div>' +
+          '<div class="accordion-title solution">✅ Solution</div>' +
+          '<div class="accordion-content solution-content">' +
+            '<pre class="python-code"><code>' + hl(e.s) + '</code></pre>' +
+            '<div class="solution-explanation">' +
+              '<p><b>Comment ça marche :</b></p>' +
+              '<ul>' + e.e.map(function(x){ return '<li>' + x + '</li>'; }).join("") + '</ul>' +
+              astuce +
+            '</div>' +
+          '</div>' +
+        '</div>';
+    });
+
+    var sec = document.createElement("section");
+    sec.className = "level";
+    sec.id = "niveau-" + lv.n;
+    sec.dataset.level = lv.n;
+    sec.innerHTML =
+      '<div class="level__head">' +
+        '<div class="level__badge"><span class="level__num">' + lv.n + '</span><span class="level__emoji">' + lv.emoji + '</span></div>' +
+        '<div class="level__meta">' +
+          '<span class="level__alt">' + lv.alt + '</span>' +
+          '<h2 class="level__title">' + lv.title + '</h2>' +
+          '<p class="level__topic">' + lv.topic + '</p>' +
+        '</div>' +
+        '<span class="level__check">✓ Camp franchi</span>' +
+      '</div>' +
+      '<div class="level__body">' +
+        '<p class="level__intro">' + lv.intro + '</p>' +
+        '<div class="exercises" data-level="' + lv.n + '">' + ex + '</div>' +
+      '</div>' +
+      '<div class="level__foot">' +
+        '<button class="camp-toggle" data-level="' + lv.n + '" type="button" aria-pressed="false">' +
+          '<span class="tick"><svg viewBox="0 0 24 24" fill="none"><path d="m5 12 5 5 9-11" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>' +
+          '<span class="camp-toggle__label">Marquer ce camp comme franchi</span>' +
+        '</button>' +
+      '</div>';
+    host.appendChild(sec);
+
+    if (lv.cheer){
+      var p = document.createElement("p");
+      p.className = "cheer";
+      p.innerHTML = lv.cheer;
+      host.appendChild(p);
+    }
+  });
+}
+
+/* =========================================================================
+   Interactions (accordéons, navigation, scroll-spy, progression)
+   ========================================================================= */
+document.addEventListener("DOMContentLoaded", function () {
+
+  renderLevels();
+
+  function setupAccordions(root){
+    (root || document).querySelectorAll(".accordion-title").forEach(function (title) {
+      if (title.dataset.bound) return;
+      title.dataset.bound = "1";
+      title.addEventListener("click", function () {
+        var content = title.nextElementSibling;
+        if (!content) return;
+        if (content.classList.contains("active")) {
+          content.classList.remove("active");
+          content.style.maxHeight = null;
+        } else {
+          content.classList.add("active");
+          content.style.maxHeight = content.scrollHeight + "px";
+        }
+      });
+    });
+  }
+  setupAccordions();
+  window.SQLAscension = { refresh: function(){ setupAccordions(); } };
+
+  var TOTAL = 7;
+  function scrollToLevel(n){
+    var el = document.getElementById("niveau-" + n);
+    if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+  document.querySelectorAll(".pill").forEach(function (pill) {
+    pill.addEventListener("click", function () { scrollToLevel(pill.dataset.level); });
+  });
+  document.querySelectorAll(".camp").forEach(function (camp) {
+    camp.addEventListener("click", function (e) { e.preventDefault(); scrollToLevel(camp.dataset.level); });
+  });
+
+  var levels = Array.prototype.slice.call(document.querySelectorAll(".level"));
+  function setActive(n){
+    document.querySelectorAll(".pill").forEach(function (p) { p.classList.toggle("active", p.dataset.level === n); });
+    document.querySelectorAll(".camp").forEach(function (c) { c.classList.toggle("active", c.dataset.level === n); });
+  }
+  if ("IntersectionObserver" in window) {
+    var spy = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) setActive(entry.target.dataset.level);
+      });
+    }, { rootMargin: "-45% 0px -50% 0px", threshold: 0 });
+    levels.forEach(function (l) { spy.observe(l); });
+  }
+
+  var KEY = "sql_ascension_progress_v1";
+  function loadDone(){
+    try { return new Set(JSON.parse(localStorage.getItem(KEY) || "[]")); }
+    catch (e) { return new Set(); }
+  }
+  function saveDone(set){
+    try { localStorage.setItem(KEY, JSON.stringify(Array.from(set))); } catch (e) {}
+  }
+  var done = loadDone();
+
+  function render(){
+    var count = 0;
+    for (var i = 1; i <= TOTAL; i++) {
+      var on = done.has(String(i)) || done.has(i);
+      if (on) count++;
+      var camp = document.querySelector('.camp[data-level="' + i + '"]');
+      if (camp) camp.classList.toggle("done", on);
+      var pill = document.querySelector('.pill[data-level="' + i + '"]');
+      if (pill) pill.classList.toggle("done", on);
+      var section = document.getElementById("niveau-" + i);
+      if (section) section.classList.toggle("completed", on);
+      var btn = document.querySelector('.camp-toggle[data-level="' + i + '"]');
+      if (btn) {
+        btn.classList.toggle("is-done", on);
+        btn.setAttribute("aria-pressed", on ? "true" : "false");
+        var label = btn.querySelector(".camp-toggle__label");
+        if (label) label.textContent = on ? "Camp franchi" : "Marquer ce camp comme franchi";
+      }
+    }
+    var pct = Math.round(count / TOTAL * 100);
+    var fill = document.getElementById("ascentFill"); if (fill) fill.style.width = pct + "%";
+    var a = document.getElementById("ascentCount"); if (a) a.textContent = count;
+    var m = document.getElementById("mhCount"); if (m) m.textContent = count;
+  }
+
+  document.querySelectorAll(".camp-toggle").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      var n = String(btn.dataset.level);
+      if (done.has(n) || done.has(Number(n))) { done.delete(n); done.delete(Number(n)); }
+      else { done.add(n); }
+      saveDone(done);
+      render();
+    });
+  });
+
+  render();
+});
+</script>
+</body>
+</html>
