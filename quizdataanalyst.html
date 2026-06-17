@@ -1,0 +1,782 @@
+<!--
+  Synapse Learners — Entraînement des synapses
+  Quiz interactif : 11 thèmes, séries de 10 questions.
+  Les questions sont générées à partir du programme Data Analyst (méthode V.E.L.M.)
+  via l'API Claude, puis mises en cache par série pour rester stables.
+  Un fonds de questions vérifiées sert de filet de sécurité hors connexion.
+-->
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+<style>
+  :root {
+    --violet:        #6d28d9;
+    --violet-deep:   #5b21b6;
+    --violet-bright: #7c3aed;
+    --violet-soft:   #f5f3ff;
+    --violet-grad:   linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%);
+
+    --ink:    #1e293b;
+    --ink-2:  #0f172a;
+    --muted:  #64748b;
+    --muted-2:#94a3b8;
+
+    --page:   #f4f3f8;
+    --card:   #ffffff;
+    --line:   #e9e7f0;
+    --line-2: #eef2f7;
+
+    --green:      #059669;
+    --green-bd:   #6ee7b7;
+    --green-bg:   #ecfdf5;
+    --red:        #e11d48;
+    --red-bd:     #fda4af;
+    --red-bg:     #fff1f3;
+
+    --radius:  20px;
+    --radius-s:14px;
+    --shadow:  0 18px 50px -22px rgba(76,29,149,.35);
+    --shadow-s:0 6px 18px -10px rgba(15,23,42,.25);
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background:
+      radial-gradient(1200px 600px at 50% -10%, #efeafd 0%, rgba(239,234,253,0) 55%),
+      var(--page);
+    color: var(--ink);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  .wrap { max-width: 640px; margin: 0 auto; padding: 28px 18px 64px; }
+
+  /* ---------- Brand header ---------- */
+  .brand {
+    display: flex; align-items: center; gap: 10px;
+    font-family: "Poppins", sans-serif; font-weight: 700;
+    font-size: 20px; color: var(--ink-2);
+    margin: 6px 4px 16px;
+  }
+  .brand .logo { font-size: 22px; line-height: 1; filter: saturate(1.1); }
+  .brand small {
+    font-family: "Inter", sans-serif; font-weight: 500; font-size: 12px;
+    color: var(--muted-2); margin-left: auto; letter-spacing: .02em;
+  }
+
+  /* ---------- Card ---------- */
+  .card {
+    position: relative; background: var(--card);
+    border-radius: var(--radius); box-shadow: var(--shadow);
+    border: 1px solid var(--line);
+    overflow: hidden;
+  }
+  .card-pad { padding: 26px 26px 28px; }
+  @media (max-width: 480px) { .card-pad { padding: 20px 18px 22px; } }
+
+  /* gradient progress rail on top of the card */
+  .rail { height: 6px; width: 100%; background: var(--line-2); }
+  .rail > span {
+    display: block; height: 100%; width: 0%;
+    background: var(--violet-grad); border-radius: 0 4px 4px 0;
+    transition: width .45s cubic-bezier(.22,1,.36,1);
+  }
+
+  /* ---------- Typography helpers ---------- */
+  .eyebrow {
+    font-family: "Poppins", sans-serif; font-weight: 600;
+    font-size: 12px; letter-spacing: .14em; text-transform: uppercase;
+    color: var(--violet); margin: 0 0 6px;
+  }
+  h1.title {
+    font-family: "Poppins", sans-serif; font-weight: 800;
+    font-size: 26px; line-height: 1.2; color: var(--ink-2); margin: 0 0 8px;
+  }
+  p.lede { font-size: 14.5px; color: var(--muted); margin: 0 0 20px; line-height: 1.55; }
+
+  /* ---------- Buttons ---------- */
+  .btn {
+    appearance: none; border: 0; cursor: pointer; width: 100%;
+    font-family: "Poppins", sans-serif; font-weight: 700; font-size: 15.5px;
+    color: #fff; background: var(--violet); padding: 15px 18px;
+    border-radius: var(--radius-s); transition: transform .12s ease, box-shadow .2s ease, background .2s ease;
+    box-shadow: 0 10px 24px -12px rgba(109,40,217,.8);
+  }
+  .btn:hover { background: var(--violet-deep); transform: translateY(-1px); }
+  .btn:active { transform: translateY(0); }
+  .btn.ghost {
+    background: #fff; color: var(--violet); border: 1.5px solid var(--line);
+    box-shadow: none;
+  }
+  .btn.ghost:hover { background: var(--violet-soft); border-color: #ddd6fe; }
+  .btn:focus-visible { outline: 3px solid #c4b5fd; outline-offset: 2px; }
+
+  .backlink {
+    display: inline-flex; align-items: center; gap: 6px; cursor: pointer;
+    background: none; border: 0; padding: 4px 0; margin: 0 0 14px;
+    color: var(--muted); font-family: "Inter"; font-weight: 600; font-size: 13.5px;
+  }
+  .backlink:hover { color: var(--violet); }
+
+  /* ---------- Theme grid (home) ---------- */
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  @media (max-width: 480px) { .grid { grid-template-columns: 1fr; } }
+
+  .tile {
+    display: flex; align-items: center; gap: 13px; text-align: left;
+    background: #fff; border: 1.5px solid var(--line); border-radius: var(--radius-s);
+    padding: 14px 15px; cursor: pointer; transition: all .16s ease;
+  }
+  .tile:hover { border-color: #c4b5fd; background: var(--violet-soft); transform: translateY(-2px); box-shadow: var(--shadow-s); }
+  .tile:focus-visible { outline: 3px solid #c4b5fd; outline-offset: 2px; }
+  .tile .emoji {
+    font-size: 22px; width: 42px; height: 42px; flex: none;
+    display: grid; place-items: center; border-radius: 12px;
+    background: var(--violet-soft);
+  }
+  .tile .meta { min-width: 0; }
+  .tile .name { font-family: "Poppins"; font-weight: 600; font-size: 14.5px; color: var(--ink-2); }
+  .tile .sub  { font-size: 12px; color: var(--muted-2); margin-top: 2px; }
+
+  /* ---------- Series list ---------- */
+  .series-head { display: flex; align-items: center; gap: 12px; margin-bottom: 4px; }
+  .series-head .emoji {
+    font-size: 24px; width: 48px; height: 48px; flex: none;
+    display: grid; place-items: center; border-radius: 13px; background: var(--violet-soft);
+  }
+  .series-list { display: grid; gap: 10px; margin-top: 18px; }
+  .srow {
+    display: flex; align-items: center; gap: 13px; text-align: left;
+    background: #fff; border: 1.5px solid var(--line); border-radius: var(--radius-s);
+    padding: 13px 15px; cursor: pointer; transition: all .16s ease;
+  }
+  .srow:hover { border-color: #c4b5fd; background: var(--violet-soft); transform: translateX(2px); }
+  .srow:focus-visible { outline: 3px solid #c4b5fd; outline-offset: 2px; }
+  .srow .num {
+    font-family: "Poppins"; font-weight: 700; font-size: 14px; color: var(--violet);
+    width: 40px; height: 40px; flex: none; display: grid; place-items: center;
+    border-radius: 11px; background: var(--violet-soft); border: 1px solid #ede9fe;
+  }
+  .srow .stitle { font-family: "Poppins"; font-weight: 600; font-size: 14px; color: var(--ink-2); }
+  .srow .sfocus { font-size: 12.5px; color: var(--muted); margin-top: 1px; }
+  .srow .score-badge {
+    margin-left: auto; flex: none; font-family: "Poppins"; font-weight: 700; font-size: 12px;
+    padding: 4px 10px; border-radius: 999px;
+  }
+  .badge-green { background: var(--green-bg); color: var(--green); border: 1px solid var(--green-bd); }
+  .badge-amber { background: #fffbeb; color: #b45309; border: 1px solid #fcd34d; }
+  .badge-arrow { margin-left: auto; color: var(--muted-2); font-size: 18px; }
+
+  .hint {
+    margin-top: 18px; font-size: 12.5px; color: var(--muted); line-height: 1.5;
+    background: var(--violet-soft); border: 1px solid #ede9fe; border-radius: 12px; padding: 11px 13px;
+  }
+  .hint b { color: var(--violet-deep); }
+
+  /* ---------- Quiz ---------- */
+  .qtop { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; }
+  .pill {
+    font-family: "Poppins"; font-weight: 700; font-size: 13px; color: #fff;
+    background: var(--violet); padding: 7px 15px; border-radius: 999px;
+  }
+  .score { font-family: "Poppins"; font-weight: 600; font-size: 14px; color: var(--muted); }
+  .score b { color: var(--ink-2); }
+
+  .question {
+    font-family: "Poppins"; font-weight: 700; font-size: 19px; line-height: 1.42;
+    color: var(--ink-2); margin: 2px 0 20px;
+  }
+  @media (max-width: 480px) { .question { font-size: 17.5px; } }
+
+  .opts { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  @media (max-width: 560px) { .opts { grid-template-columns: 1fr; } }
+
+  .opt {
+    position: relative; text-align: left; cursor: pointer;
+    background: #fff; border: 1.6px solid var(--line); border-radius: var(--radius-s);
+    padding: 17px 16px; font-family: "Poppins"; font-weight: 600; font-size: 14.5px; color: var(--ink);
+    transition: all .14s ease; min-height: 58px; display: flex; align-items: center;
+  }
+  .opt:hover:not(.locked) { border-color: #c4b5fd; background: var(--violet-soft); }
+  .opt:focus-visible { outline: 3px solid #c4b5fd; outline-offset: 2px; }
+  .opt.locked { cursor: default; }
+  .opt.correct { border-color: var(--green-bd); background: var(--green-bg); color: var(--green); }
+  .opt.wrong   { border-color: var(--red-bd);   background: var(--red-bg);   color: var(--red); }
+  .opt .mark { margin-left: auto; padding-left: 10px; font-size: 16px; font-weight: 800; }
+
+  .feedback {
+    margin-top: 18px; background: #f8fafc; border: 1px solid var(--line-2);
+    border-radius: var(--radius-s); padding: 16px 17px;
+    animation: rise .28s cubic-bezier(.22,1,.36,1) both;
+  }
+  .feedback h4 {
+    font-family: "Poppins"; font-weight: 800; font-size: 13px; letter-spacing: .04em;
+    text-transform: uppercase; margin: 0 0 7px;
+  }
+  .feedback h4.ok { color: var(--green); }
+  .feedback h4.no { color: var(--red); }
+  .feedback p { margin: 0 0 14px; font-size: 14px; line-height: 1.55; color: var(--ink); }
+  .feedback .btn { width: 100%; }
+
+  /* ---------- Results ---------- */
+  .result-top { text-align: center; padding: 8px 0 4px; }
+  .scorb {
+    width: 132px; height: 132px; border-radius: 50%; margin: 6px auto 18px;
+    background: var(--violet-grad); display: grid; place-items: center;
+    box-shadow: 0 22px 44px -18px rgba(91,33,182,.7);
+    animation: pop .5s cubic-bezier(.34,1.56,.64,1) both;
+  }
+  .scorb span { font-family: "Poppins"; font-weight: 800; font-size: 40px; color: #fff; line-height: 1; }
+  .scorb small { display:block; font-weight:600; font-size:13px; opacity:.85; margin-top:4px; }
+  .result-top h2 { font-family: "Poppins"; font-weight: 800; font-size: 21px; color: var(--ink-2); margin: 0 0 12px; }
+  .saved {
+    display: inline-flex; align-items: center; gap: 7px; font-family: "Poppins"; font-weight: 600;
+    font-size: 13px; color: var(--green); background: var(--green-bg);
+    border: 1px solid var(--green-bd); padding: 7px 14px; border-radius: 999px;
+  }
+  .verdict { font-size: 14px; color: var(--muted); margin: 14px auto 0; max-width: 90%; line-height: 1.55; }
+
+  .review { margin-top: 24px; display: grid; gap: 12px; }
+  .rev {
+    background: #fff; border: 1px solid var(--line); border-radius: var(--radius-s); padding: 16px 17px;
+  }
+  .rev .rq { font-family: "Poppins"; font-weight: 700; font-size: 14.5px; color: var(--ink-2); margin: 0 0 12px; line-height: 1.4; }
+  .rev .line { display: flex; gap: 8px; font-size: 13.5px; margin: 4px 0; align-items: flex-start; }
+  .rev .lab { font-family: "Poppins"; font-weight: 700; font-size: 11px; letter-spacing: .04em; text-transform: uppercase; color: var(--muted-2); flex: none; padding-top: 2px; min-width: 104px; }
+  .rev .yours-no { color: var(--red); font-weight: 600; }
+  .rev .yours-ok { color: var(--green); font-weight: 600; }
+  .rev .good { color: var(--green); font-weight: 600; }
+  .rev .why { margin-top: 12px; padding-top: 12px; border-top: 1px dashed var(--line); }
+  .rev .why .lab2 { font-family: "Poppins"; font-weight: 700; font-size: 12.5px; color: var(--violet); margin: 0 0 4px; }
+  .rev .why p { margin: 0; font-size: 13.5px; color: var(--muted); line-height: 1.55; }
+
+  .result-actions { display: grid; gap: 10px; margin-top: 22px; }
+
+  /* ---------- Loading ---------- */
+  .loading { text-align: center; padding: 38px 10px; }
+  .brainpulse { font-size: 46px; display: inline-block; animation: pulse 1.4s ease-in-out infinite; }
+  .loading p { font-family: "Poppins"; font-weight: 600; color: var(--ink-2); margin: 14px 0 4px; font-size: 15px; }
+  .loading small { color: var(--muted); font-size: 13px; }
+  .dots::after { content: ""; animation: dots 1.4s steps(4,end) infinite; }
+
+  .offline-tag {
+    display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600;
+    color: #b45309; background: #fffbeb; border: 1px solid #fcd34d; padding: 5px 11px; border-radius: 999px;
+    margin-bottom: 14px;
+  }
+
+  @keyframes rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+  @keyframes pop  { from { opacity: 0; transform: scale(.7); } to { opacity: 1; transform: scale(1); } }
+  @keyframes pulse{ 0%,100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.12); opacity: .7; } }
+  @keyframes dots { 0% { content:""; } 25% { content:"."; } 50% { content:".."; } 75% { content:"..."; } }
+  .screen-anim { animation: rise .3s ease both; }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+  }
+</style>
+
+<div class="wrap">
+  <div class="brand">
+    <span class="logo">🧠</span> Entraînement des synapses
+    <small id="brandTotal"></small>
+  </div>
+  <div class="card">
+    <div class="rail"><span id="rail"></span></div>
+    <div class="card-pad" id="app"></div>
+  </div>
+</div>
+
+<script>
+/* =====================================================================
+   1. PROGRAMME → THÈMES & SÉRIES
+   Chaque série a un "focus" tiré du programme Data Analyst.
+   Le "syllabus" sert d'amorce pour garder les questions dans le sujet.
+   ===================================================================== */
+const THEMES = [
+  { id:"python", emoji:"🐍", label:"Python",
+    syllabus:"Variables et types, mutabilité, opérateurs, conditions, boucles et itérateurs, chaînes, listes, tuples, dictionnaires, fonctions, slicing, tout-est-objet (POO), bibliothèque standard et modules.",
+    series:["Variables & types","Mutables vs immuables","Opérateurs & conditions","Boucles & itérateurs","Chaînes de caractères","Listes & tuples","Dictionnaires","Fonctions","Slicing","POO : tout est objet","Modules & bibliothèque standard"] },
+
+  { id:"sql", emoji:"🗄️", label:"SQL",
+    syllabus:"Modélisation relationnelle, formes normales, clés primaires/étrangères, cardinalités, SELECT/WHERE/DISTINCT/ORDER BY, LIKE/BETWEEN/IN, opérateurs logiques, fonctions d'agrégation, GROUP BY, HAVING, jointures, sous-requêtes, vues, ordre d'exécution, DDL et index.",
+    series:["Modélisation & formes normales","Clés & cardinalités","SELECT, WHERE, ORDER BY","LIKE, BETWEEN, IN","Agrégation & GROUP BY","HAVING vs WHERE","Jointures","Sous-requêtes","Vues","Ordre d'exécution des clauses","DDL : CREATE, ALTER, index"] },
+
+  { id:"regex", emoji:"🔤", label:"Regex",
+    syllabus:"Expressions régulières en Python : métacaractères, classes de caractères, quantificateurs, ancres, groupes, alternation, re.search/findall/sub, anonymisation RGPD, greedy vs lazy, lookahead/lookbehind, flags et compilation.",
+    series:["Métacaractères & classes","Quantificateurs","Ancres & limites de mot","Groupes & alternation","Recherche & extraction","Substitution & anonymisation","Cas pratiques (email, tél, date)","Greedy vs lazy","Lookahead / lookbehind","Flags & re.compile"] },
+
+  { id:"rgpd", emoji:"🛡️", label:"RGPD",
+    syllabus:"RGPD pour data analyst : principes fondamentaux, bases légales, consentement, droits des personnes, données personnelles et sensibles, rôle du DPO, sécurisation, pseudonymisation vs anonymisation, responsabilités et sanctions.",
+    series:["Principes fondamentaux","Bases légales & consentement","Droits des personnes","Données personnelles & sensibles","Le rôle du DPO","Pseudonymisation & anonymisation","Responsabilités & sanctions","RGPD au quotidien du data analyst"] },
+
+  { id:"scraping", emoji:"🕸️", label:"Scraping",
+    syllabus:"Web scraping : principes et cas d'usage, structure HTML/DOM, sélecteurs, requests, BeautifulSoup (find/find_all), extraction de texte et d'attributs, pagination multi-pages, légalité et robots.txt, bonnes pratiques anti-blocage.",
+    series:["Principes & cas d'usage","HTML, DOM & sélecteurs","requests : récupérer la page","BeautifulSoup : find / find_all","Extraire texte & attributs","Pagination multi-pages","Légalité & robots.txt","Bonnes pratiques & éthique"] },
+
+  { id:"api", emoji:"🔌", label:"API",
+    syllabus:"API REST : concepts REST, méthodes HTTP (GET/POST/PUT/DELETE), codes de statut, format JSON, bibliothèque requests côté client, endpoints et routes, création d'API avec Flask, environnements virtuels, authentification.",
+    series:["Concepts REST","Méthodes HTTP","Codes de statut HTTP","JSON, format d'échange","requests côté client","Endpoints & routes","Flask : créer une API","Environnements virtuels & sécurité"] },
+
+  { id:"pandas", emoji:"🐼", label:"Pandas",
+    syllabus:"Pandas : Series et DataFrame, lecture de données (read_csv/excel/html), head/tail/info, sélection et filtrage (loc/iloc/booléen), tri et inplace, création de colonnes, doublons et valeurs manquantes, concat/merge, groupby, describe, pivot_table, dates.",
+    series:["Series & DataFrame","Lecture de données","head, tail, info, shape","Sélection & filtrage (loc/iloc)","Tri & inplace","Nouvelles colonnes & calculs","Doublons & valeurs manquantes","Concaténation & fusion","groupby & agrégations","describe & statistiques","Tableaux croisés (pivot_table)","Dates & séries temporelles"] },
+
+  { id:"dataviz", emoji:"📊", label:"Dataviz",
+    syllabus:"Visualisation : choisir le bon graphique selon la donnée, Matplotlib (plot/bar/scatter/hist), personnalisation, Seaborn (distribution, relation, catégoriel), boxplot, Plotly interactif et animations, Bokeh, accessibilité pour déficients visuels.",
+    series:["Choisir le bon graphique","Matplotlib : les bases","Personnalisation (titres, axes)","Seaborn : distribution","Seaborn : relation & catégoriel","Boxplot & lecture","Plotly : interactif","Plotly : animation & avancé","Bokeh","Accessibilité visuelle"] },
+
+  { id:"sklearn", emoji:"🤖", label:"Scikit-learn",
+    syllabus:"Scikit-learn : train_test_split, fit/predict, régression linéaire (uni et multivariée), KNN, Naive Bayes, SVM, régression logistique, matrice de confusion, métriques (accuracy, precision, recall, F1), validation croisée, GridSearch, sur/sous-apprentissage.",
+    series:["train_test_split","fit & predict","Régression linéaire","Classification : KNN","Naive Bayes & SVM","Régression logistique","Matrice de confusion","Métriques d'évaluation","Validation croisée","GridSearch & hyperparamètres","Sur- et sous-apprentissage"] },
+
+  { id:"stats", emoji:"📐", label:"Statistiques",
+    syllabus:"Statistiques descriptives et exploratoires : tendance centrale (moyenne, médiane, mode), dispersion (variance, écart-type, étendue), quartiles et IQR, boxplot et outliers, distributions et asymétrie, corrélation de Pearson, corrcoef NumPy, describe, histogrammes, covariance vs corrélation.",
+    series:["Tendance centrale","Dispersion (écart-type, variance)","Quartiles & IQR","Boxplot & outliers","Distributions & asymétrie","Corrélation de Pearson","Matrice de corrélation (NumPy)","describe & interprétation","Histogrammes & densité","Covariance vs corrélation"] },
+
+  { id:"dashboard", emoji:"📈", label:"Dashboard",
+    syllabus:"Tableaux de bord & BI : principes d'un bon dashboard, KPI SMART, tableaux croisés dynamiques, Power BI, Tableau, hiérarchie de l'information, storytelling, accessibilité des tableaux de bord.",
+    series:["Anatomie d'un bon dashboard","KPI SMART","Tableaux croisés dynamiques","Power BI : concepts","Tableau : concepts","Hiérarchiser l'information","Storytelling visuel","Accessibilité des dashboards"] },
+];
+
+const TOTAL_SERIES = THEMES.reduce((n,t)=>n+t.series.length,0);
+document.getElementById("brandTotal").textContent = `${TOTAL_SERIES * 10}+ questions · ${TOTAL_SERIES} séries`;
+
+/* =====================================================================
+   2. FONDS DE SECOURS — questions vérifiées (mode hors connexion)
+   Réponses contrôlées manuellement. "c" = index (0-3) de la bonne réponse.
+   ===================================================================== */
+const FALLBACK = {
+  python: [
+    { q:"Parmi ces structures, laquelle est immuable en Python ?", o:["La liste","Le dictionnaire","Le tuple","L'ensemble (set)"], c:2, e:"Un tuple ne peut pas être modifié après sa création, contrairement aux listes, dictionnaires et sets qui sont mutables." },
+    { q:"Que renvoie type(3 / 2) en Python 3 ?", o:["int","float","str","bool"], c:1, e:"L'opérateur / effectue toujours une division flottante en Python 3 : le résultat est un float (1.5), même si la division tombe juste." },
+    { q:"Quelle structure de données n'autorise pas les doublons ?", o:["list","tuple","set","str"], c:2, e:"Un set (ensemble) ne stocke que des valeurs uniques : ajouter une valeur déjà présente n'a aucun effet." },
+    { q:'Que renvoie "données"[2:5] ?', o:['"don"','"nné"','"nnée"','"onn"'], c:1, e:"Le slicing [2:5] prend les caractères d'index 2, 3 et 4 (la borne 5 est exclue), soit « nné »." },
+    { q:"Quel mot-clé sert à définir une fonction en Python ?", o:["function","func","def","lambda"], c:2, e:"def introduit une fonction nommée. lambda existe aussi mais crée une fonction anonyme, pas une définition classique." },
+  ],
+  sql: [
+    { q:"Quelle clause filtre les résultats APRÈS un GROUP BY ?", o:["WHERE","HAVING","ORDER BY","DISTINCT"], c:1, e:"HAVING filtre sur les groupes (et donc sur les agrégats comme SUM ou COUNT). WHERE filtre les lignes avant le regroupement." },
+    { q:"Quelle jointure conserve toutes les lignes de la table de gauche, même sans correspondance ?", o:["INNER JOIN","LEFT JOIN","CROSS JOIN","FULL JOIN"], c:1, e:"LEFT JOIN garde toutes les lignes de la table de gauche ; les colonnes de droite sont à NULL quand il n'y a pas de correspondance." },
+    { q:"Dans l'ordre d'exécution réel d'une requête, quelle clause est traitée en premier ?", o:["SELECT","FROM","WHERE","ORDER BY"], c:1, e:"FROM s'exécute en premier (on identifie les tables), puis WHERE, GROUP BY, HAVING, SELECT et enfin ORDER BY." },
+    { q:"Quel mot-clé supprime les doublons dans le résultat d'un SELECT ?", o:["UNIQUE","DISTINCT","DELETE","REMOVE"], c:1, e:"SELECT DISTINCT ne renvoie que les lignes distinctes. UNIQUE existe mais sert à définir une contrainte, pas à filtrer un SELECT." },
+    { q:"Quelle fonction d'agrégation compte le nombre de lignes ?", o:["SUM","COUNT","AVG","TOTAL"], c:1, e:"COUNT() renvoie le nombre de lignes (ou de valeurs non nulles). SUM additionne, AVG fait la moyenne." },
+  ],
+  regex: [
+    { q:"Que représente le métacaractère \\d dans une expression régulière ?", o:["Un chiffre","Une lettre","Un espace","Un mot entier"], c:0, e:"\\d correspond à un chiffre (0-9). Pour une lettre ou un chiffre on utilise \\w, et \\s pour un espace." },
+    { q:"Que signifie le quantificateur + ?", o:["0 ou plus","1 ou plus","0 ou 1","Exactement 1"], c:1, e:"+ exige au moins une occurrence. * accepte zéro ou plus, et ? signifie zéro ou une occurrence." },
+    { q:"Quelle fonction du module re remplace les correspondances ?", o:["re.match","re.findall","re.sub","re.split"], c:2, e:"re.sub(motif, remplacement, texte) substitue chaque correspondance — c'est l'outil clé pour anonymiser des données." },
+    { q:"À quoi correspond la classe [a-z] ?", o:["Une lettre minuscule","Une majuscule","Un chiffre","N'importe quel caractère"], c:0, e:"[a-z] décrit une plage : une seule lettre minuscule de a à z. Pour les majuscules il faudrait [A-Z]." },
+    { q:"En dehors d'une classe, que représente ^ placé en début de motif ?", o:["Une négation","Le début de la chaîne/ligne","La fin de ligne","Un espace"], c:1, e:"En tête de motif, ^ est une ancre marquant le début. Ce n'est qu'à l'intérieur de crochets [^...] qu'il signifie « négation »." },
+  ],
+  rgpd: [
+    { q:"Que signifie l'acronyme RGPD ?", o:["Règlement Général sur la Protection des Données","Régime Global de Protection Digitale","Référentiel Garanti des Pratiques Data","Règle Générale de Partage des Données"], c:0, e:"RGPD = Règlement Général sur la Protection des Données, en vigueur dans l'Union européenne depuis mai 2018." },
+    { q:"Qui est chargé de veiller à la conformité RGPD dans une organisation ?", o:["Le CEO","Le DPO","Le CTO","Le DSI"], c:1, e:"Le DPO (Délégué à la Protection des Données) conseille, contrôle la conformité et fait le lien avec l'autorité (la CNIL en France)." },
+    { q:"Quelle différence entre anonymisation et pseudonymisation ?", o:["Aucune, ce sont des synonymes","L'anonymisation est irréversible","La pseudonymisation est irréversible","L'anonymisation chiffre les données"], c:1, e:"L'anonymisation est irréversible : on ne peut plus ré-identifier la personne. La pseudonymisation reste réversible via une table de correspondance." },
+    { q:"Laquelle est une base légale valable pour traiter des données ?", o:["La curiosité","Le consentement","La rentabilité","L'habitude"], c:1, e:"Le consentement est l'une des bases légales du RGPD, avec notamment le contrat, l'obligation légale et l'intérêt légitime." },
+    { q:"Que permet le « droit à l'effacement » ?", o:["Copier ses données","Vendre ses données","Obtenir la suppression de ses données","Modifier le règlement"], c:2, e:"Le droit à l'effacement (ou « droit à l'oubli ») permet à une personne de demander la suppression de ses données personnelles." },
+  ],
+  scraping: [
+    { q:"Quelle bibliothèque Python sert à analyser (parser) le HTML d'une page ?", o:["NumPy","BeautifulSoup","Flask","Seaborn"], c:1, e:"BeautifulSoup parcourt l'arbre HTML et permet d'extraire balises, textes et attributs facilement." },
+    { q:"Quelle méthode de BeautifulSoup récupère TOUTES les occurrences d'une balise ?", o:["find()","find_all()","get()","parse()"], c:1, e:"find_all() renvoie une liste de toutes les balises correspondantes ; find() ne renvoie que la première." },
+    { q:"Quel fichier d'un site web indique les règles d'exploration aux robots ?", o:["sitemap.xml","robots.txt","index.html",".htaccess"], c:1, e:"robots.txt précise les zones autorisées ou interdites au crawl. Le respecter fait partie des bonnes pratiques (et parfois des obligations)." },
+    { q:"Quelle bibliothèque envoie la requête HTTP pour télécharger une page ?", o:["requests","pandas","re","math"], c:0, e:"requests gère l'appel HTTP (requests.get) ; on passe ensuite le contenu HTML récupéré à BeautifulSoup." },
+    { q:"Comment récupère-t-on la valeur de l'attribut href d'une balise tag ?", o:["tag.text","tag.name","tag['href']","tag.find()"], c:2, e:"On accède aux attributs comme à un dictionnaire : tag['href']. tag.text donnerait le texte affiché, pas le lien." },
+  ],
+  api: [
+    { q:"Que signifie l'acronyme REST ?", o:["Representational State Transfer","Remote Server Transfer","Reactive State Transaction","Rapid Exchange Standard Type"], c:0, e:"REST = Representational State Transfer, un style d'architecture pour les services web fondé sur HTTP." },
+    { q:"Quel code de statut HTTP signifie que tout s'est bien passé ?", o:["200","301","404","500"], c:0, e:"200 = OK. 404 signale une ressource introuvable, et 500 une erreur côté serveur." },
+    { q:"Quel format de données est le plus utilisé pour échanger via une API REST ?", o:["CSV","XML","JSON","YAML"], c:2, e:"JSON est le format dominant : léger, lisible et directement exploitable en Python (module json ou .json() de requests)." },
+    { q:"Quel micro-framework Python permet de créer facilement une API REST ?", o:["Seaborn","Flask","NumPy","Bokeh"], c:1, e:"Flask est un micro-framework web léger, idéal pour exposer rapidement des routes et une API REST." },
+    { q:"Quelle méthode HTTP est typiquement utilisée pour créer une nouvelle ressource ?", o:["GET","POST","DELETE","HEAD"], c:1, e:"POST envoie des données pour créer une ressource. GET sert à lire, PUT à mettre à jour, DELETE à supprimer." },
+  ],
+  pandas: [
+    { q:"Quel objet Pandas représente un tableau à deux dimensions ?", o:["Series","DataFrame","Index","array"], c:1, e:"Le DataFrame est une table 2D (lignes × colonnes). Une Series est unidimensionnelle, comme une seule colonne." },
+    { q:"Quelle méthode affiche par défaut les 5 premières lignes d'un DataFrame ?", o:["head()","tail()","info()","sample()"], c:0, e:"head() montre les premières lignes (5 par défaut). tail() montre les dernières." },
+    { q:"Quelle méthode fusionne deux DataFrames sur une colonne clé commune ?", o:["concat()","merge()","append()","stack()"], c:1, e:"merge() réalise une jointure de type SQL sur une ou plusieurs clés. concat() empile plutôt les DataFrames." },
+    { q:"Pour sélectionner des données par étiquette (label), on utilise :", o:["iloc","loc","at_index","get"], c:1, e:"loc sélectionne par étiquette (nom de ligne/colonne). iloc sélectionne par position entière." },
+    { q:"Par défaut, describe() décrit quelles colonnes ?", o:["Toutes les colonnes","Les colonnes numériques","Les colonnes texte","Uniquement l'index"], c:1, e:"Sans argument, describe() ne résume que les colonnes numériques. Il faut include='object' (ou 'all') pour les colonnes texte." },
+  ],
+  dataviz: [
+    { q:"Quel graphique est le plus adapté pour visualiser la distribution d'une variable continue ?", o:["Le camembert","L'histogramme","Le nuage de points","Le diagramme en barres"], c:1, e:"L'histogramme regroupe les valeurs en intervalles et montre la forme de la distribution (asymétrie, pics, étalement)." },
+    { q:"Quelle bibliothèque est spécialisée dans les graphiques interactifs pour le web ?", o:["Matplotlib","Seaborn","Plotly","math"], c:2, e:"Plotly produit des graphiques interactifs (zoom, survol, animations), idéaux pour des dashboards web." },
+    { q:"Seaborn est construit au-dessus de quelle bibliothèque ?", o:["Plotly","Bokeh","Matplotlib","Pandas"], c:2, e:"Seaborn s'appuie sur Matplotlib : il en simplifie l'usage et propose des styles statistiques élégants par défaut." },
+    { q:"Pour représenter la relation entre deux variables numériques, on choisit :", o:["Un camembert","Un nuage de points","Un histogramme","Une jauge"], c:1, e:"Le nuage de points (scatter plot) place chaque observation selon ses deux valeurs et révèle une éventuelle corrélation." },
+    { q:"Que montre principalement une boîte à moustaches (boxplot) ?", o:["La moyenne seule","Les quartiles et les valeurs extrêmes","La corrélation","La pente d'une régression"], c:1, e:"Le boxplot affiche la médiane, les 1er et 3e quartiles (la boîte), les moustaches et les points aberrants (outliers)." },
+  ],
+  sklearn: [
+    { q:"Quelle fonction de scikit-learn sépare les données en jeux d'entraînement et de test ?", o:["split_dataset","train_test_split","cross_validate","fit_split"], c:1, e:"train_test_split découpe X et y en ensembles d'entraînement et de test, souvent avec test_size et random_state." },
+    { q:"Quelle méthode entraîne un modèle scikit-learn ?", o:["predict()","fit()","score()","transform()"], c:1, e:"fit() ajuste le modèle aux données d'entraînement. On utilise ensuite predict() pour prédire et score() pour évaluer." },
+    { q:"À quel type de problème la matrice de confusion s'applique-t-elle ?", o:["La régression","La classification","Le clustering","La réduction de dimension"], c:1, e:"La matrice de confusion croise classes réelles et prédites : elle évalue les modèles de classification (vrais/faux positifs et négatifs)." },
+    { q:"Un modèle qui obtient un excellent score en entraînement mais un mauvais score en test fait du :", o:["Sous-apprentissage","Sur-apprentissage","Bon apprentissage","Bruit aléatoire"], c:1, e:"C'est du sur-apprentissage (overfitting) : le modèle a mémorisé les données d'entraînement et généralise mal." },
+    { q:"Le F1-score combine quelles deux métriques ?", o:["Précision et rappel","Train et test","Biais et variance","Vrais et faux positifs uniquement"], c:0, e:"Le F1-score est la moyenne harmonique de la précision et du rappel : utile quand les classes sont déséquilibrées." },
+  ],
+  stats: [
+    { q:"Quelle mesure de tendance centrale est la plus robuste aux valeurs extrêmes ?", o:["La moyenne","La médiane","La somme","La variance"], c:1, e:"La médiane (valeur centrale) n'est presque pas affectée par les outliers, contrairement à la moyenne qui se laisse « tirer »." },
+    { q:"Comment se calcule l'écart interquartile (IQR) ?", o:["Q3 − Q1","max − min","moyenne − médiane","Q2 × 2"], c:0, e:"IQR = Q3 − Q1 : c'est l'étendue des 50 % de valeurs centrales, une mesure de dispersion robuste." },
+    { q:"Une corrélation de Pearson égale à −1 indique :", o:["Aucune relation","Une relation positive parfaite","Une relation inverse parfaite","Une relation faible"], c:2, e:"−1 traduit une relation linéaire inverse parfaite : quand une variable augmente, l'autre diminue exactement proportionnellement." },
+    { q:"Que mesure l'écart-type ?", o:["La tendance centrale","La dispersion des valeurs","La corrélation","Le mode"], c:1, e:"L'écart-type quantifie la dispersion autour de la moyenne : plus il est grand, plus les valeurs sont étalées." },
+    { q:"Quelle valeur de corrélation de Pearson indique l'absence de relation linéaire ?", o:["1","−1","0","0,8"], c:2, e:"Une corrélation proche de 0 signifie qu'il n'y a pas de relation linéaire (mais une relation non linéaire reste possible)." },
+  ],
+  dashboard: [
+    { q:"Dans un KPI « SMART », que signifie la lettre M ?", o:["Magique","Mesurable","Manuel","Mineur"], c:1, e:"SMART = Spécifique, Mesurable, Atteignable, Pertinent (Relevant), Temporel. Un bon KPI doit pouvoir être quantifié." },
+    { q:"Quel outil de Business Intelligence est édité par Microsoft ?", o:["Tableau","Power BI","Looker","Qlik"], c:1, e:"Power BI est la solution de BI de Microsoft, très répandue en entreprise et intégrée à l'écosystème Office." },
+    { q:"À quoi sert principalement un tableau croisé dynamique ?", o:["Écrire du code","Croiser et agréger des variables","Scraper un site","Chiffrer des données"], c:1, e:"Le tableau croisé dynamique (pivot table) résume et croise des variables (sommes, moyennes, comptages) sans programmer." },
+    { q:"Pour l'accessibilité, quelle erreur faut-il éviter dans un graphique ?", o:["Mettre un titre","Coder l'information uniquement par la couleur","Ajouter une légende","Utiliser des axes"], c:1, e:"Coder l'info seulement par la couleur exclut les personnes daltoniennes : il faut ajouter motifs, formes ou étiquettes." },
+    { q:"Quel est le rôle premier d'un tableau de bord ?", o:["Stocker des données","Visualiser et suivre des indicateurs clés","Remplacer SQL","Anonymiser des données"], c:1, e:"Un dashboard donne une vue synthétique et actionnable des KPI pour suivre la performance et décider." },
+  ],
+};
+
+/* =====================================================================
+   3. STOCKAGE (cache des séries + meilleurs scores)
+   ===================================================================== */
+const store = {
+  async get(key){ try{ const r = await window.storage.get(key); return r ? r.value : null; }catch(e){ return mem[key] ?? null; } },
+  async set(key,val){ try{ await window.storage.set(key, val); }catch(e){ mem[key] = val; } },
+  async del(key){ try{ await window.storage.delete(key); }catch(e){ delete mem[key]; } },
+};
+const mem = {}; // repli mémoire si window.storage indisponible
+const qKey = (t,s)=>`synq:q:${t}:${s}`;
+const scoreKey = (t,s)=>`synq:score:${t}:${s}`;
+
+/* =====================================================================
+   4. GÉNÉRATION DES QUESTIONS via l'API Claude
+   ===================================================================== */
+function buildPrompt(theme, focus){
+  return `Tu es l'Architecte Pédagogique de Synapse Learners, plateforme de formation Data Analyst (méthode V.E.L.M.).
+Génère EXACTEMENT 10 questions de quiz à choix multiple, en FRANÇAIS, pour réviser la notion suivante.
+
+THÈME : ${theme.label}
+SOUS-THÈME (focus de cette série) : ${focus}
+PÉRIMÈTRE DU THÈME : ${theme.syllabus}
+
+RÈGLES IMPÉRATIVES :
+- Chaque question a EXACTEMENT 4 options.
+- Une SEULE option est correcte. Les 3 autres sont plausibles mais fausses (pas d'absurdités évidentes).
+- La bonne réponse ne doit PAS être devinable sans connaître la notion.
+- Couvre des angles variés : définition, lecture de code, débogage d'une erreur classique, cas métier.
+- Niveau adapté à un futur data analyst junior, ancré dans le sous-thème indiqué.
+- Chaque question a une explication COURTE (1 phrase, ~20 mots) qui justifie la bonne réponse.
+- VÉRIFICATION OBLIGATOIRE : relis chaque item et assure-toi que l'option pointée par "correct" est réellement la seule bonne réponse, et que l'explication décrit bien CETTE option. Ne marque jamais une mauvaise option comme correcte.
+
+FORMAT DE SORTIE : réponds UNIQUEMENT avec un tableau JSON valide, sans texte avant ni après, sans balises Markdown. Schéma de chaque élément :
+{"question": "...", "options": ["A","B","C","D"], "correct": 0, "explanation": "..."}
+"correct" est l'index (0 à 3) de la bonne réponse dans "options".`;
+}
+
+function extractJSONArray(text){
+  if(!text) return null;
+  let t = text.replace(/```json/gi,"").replace(/```/g,"").trim();
+  const start = t.indexOf("[");
+  if(start === -1) return null;
+  t = t.slice(start);
+  // Tentative directe
+  try { return JSON.parse(t); } catch(e){}
+  // Récupération tolérante : on garde jusqu'au dernier objet complet
+  const lastObj = t.lastIndexOf("}");
+  if(lastObj !== -1){
+    let candidate = t.slice(0, lastObj + 1) + "]";
+    try { return JSON.parse(candidate); } catch(e){}
+  }
+  return null;
+}
+
+function validate(arr){
+  if(!Array.isArray(arr)) return [];
+  return arr.filter(it =>
+    it && typeof it.question === "string" && it.question.length > 3 &&
+    Array.isArray(it.options) && it.options.length === 4 &&
+    it.options.every(o => typeof o === "string" && o.length > 0) &&
+    Number.isInteger(it.correct) && it.correct >= 0 && it.correct <= 3 &&
+    typeof it.explanation === "string"
+  ).map(it => ({ q: it.question, o: it.options, c: it.correct, e: it.explanation }));
+}
+
+async function callClaude(prompt){
+  const res = await fetch("https://api.anthropic.com/v1/messages", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      model: "claude-sonnet-4-6",
+      max_tokens: 1000,
+      messages: [{ role: "user", content: prompt }],
+    }),
+  });
+  if(!res.ok) throw new Error("HTTP " + res.status);
+  const data = await res.json();
+  return (data.content || []).map(b => b.type === "text" ? b.text : "").join("");
+}
+
+// Renvoie { questions:[...], offline:bool }
+async function getQuestions(theme, seriesIndex){
+  const key = qKey(theme.id, seriesIndex);
+  const cached = await store.get(key);
+  if(cached){
+    try { const arr = JSON.parse(cached); if(arr && arr.length) return { questions: arr, offline:false }; } catch(e){}
+  }
+  const focus = theme.series[seriesIndex];
+  try {
+    let raw = await callClaude(buildPrompt(theme, focus));
+    let questions = validate(extractJSONArray(raw));
+    // Un second essai si la première fournée est trop courte
+    if(questions.length < 6){
+      raw = await callClaude(buildPrompt(theme, focus));
+      const more = validate(extractJSONArray(raw));
+      if(more.length > questions.length) questions = more;
+    }
+    if(questions.length >= 6){
+      questions = questions.slice(0, 10);
+      await store.set(key, JSON.stringify(questions));
+      return { questions, offline:false };
+    }
+    throw new Error("Génération insuffisante");
+  } catch(e){
+    return { questions: (FALLBACK[theme.id] || []).slice(), offline:true };
+  }
+}
+
+/* =====================================================================
+   5. ÉTAT & RENDU
+   ===================================================================== */
+const app = document.getElementById("app");
+const rail = document.getElementById("rail");
+let state = { view:"home", theme:null, series:0, questions:[], idx:0, answers:[], offline:false };
+
+function setRail(pct){ rail.style.width = Math.max(0, Math.min(100, pct)) + "%"; }
+function go(view){ state.view = view; render(); window.scrollTo({ top:0, behavior:"smooth" }); }
+
+/* ---------- HOME ---------- */
+function renderHome(){
+  setRail(0);
+  const tiles = THEMES.map(t => `
+    <button class="tile" data-theme="${t.id}">
+      <span class="emoji">${t.emoji}</span>
+      <span class="meta">
+        <span class="name">${t.label}</span>
+        <span class="sub">${t.series.length} séries · ${t.series.length*10} questions</span>
+      </span>
+    </button>`).join("");
+
+  app.innerHTML = `
+    <div class="screen-anim">
+      <p class="eyebrow">Quiz Data Analyst</p>
+      <h1 class="title">Choisis ton thème</h1>
+      <p class="lede">11 thèmes du programme, des séries de 10 questions. Sélectionne un thème, puis une série pour entraîner tes synapses.</p>
+      <div class="grid">${tiles}</div>
+    </div>`;
+
+  app.querySelectorAll(".tile").forEach(b =>
+    b.addEventListener("click", () => { state.theme = THEMES.find(t => t.id === b.dataset.theme); state.series = 0; go("series"); }));
+}
+
+/* ---------- SÉRIES ---------- */
+async function renderSeries(){
+  setRail(0);
+  const t = state.theme;
+  const rows = await Promise.all(t.series.map(async (focus, i) => {
+    const best = await store.get(scoreKey(t.id, i));
+    let badge = `<span class="badge-arrow">›</span>`;
+    if(best !== null){
+      const n = parseInt(best, 10);
+      const cls = n >= 7 ? "badge-green" : "badge-amber";
+      badge = `<span class="score-badge ${cls}">${n}/10</span>`;
+    }
+    return `
+      <button class="srow" data-series="${i}">
+        <span class="num">${String(i+1).padStart(2,"0")}</span>
+        <span class="meta">
+          <span class="stitle">Série ${i+1}</span>
+          <span class="sfocus">${focus}</span>
+        </span>
+        ${badge}
+      </button>`;
+  }));
+
+  app.innerHTML = `
+    <div class="screen-anim">
+      <button class="backlink" id="back">← Tous les thèmes</button>
+      <div class="series-head">
+        <span class="emoji">${t.emoji}</span>
+        <div>
+          <p class="eyebrow" style="margin:0">${t.series.length} séries disponibles</p>
+          <h1 class="title" style="margin:2px 0 0">${t.label}</h1>
+        </div>
+      </div>
+      <div class="series-list">${rows.join("")}</div>
+      <div class="hint">💡 Les questions sont générées à partir du <b>programme Synapse Learners</b> et mises en cache : une série reste identique d'une fois sur l'autre. Un badge vert (≥ 7/10) ou orange indique ton meilleur score.</div>
+    </div>`;
+
+  app.querySelector("#back").addEventListener("click", () => go("home"));
+  app.querySelectorAll(".srow").forEach(b =>
+    b.addEventListener("click", () => startSeries(parseInt(b.dataset.series, 10))));
+}
+
+/* ---------- LANCEMENT D'UNE SÉRIE ---------- */
+async function startSeries(i){
+  state.series = i;
+  state.idx = 0; state.answers = [];
+  // écran de chargement
+  setRail(6);
+  app.innerHTML = `
+    <div class="loading screen-anim">
+      <span class="brainpulse">🧠</span>
+      <p>Génération de la série<span class="dots"></span></p>
+      <small>${state.theme.label} · Série ${i+1} — ${state.theme.series[i]}</small>
+    </div>`;
+
+  const { questions, offline } = await getQuestions(state.theme, i);
+  state.questions = questions;
+  state.offline = offline;
+  if(!questions.length){
+    app.innerHTML = `
+      <div class="loading screen-anim">
+        <span style="font-size:42px">😕</span>
+        <p>Impossible de charger cette série</p>
+        <small>Vérifie ta connexion, puis réessaie.</small>
+        <div style="margin-top:18px"><button class="btn" id="retry">Réessayer</button></div>
+      </div>`;
+    app.querySelector("#retry").addEventListener("click", () => startSeries(i));
+    return;
+  }
+  go("quiz");
+}
+
+/* ---------- QUIZ ---------- */
+function renderQuiz(){
+  const total = state.questions.length;
+  const q = state.questions[state.idx];
+  const answered = state.answers[state.idx] !== undefined;
+  const score = state.answers.filter((a, k) => a === state.questions[k].c).length;
+  setRail(((state.idx + (answered ? 1 : 0)) / total) * 100);
+
+  const offlineTag = state.offline
+    ? `<div class="offline-tag">⚡ </div>` : "";
+
+  const opts = q.o.map((opt, k) => {
+    let cls = "opt";
+    if(answered){
+      cls += " locked";
+      if(k === q.c) cls += " correct";
+      else if(k === state.answers[state.idx]) cls += " wrong";
+    }
+    let mark = "";
+    if(answered && k === q.c) mark = `<span class="mark">✓</span>`;
+    else if(answered && k === state.answers[state.idx]) mark = `<span class="mark">✕</span>`;
+    return `<button class="${cls}" data-opt="${k}" ${answered ? "disabled" : ""}>${opt}${mark}</button>`;
+  }).join("");
+
+  let feedback = "";
+  if(answered){
+    const ok = state.answers[state.idx] === q.c;
+    const last = state.idx === total - 1;
+    feedback = `
+      <div class="feedback">
+        <h4 class="${ok ? "ok" : "no"}">${ok ? "✅ Bien vu !" : "❌ Pas tout à fait…"}</h4>
+        <p>${q.e}</p>
+        <button class="btn" id="next">${last ? "Voir les résultats" : "Question suivante →"}</button>
+      </div>`;
+  }
+
+  app.innerHTML = `
+    <div class="screen-anim">
+      <button class="backlink" id="back">← Quitter la série</button>
+      ${offlineTag}
+      <div class="qtop">
+        <span class="pill">Question ${state.idx + 1}/${total}</span>
+        <span class="score">Score : <b>${score}/${total}</b></span>
+      </div>
+      <div class="question">${q.q}</div>
+      <div class="opts">${opts}</div>
+      ${feedback}
+    </div>`;
+
+  app.querySelector("#back").addEventListener("click", () => go("series"));
+  if(!answered){
+    app.querySelectorAll(".opt").forEach(b =>
+      b.addEventListener("click", () => { state.answers[state.idx] = parseInt(b.dataset.opt, 10); render(); }));
+  } else {
+    app.querySelector("#next").addEventListener("click", () => {
+      if(state.idx < total - 1){ state.idx++; render(); }
+      else finishQuiz();
+    });
+  }
+}
+
+/* ---------- RÉSULTATS ---------- */
+async function finishQuiz(){
+  const total = state.questions.length;
+  const score = state.answers.filter((a, k) => a === state.questions[k].c).length;
+
+  // sauvegarde du meilleur score
+  let saved = false;
+  if(!state.offline){
+    const prev = await store.get(scoreKey(state.theme.id, state.series));
+    if(prev === null || score > parseInt(prev, 10)){ await store.set(scoreKey(state.theme.id, state.series), String(score)); }
+    saved = true;
+  }
+  state._score = score; state._saved = saved;
+  go("results");
+}
+
+function renderResults(){
+  setRail(100);
+  const total = state.questions.length;
+  const score = state._score;
+  const pct = Math.round((score / total) * 100);
+  let verdict;
+  if(pct >= 90) verdict = "Maîtrise impressionnante. Tes synapses sont au top — passe à la série suivante !";
+  else if(pct >= 70) verdict = "Solide ! Quelques notions à consolider, mais l'essentiel est acquis.";
+  else if(pct >= 40) verdict = "Bonne base. Relis les explications ci-dessous puis retente la série.";
+  else verdict = "Ça vaut le coup de revoir le cours sur ce thème avant de réessayer. Persévère !";
+
+  const reviews = state.questions.map((q, k) => {
+    const a = state.answers[k];
+    const ok = a === q.c;
+    return `
+      <div class="rev">
+        <p class="rq">${k+1}. ${q.q}</p>
+        <div class="line"><span class="lab">Ta réponse</span>
+          <span class="${ok ? "yours-ok" : "yours-no"}">${ok ? "✓" : "✕"} ${q.o[a]}</span></div>
+        ${ok ? "" : `<div class="line"><span class="lab">Bonne réponse</span><span class="good">✓ ${q.o[q.c]}</span></div>`}
+        <div class="why"><p class="lab2">Pourquoi ?</p><p>${q.e}</p></div>
+      </div>`;
+  }).join("");
+
+  const savedPill = state._saved
+    ? `<div class="saved">✓ Résultat sauvegardé</div>`
+    : `<div class="offline-tag" style="margin:0">⚡ Score</div>`;
+
+  app.innerHTML = `
+    <div class="screen-anim">
+      <div class="result-top">
+        <div class="scorb"><span>${score}/${total}<small>${pct}%</small></span></div>
+        <h2>Analyse de tes synapses terminée !</h2>
+        ${savedPill}
+        <p class="verdict">${verdict}</p>
+      </div>
+      <div class="review">${reviews}</div>
+      <div class="result-actions">
+        <button class="btn" id="retry">↻ Refaire la série</button>
+        <button class="btn ghost" id="other">Choisir une autre série</button>
+      </div>
+    </div>`;
+
+  app.querySelector("#retry").addEventListener("click", () => startSeries(state.series));
+  app.querySelector("#other").addEventListener("click", () => go("series"));
+}
+
+/* ---------- Routeur ---------- */
+function render(){
+  if(state.view === "home") return renderHome();
+  if(state.view === "series") return renderSeries();
+  if(state.view === "quiz") return renderQuiz();
+  if(state.view === "results") return renderResults();
+}
+
+render();
+</script>
