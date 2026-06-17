@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>L'Ascension du Machine Learning 🤖 — Synapse Learners</title>
+<meta name="description" content="L'Ascension du Machine Learning — révision de scikit-learn en 7 niveaux sur le Titanic : 70 exercices progressifs (régression, classification, clustering, corrélations, métriques), indices et solutions détaillées. Synapse Learners — Parcours Data Analyst.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Roboto+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* =====================================================================
+   CHARTE — L'Ascension du Machine Learning (Synapse Learners)
+   ===================================================================== */
+:root{
+  --python-blue:#3776ab;        /* bleu Python (primaire) */
+  --python-blue-deep:#21466b;   /* bleu profond (texte/dégradés) */
+  --python-night:#13263b;       /* nuit (fonds sombres) */
+  --python-yellow:#ffd43b;      /* jaune Python (accent) */
+  --python-gold:#e9a900;        /* or (accent lisible sur clair) */
+  --summit:#2f9e44;             /* vert sommet (réussite/solution) */
+
+  --bg:#eef2f8;
+  --bg-2:#e6ecf5;
+  --card:#ffffff;
+  --ink:#1b2733;
+  --muted:#5d6b7c;
+  --line:#dce4ee;
+  --line-soft:#e8eef5;
+
+  /* Code — Monokai (identique à la charte d'origine) */
+  --code-bg:#282c34;
+  --code-comment:#7f8c98;
+  --code-keyword:#f92672;
+  --code-function:#66d9ef;
+  --code-string:#e6db74;
+  --code-number:#ae81ff;
+  --code-variable:#a6e22e;
+  --code-operator:#f8f8f2;
+  --code-builtin:#fd971f;
+
+  --font:'Poppins',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  --mono:'Roboto Mono',ui-monospace,Menlo,Consolas,monospace;
+  --radius:14px;
+  --radius-sm:9px;
+  --shadow:0 10px 30px rgba(20,40,67,.10);
+  --shadow-soft:0 2px 10px rgba(20,40,67,.06);
+  --maxw:1080px;
+}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;font-family:var(--font);color:var(--ink);background:var(--bg);
+  line-height:1.7;-webkit-font-smoothing:antialiased;
+}
+@media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto} }
+h1,h2,h3,h4{margin:0;font-weight:700;letter-spacing:-.01em;line-height:1.2}
+p{margin:0}
+a{color:var(--python-blue);text-decoration:none}
+:focus-visible{outline:3px solid var(--python-yellow);outline-offset:3px;border-radius:6px}
+
+/* =====================================================================
+   MASTHEAD (barre fixe : marque + navigation des camps + progression)
+   ===================================================================== */
+.masthead{
+  position:sticky;top:0;z-index:50;
+  background:rgba(255,255,255,.86);backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--line);
+}
+.masthead__row{
+  max-width:var(--maxw);margin:0 auto;padding:9px 18px;
+  display:flex;align-items:center;gap:14px;
+}
+.brand{display:flex;align-items:center;gap:10px;flex:0 0 auto}
+.brand__logo{
+  width:34px;height:34px;border-radius:9px;display:grid;place-items:center;flex:0 0 auto;
+  background:linear-gradient(150deg,var(--python-blue),var(--python-blue-deep));
+  color:#fff;box-shadow:inset 0 0 0 1px rgba(255,255,255,.15);
+}
+.brand__logo svg{width:20px;height:20px}
+.brand__txt{display:flex;flex-direction:column;line-height:1.1}
+.brand__name{font-weight:700;font-size:.98rem;color:var(--python-blue-deep)}
+.brand__tag{font-size:.66rem;font-weight:600;letter-spacing:.04em;color:var(--muted);text-transform:uppercase}
+
+.camp-nav{
+  display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;margin-left:auto;padding:2px;
+}
+.camp-nav::-webkit-scrollbar{display:none}
+.pill{
+  flex:0 0 auto;border:1px solid var(--line);background:#fff;color:var(--python-blue-deep);
+  font-family:var(--mono);font-size:.78rem;font-weight:600;
+  padding:5px 11px;border-radius:999px;cursor:pointer;transition:.15s;white-space:nowrap;
+  position:relative;
+}
+.pill:hover{border-color:var(--python-blue);background:#f1f6fb}
+.pill.active{background:var(--python-blue);border-color:var(--python-blue);color:#fff}
+.pill.done::after{
+  content:"";position:absolute;top:-2px;right:-2px;width:9px;height:9px;border-radius:50%;
+  background:var(--summit);border:2px solid #fff;
+}
+.mh-progress{flex:0 0 auto;display:flex;align-items:center;gap:8px;font-size:.78rem;color:var(--muted);font-weight:600}
+.mh-progress b{font-family:var(--mono);color:var(--python-blue-deep)}
+@media(max-width:760px){
+  .mh-progress{display:none}
+  .brand__tag{display:none}
+}
+
+/* =====================================================================
+   HERO (le thèse de la page : l'ascension + profil d'altitude)
+   ===================================================================== */
+.hero{
+  position:relative;overflow:hidden;color:#eaf2fb;
+  background:
+    radial-gradient(110% 120% at 85% -20%, #3a6896 0%, transparent 55%),
+    linear-gradient(160deg,#2a5076 0%, #21466b 45%, #16304b 100%);
+}
+.hero__contours{position:absolute;inset:0;width:100%;height:100%;opacity:.16;pointer-events:none}
+.hero__inner{
+  max-width:var(--maxw);margin:0 auto;padding:46px 22px 30px;position:relative;z-index:1;
+}
+.kicker{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(255,212,59,.14);border:1px solid rgba(255,212,59,.4);color:var(--python-yellow);
+  font-size:.72rem;font-weight:600;letter-spacing:.05em;text-transform:uppercase;
+  padding:5px 12px;border-radius:999px;
+}
+.hero h1{
+  font-size:clamp(2.1rem,5.2vw,3.1rem);font-weight:800;color:#fff;margin:16px 0 10px;
+}
+.hero__sub{
+  max-width:58ch;color:#cfe0f0;font-size:1.04rem;font-weight:300;
+}
+.hero__sub code{font-family:var(--mono);font-size:.92em;background:rgba(255,255,255,.12);padding:1px 6px;border-radius:5px;color:#fff}
+
+/* Barre de progression de l'ascension */
+.ascent{display:flex;align-items:center;gap:14px;margin:22px 0 4px;max-width:560px}
+.ascent__track{flex:1;height:8px;border-radius:99px;background:rgba(255,255,255,.16);overflow:hidden}
+.ascent__fill{height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,var(--python-yellow),var(--python-gold));transition:width .5s ease}
+.ascent__label{font-size:.82rem;font-weight:600;color:#dfeaf5;white-space:nowrap}
+.ascent__label b{font-family:var(--mono);color:#fff}
+
+/* ---- Profil d'altitude interactif (élément signature) ---- */
+.profile{position:relative;z-index:1;margin:26px auto 0;max-width:var(--maxw);padding:0 14px 8px}
+.profile__svg{display:block;width:100%;height:auto;overflow:visible}
+.ridge-fill{fill:url(#ridgeGrad)}
+.ridge-line{fill:none;stroke:#9cc2e6;stroke-width:2.5;stroke-linejoin:round}
+.trail{fill:none;stroke:rgba(255,255,255,.35);stroke-width:1.5;stroke-dasharray:2 5;stroke-linecap:round}
+.endlabel{fill:#bcd2e8;font-family:var(--mono);font-size:11px;font-weight:500}
+
+.camp{cursor:pointer}
+.camp__halo{fill:rgba(255,255,255,.0);transition:fill .2s}
+.camp:hover .camp__halo,.camp.active .camp__halo{fill:rgba(255,212,59,.22)}
+.camp__dot{fill:#16304b;stroke:#9cc2e6;stroke-width:2.5;transition:fill .25s,stroke .25s,r .2s}
+.camp:hover .camp__dot{stroke:#fff}
+.camp.active .camp__dot{fill:var(--python-yellow);stroke:#fff}
+.camp.done .camp__dot{fill:var(--summit);stroke:#cdeccd}
+.camp__num{fill:#fff;font-family:var(--mono);font-size:11px;font-weight:600;text-anchor:middle;dominant-baseline:central;pointer-events:none}
+.camp__name{fill:#dcebff;}
+.camp:focus-visible{outline:none}
+.camp:focus-visible .camp__dot{stroke:var(--python-yellow);stroke-width:3.5}
+
+/* =====================================================================
+   CONTENU
+   ===================================================================== */
+main{max-width:var(--maxw);margin:0 auto;padding:34px 22px 40px}
+
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  box-shadow:var(--shadow-soft);padding:24px;margin-bottom:30px;
+}
+
+/* Carte préparation */
+.prep{border-left:5px solid var(--python-yellow)}
+.prep h2{font-size:1.25rem;color:var(--python-blue-deep);display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.prep p{color:var(--ink)}
+.prep p+p{margin-top:10px}
+
+/* ---- Section d'un niveau / camp ---- */
+.level{
+  scroll-margin-top:80px;
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  box-shadow:var(--shadow-soft);overflow:hidden;margin-bottom:26px;
+  transition:box-shadow .2s,border-color .2s;
+}
+.level:hover{box-shadow:var(--shadow)}
+.level.completed{border-color:#bfe3c6}
+.level__head{
+  display:flex;align-items:center;gap:18px;padding:22px 24px;
+  border-bottom:1px solid var(--line-soft);position:relative;
+  background:linear-gradient(180deg,#fbfdff,#f5f9fd);
+}
+.level__badge{
+  flex:0 0 auto;width:58px;height:58px;border-radius:16px;display:grid;place-items:center;position:relative;
+  background:linear-gradient(150deg,var(--python-blue),var(--python-blue-deep));
+  color:#fff;box-shadow:0 6px 16px rgba(33,70,107,.30);
+}
+.level__num{font-size:1.5rem;font-weight:800;line-height:1}
+.level__emoji{position:absolute;bottom:-8px;right:-8px;font-size:1.25rem;filter:drop-shadow(0 2px 3px rgba(0,0,0,.2))}
+.level__meta{flex:1;min-width:0}
+.level__alt{
+  display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:.72rem;font-weight:600;
+  color:var(--python-blue);background:#eaf2fb;border:1px solid #d4e6f6;padding:2px 9px;border-radius:999px;margin-bottom:7px;
+}
+.level__title{font-size:1.32rem;color:var(--python-blue-deep)}
+.level__topic{color:var(--muted);font-size:.92rem;font-weight:500;margin-top:3px}
+.level__topic code{font-family:var(--mono);font-size:.84em;background:#eef3f9;color:var(--python-blue-deep);padding:1px 6px;border-radius:5px}
+.level__check{
+  position:absolute;top:14px;right:18px;display:none;align-items:center;gap:6px;
+  font-size:.78rem;font-weight:600;color:var(--summit);
+}
+.level.completed .level__check{display:inline-flex}
+
+.level__body{padding:24px}
+.level__intro{color:var(--ink);margin-bottom:18px}
+
+/* Zone d'accueil des exercices (vide pour l'instant) */
+.exercises{display:block}
+.placeholder{
+  border:2px dashed #c9d6e6;border-radius:var(--radius);background:
+    repeating-linear-gradient(135deg,#f7faff,#f7faff 14px,#f2f7fc 14px,#f2f7fc 28px);
+  padding:30px 22px;text-align:center;color:var(--muted);
+}
+.placeholder__pin{font-size:1.6rem;display:block;margin-bottom:8px}
+.placeholder b{color:var(--python-blue-deep)}
+.placeholder small{display:block;margin-top:6px;font-size:.82rem}
+
+/* Bouton "camp franchi" */
+.level__foot{padding:0 24px 24px;display:flex;justify-content:flex-end}
+.camp-toggle{
+  display:inline-flex;align-items:center;gap:9px;cursor:pointer;
+  border:1.5px solid var(--summit);background:#fff;color:var(--summit);
+  font-family:var(--font);font-weight:600;font-size:.9rem;padding:9px 16px;border-radius:999px;transition:.15s;
+}
+.camp-toggle:hover{background:#eefaf0}
+.camp-toggle .tick{
+  width:18px;height:18px;border-radius:50%;border:2px solid currentColor;display:grid;place-items:center;flex:0 0 auto;
+}
+.camp-toggle .tick svg{width:11px;height:11px;opacity:0;transition:opacity .15s}
+.camp-toggle.is-done{background:var(--summit);border-color:var(--summit);color:#fff}
+.camp-toggle.is-done .tick{border-color:#fff}
+.camp-toggle.is-done .tick svg{opacity:1}
+
+/* Bandeau d'encouragement entre les camps */
+.cheer{
+  text-align:center;font-style:italic;color:var(--muted);font-size:1.02rem;
+  padding:8px 20px 26px;max-width:60ch;margin:0 auto;
+}
+.cheer::before{content:"⛰️";font-style:normal;display:block;font-size:1.2rem;margin-bottom:4px;opacity:.8}
+
+/* =====================================================================
+   COMPOSANTS RÉUTILISABLES (prêts pour le contenu à venir)
+   — exercices, accordéons, blocs de code, encarts Synapse, laboratoire, quiz
+   ===================================================================== */
+
+/* Exercice */
+.exercise{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:20px;margin-bottom:22px;box-shadow:var(--shadow-soft);
+  transition:transform .2s ease, box-shadow .2s ease;
+}
+.exercise:hover{transform:translateY(-3px);box-shadow:var(--shadow)}
+.exercise h4{
+  color:var(--python-blue);margin:0 0 14px;font-size:1.18rem;
+  border-bottom:2px solid var(--line-soft);padding-bottom:10px;
+}
+
+/* Accordéons (indices / solution) — mécanisme identique à la charte d'origine */
+.accordion-title{
+  cursor:pointer;font-weight:600;display:inline-block;padding:8px 15px;border-radius:7px;
+  transition:background-color .25s,border-color .25s,color .25s;
+  border:1px solid var(--python-blue);background:transparent;color:var(--python-blue);
+  margin-right:10px;margin-top:10px;user-select:none;
+}
+.accordion-title:hover{background:var(--python-blue);color:#fff}
+.accordion-title.solution{border-color:var(--summit);color:var(--summit)}
+.accordion-title.solution:hover{background:var(--summit);color:#fff}
+.accordion-content{
+  max-height:0;overflow:hidden;transition:max-height .5s ease-in-out;
+  padding:0 20px;margin-top:15px;background:#f0f5fa;
+  border-left:3px solid var(--python-blue);border-radius:0 var(--radius) var(--radius) 0;
+}
+.accordion-content.solution-content{border-left-color:var(--summit)}
+.accordion-content.active{padding-top:15px;padding-bottom:15px}
+.solution-explanation{
+  background:#eaf2fb;border-left:3px solid var(--python-blue);padding:15px;margin-top:15px;
+  border-radius:0 var(--radius) var(--radius) 0;
+}
+.solution-explanation p,.solution-explanation ul{margin-bottom:10px}
+
+/* Blocs de code + coloration Monokai */
+pre{
+  background:var(--code-bg);color:#abb2bf;padding:20px;overflow-x:auto;border-radius:10px;margin:15px 0;
+  box-shadow:inset 0 2px 6px rgba(0,0,0,.25);font-size:.9rem;line-height:1.55;
+}
+code{font-family:var(--mono)}
+.python-code .comment{color:var(--code-comment)}
+.python-code .keyword{color:var(--code-keyword);font-weight:600}
+.python-code .function{color:var(--code-function)}
+.python-code .string{color:var(--code-string)}
+.python-code .number{color:var(--code-number)}
+.python-code .variable{color:var(--code-variable)}
+.python-code .operator{color:var(--code-operator)}
+.python-code .built_in{color:var(--code-builtin)}
+
+/* Encarts Synapse (💡 / ⚠️ / 🚀 / ✅) — prêts pour le contenu */
+.encart{border-radius:var(--radius);padding:16px 18px 16px 50px;position:relative;margin:18px 0;font-size:.96rem}
+.encart::before{position:absolute;left:16px;top:15px;font-size:1.25rem}
+.encart h5{margin:0 0 6px;font-size:.95rem;font-weight:700}
+.encart.savais  {background:#eef4fc;border:1px solid #d4e3f6}
+.encart.savais::before{content:"💡"}
+.encart.savais h5{color:#2c5d87}
+.encart.attention{background:#fdf1ec;border:1px solid #f6d8cb}
+.encart.attention::before{content:"⚠️"}
+.encart.attention h5{color:#b5532a}
+.encart.astuce  {background:#eafaf0;border:1px solid #c8ecd4}
+.encart.astuce::before{content:"🚀"}
+.encart.astuce h5{color:#1f7a3d}
+.encart.savoir  {background:#fff8e6;border:1px solid #f3e2b0}
+.encart.savoir::before{content:"✅"}
+.encart.savoir h5{color:#9a7b14}
+.encart ul{margin:8px 0 0;padding-left:18px}
+.encart li{margin-bottom:5px}
+.encart li:last-child{margin-bottom:0}
+
+/* Laboratoire (zone interactive) + Quiz — conteneurs prêts */
+.labo{border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;margin:18px 0;background:#fff}
+.labo__head{display:flex;align-items:center;gap:9px;padding:11px 16px;background:linear-gradient(180deg,#fbfdff,#f4f9fd);border-bottom:1px solid var(--line-soft);font-weight:600;color:var(--python-blue-deep)}
+.labo__head .tag{font-family:var(--mono);font-size:.68rem;font-weight:600;color:#fff;background:var(--python-blue);padding:2px 8px;border-radius:6px;text-transform:uppercase;letter-spacing:.04em}
+.labo__body{padding:16px}
+.quiz{border:1px solid var(--line);border-radius:var(--radius);padding:18px;margin:18px 0;background:#fbfdff}
+.quiz__title{display:flex;align-items:center;gap:9px;font-weight:700;color:var(--python-blue-deep);margin-bottom:8px}
+
+footer{
+  text-align:center;padding:30px 20px 40px;color:var(--muted);font-size:.9rem;
+  border-top:1px solid var(--line);
+}
+footer b{color:var(--python-blue-deep)}
+
+/* Responsive */
+@media(max-width:560px){
+  .level__head{padding:18px;gap:14px}
+  .level__badge{width:50px;height:50px}
+  .level__num{font-size:1.3rem}
+  .level__body{padding:18px}
+  .level__foot{padding:0 18px 18px}
+  .level__check{position:static;margin-top:6px}
+  .hero__inner{padding:34px 18px 24px}
+}
+@media (prefers-reduced-motion: reduce){
+  .exercise,.camp__dot,.ascent__fill{transition:none}
+}
+
+/* Astuce intégrée à la solution */
+.astuce-line{margin:14px 0 0;padding:11px 14px;background:#fff7e6;border:1px solid #f0dcb4;border-radius:9px;color:#5a4a2a;font-size:14px;line-height:1.6}
+.astuce-line .astuce-ic{margin-right:3px}
+</style>
+</head>
+<body>
+
+<!-- ================= MASTHEAD ================= -->
+<header class="masthead">
+  <div class="masthead__row">
+    <a class="brand" href="#top" aria-label="Synapse Learners — L'Ascension du Machine Learning">
+      <span class="brand__logo" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M3 20 10 7l4 7 2-3 5 9z" fill="currentColor" opacity=".55"/><path d="M3 20 10 7l4 7 2-3 5 9z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+      </span>
+      <span class="brand__txt">
+        <span class="brand__name">Machine Learning</span>
+        <span class="brand__tag">Synapse Learners · Data Analyst</span>
+      </span>
+    </a>
+
+    <nav class="camp-nav" aria-label="Navigation des camps">
+      <button class="pill" data-level="1" type="button">N1</button>
+      <button class="pill" data-level="2" type="button">N2</button>
+      <button class="pill" data-level="3" type="button">N3</button>
+      <button class="pill" data-level="4" type="button">N4</button>
+      <button class="pill" data-level="5" type="button">N5</button>
+      <button class="pill" data-level="6" type="button">N6</button>
+      <button class="pill" data-level="7" type="button">N7</button>
+    </nav>
+
+    <div class="mh-progress"><span>Ascension</span> <b id="mhCount">0</b><span>/7</span></div>
+  </div>
+</header>
+
+<!-- ================= HERO ================= -->
+<section class="hero" id="top">
+  <!-- Motif topographique discret -->
+  <svg class="hero__contours" viewBox="0 0 1000 400" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <g fill="none" stroke="#bcd6f0" stroke-width="1">
+      <path d="M-20 330 Q 250 290 500 320 T 1020 300"/>
+      <path d="M-20 360 Q 250 320 500 350 T 1020 330"/>
+      <path d="M-20 250 Q 280 210 520 245 T 1020 225"/>
+      <path d="M-20 180 Q 300 150 560 180 T 1020 165"/>
+      <path d="M-20 110 Q 320 85 580 115 T 1020 100"/>
+    </g>
+  </svg>
+
+  <div class="hero__inner">
+    <span class="kicker">🤖 Saison 03 · Machine Learning · Révision</span>
+    <h1>L'Ascension du Machine Learning</h1>
+    <p class="hero__sub">Sept camps pour passer de la donnée brute aux <b>prédictions</b> — sur le Titanic. Statistiques, corrélations, régression, classification et clustering : une étape à la fois, indice après indice, sans syndrome de l'imposteur.</p>
+
+    <div class="ascent">
+      <span class="ascent__label">Progression : <b id="ascentCount">0</b> / 7 camps</span>
+      <div class="ascent__track"><div class="ascent__fill" id="ascentFill"></div></div>
+    </div>
+  </div>
+
+  <!-- ===== Profil d'altitude interactif (signature + navigation) ===== -->
+  <div class="profile">
+    <svg class="profile__svg" viewBox="0 0 1000 230" role="group" aria-label="Profil de l'ascension — 7 camps">
+      <defs>
+        <linearGradient id="ridgeGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#5b86b3" stop-opacity=".55"/>
+          <stop offset="100%" stop-color="#16304b" stop-opacity="0"/>
+        </linearGradient>
+      </defs>
+
+      <!-- Crête (zone + ligne) reliant les 7 camps -->
+      <path class="ridge-fill" d="M0 214 L60 196 L200 172 L345 146 L490 118 L635 92 L780 62 L940 30 L1000 24 L1000 230 L0 230 Z"/>
+      <path class="ridge-line" d="M60 196 L200 172 L345 146 L490 118 L635 92 L780 62 L940 30"/>
+      <path class="trail" d="M60 196 L200 172 L345 146 L490 118 L635 92 L780 62 L940 30"/>
+
+      <!-- Étiquettes des extrémités -->
+      <text class="endlabel" x="58" y="220">Camp de base</text>
+      <text class="endlabel" x="940" y="18" text-anchor="end">Sommet · 8 848 m</text>
+
+      <!-- Camps cliquables -->
+      <a class="camp" href="#niveau-1" data-level="1"><title>Camp 1 — Stats &amp; exploration · 1 200 m</title><circle class="camp__halo" cx="60" cy="196" r="17"/><circle class="camp__dot" cx="60" cy="196" r="11"/><text class="camp__num" x="60" y="196">1</text></a>
+      <a class="camp" href="#niveau-2" data-level="2"><title>Camp 2 — Corrélations · 2 400 m</title><circle class="camp__halo" cx="200" cy="172" r="17"/><circle class="camp__dot" cx="200" cy="172" r="11"/><text class="camp__num" x="200" y="172">2</text></a>
+      <a class="camp" href="#niveau-3" data-level="3"><title>Camp 3 — Préparation · 3 600 m</title><circle class="camp__halo" cx="345" cy="146" r="17"/><circle class="camp__dot" cx="345" cy="146" r="11"/><text class="camp__num" x="345" y="146">3</text></a>
+      <a class="camp" href="#niveau-4" data-level="4"><title>Camp 4 — Régression · 5 000 m</title><circle class="camp__halo" cx="490" cy="118" r="17"/><circle class="camp__dot" cx="490" cy="118" r="11"/><text class="camp__num" x="490" y="118">4</text></a>
+      <a class="camp" href="#niveau-5" data-level="5"><title>Camp 5 — Classification · 6 200 m</title><circle class="camp__halo" cx="635" cy="92" r="17"/><circle class="camp__dot" cx="635" cy="92" r="11"/><text class="camp__num" x="635" y="92">5</text></a>
+      <a class="camp" href="#niveau-6" data-level="6"><title>Camp 6 — Évaluation · 7 500 m</title><circle class="camp__halo" cx="780" cy="62" r="17"/><circle class="camp__dot" cx="780" cy="62" r="11"/><text class="camp__num" x="780" y="62">6</text></a>
+      <a class="camp" href="#niveau-7" data-level="7"><title>Camp 7 — Clustering · 8 848 m</title><circle class="camp__halo" cx="940" cy="30" r="17"/><circle class="camp__dot" cx="940" cy="30" r="11"/><text class="camp__num" x="940" y="30">7</text></a>
+    </svg>
+  </div>
+</section>
+
+<!-- ================= CONTENU ================= -->
+<main>
+
+  <!-- Préparation -->
+  <section class="card prep">
+    <h2>🎒 Préparation de l'équipement (Google Colab)</h2>
+    <p>L'expédition se déroule sur <strong>Google Colab</strong> : aucune installation, un compte Google suffit — scikit-learn y est déjà disponible. Chaque exercice est un défi à relever dans une cellule de code.</p>
+    <p>Avant de partir, exécute cette cellule : elle charge le <strong>Titanic</strong>, le rend entièrement numérique et retire les valeurs manquantes. Ce <code>df</code> propre est la base de tous les exercices ; à partir du camp 3, on réutilise aussi le découpage <code>train/test</code>.</p>
+    <pre class="python-code"><code><span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+<span class="keyword">import</span> seaborn <span class="keyword">as</span> sns
+
+df <span class="operator">=</span> sns.<span class="function">load_dataset</span>(<span class="string">"titanic"</span>)
+df <span class="operator">=</span> df[[<span class="string">"survived"</span>, <span class="string">"pclass"</span>, <span class="string">"sex"</span>, <span class="string">"age"</span>, <span class="string">"sibsp"</span>, <span class="string">"parch"</span>, <span class="string">"fare"</span>]].<span class="function">copy</span>()
+df[<span class="string">"sex"</span>] <span class="operator">=</span> df[<span class="string">"sex"</span>].<span class="function">map</span>({<span class="string">"male"</span>: <span class="number">0</span>, <span class="string">"female"</span>: <span class="number">1</span>})
+df <span class="operator">=</span> df.<span class="function">dropna</span>()
+df.<span class="function">head</span>()</code></pre>
+    <p>Colonnes retenues : <code>survived</code> (cible), <code>pclass</code>, <code>sex</code> (0/1), <code>age</code>, <code>sibsp</code>, <code>parch</code>, <code>fare</code> — toutes numériques, prêtes pour scikit-learn.</p>
+  </section>
+
+  <div id="levels"></div>
+
+</main>
+
+<footer>
+  © 2025 <b>L'Ascension du Machine Learning</b> — Synapse Learners · Parcours Data Analyst. Une étape à la fois.
+</footer>
+
+<script>
+"use strict";
+
+/* =========================================================================
+   L'ASCENSION DU MACHINE LEARNING — 7 niveaux (Titanic / scikit-learn)
+   Chaque exercice : t (titre), q (énoncé), h [indice1, indice2],
+   s (solution, code brut), e [explications...], a (astuce facultative).
+   Base de travail : un DataFrame `df` nettoyé et numérique (voir la carte
+   de préparation), et le découpage train/test du camp 3.
+   ========================================================================= */
+
+var LEVELS = [
+/* ---------------------------------------------------------------- NIVEAU 1 */
+{ n:1, emoji:"🧭", alt:"▲ 1 200 m · Camp de base", title:"Statistiques & exploration",
+  topic:`moyenne · médiane · écart-type · quartiles · <code class="t">describe</code> · outliers — comprendre avant de modéliser`,
+  intro:`Avant tout modèle, on regarde ses données. Les statistiques descriptives résument le Titanic en quelques chiffres : tendance centrale, dispersion, équilibre de la cible, valeurs atypiques. C'est le point de départ obligé de toute analyse.`,
+  cheer:`Camp de base franchi : tu sais résumer un jeu de données. Place aux corrélations.`,
+  exercises:[
+    { t:"L'âge moyen", q:`Calcule l'<b>âge moyen</b> des passagers (colonne <code>age</code>).`,
+      h:[`Sélectionne la colonne, puis applique <code>.mean()</code>.`,`<code>df["age"].mean()</code>.`],
+      s:`df["age"].mean()`,
+      e:[`<code>mean()</code> donne la moyenne — base de nombreux calculs, mais sensible aux valeurs extrêmes.`] },
+    { t:"Le tarif médian", q:`Calcule le <b>tarif médian</b> (médiane de <code>fare</code>).`,
+      h:[`La méthode est <code>.median()</code>.`,`Applique-la à la colonne <code>fare</code>.`],
+      s:`df["fare"].median()`,
+      e:[`La médiane est la valeur centrale ; elle ne bouge pas avec les valeurs extrêmes.`],
+      a:`Sur une variable très asymétrique comme <code>fare</code>, la médiane représente mieux le « tarif typique » que la moyenne.` },
+    { t:"La valeur la plus fréquente", q:`Trouve le <b>mode</b> de <code>pclass</code> (la classe la plus fréquente).`,
+      h:[`La méthode est <code>.mode()</code>.`,`Elle renvoie une Series ; la 1re valeur est le mode.`],
+      s:`df["pclass"].mode()`,
+      e:[`Le <b>mode</b> est la valeur qui revient le plus souvent. <code>.mode()[0]</code> donne directement cette valeur.`] },
+    { t:"La dispersion", q:`Calcule l'<b>écart-type</b> de la colonne <code>age</code>.`,
+      h:[`La méthode est <code>.std()</code>.`,`<code>df["age"].std()</code>.`],
+      s:`df["age"].std()`,
+      e:[`L'écart-type mesure l'étalement autour de la moyenne : grand écart-type = données dispersées.`],
+      a:`La variance s'obtient avec <code>.var()</code> : c'est l'écart-type au carré.` },
+    { t:"Le premier quartile", q:`Calcule le <b>1er quartile</b> (25 %) de <code>fare</code>.`,
+      h:[`La méthode est <code>.quantile(p)</code> avec <code>p</code> entre 0 et 1.`,`Pour 25 % : <code>quantile(0.25)</code>.`],
+      s:`df["fare"].quantile(0.25)`,
+      e:[`Q1 est la valeur en dessous de laquelle se trouvent 25 % des données.`] },
+    { t:"L'écart interquartile", q:`Calcule l'<b>écart interquartile (IQR)</b> de <code>fare</code> : Q3 − Q1.`,
+      h:[`IQR = quantile(0.75) − quantile(0.25).`,`C'est une mesure de dispersion robuste aux valeurs extrêmes.`],
+      s:`df["fare"].quantile(0.75) - df["fare"].quantile(0.25)`,
+      e:[`L'IQR décrit la dispersion de la <b>moitié centrale</b> des données ; insensible aux outliers.`],
+      a:`Une valeur au-delà de <code>Q3 + 1.5 × IQR</code> est généralement considérée comme un outlier (règle de Tukey).` },
+    { t:"Le portrait statistique", q:`Affiche le <b>résumé statistique complet</b> des colonnes numériques de <code>df</code>.`,
+      h:[`Une seule méthode produit tout le tableau.`,`<code>df.describe()</code>, sans argument.`],
+      s:`df.describe()`,
+      e:[`<code>describe()</code> renvoie effectif, moyenne, écart-type, min, quartiles et max — un panorama instantané.`] },
+    { t:"L'équilibre de la cible", q:`Affiche la <b>proportion</b> de survivants et de non-survivants (colonne <code>survived</code>).`,
+      h:[`<code>value_counts</code> avec <code>normalize=True</code>.`,`<code>df["survived"].value_counts(normalize=True)</code>.`],
+      s:`df["survived"].value_counts(normalize=True)`,
+      e:[`On vérifie l'équilibre des classes avant une classification (~0.41 / 0.59 ici).`],
+      a:`Si une classe écrase l'autre, l'accuracy devient trompeuse — il faudra d'autres métriques (F1, AUC).` },
+    { t:"La borne des outliers", q:`Calcule la <b>borne supérieure</b> de détection d'outliers de <code>fare</code> : <code>Q3 + 1.5 × IQR</code>.`,
+      h:[`Calcule Q1, Q3, puis l'IQR.`,`La borne vaut <code>Q3 + 1.5 * (Q3 - Q1)</code>.`],
+      s:`Q1 = df["fare"].quantile(0.25)\nQ3 = df["fare"].quantile(0.75)\nborne = Q3 + 1.5 * (Q3 - Q1)`,
+      e:[`Au-delà de cette borne, les valeurs sont atypiques. La méthode IQR est robuste, utile quand la distribution est asymétrique.`],
+      a:`Pour des données ~normales, le <b>z-score</b> (hors [-3, 3]) est une alternative.` },
+    { t:"Compter les outliers", q:`Compte le nombre de passagers dont le <code>fare</code> dépasse la <code>borne</code> calculée juste avant.`,
+      h:[`Construis un masque, puis somme-le.`,`<code>(df["fare"] > borne).sum()</code>.`],
+      s:`(df["fare"] > borne).sum()`,
+      e:[`Un masque booléen sommé compte les <code>True</code> : ici, le nombre de tarifs atypiques.`] }
+  ]
+},
+/* ---------------------------------------------------------------- NIVEAU 2 */
+{ n:2, emoji:"🔗", alt:"▲ 2 400 m · Les premiers sentiers", title:"Corrélations",
+  topic:`<code class="t">corr</code> · heatmap · ANOVA · Chi-2 — quanti-quanti, quanti-quali, quali-quali`,
+  intro:`Chercher des liens entre variables, c'est le cœur de l'analyse exploratoire. Trois cas : deux numériques (corrélation), une numérique et une catégorielle (ANOVA), deux catégorielles (Chi-2). On les pratique tous sur le Titanic.`,
+  cheer:`Beau dégagement. Tu sais mesurer un lien entre n'importe quelles variables.`,
+  exercises:[
+    { t:"La matrice de corrélation", q:`Affiche la <b>matrice de corrélation</b> des colonnes numériques de <code>df</code>.`,
+      h:[`La méthode est <code>.corr()</code>.`,`Par défaut, c'est la corrélation de Pearson.`],
+      s:`df.corr()`,
+      e:[`<code>corr()</code> mesure les liens <b>linéaires</b> (quanti-quanti) entre toutes les colonnes : un coefficient entre -1 et 1.`] },
+    { t:"Une corrélation ciblée", q:`Calcule la corrélation entre <code>fare</code> et <code>survived</code>.`,
+      h:[`Une colonne possède une méthode <code>.corr(autre_colonne)</code>.`,`<code>df["fare"].corr(df["survived"])</code>.`],
+      s:`df["fare"].corr(df["survived"])`,
+      e:[`Corrélation positive mais modérée : payer cher est faiblement lié à survivre.`] },
+    { t:"Changer de méthode", q:`Calcule la matrice de corrélation avec la méthode de <b>Spearman</b>.`,
+      h:[`Le paramètre est <code>method</code>.`,`<code>method="spearman"</code>.`],
+      s:`df.corr(method="spearman")`,
+      e:[`Spearman corrèle les <b>rangs</b> : elle capte les liens monotones (pas seulement linéaires) et résiste aux outliers.`],
+      a:`Trois méthodes : <code>"pearson"</code> (linéaire), <code>"kendall"</code>, <code>"spearman"</code> (rangs).` },
+    { t:"Visualiser avec une heatmap", q:`Affiche une <b>heatmap</b> de la matrice de corrélation avec seaborn, en annotant les valeurs.`,
+      h:[`La fonction est <code>sns.heatmap(matrice)</code>.`,`Ajoute <code>annot=True</code> pour afficher les coefficients.`],
+      s:`sns.heatmap(df.corr(), annot=True)`,
+      e:[`La heatmap colore les corrélations : on repère d'un coup d'œil les variables liées.`] },
+    { t:"Préparer l'ANOVA (boxplot)", q:`Affiche un <b>boxplot</b> de <code>age</code> selon <code>pclass</code> avec seaborn.`,
+      h:[`<code>sns.boxplot(data=df, x=..., y=...)</code>.`,`<code>x</code> = la catégorie (<code>pclass</code>), <code>y</code> = la numérique (<code>age</code>).`],
+      s:`sns.boxplot(data=df, x="pclass", y="age")`,
+      e:[`Le boxplot compare visuellement une variable numérique entre plusieurs groupes — l'étape avant le test d'ANOVA.`] },
+    { t:"ANOVA — le modèle", q:`Avec statsmodels, ajuste un modèle <b>OLS</b> de <code>age</code> expliqué par <code>pclass</code> (formule).`,
+      h:[`<code>ols("y ~ X", df).fit()</code>.`,`Mets la cible à gauche du <code>~</code> ; <code>C(pclass)</code> force le traitement catégoriel.`],
+      s:`from statsmodels.formula.api import ols\nmodele = ols("age ~ C(pclass)", df).fit()`,
+      e:[`<code>ols</code> ajuste un modèle linéaire défini par une formule à la R. <code>C(...)</code> indique une variable catégorielle.`],
+      a:`Le <code>~</code> sépare la variable expliquée (gauche) des variables explicatives (droite).` },
+    { t:"ANOVA — la p-value", q:`Calcule la <b>table d'ANOVA</b> du modèle pour tester le lien <code>age</code> ↔ <code>pclass</code>.`,
+      h:[`La fonction est <code>anova_lm(modele)</code>.`,`Lis la colonne <code>PR(&gt;F)</code> : c'est la p-value.`],
+      s:`from statsmodels.stats.anova import anova_lm\nanova_lm(modele)`,
+      e:[`L'ANOVA teste si la moyenne d'âge diffère selon la classe. Une p-value &lt; 0.05 confirme un lien quanti-quali significatif.`],
+      a:`Règle : p &lt; 0.05 → lien significatif entre la variable numérique et la variable catégorielle.` },
+    { t:"Quali-Quali — la contingence", q:`Construis le <b>tableau de contingence</b> (effectifs croisés) entre <code>sex</code> et <code>survived</code>.`,
+      h:[`La fonction est <code>pd.crosstab(lignes, colonnes)</code>.`,`<code>pd.crosstab(df["sex"], df["survived"])</code>.`],
+      s:`pd.crosstab(df["sex"], df["survived"])`,
+      e:[`Le tableau de contingence compte les effectifs de chaque croisement — la base du test du Chi-2.`] },
+    { t:"Le test du Chi-2", q:`Réalise un <b>test du Chi-2</b> d'indépendance entre <code>sex</code> et <code>survived</code> (scipy).`,
+      h:[`La fonction est <code>chi2_contingency(tableau)</code>.`,`Passe-lui le tableau de contingence ; elle renvoie (chi2, p, dof, attendus).`],
+      s:`from scipy.stats import chi2_contingency\nchi2_contingency(pd.crosstab(df["sex"], df["survived"]))`,
+      e:[`Le Chi-2 teste l'<b>indépendance</b> de deux variables catégorielles. Une p-value faible → elles sont liées (ici, sexe et survie le sont fortement).`],
+      a:`La 2ᵉ valeur renvoyée est la p-value : &lt; 0.05 signale une dépendance.` },
+    { t:"La plus liée à la cible", q:`Affiche les corrélations de chaque colonne avec <code>survived</code>, <b>triées</b>.`,
+      h:[`Prends la colonne <code>"survived"</code> de la matrice de corrélation.`,`Puis <code>.sort_values()</code>.`],
+      s:`df.corr()["survived"].sort_values()`,
+      e:[`On repère les variables les plus liées à la cible (ici <code>sex</code> et <code>pclass</code>) — précieuses pour le futur modèle.`] }
+  ]
+},
+/* ---------------------------------------------------------------- NIVEAU 3 */
+{ n:3, emoji:"🧰", alt:"▲ 3 600 m · La paroi se redresse", title:"Préparer les données",
+  topic:`X / y · encodage · <code class="t">StandardScaler</code> · <code class="t">train_test_split</code> — rendre les données exploitables`,
+  intro:`Un modèle ne mange que du numérique, propre et bien découpé. On sépare les variables explicatives (X) de la cible (y), on encode le texte, on met à l'échelle, et on réserve un jeu de test que le modèle ne verra jamais à l'entraînement.`,
+  cheer:`La paroi est passée. Tes données sont prêtes à nourrir un modèle.`,
+  exercises:[
+    { t:"Séparer X et y", q:`Sépare les variables explicatives <code>X</code> (tout sauf <code>survived</code>) et la cible <code>y</code> (<code>survived</code>).`,
+      h:[`<code>X = df.drop("cible", axis=1)</code> retire la colonne cible.`,`<code>y = df["cible"]</code>.`],
+      s:`X = df.drop("survived", axis=1)\ny = df["survived"]`,
+      e:[`Convention universelle de scikit-learn : <code>X</code> = les features (entrées), <code>y</code> = la cible (sortie à prédire).`] },
+    { t:"Encoder une catégorie", q:`Dans un <code>df</code> brut, la colonne <code>sex</code> est en texte : encode <code>"male"</code>→0 et <code>"female"</code>→1.`,
+      h:[`<code>.map({...})</code> remplace selon un dictionnaire.`,`<code>{"male": 0, "female": 1}</code>.`],
+      s:`df["sex"] = df["sex"].map({"male": 0, "female": 1})`,
+      e:[`scikit-learn exige du numérique : on convertit les catégories en nombres.`],
+      a:`Pour des catégories sans ordre (ex. <code>embarked</code>), préfère le one-hot encoding plutôt qu'un simple 0/1/2.` },
+    { t:"One-hot encoding", q:`Transforme la colonne <code>embarked</code> (C/Q/S) en colonnes binaires avec <code>pd.get_dummies</code>.`,
+      h:[`<code>pd.get_dummies(colonne)</code>.`,`Une colonne 0/1 est créée par modalité.`],
+      s:`pd.get_dummies(df["embarked"])`,
+      e:[`Le one-hot crée une colonne indicatrice par catégorie : on évite d'imposer un ordre artificiel (C&lt;Q&lt;S).`] },
+    { t:"Imputer les NaN", q:`Remplace les âges manquants par la <b>médiane</b> de <code>age</code> (pour ne pas perdre de lignes).`,
+      h:[`<code>fillna(...)</code> avec la médiane à l'intérieur.`,`<code>df["age"].fillna(df["age"].median())</code>.`],
+      s:`df["age"] = df["age"].fillna(df["age"].median())`,
+      e:[`L'imputation conserve les lignes ; la médiane résiste aux valeurs extrêmes.`] },
+    { t:"Standardiser les features", q:`Standardise les features <code>X</code> avec <code>StandardScaler</code>.`,
+      h:[`<code>StandardScaler().fit_transform(X)</code>.`,`Cela centre (moyenne 0) et réduit (écart-type 1) chaque colonne.`],
+      s:`from sklearn.preprocessing import StandardScaler\nX_scaled = StandardScaler().fit_transform(X)`,
+      e:[`La standardisation met les colonnes sur la même échelle — indispensable pour KNN, SVM et l'ACP.`],
+      a:`Surtout nécessaire avant une ACP ou un modèle sensible aux distances.` },
+    { t:"Découper train / test", q:`Découpe <code>X</code> et <code>y</code> en <b>train (80 %)</b> et <b>test (20 %)</b>, avec <code>random_state=42</code>.`,
+      h:[`<code>train_test_split(X, y, test_size=..., random_state=...)</code>.`,`Elle renvoie 4 objets : X_train, X_test, y_train, y_test.`],
+      s:`from sklearn.model_selection import train_test_split\nX_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)`,
+      e:[`On entraîne sur le train et on évalue sur le test (des données jamais vues) : c'est la seule façon de mesurer la vraie performance.`],
+      a:`<code>random_state</code> fixe le tirage aléatoire → résultats reproductibles d'une exécution à l'autre.` },
+    { t:"Vérifier le découpage", q:`Affiche les <b>dimensions</b> de <code>X_train</code>.`,
+      h:[`L'attribut est <code>shape</code>.`,`<code>X_train.shape</code>.`],
+      s:`X_train.shape`,
+      e:[`On confirme que le train contient bien ~80 % des lignes.`] },
+    { t:"Une seule feature : reshape", q:`Transforme la colonne <code>age</code> en <b>tableau 2D à une colonne</b> pour scikit-learn.`,
+      h:[`Récupère les valeurs avec <code>.values</code>, puis <code>.reshape(-1, 1)</code>.`,`scikit-learn attend un tableau 2D.`],
+      s:`df["age"].values.reshape(-1, 1)`,
+      e:[`scikit-learn veut <code>X</code> en 2D (une liste de lignes). Une seule colonne doit être remise en forme avec <code>reshape(-1, 1)</code>.`],
+      a:`Avec une seule feature, oublier <code>reshape(-1, 1)</code> provoque une erreur de dimensions.` },
+    { t:"Choisir les features", q:`Crée un <code>X</code> ne contenant que <code>pclass</code>, <code>sex</code> et <code>fare</code>.`,
+      h:[`Doubles crochets et liste de colonnes.`,`<code>df[["pclass", "sex", "fare"]]</code>.`],
+      s:`X = df[["pclass", "sex", "fare"]]`,
+      e:[`On peut restreindre <code>X</code> aux variables les plus corrélées à la cible pour simplifier le modèle.`] },
+    { t:"Cible pour la régression", q:`Pour <b>prédire l'âge</b>, définis <code>X</code> (tout sauf <code>age</code>) et <code>y</code> (<code>age</code>).`,
+      h:[`Même logique, mais la cible devient <code>age</code>.`,`<code>X = df.drop("age", axis=1)</code> et <code>y = df["age"]</code>.`],
+      s:`X = df.drop("age", axis=1)\ny = df["age"]`,
+      e:[`En régression, la cible <code>y</code> est une valeur <b>numérique continue</b> (ici, l'âge).`] }
+  ]
+},
+/* ---------------------------------------------------------------- NIVEAU 4 */
+{ n:4, emoji:"📈", alt:"▲ 5 000 m · Zone technique", title:"Régression : prédire l'âge",
+  topic:`<code class="t">fit</code> / <code class="t">predict</code> · R² · MAE / MSE · comparaison · <code class="t">GridSearchCV</code>`,
+  intro:`Premier vrai modèle : prédire une valeur continue, l'âge d'un passager. On entraîne, on prédit, on mesure l'erreur — puis on compare plusieurs algorithmes et on optimise les hyperparamètres. On réutilise <code>X</code>, <code>y</code> et le découpage train/test du camp 3.`,
+  cheer:`Zone technique avalée. Tu sais entraîner et évaluer un modèle de régression.`,
+  exercises:[
+    { t:"Importer le modèle", q:`Importe le modèle de <b>régression linéaire</b> de scikit-learn.`,
+      h:[`Le module est <code>sklearn.linear_model</code>.`,`La classe s'appelle <code>LinearRegression</code>.`],
+      s:`from sklearn.linear_model import LinearRegression`,
+      e:[`La régression linéaire modélise la cible comme une combinaison linéaire des features : <code>y = a + b·x</code>.`] },
+    { t:"Instancier et entraîner", q:`Crée un <code>LinearRegression</code> et entraîne-le sur <code>X_train</code>, <code>y_train</code>.`,
+      h:[`Crée l'objet : <code>model = LinearRegression()</code>.`,`Puis <code>model.fit(X_train, y_train)</code>.`],
+      s:`model = LinearRegression()\nmodel.fit(X_train, y_train)`,
+      e:[`<code>fit</code> ajuste les coefficients du modèle pour minimiser l'erreur sur les données d'entraînement.`] },
+    { t:"Prédire", q:`Prédis l'âge sur <code>X_test</code>.`,
+      h:[`La méthode est <code>.predict(...)</code>.`,`<code>model.predict(X_test)</code>.`],
+      s:`model.predict(X_test)`,
+      e:[`<code>predict</code> applique le modèle entraîné à de nouvelles données et renvoie les âges estimés.`] },
+    { t:"Le score R²", q:`Affiche le <b>score R²</b> du modèle sur le jeu de test.`,
+      h:[`La méthode est <code>.score(X_test, y_test)</code>.`,`En régression, elle renvoie le R² par défaut.`],
+      s:`model.score(X_test, y_test)`,
+      e:[`Le R² va jusqu'à 1 (parfait) ; 0 signifie « pas mieux que prédire la moyenne », et il peut être négatif si le modèle est mauvais.`],
+      a:`Compare toujours le score sur le train et sur le test : un grand écart révèle du surapprentissage.` },
+    { t:"Un autre modèle (KNN)", q:`Entraîne un <code>KNeighborsRegressor</code> à <b>5 voisins</b> sur <code>X_train</code>, <code>y_train</code>.`,
+      h:[`Le module est <code>sklearn.neighbors</code>.`,`<code>KNeighborsRegressor(n_neighbors=5)</code>.`],
+      s:`from sklearn.neighbors import KNeighborsRegressor\nmodel = KNeighborsRegressor(n_neighbors=5)\nmodel.fit(X_train, y_train)`,
+      e:[`Le KNN prédit la moyenne des <code>k</code> voisins les plus proches. Il est sensible aux échelles → pense à standardiser.`] },
+    { t:"L'erreur absolue (MAE)", q:`Calcule la <b>MAE</b> entre <code>y_test</code> et les prédictions <code>y_pred</code>.`,
+      h:[`La fonction est <code>mean_absolute_error</code>.`,`<code>mean_absolute_error(y_test, y_pred)</code>.`],
+      s:`from sklearn.metrics import mean_absolute_error\nmean_absolute_error(y_test, y_pred)`,
+      e:[`La MAE est l'erreur moyenne en valeur absolue, exprimée dans l'unité de la cible (des années).`] },
+    { t:"L'erreur quadratique (MSE)", q:`Calcule la <b>MSE</b> entre <code>y_test</code> et <code>y_pred</code>.`,
+      h:[`La fonction est <code>mean_squared_error</code>.`,`<code>mean_squared_error(y_test, y_pred)</code>.`],
+      s:`from sklearn.metrics import mean_squared_error\nmean_squared_error(y_test, y_pred)`,
+      e:[`La MSE met les erreurs au carré : elle pénalise davantage les grosses erreurs.`],
+      a:`La RMSE (racine de la MSE) ramène l'erreur dans l'unité d'origine, plus facile à interpréter.` },
+    { t:"Un modèle plus puissant", q:`Entraîne un <code>HistGradientBoostingRegressor</code> sur <code>X_train</code>, <code>y_train</code>.`,
+      h:[`Le module est <code>sklearn.ensemble</code>.`,`<code>HistGradientBoostingRegressor()</code>.`],
+      s:`from sklearn.ensemble import HistGradientBoostingRegressor\nmodel = HistGradientBoostingRegressor()\nmodel.fit(X_train, y_train)`,
+      e:[`C'est un modèle d'<b>ensemble</b> (boosting d'arbres), souvent bien plus performant qu'une régression linéaire.`] },
+    { t:"Comparer des modèles", q:`Entraîne et affiche le score test de <code>LinearRegression</code> et <code>KNeighborsRegressor</code> dans une <b>boucle</b>.`,
+      h:[`Boucle sur une liste de modèles.`,`Pour chacun : <code>fit</code> puis <code>print(model.score(...))</code>.`],
+      s:`for model in [LinearRegression(), KNeighborsRegressor()]:\n    model.fit(X_train, y_train)\n    print(model.score(X_test, y_test))`,
+      e:[`Comparer plusieurs algorithmes sur le même test est la bonne pratique pour choisir le meilleur.`],
+      a:`On retient le modèle qui <b>généralise</b> le mieux sur le test, pas celui qui colle au train.` },
+    { t:"Optimiser (GridSearch)", q:`Cherche le meilleur <code>n_neighbors</code> (de 1 à 20) d'un <code>KNeighborsRegressor</code> avec <code>GridSearchCV</code> (cv=5).`,
+      h:[`<code>GridSearchCV(modele, grille, cv=5)</code>.`,`La grille est un dictionnaire : <code>{"n_neighbors": range(1, 21)}</code>.`],
+      s:`from sklearn.model_selection import GridSearchCV\ngrille = {"n_neighbors": range(1, 21)}\ngrid = GridSearchCV(KNeighborsRegressor(), grille, cv=5)\ngrid.fit(X_train, y_train)`,
+      e:[`Le Grid Search teste toutes les combinaisons d'hyperparamètres par validation croisée et garde la meilleure.`],
+      a:`<code>grid.best_params_</code> donne les meilleurs hyperparamètres trouvés.` }
+  ]
+},
+/* ---------------------------------------------------------------- NIVEAU 5 */
+{ n:5, emoji:"🎯", alt:"▲ 6 200 m · Glacier — prudence", title:"Classification : survivant ?",
+  topic:`<code class="t">LogisticRegression</code> · accuracy · matrice de confusion · précision / rappel / F1 · AUC`,
+  intro:`Cette fois, on prédit une <b>catégorie</b> : survivant (1) ou non (0). On entraîne un classifieur, puis on l'évalue sérieusement — accuracy, matrice de confusion, précision, rappel, F1, AUC — et on compare plusieurs familles de modèles. On réutilise <code>X</code> (features) et <code>y = survived</code>.`,
+  cheer:`Glacier traversé. Tu sais classer et, surtout, évaluer correctement un modèle.`,
+  exercises:[
+    { t:"La régression logistique", q:`Importe et entraîne une <code>LogisticRegression</code> sur <code>X_train</code>, <code>y_train</code>.`,
+      h:[`Le module est <code>sklearn.linear_model</code>.`,`<code>LogisticRegression()</code> puis <code>.fit(...)</code>.`],
+      s:`from sklearn.linear_model import LogisticRegression\nmodel = LogisticRegression(max_iter=1000)\nmodel.fit(X_train, y_train)`,
+      e:[`Malgré son nom, c'est un modèle de <b>classification</b> : il estime la probabilité d'appartenir à une classe.`],
+      a:`Si elle ne converge pas, augmente <code>max_iter</code> (ex. <code>max_iter=1000</code>).` },
+    { t:"Prédire la classe", q:`Prédis la survie sur <code>X_test</code>.`,
+      h:[`La méthode est <code>.predict(...)</code>.`,`<code>model.predict(X_test)</code>.`],
+      s:`model.predict(X_test)`,
+      e:[`Le modèle renvoie 0 (non survivant) ou 1 (survivant) pour chaque passager du test.`] },
+    { t:"L'accuracy", q:`Calcule l'<b>accuracy</b> (exactitude) du modèle sur le test.`,
+      h:[`La méthode <code>.score()</code> renvoie l'accuracy en classification.`,`<code>model.score(X_test, y_test)</code>.`],
+      s:`model.score(X_test, y_test)`,
+      e:[`L'accuracy est la proportion de prédictions correctes.`],
+      a:`Attention : elle est trompeuse quand les classes sont déséquilibrées.` },
+    { t:"accuracy_score", q:`Recalcule l'accuracy avec la fonction <code>accuracy_score</code> entre <code>y_test</code> et <code>y_pred</code>.`,
+      h:[`La fonction vient de <code>sklearn.metrics</code>.`,`<code>accuracy_score(y_test, y_pred)</code>.`],
+      s:`from sklearn.metrics import accuracy_score\naccuracy_score(y_test, y_pred)`,
+      e:[`Même résultat que <code>.score()</code>, mais via la fonction dédiée de <code>metrics</code>.`] },
+    { t:"La matrice de confusion", q:`Affiche la <b>matrice de confusion</b> entre <code>y_test</code> et <code>y_pred</code>.`,
+      h:[`La fonction est <code>confusion_matrix</code>.`,`<code>confusion_matrix(y_test, y_pred)</code>.`],
+      s:`from sklearn.metrics import confusion_matrix\nconfusion_matrix(y_test, y_pred)`,
+      e:[`Elle croise réel et prédit : vrais négatifs, faux positifs, faux négatifs, vrais positifs. C'est la source de toutes les autres métriques.`] },
+    { t:"Précision & rappel", q:`Calcule la <b>précision</b> et le <b>rappel</b> entre <code>y_test</code> et <code>y_pred</code>.`,
+      h:[`Fonctions <code>precision_score</code> et <code>recall_score</code>.`,`Chacune prend <code>(y_test, y_pred)</code>.`],
+      s:`from sklearn.metrics import precision_score, recall_score\nprecision_score(y_test, y_pred)\nrecall_score(y_test, y_pred)`,
+      e:[`Précision = fiabilité des positifs prédits. Rappel = part des positifs réels retrouvés.`],
+      a:`Privilégie la précision quand un faux positif coûte cher ; le rappel quand c'est un faux négatif (ex. dépistage médical).` },
+    { t:"Le F1-score", q:`Calcule le <b>F1-score</b> entre <code>y_test</code> et <code>y_pred</code>.`,
+      h:[`La fonction est <code>f1_score</code>.`,`<code>f1_score(y_test, y_pred)</code>.`],
+      s:`from sklearn.metrics import f1_score\nf1_score(y_test, y_pred)`,
+      e:[`Le F1 est la moyenne harmonique de la précision et du rappel : un bon compromis unique.`] },
+    { t:"Le rapport complet", q:`Affiche le <b>rapport de classification</b> complet (toutes les métriques par classe).`,
+      h:[`La fonction est <code>classification_report</code>.`,`Enveloppe-la dans <code>print(...)</code> pour un affichage lisible.`],
+      s:`from sklearn.metrics import classification_report\nprint(classification_report(y_test, y_pred))`,
+      e:[`Précision, rappel, F1 et effectif (support) pour chaque classe, d'un seul coup.`] },
+    { t:"Comparer des classifieurs", q:`Compare le score test de <code>LogisticRegression</code>, <code>KNeighborsClassifier</code>, <code>SVC</code> et <code>GaussianNB</code> dans une boucle.`,
+      h:[`Importe les quatre modèles, mets-les dans une liste.`,`Pour chacun : <code>fit</code> puis <code>print(model.score(...))</code>.`],
+      s:`from sklearn.neighbors import KNeighborsClassifier\nfrom sklearn.svm import SVC\nfrom sklearn.naive_bayes import GaussianNB\nfor model in [LogisticRegression(max_iter=1000), KNeighborsClassifier(), SVC(), GaussianNB()]:\n    model.fit(X_train, y_train)\n    print(model.score(X_test, y_test))`,
+      e:[`On confronte plusieurs familles : linéaire, voisins, marges (SVM) et probabiliste (Naive Bayes).`],
+      a:`Aucun modèle n'est universellement meilleur : on teste et on compare.` },
+    { t:"L'AUC", q:`Calcule l'<b>AUC</b> (aire sous la courbe ROC) entre <code>y_test</code> et <code>y_pred</code>.`,
+      h:[`La fonction est <code>roc_auc_score</code>.`,`<code>roc_auc_score(y_test, y_pred)</code>.`],
+      s:`from sklearn.metrics import roc_auc_score\nroc_auc_score(y_test, y_pred)`,
+      e:[`L'AUC va de 0 à 1 ; proche de 1 = excellent classifieur. Elle reste fiable même quand les classes sont déséquilibrées.`],
+      a:`C'est la métrique de choix pour comparer des modèles sur des classes déséquilibrées.` }
+  ]
+},
+/* ---------------------------------------------------------------- NIVEAU 6 */
+{ n:6, emoji:"⚙️", alt:"▲ 7 500 m · L'arête sommitale", title:"Évaluer & optimiser",
+  topic:`<code class="t">cross_val_score</code> · <code class="t">GridSearchCV</code> · <code class="t">PCA</code> · surapprentissage — fiabiliser le modèle`,
+  intro:`Un bon score sur un seul découpage ne suffit pas. On valide par validation croisée, on optimise les hyperparamètres, on réduit la dimension avec l'ACP, et on surveille le surapprentissage. C'est ce qui sépare un modèle « qui marche une fois » d'un modèle fiable.`,
+  cheer:`Arête sommitale en vue. Ton évaluation est désormais solide et reproductible.`,
+  exercises:[
+    { t:"La validation croisée", q:`Évalue une <code>LogisticRegression</code> par <b>validation croisée</b> à 5 plis sur <code>X</code>, <code>y</code>.`,
+      h:[`La fonction est <code>cross_val_score(modele, X, y, cv=5)</code>.`,`Elle renvoie un score par pli.`],
+      s:`from sklearn.model_selection import cross_val_score\ncross_val_score(LogisticRegression(max_iter=1000), X, y, cv=5)`,
+      e:[`La validation croisée découpe les données en 5 et évalue 5 fois : l'estimation est bien plus robuste qu'un seul split.`],
+      a:`Prends la moyenne (<code>.mean()</code>) des scores pour résumer la performance.` },
+    { t:"Le score moyen", q:`Affiche le <b>score moyen</b> de validation croisée de cette même <code>LogisticRegression</code>.`,
+      h:[`Enchaîne <code>.mean()</code> sur le résultat de <code>cross_val_score</code>.`,`<code>cross_val_score(...).mean()</code>.`],
+      s:`cross_val_score(LogisticRegression(max_iter=1000), X, y, cv=5).mean()`,
+      e:[`La moyenne des plis résume la performance attendue du modèle sur des données nouvelles.`] },
+    { t:"GridSearch (classification)", q:`Cherche le meilleur <code>n_neighbors</code> (1 à 20) d'un <code>KNeighborsClassifier</code> avec <code>GridSearchCV</code> (cv=5).`,
+      h:[`<code>GridSearchCV(modele, grille, cv=5)</code>.`,`<code>{"n_neighbors": range(1, 21)}</code>.`],
+      s:`from sklearn.model_selection import GridSearchCV\nfrom sklearn.neighbors import KNeighborsClassifier\ngrid = GridSearchCV(KNeighborsClassifier(), {"n_neighbors": range(1, 21)}, cv=5)\ngrid.fit(X_train, y_train)`,
+      e:[`Recherche exhaustive des hyperparamètres, chaque combinaison étant évaluée par validation croisée.`] },
+    { t:"Les meilleurs paramètres", q:`Affiche les <b>meilleurs hyperparamètres</b> trouvés par le grid search.`,
+      h:[`L'attribut est <code>best_params_</code>.`,`<code>grid.best_params_</code>.`],
+      s:`grid.best_params_`,
+      e:[`<code>best_params_</code> contient la combinaison qui a obtenu le meilleur score en validation croisée.`],
+      a:`<code>grid.best_score_</code> donne le score associé, et <code>grid.best_estimator_</code> le modèle déjà réglé.` },
+    { t:"Standardiser avant KNN", q:`Standardise <code>X</code> avec <code>StandardScaler</code> (rappel : KNN et SVM sont sensibles aux échelles).`,
+      h:[`<code>StandardScaler().fit_transform(X)</code>.`,`On centre et on réduit chaque colonne.`],
+      s:`from sklearn.preprocessing import StandardScaler\nX_scaled = StandardScaler().fit_transform(X)`,
+      e:[`Sans standardisation, une colonne à grande échelle (<code>fare</code>) domine les distances et biaise KNN/SVM.`] },
+    { t:"ACP — ajuster", q:`Ajuste une <b>ACP</b> (<code>PCA</code>) sur <code>X_scaled</code>.`,
+      h:[`Le module est <code>sklearn.decomposition</code>.`,`<code>PCA().fit(X_scaled)</code>.`],
+      s:`from sklearn.decomposition import PCA\nacp = PCA()\nacp.fit(X_scaled)`,
+      e:[`L'ACP cherche de nouveaux axes (composantes principales) qui concentrent le maximum de variance.`] },
+    { t:"La variance expliquée", q:`Affiche la part de <b>variance expliquée</b> par chaque composante.`,
+      h:[`L'attribut est <code>explained_variance_ratio_</code>.`,`<code>acp.explained_variance_ratio_</code>.`],
+      s:`acp.explained_variance_ratio_`,
+      e:[`Chaque valeur indique la proportion d'information conservée par la composante correspondante.`],
+      a:`On garde généralement assez de composantes pour atteindre ~80 % de variance cumulée.` },
+    { t:"La variance cumulée", q:`Affiche la variance expliquée <b>cumulée</b> (somme progressive).`,
+      h:[`Enchaîne <code>.cumsum()</code>.`,`<code>acp.explained_variance_ratio_.cumsum()</code>.`],
+      s:`acp.explained_variance_ratio_.cumsum()`,
+      e:[`La somme cumulée aide à choisir combien de composantes garder (par ex. jusqu'au seuil de 80 %).`] },
+    { t:"Réduire la dimension", q:`Projette <code>X_scaled</code> sur les <b>2 premières composantes</b> principales.`,
+      h:[`<code>PCA(n_components=2)</code>.`,`Puis <code>.fit_transform(X_scaled)</code>.`],
+      s:`PCA(n_components=2).fit_transform(X_scaled)`,
+      e:[`On réduit <code>X</code> à 2 colonnes en gardant le maximum d'information : utile pour visualiser ou accélérer l'entraînement.`] },
+    { t:"Détecter le surapprentissage", q:`Affiche l'<b>écart</b> entre le score d'entraînement et le score de test d'un <code>model</code> entraîné.`,
+      h:[`Soustrais le score test au score train.`,`<code>model.score(X_train, y_train) - model.score(X_test, y_test)</code>.`],
+      s:`model.score(X_train, y_train) - model.score(X_test, y_test)`,
+      e:[`Un grand écart (train nettement supérieur au test) trahit du <b>surapprentissage</b> : le modèle a mémorisé au lieu d'apprendre.`],
+      a:`Remèdes : plus de données, régularisation, ou un modèle plus simple.` }
+  ]
+},
+/* ---------------------------------------------------------------- NIVEAU 7 */
+{ n:7, emoji:"🛰️", alt:"▲ 8 848 m · Le sommet", title:"Clustering & non supervisé",
+  topic:`<code class="t">KMeans</code> · inertie · coude · silhouette · CAH (<code class="t">linkage</code>) — apprendre sans étiquettes`,
+  intro:`Le sommet : trouver des groupes <b>sans connaître la réponse</b>. Pas de <code>y</code> ici — l'algorithme découvre lui-même la structure. KMeans, méthode du coude, silhouette, clustering hiérarchique, puis interprétation des groupes. On travaille sur le <code>df</code> numérique.`,
+  cheer:`🎉 Sommet atteint ! Tu as parcouru tout le Machine Learning : stats, corrélations, préparation, régression, classification, évaluation et clustering. Refais ce parcours sur un dataset qui te passionne — et publie-le.`,
+  exercises:[
+    { t:"Lancer un KMeans", q:`Entraîne un <code>KMeans</code> à <b>2 clusters</b> sur <code>X</code> (avec <code>n_init="auto"</code>).`,
+      h:[`Le module est <code>sklearn.cluster</code>.`,`<code>KMeans(n_clusters=2, n_init="auto").fit(X)</code>.`],
+      s:`from sklearn.cluster import KMeans\nkm = KMeans(n_clusters=2, n_init="auto").fit(X)`,
+      e:[`KMeans regroupe les points en <code>k</code> groupes denses et séparés. C'est <b>non supervisé</b> : il n'utilise aucune cible <code>y</code>.`] },
+    { t:"Les clusters attribués", q:`Récupère le <b>cluster</b> attribué à chaque point.`,
+      h:[`L'attribut est <code>labels_</code>.`,`<code>km.labels_</code> (ou <code>km.predict(X)</code>).`],
+      s:`km.labels_`,
+      e:[`Chaque point reçoit un numéro de groupe (0 ou 1 ici). C'est le résultat brut du clustering.`] },
+    { t:"L'inertie", q:`Affiche l'<b>inertie</b> du modèle KMeans.`,
+      h:[`L'attribut est <code>inertia_</code>.`,`<code>km.inertia_</code>.`],
+      s:`km.inertia_`,
+      e:[`L'inertie est la somme des distances des points à leur centre : plus elle est faible, plus les clusters sont compacts.`] },
+    { t:"La méthode du coude", q:`Calcule l'<b>inertie pour k de 1 à 9</b> (méthode du coude).`,
+      h:[`Une boucle sur <code>k</code>, en stockant <code>.inertia_</code> à chaque fois.`,`<code>KMeans(n_clusters=k, n_init="auto").fit(X).inertia_</code>.`],
+      s:`inerties = []\nfor k in range(1, 10):\n    inerties.append(KMeans(n_clusters=k, n_init="auto").fit(X).inertia_)`,
+      e:[`En traçant l'inertie en fonction de <code>k</code>, le « coude » du graphe indique le nombre de clusters optimal.`],
+      a:`On choisit le <code>k</code> où l'inertie cesse de chuter franchement : ajouter un cluster n'apporte plus grand-chose.` },
+    { t:"Le coefficient de silhouette", q:`Calcule le <b>coefficient de silhouette</b> d'un KMeans à 3 clusters sur <code>X</code>.`,
+      h:[`La fonction est <code>silhouette_score(X, labels)</code>.`,`Calcule d'abord les labels avec un KMeans à 3 clusters.`],
+      s:`from sklearn.metrics import silhouette_score\nkm = KMeans(n_clusters=3, n_init="auto").fit(X)\nsilhouette_score(X, km.labels_)`,
+      e:[`La silhouette va de -1 à 1 ; proche de 1 = clusters denses et bien séparés. Elle complète la méthode du coude pour choisir <code>k</code>.`],
+      a:`Le coude et la silhouette se croisent souvent pour confirmer le bon nombre de clusters.` },
+    { t:"Les centres de clusters", q:`Affiche les <b>coordonnées des centres</b> des clusters.`,
+      h:[`L'attribut est <code>cluster_centers_</code>.`,`<code>km.cluster_centers_</code>.`],
+      s:`km.cluster_centers_`,
+      e:[`Chaque centre est le « point moyen » de son cluster : il résume le profil typique du groupe.`] },
+    { t:"Clustering hiérarchique", q:`Calcule le <b>linkage</b> (méthode Ward, distance euclidienne) sur <code>X</code> avec scipy.`,
+      h:[`La fonction vient de <code>scipy.cluster.hierarchy</code>.`,`<code>linkage(X, method="ward", metric="euclidean")</code>.`],
+      s:`from scipy.cluster.hierarchy import linkage\nZ = linkage(X, method="ward", metric="euclidean")`,
+      e:[`La CAH fusionne progressivement les points les plus proches. <code>Z</code> encode l'arbre — qu'on visualise avec un dendrogramme.`] },
+    { t:"Couper le dendrogramme", q:`Découpe l'arbre en clusters avec <code>fcluster</code> (critère « distance », seuil <code>t=7</code>).`,
+      h:[`La fonction est <code>fcluster(Z, t=..., criterion="distance")</code>.`,`<code>fcluster(Z, t=7, criterion="distance")</code>.`],
+      s:`from scipy.cluster.hierarchy import fcluster\nfcluster(Z, t=7, criterion="distance")`,
+      e:[`<code>fcluster</code> transforme l'arbre hiérarchique en affectations de clusters selon un seuil de coupe.`],
+      a:`On lit ce seuil sur le dendrogramme, à la hauteur où couper produit le nombre de clusters voulu.` },
+    { t:"Cluster vs réalité", q:`Compare les clusters à la survie réelle : effectifs de <code>survived</code> dans le <b>cluster 0</b>. (Ajoute d'abord la colonne.)`,
+      h:[`Ajoute <code>df["cluster"] = km.labels_</code>.`,`Filtre <code>cluster == 0</code>, puis <code>value_counts()</code> sur <code>survived</code>.`],
+      s:`df["cluster"] = km.labels_\ndf[df["cluster"] == 0]["survived"].value_counts()`,
+      e:[`Même sans avoir utilisé <code>y</code>, le clustering peut retrouver une structure liée à la survie. On le vérifie <b>a posteriori</b>.`],
+      a:`Le clustering est non supervisé : on interprète les groupes après coup, avec les vraies étiquettes.` },
+    { t:"Profiler un cluster (synthèse)", q:`Affiche le <b>profil statistique</b> (<code>describe</code>) des passagers du <b>cluster 1</b>.`,
+      h:[`Filtre <code>cluster == 1</code>, puis applique <code>.describe()</code>.`,`<code>df[df["cluster"] == 1].describe()</code>.`],
+      s:`df[df["cluster"] == 1].describe()`,
+      e:[`Décrire chaque cluster (âge moyen, tarif, classe…) révèle ce qui distingue les groupes — l'aboutissement de l'analyse non supervisée.`],
+      a:`Bravo : stats, corrélations, préparation, régression, classification, évaluation et clustering — tu maîtrises la chaîne complète du ML. 🏔️` }
+  ]
+}
+];
+
+/* =========================================================================
+   Surlignage automatique d'un extrait de code Python (sans dépendance)
+   ========================================================================= */
+function hl(code){
+  code = String(code).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  var re = /(#[^\n]*)|("(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*')|\b(True|False|None|import|from|as|and|or|not|in|lambda|if|else|for|return)\b|\b(\d+\.?\d*)\b|\b([A-Za-z_]\w*)(?=\s*\()/g;
+  return code.replace(re, function(m, comment, str, kw, num, fn){
+    if (comment !== undefined) return '<span class="comment">' + comment + '</span>';
+    if (str !== undefined) return '<span class="string">' + str + '</span>';
+    if (kw !== undefined) return '<span class="keyword">' + kw + '</span>';
+    if (num !== undefined) return '<span class="number">' + num + '</span>';
+    if (fn !== undefined) return '<span class="function">' + fn + '</span>';
+    return m;
+  });
+}
+
+/* =========================================================================
+   Construction des sections de niveaux à partir des données
+   ========================================================================= */
+function renderLevels(){
+  var host = document.getElementById("levels");
+  if (!host) return;
+  LEVELS.forEach(function(lv){
+    var ex = "";
+    lv.exercises.forEach(function(e, i){
+      var astuce = e.a ? '<p class="astuce-line"><span class="astuce-ic">🚀</span> <b>Astuce —</b> ' + e.a + '</p>' : '';
+      ex +=
+        '<div class="exercise">' +
+          '<h4>Exercice ' + (i + 1) + ' — ' + e.t + '</h4>' +
+          '<p>' + e.q + '</p>' +
+          '<div class="accordion-title">💡 Indice 1</div>' +
+          '<div class="accordion-content"><p>' + e.h[0] + '</p></div>' +
+          '<div class="accordion-title">💡 Indice 2</div>' +
+          '<div class="accordion-content"><p>' + e.h[1] + '</p></div>' +
+          '<div class="accordion-title solution">✅ Solution</div>' +
+          '<div class="accordion-content solution-content">' +
+            '<pre class="python-code"><code>' + hl(e.s) + '</code></pre>' +
+            '<div class="solution-explanation">' +
+              '<p><b>Comment ça marche :</b></p>' +
+              '<ul>' + e.e.map(function(x){ return '<li>' + x + '</li>'; }).join("") + '</ul>' +
+              astuce +
+            '</div>' +
+          '</div>' +
+        '</div>';
+    });
+
+    var sec = document.createElement("section");
+    sec.className = "level";
+    sec.id = "niveau-" + lv.n;
+    sec.dataset.level = lv.n;
+    sec.innerHTML =
+      '<div class="level__head">' +
+        '<div class="level__badge"><span class="level__num">' + lv.n + '</span><span class="level__emoji">' + lv.emoji + '</span></div>' +
+        '<div class="level__meta">' +
+          '<span class="level__alt">' + lv.alt + '</span>' +
+          '<h2 class="level__title">' + lv.title + '</h2>' +
+          '<p class="level__topic">' + lv.topic + '</p>' +
+        '</div>' +
+        '<span class="level__check">✓ Camp franchi</span>' +
+      '</div>' +
+      '<div class="level__body">' +
+        '<p class="level__intro">' + lv.intro + '</p>' +
+        '<div class="exercises" data-level="' + lv.n + '">' + ex + '</div>' +
+      '</div>' +
+      '<div class="level__foot">' +
+        '<button class="camp-toggle" data-level="' + lv.n + '" type="button" aria-pressed="false">' +
+          '<span class="tick"><svg viewBox="0 0 24 24" fill="none"><path d="m5 12 5 5 9-11" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>' +
+          '<span class="camp-toggle__label">Marquer ce camp comme franchi</span>' +
+        '</button>' +
+      '</div>';
+    host.appendChild(sec);
+
+    if (lv.cheer){
+      var p = document.createElement("p");
+      p.className = "cheer";
+      p.innerHTML = lv.cheer;
+      host.appendChild(p);
+    }
+  });
+}
+
+/* =========================================================================
+   Interactions (accordéons, navigation, scroll-spy, progression)
+   ========================================================================= */
+document.addEventListener("DOMContentLoaded", function () {
+
+  renderLevels();   // construit d'abord les 7 niveaux dans #levels
+
+  function setupAccordions(root){
+    (root || document).querySelectorAll(".accordion-title").forEach(function (title) {
+      if (title.dataset.bound) return;
+      title.dataset.bound = "1";
+      title.addEventListener("click", function () {
+        var content = title.nextElementSibling;
+        if (!content) return;
+        if (content.classList.contains("active")) {
+          content.classList.remove("active");
+          content.style.maxHeight = null;
+        } else {
+          content.classList.add("active");
+          content.style.maxHeight = content.scrollHeight + "px";
+        }
+      });
+    });
+  }
+  setupAccordions();
+  window.MLAscension = { refresh: function(){ setupAccordions(); } };
+
+  var TOTAL = 7;
+  function scrollToLevel(n){
+    var el = document.getElementById("niveau-" + n);
+    if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+  document.querySelectorAll(".pill").forEach(function (pill) {
+    pill.addEventListener("click", function () { scrollToLevel(pill.dataset.level); });
+  });
+  document.querySelectorAll(".camp").forEach(function (camp) {
+    camp.addEventListener("click", function (e) { e.preventDefault(); scrollToLevel(camp.dataset.level); });
+  });
+
+  var levels = Array.prototype.slice.call(document.querySelectorAll(".level"));
+  function setActive(n){
+    document.querySelectorAll(".pill").forEach(function (p) { p.classList.toggle("active", p.dataset.level === n); });
+    document.querySelectorAll(".camp").forEach(function (c) { c.classList.toggle("active", c.dataset.level === n); });
+  }
+  if ("IntersectionObserver" in window) {
+    var spy = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) setActive(entry.target.dataset.level);
+      });
+    }, { rootMargin: "-45% 0px -50% 0px", threshold: 0 });
+    levels.forEach(function (l) { spy.observe(l); });
+  }
+
+  var KEY = "ml_ascension_progress_v1";
+  function loadDone(){
+    try { return new Set(JSON.parse(localStorage.getItem(KEY) || "[]")); }
+    catch (e) { return new Set(); }
+  }
+  function saveDone(set){
+    try { localStorage.setItem(KEY, JSON.stringify(Array.from(set))); } catch (e) {}
+  }
+  var done = loadDone();
+
+  function render(){
+    var count = 0;
+    for (var i = 1; i <= TOTAL; i++) {
+      var on = done.has(String(i)) || done.has(i);
+      if (on) count++;
+      var camp = document.querySelector('.camp[data-level="' + i + '"]');
+      if (camp) camp.classList.toggle("done", on);
+      var pill = document.querySelector('.pill[data-level="' + i + '"]');
+      if (pill) pill.classList.toggle("done", on);
+      var section = document.getElementById("niveau-" + i);
+      if (section) section.classList.toggle("completed", on);
+      var btn = document.querySelector('.camp-toggle[data-level="' + i + '"]');
+      if (btn) {
+        btn.classList.toggle("is-done", on);
+        btn.setAttribute("aria-pressed", on ? "true" : "false");
+        var label = btn.querySelector(".camp-toggle__label");
+        if (label) label.textContent = on ? "Camp franchi" : "Marquer ce camp comme franchi";
+      }
+    }
+    var pct = Math.round(count / TOTAL * 100);
+    var fill = document.getElementById("ascentFill"); if (fill) fill.style.width = pct + "%";
+    var a = document.getElementById("ascentCount"); if (a) a.textContent = count;
+    var m = document.getElementById("mhCount"); if (m) m.textContent = count;
+  }
+
+  document.querySelectorAll(".camp-toggle").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      var n = String(btn.dataset.level);
+      if (done.has(n) || done.has(Number(n))) { done.delete(n); done.delete(Number(n)); }
+      else { done.add(n); }
+      saveDone(done);
+      render();
+    });
+  });
+
+  render();
+});
+</script>
+</body>
+</html>
