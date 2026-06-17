@@ -1,0 +1,1027 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>L'Ascension Pandas 🐼 — Synapse Learners</title>
+<meta name="description" content="L'Ascension Pandas — révision de Pandas en 7 niveaux sur le dataset Titanic : 70 exercices progressifs, indices et solutions détaillées. Synapse Learners — Parcours Data Analyst.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Roboto+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* =====================================================================
+   CHARTE — L'Ascension Pandas (Synapse Learners)
+   ===================================================================== */
+:root{
+  --python-blue:#3776ab;        /* bleu Python (primaire) */
+  --python-blue-deep:#21466b;   /* bleu profond (texte/dégradés) */
+  --python-night:#13263b;       /* nuit (fonds sombres) */
+  --python-yellow:#ffd43b;      /* jaune Python (accent) */
+  --python-gold:#e9a900;        /* or (accent lisible sur clair) */
+  --summit:#2f9e44;             /* vert sommet (réussite/solution) */
+
+  --bg:#eef2f8;
+  --bg-2:#e6ecf5;
+  --card:#ffffff;
+  --ink:#1b2733;
+  --muted:#5d6b7c;
+  --line:#dce4ee;
+  --line-soft:#e8eef5;
+
+  /* Code — Monokai (identique à la charte d'origine) */
+  --code-bg:#282c34;
+  --code-comment:#7f8c98;
+  --code-keyword:#f92672;
+  --code-function:#66d9ef;
+  --code-string:#e6db74;
+  --code-number:#ae81ff;
+  --code-variable:#a6e22e;
+  --code-operator:#f8f8f2;
+  --code-builtin:#fd971f;
+
+  --font:'Poppins',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  --mono:'Roboto Mono',ui-monospace,Menlo,Consolas,monospace;
+  --radius:14px;
+  --radius-sm:9px;
+  --shadow:0 10px 30px rgba(20,40,67,.10);
+  --shadow-soft:0 2px 10px rgba(20,40,67,.06);
+  --maxw:1080px;
+}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;font-family:var(--font);color:var(--ink);background:var(--bg);
+  line-height:1.7;-webkit-font-smoothing:antialiased;
+}
+@media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto} }
+h1,h2,h3,h4{margin:0;font-weight:700;letter-spacing:-.01em;line-height:1.2}
+p{margin:0}
+a{color:var(--python-blue);text-decoration:none}
+:focus-visible{outline:3px solid var(--python-yellow);outline-offset:3px;border-radius:6px}
+
+/* =====================================================================
+   MASTHEAD (barre fixe : marque + navigation des camps + progression)
+   ===================================================================== */
+.masthead{
+  position:sticky;top:0;z-index:50;
+  background:rgba(255,255,255,.86);backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--line);
+}
+.masthead__row{
+  max-width:var(--maxw);margin:0 auto;padding:9px 18px;
+  display:flex;align-items:center;gap:14px;
+}
+.brand{display:flex;align-items:center;gap:10px;flex:0 0 auto}
+.brand__logo{
+  width:34px;height:34px;border-radius:9px;display:grid;place-items:center;flex:0 0 auto;
+  background:linear-gradient(150deg,var(--python-blue),var(--python-blue-deep));
+  color:#fff;box-shadow:inset 0 0 0 1px rgba(255,255,255,.15);
+}
+.brand__logo svg{width:20px;height:20px}
+.brand__txt{display:flex;flex-direction:column;line-height:1.1}
+.brand__name{font-weight:700;font-size:.98rem;color:var(--python-blue-deep)}
+.brand__tag{font-size:.66rem;font-weight:600;letter-spacing:.04em;color:var(--muted);text-transform:uppercase}
+
+.camp-nav{
+  display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;margin-left:auto;padding:2px;
+}
+.camp-nav::-webkit-scrollbar{display:none}
+.pill{
+  flex:0 0 auto;border:1px solid var(--line);background:#fff;color:var(--python-blue-deep);
+  font-family:var(--mono);font-size:.78rem;font-weight:600;
+  padding:5px 11px;border-radius:999px;cursor:pointer;transition:.15s;white-space:nowrap;
+  position:relative;
+}
+.pill:hover{border-color:var(--python-blue);background:#f1f6fb}
+.pill.active{background:var(--python-blue);border-color:var(--python-blue);color:#fff}
+.pill.done::after{
+  content:"";position:absolute;top:-2px;right:-2px;width:9px;height:9px;border-radius:50%;
+  background:var(--summit);border:2px solid #fff;
+}
+.mh-progress{flex:0 0 auto;display:flex;align-items:center;gap:8px;font-size:.78rem;color:var(--muted);font-weight:600}
+.mh-progress b{font-family:var(--mono);color:var(--python-blue-deep)}
+@media(max-width:760px){
+  .mh-progress{display:none}
+  .brand__tag{display:none}
+}
+
+/* =====================================================================
+   HERO (le thèse de la page : l'ascension + profil d'altitude)
+   ===================================================================== */
+.hero{
+  position:relative;overflow:hidden;color:#eaf2fb;
+  background:
+    radial-gradient(110% 120% at 85% -20%, #3a6896 0%, transparent 55%),
+    linear-gradient(160deg,#2a5076 0%, #21466b 45%, #16304b 100%);
+}
+.hero__contours{position:absolute;inset:0;width:100%;height:100%;opacity:.16;pointer-events:none}
+.hero__inner{
+  max-width:var(--maxw);margin:0 auto;padding:46px 22px 30px;position:relative;z-index:1;
+}
+.kicker{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(255,212,59,.14);border:1px solid rgba(255,212,59,.4);color:var(--python-yellow);
+  font-size:.72rem;font-weight:600;letter-spacing:.05em;text-transform:uppercase;
+  padding:5px 12px;border-radius:999px;
+}
+.hero h1{
+  font-size:clamp(2.1rem,5.2vw,3.1rem);font-weight:800;color:#fff;margin:16px 0 10px;
+}
+.hero__sub{
+  max-width:58ch;color:#cfe0f0;font-size:1.04rem;font-weight:300;
+}
+.hero__sub code{font-family:var(--mono);font-size:.92em;background:rgba(255,255,255,.12);padding:1px 6px;border-radius:5px;color:#fff}
+
+/* Barre de progression de l'ascension */
+.ascent{display:flex;align-items:center;gap:14px;margin:22px 0 4px;max-width:560px}
+.ascent__track{flex:1;height:8px;border-radius:99px;background:rgba(255,255,255,.16);overflow:hidden}
+.ascent__fill{height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,var(--python-yellow),var(--python-gold));transition:width .5s ease}
+.ascent__label{font-size:.82rem;font-weight:600;color:#dfeaf5;white-space:nowrap}
+.ascent__label b{font-family:var(--mono);color:#fff}
+
+/* ---- Profil d'altitude interactif (élément signature) ---- */
+.profile{position:relative;z-index:1;margin:26px auto 0;max-width:var(--maxw);padding:0 14px 8px}
+.profile__svg{display:block;width:100%;height:auto;overflow:visible}
+.ridge-fill{fill:url(#ridgeGrad)}
+.ridge-line{fill:none;stroke:#9cc2e6;stroke-width:2.5;stroke-linejoin:round}
+.trail{fill:none;stroke:rgba(255,255,255,.35);stroke-width:1.5;stroke-dasharray:2 5;stroke-linecap:round}
+.endlabel{fill:#bcd2e8;font-family:var(--mono);font-size:11px;font-weight:500}
+
+.camp{cursor:pointer}
+.camp__halo{fill:rgba(255,255,255,.0);transition:fill .2s}
+.camp:hover .camp__halo,.camp.active .camp__halo{fill:rgba(255,212,59,.22)}
+.camp__dot{fill:#16304b;stroke:#9cc2e6;stroke-width:2.5;transition:fill .25s,stroke .25s,r .2s}
+.camp:hover .camp__dot{stroke:#fff}
+.camp.active .camp__dot{fill:var(--python-yellow);stroke:#fff}
+.camp.done .camp__dot{fill:var(--summit);stroke:#cdeccd}
+.camp__num{fill:#fff;font-family:var(--mono);font-size:11px;font-weight:600;text-anchor:middle;dominant-baseline:central;pointer-events:none}
+.camp__name{fill:#dcebff;}
+.camp:focus-visible{outline:none}
+.camp:focus-visible .camp__dot{stroke:var(--python-yellow);stroke-width:3.5}
+
+/* =====================================================================
+   CONTENU
+   ===================================================================== */
+main{max-width:var(--maxw);margin:0 auto;padding:34px 22px 40px}
+
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  box-shadow:var(--shadow-soft);padding:24px;margin-bottom:30px;
+}
+
+/* Carte préparation */
+.prep{border-left:5px solid var(--python-yellow)}
+.prep h2{font-size:1.25rem;color:var(--python-blue-deep);display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.prep p{color:var(--ink)}
+.prep p+p{margin-top:10px}
+
+/* ---- Section d'un niveau / camp ---- */
+.level{
+  scroll-margin-top:80px;
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  box-shadow:var(--shadow-soft);overflow:hidden;margin-bottom:26px;
+  transition:box-shadow .2s,border-color .2s;
+}
+.level:hover{box-shadow:var(--shadow)}
+.level.completed{border-color:#bfe3c6}
+.level__head{
+  display:flex;align-items:center;gap:18px;padding:22px 24px;
+  border-bottom:1px solid var(--line-soft);position:relative;
+  background:linear-gradient(180deg,#fbfdff,#f5f9fd);
+}
+.level__badge{
+  flex:0 0 auto;width:58px;height:58px;border-radius:16px;display:grid;place-items:center;position:relative;
+  background:linear-gradient(150deg,var(--python-blue),var(--python-blue-deep));
+  color:#fff;box-shadow:0 6px 16px rgba(33,70,107,.30);
+}
+.level__num{font-size:1.5rem;font-weight:800;line-height:1}
+.level__emoji{position:absolute;bottom:-8px;right:-8px;font-size:1.25rem;filter:drop-shadow(0 2px 3px rgba(0,0,0,.2))}
+.level__meta{flex:1;min-width:0}
+.level__alt{
+  display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:.72rem;font-weight:600;
+  color:var(--python-blue);background:#eaf2fb;border:1px solid #d4e6f6;padding:2px 9px;border-radius:999px;margin-bottom:7px;
+}
+.level__title{font-size:1.32rem;color:var(--python-blue-deep)}
+.level__topic{color:var(--muted);font-size:.92rem;font-weight:500;margin-top:3px}
+.level__topic code{font-family:var(--mono);font-size:.84em;background:#eef3f9;color:var(--python-blue-deep);padding:1px 6px;border-radius:5px}
+.level__check{
+  position:absolute;top:14px;right:18px;display:none;align-items:center;gap:6px;
+  font-size:.78rem;font-weight:600;color:var(--summit);
+}
+.level.completed .level__check{display:inline-flex}
+
+.level__body{padding:24px}
+.level__intro{color:var(--ink);margin-bottom:18px}
+
+/* Zone d'accueil des exercices (vide pour l'instant) */
+.exercises{display:block}
+.placeholder{
+  border:2px dashed #c9d6e6;border-radius:var(--radius);background:
+    repeating-linear-gradient(135deg,#f7faff,#f7faff 14px,#f2f7fc 14px,#f2f7fc 28px);
+  padding:30px 22px;text-align:center;color:var(--muted);
+}
+.placeholder__pin{font-size:1.6rem;display:block;margin-bottom:8px}
+.placeholder b{color:var(--python-blue-deep)}
+.placeholder small{display:block;margin-top:6px;font-size:.82rem}
+
+/* Bouton "camp franchi" */
+.level__foot{padding:0 24px 24px;display:flex;justify-content:flex-end}
+.camp-toggle{
+  display:inline-flex;align-items:center;gap:9px;cursor:pointer;
+  border:1.5px solid var(--summit);background:#fff;color:var(--summit);
+  font-family:var(--font);font-weight:600;font-size:.9rem;padding:9px 16px;border-radius:999px;transition:.15s;
+}
+.camp-toggle:hover{background:#eefaf0}
+.camp-toggle .tick{
+  width:18px;height:18px;border-radius:50%;border:2px solid currentColor;display:grid;place-items:center;flex:0 0 auto;
+}
+.camp-toggle .tick svg{width:11px;height:11px;opacity:0;transition:opacity .15s}
+.camp-toggle.is-done{background:var(--summit);border-color:var(--summit);color:#fff}
+.camp-toggle.is-done .tick{border-color:#fff}
+.camp-toggle.is-done .tick svg{opacity:1}
+
+/* Bandeau d'encouragement entre les camps */
+.cheer{
+  text-align:center;font-style:italic;color:var(--muted);font-size:1.02rem;
+  padding:8px 20px 26px;max-width:60ch;margin:0 auto;
+}
+.cheer::before{content:"⛰️";font-style:normal;display:block;font-size:1.2rem;margin-bottom:4px;opacity:.8}
+
+/* =====================================================================
+   COMPOSANTS RÉUTILISABLES (prêts pour le contenu à venir)
+   — exercices, accordéons, blocs de code, encarts Synapse, laboratoire, quiz
+   ===================================================================== */
+
+/* Exercice */
+.exercise{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:20px;margin-bottom:22px;box-shadow:var(--shadow-soft);
+  transition:transform .2s ease, box-shadow .2s ease;
+}
+.exercise:hover{transform:translateY(-3px);box-shadow:var(--shadow)}
+.exercise h4{
+  color:var(--python-blue);margin:0 0 14px;font-size:1.18rem;
+  border-bottom:2px solid var(--line-soft);padding-bottom:10px;
+}
+
+/* Accordéons (indices / solution) — mécanisme identique à la charte d'origine */
+.accordion-title{
+  cursor:pointer;font-weight:600;display:inline-block;padding:8px 15px;border-radius:7px;
+  transition:background-color .25s,border-color .25s,color .25s;
+  border:1px solid var(--python-blue);background:transparent;color:var(--python-blue);
+  margin-right:10px;margin-top:10px;user-select:none;
+}
+.accordion-title:hover{background:var(--python-blue);color:#fff}
+.accordion-title.solution{border-color:var(--summit);color:var(--summit)}
+.accordion-title.solution:hover{background:var(--summit);color:#fff}
+.accordion-content{
+  max-height:0;overflow:hidden;transition:max-height .5s ease-in-out;
+  padding:0 20px;margin-top:15px;background:#f0f5fa;
+  border-left:3px solid var(--python-blue);border-radius:0 var(--radius) var(--radius) 0;
+}
+.accordion-content.solution-content{border-left-color:var(--summit)}
+.accordion-content.active{padding-top:15px;padding-bottom:15px}
+.solution-explanation{
+  background:#eaf2fb;border-left:3px solid var(--python-blue);padding:15px;margin-top:15px;
+  border-radius:0 var(--radius) var(--radius) 0;
+}
+.solution-explanation p,.solution-explanation ul{margin-bottom:10px}
+
+/* Blocs de code + coloration Monokai */
+pre{
+  background:var(--code-bg);color:#abb2bf;padding:20px;overflow-x:auto;border-radius:10px;margin:15px 0;
+  box-shadow:inset 0 2px 6px rgba(0,0,0,.25);font-size:.9rem;line-height:1.55;
+}
+code{font-family:var(--mono)}
+.python-code .comment{color:var(--code-comment)}
+.python-code .keyword{color:var(--code-keyword);font-weight:600}
+.python-code .function{color:var(--code-function)}
+.python-code .string{color:var(--code-string)}
+.python-code .number{color:var(--code-number)}
+.python-code .variable{color:var(--code-variable)}
+.python-code .operator{color:var(--code-operator)}
+.python-code .built_in{color:var(--code-builtin)}
+
+/* Encarts Synapse (💡 / ⚠️ / 🚀 / ✅) — prêts pour le contenu */
+.encart{border-radius:var(--radius);padding:16px 18px 16px 50px;position:relative;margin:18px 0;font-size:.96rem}
+.encart::before{position:absolute;left:16px;top:15px;font-size:1.25rem}
+.encart h5{margin:0 0 6px;font-size:.95rem;font-weight:700}
+.encart.savais  {background:#eef4fc;border:1px solid #d4e3f6}
+.encart.savais::before{content:"💡"}
+.encart.savais h5{color:#2c5d87}
+.encart.attention{background:#fdf1ec;border:1px solid #f6d8cb}
+.encart.attention::before{content:"⚠️"}
+.encart.attention h5{color:#b5532a}
+.encart.astuce  {background:#eafaf0;border:1px solid #c8ecd4}
+.encart.astuce::before{content:"🚀"}
+.encart.astuce h5{color:#1f7a3d}
+.encart.savoir  {background:#fff8e6;border:1px solid #f3e2b0}
+.encart.savoir::before{content:"✅"}
+.encart.savoir h5{color:#9a7b14}
+.encart ul{margin:8px 0 0;padding-left:18px}
+.encart li{margin-bottom:5px}
+.encart li:last-child{margin-bottom:0}
+
+/* Laboratoire (zone interactive) + Quiz — conteneurs prêts */
+.labo{border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;margin:18px 0;background:#fff}
+.labo__head{display:flex;align-items:center;gap:9px;padding:11px 16px;background:linear-gradient(180deg,#fbfdff,#f4f9fd);border-bottom:1px solid var(--line-soft);font-weight:600;color:var(--python-blue-deep)}
+.labo__head .tag{font-family:var(--mono);font-size:.68rem;font-weight:600;color:#fff;background:var(--python-blue);padding:2px 8px;border-radius:6px;text-transform:uppercase;letter-spacing:.04em}
+.labo__body{padding:16px}
+.quiz{border:1px solid var(--line);border-radius:var(--radius);padding:18px;margin:18px 0;background:#fbfdff}
+.quiz__title{display:flex;align-items:center;gap:9px;font-weight:700;color:var(--python-blue-deep);margin-bottom:8px}
+
+footer{
+  text-align:center;padding:30px 20px 40px;color:var(--muted);font-size:.9rem;
+  border-top:1px solid var(--line);
+}
+footer b{color:var(--python-blue-deep)}
+
+/* Responsive */
+@media(max-width:560px){
+  .level__head{padding:18px;gap:14px}
+  .level__badge{width:50px;height:50px}
+  .level__num{font-size:1.3rem}
+  .level__body{padding:18px}
+  .level__foot{padding:0 18px 18px}
+  .level__check{position:static;margin-top:6px}
+  .hero__inner{padding:34px 18px 24px}
+}
+@media (prefers-reduced-motion: reduce){
+  .exercise,.camp__dot,.ascent__fill{transition:none}
+}
+
+/* Astuce intégrée à la solution */
+.astuce-line{margin:14px 0 0;padding:11px 14px;background:#fff7e6;border:1px solid #f0dcb4;border-radius:9px;color:#5a4a2a;font-size:14px;line-height:1.6}
+.astuce-line .astuce-ic{margin-right:3px}
+</style>
+</head>
+<body>
+
+<!-- ================= MASTHEAD ================= -->
+<header class="masthead">
+  <div class="masthead__row">
+    <a class="brand" href="#top" aria-label="Synapse Learners — L'Ascension Pandas">
+      <span class="brand__logo" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M3 20 10 7l4 7 2-3 5 9z" fill="currentColor" opacity=".55"/><path d="M3 20 10 7l4 7 2-3 5 9z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+      </span>
+      <span class="brand__txt">
+        <span class="brand__name">Pandas</span>
+        <span class="brand__tag">Synapse Learners · Data Analyst</span>
+      </span>
+    </a>
+
+    <nav class="camp-nav" aria-label="Navigation des camps">
+      <button class="pill" data-level="1" type="button">N1</button>
+      <button class="pill" data-level="2" type="button">N2</button>
+      <button class="pill" data-level="3" type="button">N3</button>
+      <button class="pill" data-level="4" type="button">N4</button>
+      <button class="pill" data-level="5" type="button">N5</button>
+      <button class="pill" data-level="6" type="button">N6</button>
+      <button class="pill" data-level="7" type="button">N7</button>
+    </nav>
+
+    <div class="mh-progress"><span>Ascension</span> <b id="mhCount">0</b><span>/7</span></div>
+  </div>
+</header>
+
+<!-- ================= HERO ================= -->
+<section class="hero" id="top">
+  <!-- Motif topographique discret -->
+  <svg class="hero__contours" viewBox="0 0 1000 400" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <g fill="none" stroke="#bcd6f0" stroke-width="1">
+      <path d="M-20 330 Q 250 290 500 320 T 1020 300"/>
+      <path d="M-20 360 Q 250 320 500 350 T 1020 330"/>
+      <path d="M-20 250 Q 280 210 520 245 T 1020 225"/>
+      <path d="M-20 180 Q 300 150 560 180 T 1020 165"/>
+      <path d="M-20 110 Q 320 85 580 115 T 1020 100"/>
+    </g>
+  </svg>
+
+  <div class="hero__inner">
+    <span class="kicker">🐼 Révision Pandas</span>
+    <h1>L'Ascension Pandas</h1>
+    <p class="hero__sub">Sept camps pour passer du DataFrame brut à l'analyse qui dit quelque chose — sur les passagers du <b>Titanic</b>. Une notion à la fois, indice après indice, sans syndrome de l'imposteur.</p>
+
+    <div class="ascent">
+      <span class="ascent__label">Progression : <b id="ascentCount">0</b> / 7 camps</span>
+      <div class="ascent__track"><div class="ascent__fill" id="ascentFill"></div></div>
+    </div>
+  </div>
+
+  <!-- ===== Profil d'altitude interactif (signature + navigation) ===== -->
+  <div class="profile">
+    <svg class="profile__svg" viewBox="0 0 1000 230" role="group" aria-label="Profil de l'ascension — 7 camps">
+      <defs>
+        <linearGradient id="ridgeGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#5b86b3" stop-opacity=".55"/>
+          <stop offset="100%" stop-color="#16304b" stop-opacity="0"/>
+        </linearGradient>
+      </defs>
+
+      <!-- Crête (zone + ligne) reliant les 7 camps -->
+      <path class="ridge-fill" d="M0 214 L60 196 L200 172 L345 146 L490 118 L635 92 L780 62 L940 30 L1000 24 L1000 230 L0 230 Z"/>
+      <path class="ridge-line" d="M60 196 L200 172 L345 146 L490 118 L635 92 L780 62 L940 30"/>
+      <path class="trail" d="M60 196 L200 172 L345 146 L490 118 L635 92 L780 62 L940 30"/>
+
+      <!-- Étiquettes des extrémités -->
+      <text class="endlabel" x="58" y="220">Camp de base</text>
+      <text class="endlabel" x="940" y="18" text-anchor="end">Sommet · 8 848 m</text>
+
+      <!-- Camps cliquables -->
+      <a class="camp" href="#niveau-1" data-level="1"><title>Camp 1 — Découverte · 1 200 m</title><circle class="camp__halo" cx="60" cy="196" r="17"/><circle class="camp__dot" cx="60" cy="196" r="11"/><text class="camp__num" x="60" y="196">1</text></a>
+      <a class="camp" href="#niveau-2" data-level="2"><title>Camp 2 — Sélection · 2 400 m</title><circle class="camp__halo" cx="200" cy="172" r="17"/><circle class="camp__dot" cx="200" cy="172" r="11"/><text class="camp__num" x="200" y="172">2</text></a>
+      <a class="camp" href="#niveau-3" data-level="3"><title>Camp 3 — Filtrage · 3 600 m</title><circle class="camp__halo" cx="345" cy="146" r="17"/><circle class="camp__dot" cx="345" cy="146" r="11"/><text class="camp__num" x="345" y="146">3</text></a>
+      <a class="camp" href="#niveau-4" data-level="4"><title>Camp 4 — Transformation · 5 000 m</title><circle class="camp__halo" cx="490" cy="118" r="17"/><circle class="camp__dot" cx="490" cy="118" r="11"/><text class="camp__num" x="490" y="118">4</text></a>
+      <a class="camp" href="#niveau-5" data-level="5"><title>Camp 5 — Nettoyage · 6 200 m</title><circle class="camp__halo" cx="635" cy="92" r="17"/><circle class="camp__dot" cx="635" cy="92" r="11"/><text class="camp__num" x="635" y="92">5</text></a>
+      <a class="camp" href="#niveau-6" data-level="6"><title>Camp 6 — Agrégation · 7 500 m</title><circle class="camp__halo" cx="780" cy="62" r="17"/><circle class="camp__dot" cx="780" cy="62" r="11"/><text class="camp__num" x="780" y="62">6</text></a>
+      <a class="camp" href="#niveau-7" data-level="7"><title>Camp 7 — Combiner & analyser · 8 848 m</title><circle class="camp__halo" cx="940" cy="30" r="17"/><circle class="camp__dot" cx="940" cy="30" r="11"/><text class="camp__num" x="940" y="30">7</text></a>
+    </svg>
+  </div>
+</section>
+
+<!-- ================= CONTENU ================= -->
+<main>
+
+  <!-- Préparation -->
+  <section class="card prep">
+    <h2>🎒 Préparation de l'équipement (Google Colab)</h2>
+    <p>L'expédition se déroule sur <strong>Google Colab</strong> : aucune installation, un compte Google suffit. Chaque exercice est un défi à relever dans une cellule de code.</p>
+    <p>Avant de partir, exécute cette cellule d'échauffement : elle importe Pandas, charge le jeu de données <strong>Titanic</strong> (891 passagers) et en montre un aperçu. C'est la base de travail commune à tous les exercices.</p>
+    <pre class="python-code"><code><span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+<span class="keyword">import</span> seaborn <span class="keyword">as</span> sns
+
+df <span class="operator">=</span> sns.<span class="function">load_dataset</span>(<span class="string">"titanic"</span>)
+df.<span class="function">head</span>()</code></pre>
+    <p>Les 15 colonnes du dataset : <code>survived</code>, <code>pclass</code>, <code>sex</code>, <code>age</code>, <code>sibsp</code>, <code>parch</code>, <code>fare</code>, <code>embarked</code>, <code>class</code>, <code>who</code>, <code>adult_male</code>, <code>deck</code>, <code>embark_town</code>, <code>alive</code>, <code>alone</code>.</p>
+  </section>
+
+  <div id="levels"></div>
+
+</main>
+
+<footer>
+  © 2026 <b>L'Ascension Pandas</b> — Synapse Learners · Parcours Data Analyst.
+</footer>
+
+<script>
+"use strict";
+
+/* =========================================================================
+   L'ASCENSION PANDAS — données des 7 niveaux (Titanic) + moteur de rendu
+   Chaque exercice : t (titre), q (énoncé), h [indice1, indice2],
+   s (solution, code brut), e [explications...], a (astuce facultative).
+   Le code des solutions est surligné automatiquement par hl().
+   ========================================================================= */
+
+var LEVELS = [
+/* ---------------------------------------------------------------- NIVEAU 1 */
+{ n:1, emoji:"🏕️", alt:"▲ 1 200 m · Camp de base", title:"Découverte des données",
+  topic:`<code class="t">Series</code> · <code class="t">DataFrame</code> · head / info / describe — charger le Titanic et l'observer`,
+  intro:`Toute analyse commence par regarder ses données droit dans les yeux. On charge le Titanic, on découvre les deux structures de Pandas — la <b>Series</b> (une colonne) et le <b>DataFrame</b> (le tableau entier) — et les commandes qui révèlent en quelques secondes la taille, les colonnes et les types.`,
+  cheer:`Camp de base franchi : tu sais charger un dataset et l'observer. La suite : viser juste.`,
+  exercises:[
+    { t:"Préparer le matériel", q:`Importe la bibliothèque Pandas en lui donnant son alias conventionnel <code>pd</code>.`,
+      h:[`On importe une bibliothèque avec le mot-clé <code>import</code>, et on lui donne un surnom avec <code>as</code>.`,`L'alias universellement utilisé pour Pandas est <code>pd</code>.`],
+      s:`import pandas as pd`,
+      e:[`<code>import pandas</code> charge la bibliothèque ; <code>as pd</code> crée un raccourci pour ne pas réécrire « pandas » à chaque appel.`,`C'est une convention quasi universelle : tout le code Pandas du monde commence ainsi.`],
+      a:`Pour l'entraînement, importe aussi seaborn (<code>import seaborn as sns</code>) : il fournit des jeux de données prêts à l'emploi, dont le Titanic.` },
+    { t:"Charger le Titanic", q:`Avec seaborn (importé sous <code>sns</code>), charge le jeu de données <code>"titanic"</code> dans une variable nommée <code>df</code>.`,
+      h:[`La fonction est <code>sns.load_dataset(...)</code>.`,`Le nom du dataset se passe sous forme de chaîne : <code>"titanic"</code>.`],
+      s:`df = sns.load_dataset("titanic")`,
+      e:[`<code>load_dataset</code> renvoie directement un DataFrame tout prêt : 891 lignes (les passagers) et 15 colonnes.`,`On range ce DataFrame dans la variable <code>df</code>, le nom traditionnel d'un DataFrame de travail.`],
+      a:`seaborn propose d'autres datasets pour s'exercer : <code>"tips"</code>, <code>"penguins"</code>, <code>"iris"</code>.` },
+    { t:"Le premier coup d'œil", q:`Affiche les <b>5 premières lignes</b> de <code>df</code>.`,
+      h:[`La méthode qui montre le début d'un DataFrame s'appelle <code>head</code>.`,`Sans argument, elle affiche 5 lignes par défaut.`],
+      s:`df.head()`,
+      e:[`<code>head()</code> est le réflexe n°1 après un chargement : on vérifie que les données ont la tête attendue.`,`On peut préciser un nombre : <code>df.head(10)</code> pour 10 lignes.`] },
+    { t:"Et la fin du registre", q:`Affiche les <b>3 dernières lignes</b> de <code>df</code>.`,
+      h:[`La méthode jumelle de <code>head</code>, pour la fin, est <code>tail</code>.`,`Passe le nombre <code>3</code> en argument.`],
+      s:`df.tail(3)`,
+      e:[`<code>tail(3)</code> montre les 3 dernières lignes — pratique pour vérifier qu'un fichier s'est chargé jusqu'au bout.`] },
+    { t:"Mesurer le terrain", q:`Affiche les <b>dimensions</b> de <code>df</code> (nombre de lignes et de colonnes).`,
+      h:[`L'information « taille » est un <b>attribut</b>, pas une méthode.`,`Il s'appelle <code>shape</code> et s'écrit sans parenthèses.`],
+      s:`df.shape`,
+      e:[`<code>shape</code> renvoie un tuple <code>(891, 15)</code> : 891 lignes, 15 colonnes.`,`Comme c'est un attribut (une donnée, pas une action), il n'y a <b>pas</b> de parenthèses.`] },
+    { t:"Lister les colonnes", q:`Affiche la liste des <b>noms de colonnes</b> de <code>df</code>.`,
+      h:[`C'est aussi un attribut.`,`Il s'appelle <code>columns</code> (sans parenthèses).`],
+      s:`df.columns`,
+      e:[`<code>columns</code> renvoie l'index des 15 noms de colonnes (survived, pclass, sex, age, …).`] },
+    { t:"La fiche technique", q:`Affiche un <b>résumé technique</b> de <code>df</code> : le type de chaque colonne et son nombre de valeurs non manquantes.`,
+      h:[`La méthode qui dresse ce bilan s'appelle <code>info</code>.`,`Elle s'appelle avec des parenthèses : <code>df.info()</code>.`],
+      s:`df.info()`,
+      e:[`<code>info()</code> liste, colonne par colonne, le type et le nombre de valeurs <b>non nulles</b>.`,`On y repère immédiatement les colonnes à trous : <code>age</code> n'a que 714 valeurs sur 891, <code>deck</code> à peine 203.`],
+      a:`<code>info()</code> est ton diagnostic express : en une commande, tu sais déjà quoi nettoyer.` },
+    { t:"Isoler une colonne", q:`Sélectionne uniquement la colonne <code>age</code>. Tu obtiens alors une <b>Series</b>.`,
+      h:[`On sélectionne une colonne avec des crochets et le nom entre guillemets.`,`Syntaxe : <code>df["nom_de_colonne"]</code>.`],
+      s:`df["age"]`,
+      e:[`Des crochets <b>simples</b> avec un seul nom renvoient une <b>Series</b> : une colonne unique, avec son index.`],
+      a:`<code>df.age</code> fonctionne aussi, mais les crochets restent fiables même si le nom contient un espace ou un caractère spécial.` },
+    { t:"Le portrait statistique", q:`Affiche les <b>statistiques descriptives</b> des colonnes numériques de <code>df</code>.`,
+      h:[`Une seule méthode produit tout le tableau.`,`Elle s'appelle <code>describe</code> et s'utilise sans argument.`],
+      s:`df.describe()`,
+      e:[`<code>describe()</code> renvoie, pour chaque colonne numérique : effectif, moyenne, écart-type, minimum, quartiles et maximum.`,`C'est un panorama instantané de la distribution de tes données.`] },
+    { t:"Connaître les types", q:`Affiche le <b>type de données</b> de chaque colonne de <code>df</code>.`,
+      h:[`C'est un attribut au pluriel.`,`Il s'appelle <code>dtypes</code> (sans parenthèses).`],
+      s:`df.dtypes`,
+      e:[`<code>dtypes</code> indique le type de chaque colonne : <code>int64</code>, <code>float64</code>, <code>object</code> (texte), <code>bool</code>, <code>category</code>.`,`Connaître les types évite des surprises : on ne calcule pas une moyenne sur du texte.`] }
+  ]
+},
+/* ---------------------------------------------------------------- NIVEAU 2 */
+{ n:2, emoji:"🌲", alt:"▲ 2 400 m · Les premiers sentiers", title:"Sélectionner",
+  topic:`colonnes · <code class="t">loc</code> · <code class="t">iloc</code> — viser une donnée précise`,
+  intro:`Savoir viser : une colonne, plusieurs, une cellule unique ou une plage de lignes. Deux outils maîtres — <b>loc</b> (par étiquette) et <b>iloc</b> (par position) — et le fameux piège des bornes qui fait trébucher tout le monde.`,
+  cheer:`Beau dégagement. Tu sélectionnes désormais n'importe quelle donnée à la demande.`,
+  exercises:[
+    { t:"Deux colonnes d'un coup", q:`Sélectionne ensemble les colonnes <code>sex</code> et <code>age</code> (tu obtiens un <b>DataFrame</b>).`,
+      h:[`Plusieurs colonnes se demandent avec une <b>liste</b> de noms.`,`Une liste entre crochets, donc des <b>doubles crochets</b> : <code>df[["a", "b"]]</code>.`],
+      s:`df[["sex", "age"]]`,
+      e:[`Les doubles crochets passent une <b>liste</b> de colonnes ; le résultat reste un DataFrame (plusieurs colonnes), pas une Series.`] },
+    { t:"loc : une ligne par étiquette", q:`Avec <code>loc</code>, sélectionne la ligne dont l'étiquette d'index vaut <code>0</code>.`,
+      h:[`<code>loc</code> sélectionne par <b>étiquette</b> : <code>df.loc[...]</code>.`,`Ici l'index est numérique : l'étiquette de la première ligne est <code>0</code>.`],
+      s:`df.loc[0]`,
+      e:[`<code>loc</code> travaille avec les <b>étiquettes</b> de l'index. Comme l'index du Titanic est 0,1,2,…, <code>df.loc[0]</code> renvoie la 1re ligne sous forme de Series.`] },
+    { t:"loc : une cellule précise", q:`Avec <code>loc</code>, récupère l'<b>âge</b> (colonne <code>age</code>) du passager d'index <code>0</code>.`,
+      h:[`<code>loc</code> accepte deux arguments : <code>df.loc[ligne, colonne]</code>.`,`La colonne se nomme <code>"age"</code>.`],
+      s:`df.loc[0, "age"]`,
+      e:[`<code>df.loc[ligne, colonne]</code> cible une cellule unique et renvoie sa valeur (ici <code>22.0</code>).`] },
+    { t:"iloc : une ligne par position", q:`Avec <code>iloc</code>, récupère la <b>première</b> ligne (position 0).`,
+      h:[`<code>iloc</code> sélectionne par <b>position</b> (le numéro d'ordre), pas par étiquette.`,`La première position est <code>0</code> : <code>df.iloc[0]</code>.`],
+      s:`df.iloc[0]`,
+      e:[`<code>iloc</code> raisonne en <b>positions</b> : <code>df.iloc[0]</code> = la ligne tout en haut, quelle que soit son étiquette d'index.`] },
+    { t:"iloc : une cellule par position", q:`Avec <code>iloc</code>, récupère la valeur située à la <b>ligne 0, colonne 3</b>.`,
+      h:[`Deux positions entières : <code>df.iloc[ligne, colonne]</code>.`,`Les positions commencent à 0 : la colonne 3 est donc la 4ᵉ.`],
+      s:`df.iloc[0, 3]`,
+      e:[`On compte à partir de 0 : la colonne de position 3 est la 4ᵉ, c'est-à-dire <code>age</code>. On obtient <code>22.0</code>.`] },
+    { t:"loc : plage de lignes + colonnes", q:`Avec <code>loc</code>, récupère les colonnes <code>age</code> et <code>fare</code> pour les lignes <code>0</code> à <code>4</code> <b>incluses</b>.`,
+      h:[`Combine une plage de lignes et une liste de colonnes : <code>df.loc[0:4, ["a","b"]]</code>.`,`Avec <code>loc</code>, la borne de fin est <b>incluse</b>.`],
+      s:`df.loc[0:4, ["age", "fare"]]`,
+      e:[`<code>loc[0:4]</code> renvoie 5 lignes (0,1,2,3,4) car <b>loc inclut la borne de fin</b>.`,`La liste <code>["age", "fare"]</code> sélectionne les deux colonnes voulues.`],
+      a:`Retiens-le : <code>loc</code> inclut la fin, <code>iloc</code> l'exclut. C'est la confusion n°1 des débutants.` },
+    { t:"iloc : les premières lignes", q:`Avec <code>iloc</code>, récupère les <b>5 premières</b> lignes (positions 0 à 4).`,
+      h:[`Une plage de positions : <code>df.iloc[0:5]</code>.`,`Avec <code>iloc</code>, la borne de fin est <b>exclue</b> — d'où <code>0:5</code> pour 5 lignes.`],
+      s:`df.iloc[0:5]`,
+      e:[`<code>iloc[0:5]</code> prend les positions 0,1,2,3,4 : la position 5 est <b>exclue</b>. C'est l'inverse de <code>loc</code>.`] },
+    { t:"La toute dernière ligne", q:`Avec <code>iloc</code>, récupère la <b>dernière</b> ligne de <code>df</code>.`,
+      h:[`Les positions négatives comptent depuis la fin.`,`<code>-1</code> désigne le dernier élément.`],
+      s:`df.iloc[-1]`,
+      e:[`<code>-1</code> est la position du dernier élément, <code>-2</code> l'avant-dernier, etc. Très pratique quand on ignore le nombre de lignes.`] },
+    { t:"Quelques colonnes par position", q:`Avec <code>iloc</code>, récupère <b>toutes les lignes</b> mais seulement les <b>3 premières colonnes</b>.`,
+      h:[`Le symbole <code>:</code> seul signifie « toutes les lignes ».`,`Puis une plage de colonnes : <code>df.iloc[:, 0:3]</code>.`],
+      s:`df.iloc[:, 0:3]`,
+      e:[`<code>:</code> en première position = toutes les lignes ; <code>0:3</code> en seconde = les colonnes de position 0,1,2.`] },
+    { t:"loc avec une liste de colonnes", q:`Avec <code>loc</code>, sélectionne <b>toutes les lignes</b> et uniquement les colonnes <code>survived</code> et <code>age</code>.`,
+      h:[`Là encore, <code>:</code> pour toutes les lignes.`,`Puis une liste de colonnes : <code>df.loc[:, ["a", "b"]]</code>.`],
+      s:`df.loc[:, ["survived", "age"]]`,
+      e:[`<code>loc[:, ["survived", "age"]]</code> garde toutes les lignes et seulement ces deux colonnes (par leurs noms).`],
+      a:`<code>df[["survived", "age"]]</code> donne le même résultat en plus court ; <code>loc</code> devient indispensable dès qu'on veut filtrer aussi les lignes.` }
+  ]
+},
+/* ---------------------------------------------------------------- NIVEAU 3 */
+{ n:3, emoji:"⛰️", alt:"▲ 3 600 m · La paroi se redresse", title:"Filtrer",
+  topic:`masques booléens · <code class="t">&amp;</code> <code class="t">|</code> <code class="t">~</code> · isin · between — ne garder que l'utile`,
+  intro:`Un masque booléen, c'est une question posée à chaque ligne : « réponds-tu au critère ? ». Pandas répond par <b>True</b> ou <b>False</b>, et ne garde que les <b>True</b>. On filtre, on combine les conditions, et on isole exactement la population à étudier.`,
+  cheer:`La paroi est passée. Filtrer, c'est déjà penser comme un analyste.`,
+  exercises:[
+    { t:"Le masque, étape par étape", q:`Crée le <b>masque booléen</b> correspondant à « l'âge est supérieur à 30 » (<code>age</code> &gt; 30). Tu obtiens une Series de True/False.`,
+      h:[`Une comparaison s'applique directement à toute la colonne.`,`Écris simplement <code>df["age"] &gt; 30</code>.`],
+      s:`df["age"] > 30`,
+      e:[`Comparer une colonne à une valeur renvoie une <b>Series de booléens</b> : True là où la condition est vraie, False ailleurs.`,`Ce masque est réutilisable : c'est lui qu'on placera entre crochets pour filtrer.`] },
+    { t:"Appliquer le masque", q:`Garde uniquement les passagers de <b>plus de 30 ans</b>.`,
+      h:[`On place le masque entre les crochets du DataFrame.`,`Syntaxe : <code>df[ masque ]</code>.`],
+      s:`df[df["age"] > 30]`,
+      e:[`<code>df[masque]</code> ne conserve que les lignes où le masque vaut True. On obtient le sous-tableau des passagers de plus de 30 ans.`] },
+    { t:"Filtrer sur du texte", q:`Garde uniquement les <b>femmes</b> (colonne <code>sex</code> égale à <code>"female"</code>).`,
+      h:[`L'égalité se teste avec un double signe égal <code>==</code>.`,`La valeur cherchée est une chaîne : <code>"female"</code>.`],
+      s:`df[df["sex"] == "female"]`,
+      e:[`<code>==</code> teste l'égalité (à ne pas confondre avec <code>=</code> qui affecte). Le masque est True pour chaque femme.`] },
+    { t:"Deux conditions : ET", q:`Garde les <b>femmes de 1re classe</b> (<code>sex</code> vaut <code>"female"</code> <b>ET</b> <code>pclass</code> vaut <code>1</code>).`,
+      h:[`Le ET logique entre deux masques s'écrit <code>&amp;</code>.`,`Chaque condition doit être entre <b>parenthèses</b> : <code>(...) &amp; (...)</code>.`],
+      s:`df[(df["sex"] == "female") & (df["pclass"] == 1)]`,
+      e:[`<code>&amp;</code> combine deux masques : True seulement si les deux sont vrais.`,`Les <b>parenthèses sont obligatoires</b> autour de chaque condition, à cause de la priorité des opérateurs.`],
+      a:`Sur des Series, on utilise <code>&amp;</code> et <code>|</code>, <b>jamais</b> <code>and</code> / <code>or</code> (réservés aux booléens simples).` },
+    { t:"Deux conditions : OU", q:`Garde les passagers de <b>1re OU 2e classe</b> (<code>pclass</code> vaut 1 ou 2).`,
+      h:[`Le OU logique s'écrit <code>|</code>.`,`Parenthèses autour de chaque condition.`],
+      s:`df[(df["pclass"] == 1) | (df["pclass"] == 2)]`,
+      e:[`<code>|</code> garde les lignes où <b>au moins une</b> condition est vraie.`] },
+    { t:"Appartenance avec isin", q:`Garde les passagers embarqués à <code>"C"</code> ou <code>"Q"</code> (colonne <code>embarked</code>), en utilisant <code>isin</code>.`,
+      h:[`La méthode <code>.isin([...])</code> teste l'appartenance à une liste de valeurs.`,`Passe-lui la liste <code>["C", "Q"]</code>.`],
+      s:`df[df["embarked"].isin(["C", "Q"])]`,
+      e:[`<code>isin([...])</code> renvoie True si la valeur figure dans la liste. C'est bien plus lisible qu'une longue chaîne de <code>|</code>.`] },
+    { t:"Un intervalle avec between", q:`Garde les passagers dont l'âge est <b>compris entre 20 et 40 inclus</b>, avec <code>between</code>.`,
+      h:[`La méthode <code>.between(a, b)</code> teste un intervalle.`,`Les deux bornes sont incluses : <code>between(20, 40)</code>.`],
+      s:`df[df["age"].between(20, 40)]`,
+      e:[`<code>between(a, b)</code> est un raccourci pour <code>(col &gt;= a) &amp; (col &lt;= b)</code> : les deux bornes sont incluses.`] },
+    { t:"Inverser un masque", q:`Garde les passagers qui ne voyagent <b>pas seuls</b> (colonne booléenne <code>alone</code> vaut False).`,
+      h:[`Le symbole <code>~</code> inverse un masque booléen (True devient False).`,`<code>alone</code> est déjà un booléen : <code>~df["alone"]</code> sélectionne les « non seuls ».`],
+      s:`df[~df["alone"]]`,
+      e:[`<code>~</code> est le NON logique : il inverse chaque valeur du masque. Comme <code>alone</code> vaut True/False, <code>~df["alone"]</code> cible ceux accompagnés.`],
+      a:`Équivalent plus explicite : <code>df[df["alone"] == False]</code>.` },
+    { t:"Repérer les valeurs manquantes", q:`Garde les lignes où l'<b>âge est manquant</b> (NaN).`,
+      h:[`La méthode <code>.isnull()</code> renvoie True là où la valeur manque.`,`Applique-la à la colonne <code>age</code>, puis filtre.`],
+      s:`df[df["age"].isnull()]`,
+      e:[`<code>isnull()</code> détecte les NaN. Le filtre garde les 177 passagers dont l'âge est inconnu.`],
+      a:`<code>.isna()</code> est un alias strictement identique à <code>.isnull()</code>.` },
+    { t:"Filtrer puis mesurer", q:`Parmi les <b>femmes</b>, calcule le <b>taux de survie moyen</b> (moyenne de <code>survived</code>).`,
+      h:[`Filtre d'abord les femmes, puis sélectionne <code>survived</code> et applique <code>.mean()</code>.`,`Enchaîne : <code>df[masque]["survived"].mean()</code>.`],
+      s:`df[df["sex"] == "female"]["survived"].mean()`,
+      e:[`On combine un <b>filtre</b> et une <b>agrégation</b> : on isole les femmes, puis on moyenne leur colonne <code>survived</code> (des 0/1) → environ <b>0.74</b>.`],
+      a:`Plus idiomatique : <code>df.loc[df["sex"] == "female", "survived"].mean()</code>.` }
+  ]
+},
+/* ---------------------------------------------------------------- NIVEAU 4 */
+{ n:4, emoji:"🏔️", alt:"▲ 5 000 m · Zone technique", title:"Transformer",
+  topic:`<code class="t">sort_values</code> · nouvelles colonnes · <code class="t">apply</code> · map — réorganiser et enrichir`,
+  intro:`On remodèle le tableau : trier pour faire ressortir les extrêmes, créer des colonnes calculées, recoder des valeurs, appliquer une logique sur mesure. C'est ici que la donnée brute devient vraiment exploitable.`,
+  cheer:`Zone technique avalée. Ta donnée est désormais propre et enrichie.`,
+  exercises:[
+    { t:"Trier (ordre croissant)", q:`Trie <code>df</code> selon la colonne <code>age</code>, en ordre <b>croissant</b>.`,
+      h:[`La méthode de tri par valeurs s'appelle <code>sort_values</code>.`,`Passe-lui le nom de la colonne ; l'ordre croissant est le défaut.`],
+      s:`df.sort_values("age")`,
+      e:[`<code>sort_values("age")</code> réordonne les lignes du plus jeune au plus âgé. L'ordre croissant est appliqué par défaut.`] },
+    { t:"Trier (ordre décroissant)", q:`Trie <code>df</code> selon <code>fare</code> en ordre <b>décroissant</b> (du plus cher au moins cher).`,
+      h:[`Le sens du tri se règle avec le paramètre <code>ascending</code>.`,`Décroissant : <code>ascending=False</code>.`],
+      s:`df.sort_values("fare", ascending=False)`,
+      e:[`<code>ascending=False</code> inverse l'ordre : les billets les plus chers remontent en haut du tableau.`] },
+    { t:"Trier sur plusieurs colonnes", q:`Trie <code>df</code> d'abord par <code>pclass</code>, puis (à classe égale) par <code>age</code>.`,
+      h:[`Passe une <b>liste</b> de colonnes.`,`L'ordre de la liste fixe la priorité : <code>["pclass", "age"]</code>.`],
+      s:`df.sort_values(["pclass", "age"])`,
+      e:[`Avec une liste, le tri se fait d'abord sur la 1re colonne, puis départage les ex æquo avec la suivante.`] },
+    { t:"Revenir à l'ordre d'origine", q:`Après un tri, remets <code>df</code> dans l'ordre de son <b>index</b>.`,
+      h:[`La méthode qui trie par étiquette d'index s'appelle <code>sort_index</code>.`,`Elle s'utilise sans argument.`],
+      s:`df.sort_index()`,
+      e:[`<code>sort_index()</code> réordonne les lignes selon l'index (0,1,2,…), ce qui annule l'effet d'un tri précédent.`] },
+    { t:"Créer une colonne (somme)", q:`Crée une colonne <code>famille</code> égale à la somme de <code>sibsp</code> et <code>parch</code>.`,
+      h:[`On crée une colonne en affectant à <code>df["famille"]</code>.`,`Additionne directement les deux colonnes : <code>df["sibsp"] + df["parch"]</code>.`],
+      s:`df["famille"] = df["sibsp"] + df["parch"]`,
+      e:[`L'addition est <b>vectorisée</b> : Pandas additionne ligne à ligne, sans boucle.`,`<code>sibsp</code> (frères/sœurs/conjoint) + <code>parch</code> (parents/enfants) = nombre de proches à bord.`] },
+    { t:"Créer une colonne (calcul)", q:`Crée une colonne <code>fare_eur</code> égale à <code>fare</code> multiplié par <code>0.92</code>.`,
+      h:[`Multiplie la colonne par un nombre.`,`<code>df["fare"] * 0.92</code>.`],
+      s:`df["fare_eur"] = df["fare"] * 0.92`,
+      e:[`Multiplier une colonne par un scalaire applique l'opération à chaque valeur, d'un seul coup (vectorisation).`] },
+    { t:"Créer une colonne booléenne", q:`Crée une colonne <code>mineur</code> valant True quand <code>age</code> est strictement inférieur à 18.`,
+      h:[`Une comparaison vectorisée renvoie des True/False.`,`<code>df["age"] &lt; 18</code>.`],
+      s:`df["mineur"] = df["age"] < 18`,
+      e:[`La comparaison <code>&lt; 18</code> produit une Series booléenne, stockée directement comme nouvelle colonne.`] },
+    { t:"Logique sur mesure avec apply", q:`Crée une colonne <code>categorie_age</code> qui vaut <code>"adulte"</code> si l'âge est ≥ 18, sinon <code>"mineur"</code>, à l'aide de <code>apply</code> et d'une <code>lambda</code>.`,
+      h:[`<code>.apply(lambda x: ...)</code> applique une fonction à chaque valeur de la colonne.`,`Utilise une expression conditionnelle : <code>"adulte" if x &gt;= 18 else "mineur"</code>.`],
+      s:`df["categorie_age"] = df["age"].apply(lambda x: "adulte" if x >= 18 else "mineur")`,
+      e:[`<code>apply</code> exécute la <code>lambda</code> pour chaque valeur <code>x</code> de la colonne <code>age</code>.`,`L'expression <code>a if condition else b</code> renvoie l'une ou l'autre valeur selon le test.`],
+      a:`Pour un simple choix binaire, <code>np.where(df["age"] &gt;= 18, "adulte", "mineur")</code> est plus rapide qu'<code>apply</code>.` },
+    { t:"Recoder avec map", q:`Dans la colonne <code>sex</code>, remplace <code>"male"</code> par <code>"H"</code> et <code>"female"</code> par <code>"F"</code>, avec la méthode <code>map</code>.`,
+      h:[`<code>.map({...})</code> remplace chaque valeur selon un dictionnaire.`,`Le dictionnaire associe l'ancienne valeur à la nouvelle : <code>{"male": "H", "female": "F"}</code>.`],
+      s:`df["sex"].map({"male": "H", "female": "F"})`,
+      e:[`<code>map</code> parcourt la colonne et remplace chaque valeur par celle indiquée dans le dictionnaire.`],
+      a:`<code>.replace({...})</code> fait un travail proche, mais conserve telles quelles les valeurs absentes du dictionnaire.` },
+    { t:"Renommer une colonne", q:`Renomme la colonne <code>sex</code> en <code>sexe</code>.`,
+      h:[`La méthode est <code>.rename(columns={...})</code>.`,`Le dictionnaire associe l'ancien nom au nouveau : <code>{"sex": "sexe"}</code>.`],
+      s:`df.rename(columns={"sex": "sexe"})`,
+      e:[`<code>rename(columns={...})</code> change le nom des colonnes listées et laisse les autres intactes.`],
+      a:`Comme souvent en Pandas, <code>rename</code> renvoie une copie : réassigne (<code>df = ...</code>) ou ajoute <code>inplace=True</code> pour conserver le changement.` }
+  ]
+},
+/* ---------------------------------------------------------------- NIVEAU 5 */
+{ n:5, emoji:"🧗", alt:"▲ 6 200 m · Glacier — prudence", title:"Nettoyer",
+  topic:`NaN · <code class="t">fillna</code> · <code class="t">dropna</code> · doublons · <code class="t">copy</code> — des données fiables`,
+  intro:`Les vraies données sont sales : trous, doublons, colonnes inutilisables. On apprend à les détecter et à les traiter sans casser le reste — l'étape qui sépare une analyse fiable d'un résultat trompeur.`,
+  cheer:`Glacier traversé. Des données fiables, enfin.`,
+  exercises:[
+    { t:"Cartographier les trous", q:`Compte le nombre de <b>valeurs manquantes par colonne</b>.`,
+      h:[`<code>.isnull()</code> repère les NaN, <code>.sum()</code> les compte.`,`Enchaîne les deux : <code>df.isnull().sum()</code>.`],
+      s:`df.isnull().sum()`,
+      e:[`<code>isnull()</code> renvoie un tableau de True/False ; <code>.sum()</code> additionne les True par colonne.`,`On découvre les trous : <code>age</code> 177, <code>deck</code> 688, <code>embarked</code> 2.`],
+      a:`<code>.isna()</code> est l'alias d'<code>.isnull()</code> : strictement la même chose.` },
+    { t:"Supprimer les lignes à trous", q:`Supprime toutes les lignes contenant <b>au moins une</b> valeur manquante.`,
+      h:[`La méthode est <code>dropna</code>.`,`Sans argument, elle retire toute ligne ayant au moins un NaN.`],
+      s:`df.dropna()`,
+      e:[`<code>dropna()</code> supprime chaque ligne où il manque au moins une valeur.`,`Attention : à cause de <code>deck</code> (très trouée), cela élimine la grande majorité des lignes — d'où l'intérêt de cibler.`],
+      a:`Pense à réassigner (<code>df = df.dropna()</code>) pour conserver le résultat.` },
+    { t:"Cibler les lignes à supprimer", q:`Supprime seulement les lignes où la colonne <code>age</code> est manquante.`,
+      h:[`Le paramètre <code>subset</code> limite le contrôle à certaines colonnes.`,`<code>subset=["age"]</code>.`],
+      s:`df.dropna(subset=["age"])`,
+      e:[`<code>subset=["age"]</code> ne regarde que la colonne <code>age</code> : on perd les 177 lignes sans âge, mais on garde tout le reste.`] },
+    { t:"Imputer par la médiane", q:`Remplace les âges manquants par la <b>médiane</b> de la colonne <code>age</code>.`,
+      h:[`La méthode qui remplit les NaN est <code>fillna(...)</code>.`,`Place la valeur de remplacement à l'intérieur : <code>df["age"].median()</code>.`],
+      s:`df["age"].fillna(df["age"].median())`,
+      e:[`<code>fillna</code> remplace chaque NaN par la valeur fournie : ici la <b>médiane</b> des âges connus.`],
+      a:`On préfère la <b>médiane</b> à la moyenne quand la distribution est asymétrique : elle résiste aux valeurs extrêmes.` },
+    { t:"Imputer une catégorie", q:`Remplace les ports d'embarquement manquants (colonne <code>embarked</code>) par <code>"S"</code>.`,
+      h:[`Toujours <code>fillna</code>, mais avec une chaîne.`,`<code>df["embarked"].fillna("S")</code>.`],
+      s:`df["embarked"].fillna("S")`,
+      e:[`Pour une variable catégorielle, on impute souvent par la modalité la plus fréquente : ici <code>"S"</code> (Southampton), le port le plus courant.`] },
+    { t:"Jeter une colonne", q:`Supprime la colonne <code>deck</code> (trop de valeurs manquantes pour être utile).`,
+      h:[`La méthode est <code>drop</code>, avec le paramètre <code>columns</code>.`,`<code>columns="deck"</code>.`],
+      s:`df.drop(columns="deck")`,
+      e:[`<code>drop(columns="deck")</code> retire la colonne indiquée. Le paramètre <code>columns</code> évite toute ambiguïté avec les lignes.`] },
+    { t:"Jeter plusieurs colonnes", q:`Supprime d'un coup les colonnes <code>deck</code> et <code>embark_town</code>.`,
+      h:[`Passe une <b>liste</b> de noms à <code>columns</code>.`,`<code>columns=["deck", "embark_town"]</code>.`],
+      s:`df.drop(columns=["deck", "embark_town"])`,
+      e:[`Une liste dans <code>columns</code> supprime plusieurs colonnes en une seule opération.`] },
+    { t:"Compter les doublons", q:`Compte le nombre de lignes <b>en double</b> dans <code>df</code>.`,
+      h:[`<code>.duplicated()</code> marque les répétitions, <code>.sum()</code> les compte.`,`Enchaîne : <code>df.duplicated().sum()</code>.`],
+      s:`df.duplicated().sum()`,
+      e:[`<code>duplicated()</code> renvoie True pour chaque ligne identique à une précédente ; <code>.sum()</code> en donne le total.`] },
+    { t:"Retirer les doublons", q:`Supprime les lignes en double de <code>df</code>.`,
+      h:[`La méthode dédiée est <code>drop_duplicates</code>.`,`Elle s'utilise sans argument pour des lignes entièrement identiques.`],
+      s:`df.drop_duplicates()`,
+      e:[`<code>drop_duplicates()</code> conserve la première occurrence de chaque ligne et supprime les répétitions exactes.`] },
+    { t:"Travailler sur une copie", q:`Crée une <b>copie indépendante</b> de <code>df</code>, nommée <code>df2</code>.`,
+      h:[`La méthode est <code>.copy()</code>.`,`<code>df2 = df.copy()</code>.`],
+      s:`df2 = df.copy()`,
+      e:[`<code>copy()</code> crée un nouveau DataFrame indépendant : modifier <code>df2</code> ne touche pas <code>df</code>.`,`Attention : <code>df2 = df</code> ne copie rien — les deux noms désigneraient le même objet.`],
+      a:`Travailler sur une <code>.copy()</code> évite le redouté <em>SettingWithCopyWarning</em>.` }
+  ]
+},
+/* ---------------------------------------------------------------- NIVEAU 6 */
+{ n:6, emoji:"🏂", alt:"▲ 7 500 m · L'arête sommitale", title:"Résumer & regrouper",
+  topic:`<code class="t">describe</code> · <code class="t">value_counts</code> · <code class="t">groupby</code> · <code class="t">pivot_table</code> — faire parler les chiffres`,
+  intro:`Le cœur de l'analyse : condenser des milliers de lignes en quelques chiffres qui racontent une histoire. Statistiques, effectifs, regroupements et tableaux croisés — la pensée « découper, appliquer, recombiner ».`,
+  cheer:`Arête sommitale en vue. Tu fais désormais parler les chiffres.`,
+  exercises:[
+    { t:"La moyenne", q:`Calcule l'<b>âge moyen</b> des passagers.`,
+      h:[`Sélectionne la colonne <code>age</code>, puis applique <code>.mean()</code>.`,`<code>df["age"].mean()</code>.`],
+      s:`df["age"].mean()`,
+      e:[`<code>mean()</code> calcule la moyenne (~29.7) et <b>ignore automatiquement</b> les valeurs manquantes.`] },
+    { t:"La médiane", q:`Calcule le <b>tarif médian</b> (médiane de la colonne <code>fare</code>).`,
+      h:[`La méthode est <code>.median()</code>.`,`Applique-la à la colonne <code>fare</code>.`],
+      s:`df["fare"].median()`,
+      e:[`La médiane (~14.45) est très inférieure à la moyenne (~32) : signe d'une distribution asymétrique, tirée par quelques billets de luxe.`] },
+    { t:"Décrire les colonnes texte", q:`Affiche les <b>statistiques des colonnes non numériques</b> (texte) de <code>df</code>.`,
+      h:[`<code>describe</code> accepte un paramètre <code>include</code>.`,`<code>include="object"</code> cible les colonnes texte.`],
+      s:`df.describe(include="object")`,
+      e:[`Avec <code>include="object"</code>, <code>describe</code> renvoie pour chaque colonne texte : effectif, nombre de valeurs distinctes, valeur la plus fréquente et sa fréquence.`] },
+    { t:"Compter par catégorie", q:`Compte le nombre de passagers <b>par classe</b> (colonne <code>class</code>).`,
+      h:[`La méthode dédiée aux effectifs est <code>.value_counts()</code>.`,`Applique-la à la colonne <code>class</code>.`],
+      s:`df["class"].value_counts()`,
+      e:[`<code>value_counts()</code> compte les occurrences de chaque valeur, triées par fréquence : Third 491, First 216, Second 184.`] },
+    { t:"Des proportions, pas des effectifs", q:`Donne la <b>proportion</b> de survivants et de décédés (colonne <code>survived</code>).`,
+      h:[`<code>value_counts</code> a un paramètre <code>normalize</code>.`,`<code>normalize=True</code> renvoie des fréquences relatives.`],
+      s:`df["survived"].value_counts(normalize=True)`,
+      e:[`<code>normalize=True</code> transforme les effectifs en proportions (qui somment à 1) : ~0.62 de décès, ~0.38 de survie.`],
+      a:`Les proportions sont bien plus parlantes qu'un effectif brut dans un rapport : « 38 % » plutôt que « 342 ».` },
+    { t:"Compter les valeurs distinctes", q:`Combien de valeurs <b>distinctes</b> contient la colonne <code>embarked</code> ?`,
+      h:[`La méthode est <code>.nunique()</code>.`,`Applique-la à la colonne <code>embarked</code>.`],
+      s:`df["embarked"].nunique()`,
+      e:[`<code>nunique()</code> renvoie le nombre de modalités différentes : ici 3 ports (C, Q, S).`] },
+    { t:"Regrouper : split-apply-combine", q:`Calcule le <b>taux de survie moyen par sexe</b>.`,
+      h:[`<code>groupby("sex")</code> crée les groupes ; ensuite on choisit la colonne et on agrège.`,`<code>df.groupby("sex")["survived"].mean()</code>.`],
+      s:`df.groupby("sex")["survived"].mean()`,
+      e:[`<code>groupby</code> découpe les lignes par sexe, <code>.mean()</code> agrège chaque groupe : femmes ~0.74, hommes ~0.19.`,`C'est la logique « découper – appliquer – recombiner », fondatrice de l'analyse.`] },
+    { t:"Regrouper sur deux clés", q:`Calcule le taux de survie moyen par <b>sexe ET classe</b> (<code>pclass</code>).`,
+      h:[`Passe une <b>liste</b> de colonnes à <code>groupby</code>.`,`<code>groupby(["sex", "pclass"])</code>.`],
+      s:`df.groupby(["sex", "pclass"])["survived"].mean()`,
+      e:[`Une liste de clés crée un groupe pour chaque <b>combinaison</b> (femme-1re, femme-2e, …) et calcule la survie de chacun.`] },
+    { t:"Plusieurs stats d'un coup", q:`Pour chaque classe (<code>pclass</code>), calcule la <b>moyenne, le maximum et l'effectif</b> de <code>fare</code>, en une seule opération.`,
+      h:[`La méthode <code>.agg([...])</code> applique plusieurs fonctions.`,`Passe une liste de noms : <code>["mean", "max", "count"]</code>.`],
+      s:`df.groupby("pclass")["fare"].agg(["mean", "max", "count"])`,
+      e:[`<code>agg([...])</code> calcule plusieurs statistiques en même temps et les présente en colonnes — un mini-tableau de bord par groupe.`] },
+    { t:"Le tableau croisé", q:`Construis un <b>tableau croisé</b> du taux de survie moyen : <code>sex</code> en lignes, <code>pclass</code> en colonnes.`,
+      h:[`La fonction est <code>df.pivot_table(values=..., index=..., columns=...)</code>.`,`L'agrégation par défaut est déjà la moyenne.`],
+      s:`df.pivot_table(values="survived", index="sex", columns="pclass")`,
+      e:[`<code>pivot_table</code> dispose une statistique selon deux dimensions : <code>values</code> (à résumer), <code>index</code> (lignes), <code>columns</code> (colonnes).`,`L'écart femmes/hommes et 1re/3e classe saute aux yeux.`],
+      a:`Change l'agrégation avec <code>aggfunc</code> : <code>aggfunc="sum"</code> pour des effectifs, <code>"count"</code> pour des comptages.` }
+  ]
+},
+/* ---------------------------------------------------------------- NIVEAU 7 */
+{ n:7, emoji:"🚩", alt:"▲ 8 848 m · Le sommet", title:"Combiner & analyser",
+  topic:`<code class="t">concat</code> · <code class="t">merge</code> · dates · <code class="t">cut</code> · synthèse — niveau analyste`,
+  intro:`Le sommet : assembler plusieurs tables (comme en SQL), manipuler des dates, créer des tranches, et enchaîner filtre + regroupement + tableau croisé pour produire un vrai insight. Tu y es presque.`,
+  cheer:`🎉 Sommet atteint ! Tu maîtrises Pandas, du chargement à l'analyse croisée. Refais ce parcours sur un dataset qui te passionne — et publie-le : c'est ça, un portfolio d'analyste.`,
+  exercises:[
+    { t:"Empiler deux tables", q:`Empile <b>verticalement</b> (l'un sous l'autre) deux DataFrames <code>df_a</code> et <code>df_b</code>.`,
+      h:[`La fonction est <code>pd.concat([...])</code>.`,`Elle prend une <b>liste</b> de DataFrames.`],
+      s:`pd.concat([df_a, df_b])`,
+      e:[`<code>concat</code> colle les DataFrames bout à bout. Par défaut (axis=0), il <b>empile les lignes</b>.`] },
+    { t:"Empiler proprement", q:`Même empilement de <code>df_a</code> et <code>df_b</code>, mais avec un <b>index réindexé</b> (0, 1, 2, …).`,
+      h:[`Le paramètre <code>ignore_index</code> régénère l'index.`,`<code>ignore_index=True</code>.`],
+      s:`pd.concat([df_a, df_b], ignore_index=True)`,
+      e:[`Sans précaution, <code>concat</code> conserve les index d'origine (risque de doublons d'étiquettes). <code>ignore_index=True</code> crée un index propre, continu.`] },
+    { t:"Joindre sur une clé (merge)", q:`Joins les DataFrames <code>clients</code> et <code>commandes</code> sur la colonne commune <code>client_id</code> (jointure interne).`,
+      h:[`La fonction est <code>pd.merge(gauche, droite, on=...)</code>.`,`La clé commune : <code>on="client_id"</code>.`],
+      s:`pd.merge(clients, commandes, on="client_id")`,
+      e:[`<code>merge</code> est l'équivalent du <b>JOIN</b> de SQL : il relie deux tables par une clé commune. Sans <code>how</code>, c'est une jointure <b>interne</b> (seules les clés présentes des deux côtés).`] },
+    { t:"Garder toutes les lignes (left join)", q:`Même jointure, mais en conservant <b>tous les clients</b>, même ceux sans commande.`,
+      h:[`Le type de jointure se choisit avec <code>how</code>.`,`Jointure à gauche : <code>how="left"</code>.`],
+      s:`pd.merge(clients, commandes, on="client_id", how="left")`,
+      e:[`<code>how="left"</code> garde toutes les lignes de la table de gauche ; les clients sans commande auront des <code>NaN</code> dans les colonnes de <code>commandes</code>.`],
+      a:`<code>how</code> accepte <code>inner</code>, <code>left</code>, <code>right</code>, <code>outer</code> — exactement les quatre JOIN de SQL.` },
+    { t:"Comptage croisé (crosstab)", q:`Avec <code>pd.crosstab</code>, compte le nombre de passagers pour chaque croisement <code>sex</code> (lignes) × <code>pclass</code> (colonnes).`,
+      h:[`La fonction est <code>pd.crosstab(lignes, colonnes)</code>.`,`Passe deux colonnes : <code>pd.crosstab(df["sex"], df["pclass"])</code>.`],
+      s:`pd.crosstab(df["sex"], df["pclass"])`,
+      e:[`<code>crosstab</code> construit un tableau d'<b>effectifs</b> croisés : combien de passagers dans chaque case sexe × classe. C'est un comptage, là où <code>pivot_table</code> agrège une valeur.`] },
+    { t:"Convertir du texte en dates", q:`Convertis la colonne texte <code>date</code> d'un DataFrame en véritables <b>dates</b>.`,
+      h:[`La fonction est <code>pd.to_datetime(...)</code>.`,`Passe-lui la colonne : <code>pd.to_datetime(df["date"])</code>.`],
+      s:`pd.to_datetime(df["date"])`,
+      e:[`<code>to_datetime</code> transforme une colonne de texte (« 2024-03-15 ») en type <code>datetime64</code>, ce qui débloque le tri chronologique et l'accesseur <code>.dt</code>.`] },
+    { t:"Extraire un élément de date", q:`À partir de la colonne <code>date</code> (déjà convertie en datetime), extrais l'<b>année</b>.`,
+      h:[`Les composantes d'une date passent par l'accesseur <code>.dt</code>.`,`<code>df["date"].dt.year</code>.`],
+      s:`df["date"].dt.year`,
+      e:[`<code>.dt</code> donne accès aux morceaux d'une date : <code>.dt.year</code>, <code>.dt.month</code>, <code>.dt.day_name()</code>, etc.`] },
+    { t:"Découper en tranches (cut)", q:`Découpe la colonne <code>age</code> en tranches avec <code>pd.cut</code>, en utilisant les bornes <code>0, 18, 60, 100</code>.`,
+      h:[`La fonction est <code>pd.cut(série, bins=[...])</code>.`,`<code>bins</code> reçoit la liste des bornes des tranches.`],
+      s:`pd.cut(df["age"], bins=[0, 18, 60, 100])`,
+      e:[`<code>cut</code> transforme une variable continue en <b>catégories</b> : ]0,18], ]18,60], ]60,100]. Idéal pour regrouper l'âge en classes.`],
+      a:`Ajoute <code>labels=["enfant", "adulte", "senior"]</code> pour nommer les tranches plutôt que d'afficher les intervalles.` },
+    { t:"Créer une variable puis l'analyser", q:`Crée une colonne <code>tranche_age</code> = découpage de <code>age</code> selon <code>[0, 18, 60, 100]</code>, puis calcule le <b>taux de survie moyen par tranche</b>. (Deux lignes.)`,
+      h:[`Première ligne : créer la colonne avec <code>pd.cut</code>. Seconde ligne : <code>groupby</code> dessus.`,`<code>df.groupby("tranche_age")["survived"].mean()</code>.`],
+      s:`df["tranche_age"] = pd.cut(df["age"], bins=[0, 18, 60, 100])\ndf.groupby("tranche_age")["survived"].mean()`,
+      e:[`On enchaîne <b>création de variable</b> (cut) et <b>agrégation</b> (groupby) : la survie ressort par tranche d'âge.`,`C'est le cœur de l'analyse exploratoire : fabriquer une variable utile, puis la croiser.`],
+      a:`Les enfants (]0,18]) survivent davantage que les adultes — la donnée confirme « les femmes et les enfants d'abord ».` },
+    { t:"La synthèse finale", q:`Construis un tableau croisé du <b>taux de survie moyen</b> avec <code>sex</code> en lignes et <code>class</code> en colonnes, sur le Titanic complet.`,
+      h:[`Réutilise <code>pivot_table(values=..., index=..., columns=...)</code>.`,`Les colonnes sont <code>"class"</code> (First / Second / Third).`],
+      s:`df.pivot_table(values="survived", index="sex", columns="class")`,
+      e:[`Six cases qui résument tout : une femme de 1re classe survit à ~97 %, un homme de 3e à ~13 %.`,`Le sexe et la classe sociale sont les deux facteurs les plus déterminants — une conclusion que tu obtiens toi-même, en une ligne.`],
+      a:`Bravo : charger, nettoyer, transformer, regrouper, croiser — tu sais mener une analyse de bout en bout. 🏔️` }
+  ]
+}
+];
+
+/* =========================================================================
+   Surlignage automatique d'un extrait de code Python (sans dépendance)
+   ========================================================================= */
+function hl(code){
+  code = String(code).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  var re = /(#[^\n]*)|("(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*')|\b(True|False|None|import|as|and|or|not|in|lambda|if|else|for|return)\b|\b(\d+\.?\d*)\b|\b([A-Za-z_]\w*)(?=\s*\()/g;
+  return code.replace(re, function(m, comment, str, kw, num, fn){
+    if (comment !== undefined) return '<span class="comment">' + comment + '</span>';
+    if (str !== undefined) return '<span class="string">' + str + '</span>';
+    if (kw !== undefined) return '<span class="keyword">' + kw + '</span>';
+    if (num !== undefined) return '<span class="number">' + num + '</span>';
+    if (fn !== undefined) return '<span class="function">' + fn + '</span>';
+    return m;
+  });
+}
+
+/* =========================================================================
+   Construction des sections de niveaux à partir des données
+   ========================================================================= */
+function renderLevels(){
+  var host = document.getElementById("levels");
+  if (!host) return;
+  LEVELS.forEach(function(lv){
+    var ex = "";
+    lv.exercises.forEach(function(e, i){
+      var astuce = e.a ? '<p class="astuce-line"><span class="astuce-ic">🚀</span> <b>Astuce —</b> ' + e.a + '</p>' : '';
+      ex +=
+        '<div class="exercise">' +
+          '<h4>Exercice ' + (i + 1) + ' — ' + e.t + '</h4>' +
+          '<p>' + e.q + '</p>' +
+          '<div class="accordion-title">💡 Indice 1</div>' +
+          '<div class="accordion-content"><p>' + e.h[0] + '</p></div>' +
+          '<div class="accordion-title">💡 Indice 2</div>' +
+          '<div class="accordion-content"><p>' + e.h[1] + '</p></div>' +
+          '<div class="accordion-title solution">✅ Solution</div>' +
+          '<div class="accordion-content solution-content">' +
+            '<pre class="python-code"><code>' + hl(e.s) + '</code></pre>' +
+            '<div class="solution-explanation">' +
+              '<p><b>Comment ça marche :</b></p>' +
+              '<ul>' + e.e.map(function(x){ return '<li>' + x + '</li>'; }).join("") + '</ul>' +
+              astuce +
+            '</div>' +
+          '</div>' +
+        '</div>';
+    });
+
+    var sec = document.createElement("section");
+    sec.className = "level";
+    sec.id = "niveau-" + lv.n;
+    sec.dataset.level = lv.n;
+    sec.innerHTML =
+      '<div class="level__head">' +
+        '<div class="level__badge"><span class="level__num">' + lv.n + '</span><span class="level__emoji">' + lv.emoji + '</span></div>' +
+        '<div class="level__meta">' +
+          '<span class="level__alt">' + lv.alt + '</span>' +
+          '<h2 class="level__title">' + lv.title + '</h2>' +
+          '<p class="level__topic">' + lv.topic + '</p>' +
+        '</div>' +
+        '<span class="level__check">✓ Camp franchi</span>' +
+      '</div>' +
+      '<div class="level__body">' +
+        '<p class="level__intro">' + lv.intro + '</p>' +
+        '<div class="exercises" data-level="' + lv.n + '">' + ex + '</div>' +
+      '</div>' +
+      '<div class="level__foot">' +
+        '<button class="camp-toggle" data-level="' + lv.n + '" type="button" aria-pressed="false">' +
+          '<span class="tick"><svg viewBox="0 0 24 24" fill="none"><path d="m5 12 5 5 9-11" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>' +
+          '<span class="camp-toggle__label">Marquer ce camp comme franchi</span>' +
+        '</button>' +
+      '</div>';
+    host.appendChild(sec);
+
+    if (lv.cheer){
+      var p = document.createElement("p");
+      p.className = "cheer";
+      p.innerHTML = lv.cheer;
+      host.appendChild(p);
+    }
+  });
+}
+
+/* =========================================================================
+   Interactions (accordéons, navigation, scroll-spy, progression)
+   ========================================================================= */
+document.addEventListener("DOMContentLoaded", function () {
+
+  renderLevels();   // construit d'abord les 7 niveaux dans #levels
+
+  /* ---------- Accordéons (indices / solutions) ---------- */
+  function setupAccordions(root){
+    (root || document).querySelectorAll(".accordion-title").forEach(function (title) {
+      if (title.dataset.bound) return;
+      title.dataset.bound = "1";
+      title.addEventListener("click", function () {
+        var content = title.nextElementSibling;
+        if (!content) return;
+        if (content.classList.contains("active")) {
+          content.classList.remove("active");
+          content.style.maxHeight = null;
+        } else {
+          content.classList.add("active");
+          content.style.maxHeight = content.scrollHeight + "px";
+        }
+      });
+    });
+  }
+  setupAccordions();
+  window.PandasAscension = { refresh: function(){ setupAccordions(); } };
+
+  /* ---------- Navigation vers les camps ---------- */
+  var TOTAL = 7;
+  function scrollToLevel(n){
+    var el = document.getElementById("niveau-" + n);
+    if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+  document.querySelectorAll(".pill").forEach(function (pill) {
+    pill.addEventListener("click", function () { scrollToLevel(pill.dataset.level); });
+  });
+  document.querySelectorAll(".camp").forEach(function (camp) {
+    camp.addEventListener("click", function (e) { e.preventDefault(); scrollToLevel(camp.dataset.level); });
+  });
+
+  /* ---------- Scroll-spy ---------- */
+  var levels = Array.prototype.slice.call(document.querySelectorAll(".level"));
+  function setActive(n){
+    document.querySelectorAll(".pill").forEach(function (p) { p.classList.toggle("active", p.dataset.level === n); });
+    document.querySelectorAll(".camp").forEach(function (c) { c.classList.toggle("active", c.dataset.level === n); });
+  }
+  if ("IntersectionObserver" in window) {
+    var spy = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) setActive(entry.target.dataset.level);
+      });
+    }, { rootMargin: "-45% 0px -50% 0px", threshold: 0 });
+    levels.forEach(function (l) { spy.observe(l); });
+  }
+
+  /* ---------- Progression "camps franchis" (sauvegarde locale) ---------- */
+  var KEY = "pandas_ascension_progress_v1";
+  function loadDone(){
+    try { return new Set(JSON.parse(localStorage.getItem(KEY) || "[]")); }
+    catch (e) { return new Set(); }
+  }
+  function saveDone(set){
+    try { localStorage.setItem(KEY, JSON.stringify(Array.from(set))); } catch (e) {}
+  }
+  var done = loadDone();
+
+  function render(){
+    var count = 0;
+    for (var i = 1; i <= TOTAL; i++) {
+      var on = done.has(String(i)) || done.has(i);
+      if (on) count++;
+      var camp = document.querySelector('.camp[data-level="' + i + '"]');
+      if (camp) camp.classList.toggle("done", on);
+      var pill = document.querySelector('.pill[data-level="' + i + '"]');
+      if (pill) pill.classList.toggle("done", on);
+      var section = document.getElementById("niveau-" + i);
+      if (section) section.classList.toggle("completed", on);
+      var btn = document.querySelector('.camp-toggle[data-level="' + i + '"]');
+      if (btn) {
+        btn.classList.toggle("is-done", on);
+        btn.setAttribute("aria-pressed", on ? "true" : "false");
+        var label = btn.querySelector(".camp-toggle__label");
+        if (label) label.textContent = on ? "Camp franchi" : "Marquer ce camp comme franchi";
+      }
+    }
+    var pct = Math.round(count / TOTAL * 100);
+    var fill = document.getElementById("ascentFill"); if (fill) fill.style.width = pct + "%";
+    var a = document.getElementById("ascentCount"); if (a) a.textContent = count;
+    var m = document.getElementById("mhCount"); if (m) m.textContent = count;
+  }
+
+  document.querySelectorAll(".camp-toggle").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      var n = String(btn.dataset.level);
+      if (done.has(n) || done.has(Number(n))) { done.delete(n); done.delete(Number(n)); }
+      else { done.add(n); }
+      saveDone(done);
+      render();
+    });
+  });
+
+  render();
+});
+</script>
+</body>
+</html>
