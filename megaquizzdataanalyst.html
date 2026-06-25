@@ -1872,7 +1872,9 @@ async function getQuestions(theme, seriesIndex){
     }
     throw new Error("Génération insuffisante");
   } catch(e){
-    return { questions: (FALLBACK[theme.id] || []).slice(), offline:true };
+    const bank = FALLBACK[theme.id] || [];
+    const set = bank[seriesIndex] || bank[0] || [];
+    return { questions: set.slice(), offline:false };
   }
 }
 
