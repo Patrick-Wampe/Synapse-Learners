@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Générateur de QR Code</title>
+  <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f4f7f6;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+    .container {
+      background: #ffffff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+      width: 100%;
+      max-width: 400px;
+      box-sizing: border-box;
+    }
+    h2 {
+      text-align: center;
+      color: #333;
+      margin-top: 0;
+    }
+    .input-group {
+      margin-bottom: 15px;
+    }
+    .input-group label {
+      display: block;
+      margin-bottom: 5px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #555;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      box-sizing: border-box;
+      font-size: 14px;
+    }
+    .options-row {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 15px;
+    }
+    .options-row div {
+      flex: 1;
+    }
+    input[type="color"] {
+      width: 100%;
+      height: 38px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      padding: 0;
+    }
+    input[type="range"] {
+      width: 100%;
+    }
+    button {
+      background: #007bff;
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      width: 100%;
+      font-size: 16px;
+      font-weight: bold;
+      transition: background 0.3s ease;
+      margin-bottom: 10px;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+    .btn-download {
+      background: #28a745;
+      display: none; /* Masqué par défaut */
+    }
+    .btn-download:hover {
+      background: #218838;
+    }
+    #qrcode {
+      margin: 20px 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 200px;
+    }
+    #error-msg {
+      color: #dc3545;
+      font-size: 14px;
+      text-align: center;
+      margin-bottom: 10px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h2>Générateur QR Code</h2>
+    
+    <div class="input-group">
+      <input type="text" id="url" placeholder="Colle ton URL ou texte ici...">
+    </div>
+
+    <div id="error-msg">Veuillez entrer une URL ou un texte valide.</div>
+
+    <div class="options-row">
+      <div>
+        <label for="colorDark">Couleur (QR)</label>
+        <input type="color" id="colorDark" value="#000000">
+      </div>
+      <div>
+        <label for="colorLight">Couleur (Fond)</label>
+        <input type="color" id="colorLight" value="#ffffff">
+      </div>
+    </div>
+
+    <div class="input-group">
+      <label for="size">Taille : <span id="size-val">256</span>px</label>
+      <input type="range" id="size" min="128" max="512" step="32" value="256">
+    </div>
+
+    <button onclick="genererQR()">Générer le QR Code</button>
+    
+    <div id="qrcode"></div>
+    
+    <button id="btn-dl" class="btn-download" onclick="telechargerQR()">📥 Télécharger l'image</button>
+  </div>
+
+  <script>
+    // Mise à jour de l'affichage de la taille en temps réel
+    document.getElementById('size').addEventListener('input', function() {
+      document.getElementById('size-val').innerText = this.value;
+    });
+
+    function genererQR() {
+      const textInput = document.getElementById("url").value.trim();
+      const errorMsg = document.getElementById("error-msg");
+      const qrContainer = document.getElementById("qrcode");
+      const downloadBtn = document.getElementById("btn-dl");
+
+      // Récupération des options
+      const size = parseInt(document.getElementById("size").value);
+      const colorDark = document.getElementById("colorDark").value;
+      const colorLight = document.getElementById("colorLight").value;
+
+      // Gestion de l'erreur si le champ est vide
+      if (!textInput) {
+        errorMsg.style.display = "block";
+        qrContainer.innerHTML = "";
+        downloadBtn.style.display = "none";
+        return;
+      }
+
+      // Réinitialisation
+      errorMsg.style.display = "none";
+      qrContainer.innerHTML = "";
+
+      // Génération du QR Code
+      new QRCode(qrContainer, {
+        text: textInput,
+        width: size,
+        height: size,
+        colorDark: colorDark,
+        colorLight: colorLight,
+        correctLevel: QRCode.CorrectLevel.H // Niveau de correction d'erreur élevé pour plus de fiabilité
+      });
+
+      // Afficher le bouton de téléchargement après génération
+      // Un léger délai est nécessaire pour que qrcodejs insère le canvas/img dans le DOM
+      setTimeout(() => {
+        downloadBtn.style.display = "block";
+      }, 100);
+    }
+
+    function telechargerQR() {
+      const qrContainer = document.getElementById("qrcode");
+      
+      // La librairie qrcode.js génère à la fois un <canvas> et une <img>
+      // On privilégie l'attribut src de l'image (si généré en base64) ou le canvas
+      let imgSrc = "";
+      const imgElement = qrContainer.querySelector("img");
+      const canvasElement = qrContainer.querySelector("canvas");
+
+      if (imgElement && imgElement.src) {
+        imgSrc = imgElement.src;
+      } else if (canvasElement) {
+        imgSrc = canvasElement.toDataURL("image/png");
+      }
+
+      if (imgSrc) {
+        const link = document.createElement("a");
+        link.href = imgSrc;
+        link.download = "mon-qrcode.png";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      } else {
+        alert("Erreur lors du téléchargement. Veuillez générer le QR code à nouveau.");
+      }
+    }
+  </script>
+
+</body>
+</html>
