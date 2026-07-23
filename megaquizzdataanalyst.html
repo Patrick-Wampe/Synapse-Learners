@@ -988,7 +988,7 @@ const FALLBACK = {
       { q:"Quelle mentalité globale doit guider un projet de web scraping ?", o:["Prendre le maximum de données, le plus vite possible, sans se soucier des règles","Agir avec mesure, transparence, respect des règles techniques et considération pour le site hôte","Ignorer systématiquement les avertissements du web","Cacher son identité à tout prix"], c:1, e:"Modération et respect de l'écosystème web garantissent des pratiques durables et sans conflit." }
     ]
   ],
-  api: [
+   api: [
     /* S1 — Concepts REST */
     [
       { q:"Que signifie exactement l'acronyme REST appliqué aux services web ?", o:["Remote Server Transfer","Representational State Transfer","Reactive State Transaction","Rapid Exchange Standard"], c:1, e:"REST (Representational State Transfer) est un style d'architecture logicielle pour les services web distribués." },
@@ -1402,7 +1402,7 @@ const FALLBACK = {
     [
       { q:"Quelle méthode standard de Scikit-learn emploie-t-on pour entraîner un modèle d'apprentissage ?", o:["model.train()","model.fit(X, y)","model.learn()","model.build()"], c:1, e:"La méthode .fit(X, y) ajuste les paramètres internes du modèle aux données d'entraînement." },
       { q:"Quelle méthode appelle-t-on pour générer des prédictions sur de nouvelles données avec un modèle entraîné ?", o:["model.fit()","model.predict(X)","model.score()","model.guess()"], c:1, e:"La méthode .predict(X) produit et retourne les prédictions du modèle pour les features X fournies." },
-      { q:["Sur quel ensemble de données doit-on impérativement exécuter la méthode .fit() ?", o:["Uniquement sur le jeu de test","Uniquement sur le jeu d'entraînement (X_train, y_train)","Sur l'ensemble complet du dataset sans distinction","Sur le jeu de validation croisée uniquement"], c:1, e:"On entraîne (fit) exclusivement sur les données d'entraînement pour éviter toute fuite d'information (data leakage)." },
+      { q:"Sur quel ensemble de données doit-on impérativement exécuter la méthode .fit() ?", o:["Uniquement sur le jeu de test","Uniquement sur le jeu d'entraînement (X_train, y_train)","Sur l'ensemble complet du dataset sans distinction","Sur le jeu de validation croisée uniquement"], c:1, e:"On entraîne (fit) exclusivement sur les données d'entraînement pour éviter toute fuite d'information (data leakage)." },
       { q:"Que calcule la méthode model.score(X_test, y_test) d'un estimateur de classification ?", o:["Le temps d'exécution en secondes","L'accuracy (précision globale) de la prédiction sur le jeu fourni","La matrice de confusion complète","Le nombre de paramètres du modèle"], c:1, e:"Pour un classifieur, .score() retourne l'accuracy moyenne ; pour un régresseur, il retourne le coefficient R²." },
       { q:"Quel est l'ordre chronologique logique impératif dans le cycle de vie d'un modèle Scikit-learn ?", o:["D'abord predict, puis fit","D'abord fit, puis predict","D'abord score, puis fit, puis predict","predict s'utilise seul sans fit"], c:1, e:"On doit impérativement entraîner le modèle (fit) avant de pouvoir lui demander de prédire (predict)." },
       { q:"Que réalise concrètement la méthode .fit() au cœur d'un algorithme d'apprentissage ?", o:["Elle supprime les valeurs manquantes","Elle ajuste et optimise les paramètres internes du modèle à partir des exemples fournis","Elle trace un graphique de dataviz","Elle convertit le DataFrame en CSV"], c:1, e:"Le fit modifie les poids ou les structures internes de l'algorithme pour qu'il comprenne la relation X -> y." },
